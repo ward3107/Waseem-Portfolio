@@ -1,20 +1,251 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+
+# Waseem Portfolio
+
+A modern, responsive portfolio website built with React, TypeScript, and Tailwind CSS. Features smooth animations, multi-language support, accessibility features, and a sleek dark-themed design.
+
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.2-blue)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18.2-cyan)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.2-purple)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8)](https://tailwindcss.com/)
+
+[Live Demo](#) | [Report Bug](https://github.com/ward3107/Waseem-Portfolio/issues) | [Request Feature](https://github.com/ward3107/Waseem-Portfolio/issues)
+
 </div>
 
-# Run and deploy your AI Studio app
+---
 
-This contains everything you need to run your app locally.
+## Table of Contents
 
-View your app in AI Studio: https://ai.studio/apps/drive/1SBITCxSxHE-ifFa7bfWRICCzQwBANkUv
+- [About The Project](#about-the-project)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Configuration](#configuration)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-## Run Locally
+---
 
-**Prerequisites:**  Node.js
+## About The Project
 
+This is a personal portfolio website showcasing my work, skills, and services as a developer. The site features a modern, minimalist design with smooth animations powered by Framer Motion, and includes sections for services, projects, timeline, and contact information.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+---
+
+## Features
+
+- **Responsive Design**: Fully responsive across all device sizes
+- **Dark Theme**: Modern dark-themed UI with smooth transitions
+- **Animations**: Smooth page transitions and element animations using Framer Motion
+- **Multi-language Support**: Built-in language context for internationalization
+- **Accessibility**: ARIA labels, keyboard navigation support, and accessibility toolbar
+- **Performance**: Optimized with Vite for lightning-fast builds
+- **TypeScript**: Full type safety throughout the application
+- **Components Include**:
+  - Hero section with animated introduction
+  - Services showcase
+  - AI integration section
+  - Interactive timeline
+  - Projects gallery
+  - Tech stack display
+  - Social media hub
+  - FAQ section
+  - Contact form
+  - Cookie consent banner
+  - Share widget
+  - Back-to-top button
+
+---
+
+## Technologies Used
+
+### Frontend Framework
+- [React 18](https://react.dev/) - UI library
+- [TypeScript 5.2](https://www.typescriptlang.org/) - Type safety
+
+### Build Tool
+- [Vite 5.2](https://vitejs.dev/) - Next generation frontend tooling
+
+### Styling
+- [Tailwind CSS 3.4](https://tailwindcss.com/) - Utility-first CSS framework
+- [PostCSS](https://postcss.org/) - CSS transformations
+
+### Animations
+- [Framer Motion 11](https://www.framer.com/motion/) - Production-ready motion library
+
+### Icons
+- [Lucide React](https://lucide.dev/) - Beautiful & consistent icons
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+Before running this project, ensure you have the following installed:
+
+- **Node.js** (v18 or higher)
+- **npm** (comes with Node.js)
+
+Check your versions:
+```bash
+node --version
+npm --version
+```
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/ward3107/Waseem-Portfolio.git
+   cd Waseem-Portfolio
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   Edit `.env.local` and add your API keys if needed.
+
+4. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open your browser**
+   Navigate to [http://localhost:5173](http://localhost:5173)
+
+---
+
+## Usage
+
+### Development
+
+Run the development server with hot module replacement:
+```bash
+npm run dev
+```
+
+### Production Build
+
+Create an optimized production build:
+```bash
+npm run build
+```
+
+Preview the production build locally:
+```bash
+npm run preview
+```
+
+### Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+
+---
+
+## Project Structure
+
+```
+waseem-portfolio/
+├── components/          # React components
+│   ├── Hero.tsx        # Hero/landing section
+│   ├── Services.tsx    # Services showcase
+│   ├── Projects.tsx    # Projects gallery
+│   ├── Contact.tsx     # Contact section
+│   └── ...
+├── contexts/           # React contexts
+│   ├── LanguageContext.tsx
+│   └── WidgetContext.tsx
+├── public/            # Static assets
+├── App.tsx            # Main app component
+├── index.html         # HTML entry point
+├── index.tsx          # React entry point
+├── constants.ts       # App constants
+├── types.ts           # TypeScript type definitions
+├── tailwind.config.js # Tailwind configuration
+├── vite.config.ts     # Vite configuration
+└── tsconfig.json      # TypeScript configuration
+```
+
+---
+
+## Configuration
+
+### Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```env
+# Add your environment variables here
+# Example:
+# VITE_API_KEY=your_api_key_here
+# VITE_GEMINI_API_KEY=your_gemini_key
+```
+
+### Tailwind Configuration
+
+Customize the theme in `tailwind.config.js`:
+
+```javascript
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        // Add custom colors
+      }
+    }
+  }
+}
+```
+
+---
+
+## Contributing
+
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Contact
+
+Waseem - [@ward3107](https://github.com/ward3107)
+
+Project Link: [https://github.com/ward3107/Waseem-Portfolio](https://github.com/ward3107/Waseem-Portfolio)
+
+---
+
+<div align="center">
+
+**Built with ❤️ using React & TypeScript**
+
+</div>
