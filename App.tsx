@@ -18,33 +18,36 @@ import BackToTop from './components/BackToTop';
 import CookieBanner from './components/CookieBanner';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { WidgetProvider } from './contexts/WidgetContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 const App: React.FC = () => {
   return (
     <LanguageProvider>
-      <WidgetProvider>
-        <div className="relative">
-          <Navbar />
-          <main>
-            <Hero />
-            <Services />
-            <AISection />
-            <VibeCoding />
-            <AboutTimeline />
-            <Projects />
-            <Process />
-            <TechStack />
-            <SocialHub />
-            <FAQ />
-            <Contact />
-          </main>
-          <Footer />
-          <AccessibilityToolbar />
-          <ShareWidget />
-          <BackToTop />
-          <CookieBanner />
-        </div>
-      </WidgetProvider>
+      <ThemeProvider>
+        <WidgetProvider>
+          <div className="relative">
+            <Navbar />
+            <main>
+              <Hero />
+              <Services />
+              <AISection />
+              <VibeCoding />
+              <AboutTimeline />
+              <Projects />
+              <Process />
+              <TechStack />
+              <SocialHub />
+              <FAQ />
+              <Contact />
+            </main>
+            <Footer />
+            <AccessibilityToolbar />
+            <ShareWidget />
+            <BackToTop />
+            <CookieBanner />
+          </div>
+        </WidgetProvider>
+      </ThemeProvider>
     </LanguageProvider>
   );
 };

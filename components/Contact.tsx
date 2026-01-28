@@ -1,6 +1,6 @@
 import React from 'react';
 import { Mail, MessageSquare } from 'lucide-react';
-import ContactForm from './ContactForm';
+import ProjectWizard from './ProjectWizard';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -8,7 +8,7 @@ const Contact: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <section id="contact" className="py-24 bg-white relative overflow-hidden">
+    <section id="contact" className="py-24 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
       {/* Background Gradients */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-purple/5 rounded-full blur-[100px]"></div>
@@ -17,7 +17,7 @@ const Contact: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
-          
+
           {/* Left Column: Copy & Info */}
           <div className="flex flex-col">
             <motion.div
@@ -33,49 +33,49 @@ const Contact: React.FC = () => {
               {t('contact_avail')}
             </motion.div>
 
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-5xl md:text-6xl font-heading font-bold text-slate-900 mb-6 leading-tight"
+              className="text-5xl md:text-6xl font-heading font-bold text-slate-900 dark:text-white mb-6 leading-tight"
             >
-              {t('contact_title_1')} <br/>
+              {t('contact_title_1')} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">{t('contact_title_2')}</span>
             </motion.h2>
 
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="text-slate-500 mb-10 text-lg leading-relaxed max-w-lg"
+              className="text-slate-500 dark:text-slate-400 mb-10 text-lg leading-relaxed max-w-lg"
             >
               {t('contact_desc')}
             </motion.p>
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
               className="grid grid-cols-1 sm:grid-cols-2 gap-4"
             >
-              <a href="mailto:waseem@example.com" className="group flex flex-col p-6 bg-slate-50 hover:bg-white rounded-2xl border border-slate-100 hover:border-brand-purple/20 hover:shadow-xl transition-all duration-300">
-                <div className="w-12 h-12 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-900 group-hover:bg-brand-purple group-hover:text-white transition-colors mb-4 shadow-sm">
+              <a href="mailto:waseem@example.com" className="group flex flex-col p-6 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-brand-purple/20 hover:shadow-xl transition-all duration-300">
+                <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-slate-900 dark:text-white group-hover:bg-brand-purple group-hover:text-white transition-colors mb-4 shadow-sm">
                   <Mail size={20} />
                 </div>
                 <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">{t('contact_email_btn')}</p>
-                <p className="font-bold text-slate-900 text-lg group-hover:text-brand-purple transition-colors">waseem@example.com</p>
+                <p className="font-bold text-slate-900 dark:text-white text-lg group-hover:text-brand-purple transition-colors">waseem@example.com</p>
               </a>
 
               {/* Updated WhatsApp Block to be Green */}
-              <a href="https://wa.me/972534260632" className="group flex flex-col p-6 bg-green-50/50 hover:bg-green-50 rounded-2xl border border-green-100 hover:border-green-300 hover:shadow-xl hover:shadow-green-100 transition-all duration-300">
-                <div className="w-12 h-12 rounded-full bg-white border border-green-100 flex items-center justify-center text-green-600 group-hover:bg-green-600 group-hover:text-white transition-colors mb-4 shadow-sm">
+              <a href="https://wa.me/972534260632" className="group flex flex-col p-6 bg-green-50/50 dark:bg-green-900/10 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-2xl border border-green-100 dark:border-green-900/30 hover:border-green-300 hover:shadow-xl hover:shadow-green-100 transition-all duration-300">
+                <div className="w-12 h-12 rounded-full bg-white dark:bg-green-900/30 border border-green-100 dark:border-green-800 flex items-center justify-center text-green-600 dark:text-green-400 group-hover:bg-green-600 group-hover:text-white transition-colors mb-4 shadow-sm">
                   <MessageSquare size={20} />
                 </div>
                 <p className="text-xs text-green-600/80 font-bold uppercase tracking-wider mb-1">{t('contact_whatsapp_btn')}</p>
-                <p className="font-bold text-slate-900 text-lg group-hover:text-green-700 transition-colors">+972 53 426 0632</p>
+                <p className="font-bold text-slate-900 dark:text-white text-lg group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors" dir="ltr">+972 53 426 0632</p>
               </a>
             </motion.div>
           </div>
@@ -88,9 +88,8 @@ const Contact: React.FC = () => {
             transition={{ delay: 0.4 }}
             className="relative"
           >
-             {/* Decorative element behind form */}
-             <div className="absolute inset-0 bg-gradient-to-tr from-brand-purple/20 to-brand-cyan/20 rounded-3xl blur-2xl transform rotate-3 scale-95 -z-10"></div>
-             <ContactForm />
+            <div className="absolute inset-0 bg-gradient-to-tr from-brand-purple/20 to-brand-cyan/20 rounded-3xl blur-2xl transform rotate-3 scale-95 -z-10"></div>
+            <ProjectWizard />
           </motion.div>
 
         </div>

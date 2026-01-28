@@ -15,7 +15,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     // Navigation
     hireMe: "Let's Create the Future",
     letsTalk: "Let's Talk",
-    
+
     // Hero
     hero_badge: "Available for New Projects",
     hero_title_1: "I craft digital ",
@@ -41,7 +41,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     services_cta_btn: "Book a Consultation",
     modal_btn: "Got it, let's build! 🚀",
     modal_whatsapp: "Or discuss via WhatsApp",
-    
+
     // Service Items
     service_1_title: "Full Stack Dev",
     service_1_desc: "End-to-end web applications using Next.js, React, and Node.js. Scalable, secure, and fast.",
@@ -53,6 +53,10 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     service_4_desc: "High-performance marketing sites that convert visitors into loyal customers.",
     service_5_title: "3D Animated Frontend",
     service_5_desc: "Immersive 3D experiences and fluid animations that bring your digital presence to life.",
+    service_marketing_title: 'Performance Marketing',
+    service_marketing_desc: 'Data-driven campaigns on Google, Meta, TikTok, & Instagram that target your ideal audience and maximize ROI.',
+    service_marketing_modal_title: 'Performance Marketing & PPC',
+    service_marketing_modal_desc: "Maximize your ROI with data-driven campaigns across Google, Meta, TikTok, and Instagram. I offer tailored packages to suit your growth stage:\n\n**1. The Launch (3,000 ₪/mo):** Perfect for starters. 1 Platform, Campaign Setup, AI Copywriting, Weekly Optimization.\n\n**2. The Growth (5,500 ₪/mo):** Recommended for scaling. 2 Platforms, A/B Testing, Retargeting, Bi-Weekly Strategy.\n\n**3. The Dominance (9,000 ₪/mo):** Full-stack management. All Platforms, Advanced Automation, Video Editing assistance, 24/7 Support.\n\nWhy me? I combine marketing with technical expertise (Pixel API, Event Tracking) to ensure every cent is tracked.",
 
     // AI Section
     ai_badge: "Next-Gen Automation",
@@ -94,7 +98,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     about_narrative_1: "I started with a simple question: \"How can we build better?\". That question drove me to master the entire stack, from the database to the pixel-perfect animation.",
     about_narrative_2: "Today, I leverage that mastery to help businesses like yours scale. My mission is simple:",
     about_mission: "To eliminate technical risk and deliver a product that just works.",
-    
+
     // Timeline Items
     timeline_1_title: "Vibe Coding & Design",
     timeline_1_desc: "Professing the art of vibe coding and design, merging aesthetics with high-performance engineering.",
@@ -177,8 +181,8 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     faq_a5: "I typically work on a project-based pricing model, but I am open to hourly billing for consultation or maintenance tasks.",
     faq_q6: "Do you handle hosting and domain setup?",
     faq_a6: "Yes, I can handle the entire deployment process, including server setup, domain configuration, and SSL certificates.",
-    faq_q7: "Are your websites SEO friendly?",
-    faq_a7: "Yes, all websites are built with SEO best practices in mind, including semantic HTML, fast loading times, and mobile optimization.",
+    faq_q7: "Are your websites SEO / AEO / GEO optimized?",
+    faq_a7: "Yes! I build with modern Search Engine Optimization (SEO), Answer Engine Optimization (AEO), and Generative Engine Optimization (GEO) in mind. This means your site is ready for Google, ChatGPT, and the future of AI search.",
 
     // Footer
     footer_desc: "Crafting robust digital solutions at the intersection of design and artificial intelligence.",
@@ -258,7 +262,31 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     // Validation
     required: "Required",
     invalidEmail: "Invalid email",
-    tooShort: "Too short"
+    tooShort: "Too short",
+    // Wizard
+    wizard_step_count: "Step {current} of {total}",
+    wizard_step1_title: "What are we building?",
+    wizard_step2_title: "What's the vibe?",
+    wizard_step3_title: "What's the budget?",
+    wizard_final_title: "Final Details",
+    wizard_final_desc: "Tell me a bit more about your vision.",
+    wizard_opt_web: "Web App",
+    wizard_opt_app: "Mobile App",
+    wizard_opt_ai: "AI Tool",
+    wizard_opt_ecom: "E-Commerce",
+    wizard_opt_minimal: "Minimalist",
+    wizard_opt_bold: "Bold & Wild",
+    wizard_opt_corp: "Corporate",
+    wizard_opt_future: "Futuristic",
+    wizard_opt_small: "< $5k",
+    wizard_opt_medium: "$5k - $15k",
+    wizard_opt_large: "$15k - $50k",
+    wizard_opt_ent: "$50k+",
+    wizard_detail_placeholder: "Describe your project in a few words...",
+    wizard_btn_send: "Launch Project Request",
+    wizard_success_title: "Request Received!",
+    wizard_success_desc: "I've received your project specs. I'll review them and get back to you within 24 hours.",
+    wizard_start_over: "Start New Request",
   },
   he: {
     // Navigation
@@ -302,6 +330,10 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     service_4_desc: "אתרי שיווק מהירים שממירים מבקרים ללקוחות נאמנים.",
     service_5_title: "פרונט-אנד תלת-ממדי",
     service_5_desc: "חוויות תלת-ממד ואנימציות שמפיחות חיים בנוכחות הדיגיטלית שלך.",
+    service_marketing_title: 'שיווק ביצועים (PPC)',
+    service_marketing_desc: 'קמפיינים מבוססי נתונים בגוגל, פייסבוק, טיקטוק ואינסטגרם שמכוונים לקהל היעד שלך וממקסמים החזר השקעה.',
+    service_marketing_modal_title: 'שיווק דיגיטלי ו-PPC',
+    service_marketing_modal_desc: "מקסם את החזר ההשקעה שלך עם קמפיינים מבוססי נתונים בגוגל, פייסבוק, טיקטוק ואינסטגרם. חבילות מותאמות אישית:\n\n**1. חבילת ההשקה (3,000 ₪/חודש):** מתאימה למתחילים. פלטפורמה אחת, הקמת קמפיין, קופירייטינג מבוסס AI, אופטימיזציה שבועית.\n\n**2. חבילת הצמיחה (5,500 ₪/חודש):** מומלצת לגדילה. 2 פלטפורמות, בדיקות A/B, ריטרגטינג, אסטרטגיה דו-שבועית.\n\n**3. חבילת השליטה (9,000 ₪/חודש):** ניהול מלא. כל הפלטפורמות, אוטומציה מתקדמת, עריכת וידאו, תמיכה 24/7.",
 
     // AI Section
     ai_badge: "אוטומציה מתקדמת",
@@ -425,8 +457,8 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     faq_a5: "בדרך כלל אני עובד לפי פרויקט, אך פתוח גם לחיוב שעתי לייעוץ או תחזוקה.",
     faq_q6: "האם אתה מטפל באחסון ודומיין?",
     faq_a6: "כן, אני יכול לטפל בכל תהליך ההעלאה לאוויר, כולל שרתים ותעודות אבטחה.",
-    faq_q7: "האם האתרים מותאמים לקידום (SEO)?",
-    faq_a7: "כן, כל האתרים נבנים עם דגש על SEO, קוד סמנטי ומהירות טעינה.",
+    faq_q7: "האם האתרים מותאמים ל-SEO / AEO / GEO?",
+    faq_a7: "כן! אני בונה עם דגש על קידום במנועי חיפוש (SEO), אופטימיזציה למנועי תשובות (AEO), ואופטימיזציה למנועים גנרטיביים (GEO). זה אומר שהאתר שלך מוכן לגוגל, ל-ChatGPT ולעתיד החיפוש ב-AI.",
 
     // Footer
     footer_desc: "בניית פתרונות דיגיטליים חזקים במפגש שבין עיצוב לבינה מלאכותית.",
@@ -502,13 +534,37 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     budget50kPlus: "50,000 ₪+",
     required: "נדרש",
     invalidEmail: "אימייל לא תקין",
-    tooShort: "קצר מדי"
+    tooShort: "קצר מדי",
+    // Wizard
+    wizard_step_count: "שלב {current} מתוך {total}",
+    wizard_step1_title: "מה בונים?",
+    wizard_step2_title: "מה הוויב?",
+    wizard_step3_title: "מה התקציב?",
+    wizard_final_title: "פרטים אחרונים",
+    wizard_final_desc: "ספר לי עוד קצת על החזון שלך.",
+    wizard_opt_web: "אפליקציית ווב",
+    wizard_opt_app: "אפליקציית מובייל",
+    wizard_opt_ai: "כלי AI",
+    wizard_opt_ecom: "חנות אינטרנטית",
+    wizard_opt_minimal: "מינימליסטי",
+    wizard_opt_bold: "נועז ופראי",
+    wizard_opt_corp: "פורמלי/עסקי",
+    wizard_opt_future: "עתידני",
+    wizard_opt_small: "עד 5,000₪",
+    wizard_opt_medium: "5,000₪ - 15,000₪",
+    wizard_opt_large: "15,000₪ - 50,000₪",
+    wizard_opt_ent: "50,000₪+",
+    wizard_detail_placeholder: "תאר את הפרויקט בכמה מילים...",
+    wizard_btn_send: "שגר בקשה לפרויקט",
+    wizard_success_title: "הבקשה התקבלה!",
+    wizard_success_desc: "קיבלתי את המפרט שלך. אעבור עליו ואחזור אליך תוך 24 שעות.",
+    wizard_start_over: "התחל בקשה חדשה",
   },
   ar: {
     // Navigation
     hireMe: "لنصنع المستقبل",
     letsTalk: "تحدث معي",
-    
+
     // Hero
     hero_badge: "متاح لمشاريع جديدة",
     hero_title_1: "أصمم تجارب ",
@@ -534,7 +590,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     services_cta_btn: "احجز استشارة",
     modal_btn: "فهمت، لنبدأ البناء! 🚀",
     modal_whatsapp: "أو ناقش عبر واتساب",
-    
+
     // Service Items
     service_1_title: "تطوير شامل (Full Stack)",
     service_1_desc: "تطبيقات ويب متكاملة باستخدام Next.js و React و Node.js. قابلة للتوسع، آمنة، وسريعة.",
@@ -546,6 +602,10 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     service_4_desc: "مواقع تسويقية عالية الأداء تحول الزوار إلى عملاء مخلصين.",
     service_5_title: "واجهات ثلاثية الأبعاد",
     service_5_desc: "تجارب ثلاثية الأبعاد غامرة ورسوم متحركة سلسة تبث الحياة في تواجدك الرقمي.",
+    service_marketing_title: 'التسويق الرقمي والأداء',
+    service_marketing_desc: 'حملات مدفوعة تعتمد على البيانات عبر Google و Meta و TikTok و Instagram تستهدف جمهورك المثالي وتحقق أعلى عائد استثمار.',
+    service_marketing_modal_title: 'إدارة الحملات الإعلانية (PPC)',
+    service_marketing_modal_desc: "حقق أقصى عائد على الاستثمار من خلال حملات تعتمد على البيانات عبر Google و Meta و TikTok و Instagram. باقات مصممة لتناسب مرحلة نموك:\n\n**1. باقة الانطلاق (3,000 شيكل/شهرياً):** مثالية للمبتدئين. منصة واحدة، إعداد الحملة، كتابة إعلانات بالذكاء الاصطناعي، تحسين أسبوعي.\n\n**2. باقة النمو (5,500 شيكل/شهرياً):** موصى بها للتوسع. منصتان، اختبار A/B، إعادة الاستهداف، استراتيجية نصف شهرية.\n\n**3. باقة السيطرة (9,000 شيكل/شهرياً):** إدارة شاملة. جميع المنصات، أتمتة متقدمة، مساعدة في تحرير الفيديو، دعم 24/7.",
 
     // AI Section
     ai_badge: "أتمتة الجيل القادم",
@@ -587,7 +647,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     about_narrative_1: "بدأت بسؤال بسيط: \"كيف يمكننا البناء بشكل أفضل؟\". قادني هذا السؤال لإتقان التقنيات بالكامل، من قاعدة البيانات إلى الرسوم المتحركة الدقيقة.",
     about_narrative_2: "اليوم، أستفيد من هذا الإتقان لمساعدة شركات مثل شركتك على النمو. مهمتي بسيطة:",
     about_mission: "إزالة المخاطر التقنية وتقديم منتج يعمل ببساطة.",
-    
+
     // Timeline Items
     timeline_1_title: "Vibe Coding & Design",
     timeline_1_desc: "ممارسة فن الكود والتصميم، دمج الجماليات مع الهندسة عالية الأداء.",
@@ -670,8 +730,8 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     faq_a5: "عادة ما أعمل بنظام التسعير القائم على المشروع، لكنني منفتح على الفوترة بالساعة للاستشارات أو مهام الصيانة.",
     faq_q6: "هل تتعامل مع الاستضافة وإعداد النطاق؟",
     faq_a6: "نعم، يمكنني التعامل مع عملية النشر بأكملها، بما في ذلك إعداد الخادم، تكوين النطاق، وشهادات SSL.",
-    faq_q7: "هل مواقعك صديقة لمحركات البحث (SEO)؟",
-    faq_a7: "نعم، جميع المواقع مبنية مع وضع أفضل ممارسات SEO في الاعتبار، بما في ذلك HTML الدلالي، وأوقات التحميل السريعة، وتحسين الهاتف المحمول.",
+    faq_q7: "هل مواقعك مهيئة لـ SEO / AEO / GEO؟",
+    faq_a7: "نعم! أنا أبني مع وضع تحسين محركات البحث (SEO)، وتحسين محركات الإجابة (AEO)، وتحسين المحركات التوليدية (GEO) في الاعتبار. هذا يعني أن موقعك جاهز لـ Google و ChatGPT ومستقبل البحث بالذكاء الاصطناعي.",
 
     // Footer
     footer_desc: "صياغة حلول رقمية قوية في تقاطع التصميم والذكاء الاصطناعي.",
@@ -747,15 +807,48 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     budget50kPlus: "50,000 ₪+",
     required: "مطلوب",
     invalidEmail: "بريد غير صالح",
-    tooShort: "قصير جداً"
+    tooShort: "قصير جداً",
+    // Wizard
+    wizard_step_count: "خطوة {current} من {total}",
+    wizard_step1_title: "ماذا سنبني؟",
+    wizard_step2_title: "ما هو الأسلوب؟",
+    wizard_step3_title: "ما هي الميزانية؟",
+    wizard_final_title: "تفاصيل أخيرة",
+    wizard_final_desc: "أخبرني المزيد عن رؤيتك.",
+    wizard_opt_web: "تطبيق ويب",
+    wizard_opt_app: "تطبيق موبايل",
+    wizard_opt_ai: "أداة ذكاء اصطناعي",
+    wizard_opt_ecom: "متجر إلكتروني",
+    wizard_opt_minimal: "بسيط (Minimalist)",
+    wizard_opt_bold: "جريء وقوي",
+    wizard_opt_corp: "رسمي/شركات",
+    wizard_opt_future: "مستقبلي",
+    wizard_opt_small: "أقل من 5,000 ₪",
+    wizard_opt_medium: "5,000 ₪ - 15,000 ₪",
+    wizard_opt_large: "15,000 ₪ - 50,000 ₪",
+    wizard_opt_ent: "50,000 ₪+",
+    wizard_detail_placeholder: "صف مشروعك بكلمات قليلة...",
+    wizard_btn_send: "إرسال طلب المشروع",
+    wizard_success_title: "تم استلام الطلب!",
+    wizard_success_desc: "لقد استلمت مواصفات مشروعك. سأراجعها وأعود إليك خلال 24 ساعة.",
+    wizard_start_over: "بدء طلب جديد",
   }
 };
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>(() => {
+    const saved = localStorage.getItem('vibe_lang') as Language;
+    if (saved && (saved === 'en' || saved === 'he' || saved === 'ar')) {
+      return saved;
+    }
+    const browserLang = navigator.language.split('-')[0];
+    return (browserLang === 'he' || browserLang === 'ar') ? (browserLang as Language) : 'en';
+  });
+
   const dir = language === 'en' ? 'ltr' : 'rtl';
 
   useEffect(() => {
+    localStorage.setItem('vibe_lang', language);
     document.documentElement.lang = language;
     document.documentElement.dir = dir;
   }, [language, dir]);

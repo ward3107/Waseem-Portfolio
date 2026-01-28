@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Accessibility, X, RotateCcw, Sun, Moon, Type, 
-  MousePointer, Image as ImageIcon, Zap, Link as LinkIcon, 
+import {
+  Accessibility, X, RotateCcw, Sun, Moon, Type,
+  MousePointer, Image as ImageIcon, Zap, Link as LinkIcon,
   AlignLeft, Check, EyeOff
 } from 'lucide-react';
 
@@ -74,7 +74,7 @@ const AccessibilityToolbar: React.FC = () => {
 
   const applyStyles = (s: A11yState) => {
     const doc = document.documentElement;
-    
+
     // Theme
     if (s.isDark) {
       doc.classList.add('dark');
@@ -84,7 +84,7 @@ const AccessibilityToolbar: React.FC = () => {
 
     // Generate dynamic CSS
     let css = '';
-    
+
     // Font Size
     if (s.fontSize !== 100) {
       css += `html { font-size: ${s.fontSize}% !important; }`;
@@ -117,10 +117,10 @@ const AccessibilityToolbar: React.FC = () => {
 
     // Large Cursor
     if (s.largeCursor) {
-        // Using a data URI for a larger cursor SVG
-        const cursorSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="black" stroke="white" stroke-width="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>`;
-        const cursorUrl = `data:image/svg+xml;utf8,${encodeURIComponent(cursorSvg)}`;
-        css += `* { cursor: url('${cursorUrl}') 0 0, auto !important; }`;
+      // Using a data URI for a larger cursor SVG
+      const cursorSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="black" stroke="white" stroke-width="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>`;
+      const cursorUrl = `data:image/svg+xml;utf8,${encodeURIComponent(cursorSvg)}`;
+      css += `* { cursor: url('${cursorUrl}') 0 0, auto !important; }`;
     }
 
     // Contrast Modes
@@ -162,9 +162,9 @@ const AccessibilityToolbar: React.FC = () => {
 
   if (!isOpen) {
     return (
-      <button 
+      <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group"
+        className="fixed bottom-6 right-6 z-50 bg-slate-900 dark:bg-slate-800 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group"
         aria-label="Accessibility Options"
       >
         <Accessibility size={28} className="group-hover:rotate-12 transition-transform duration-500" />
@@ -177,46 +177,46 @@ const AccessibilityToolbar: React.FC = () => {
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-auto" onClick={() => setIsOpen(false)}></div>
 
-      <div 
+      <div
         ref={panelRef}
-        className="w-full sm:w-[400px] bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[90vh] pointer-events-auto overflow-hidden animate-float"
+        className="w-full sm:w-[400px] bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[90vh] pointer-events-auto overflow-hidden animate-float"
         role="dialog"
         aria-label="Accessibility Settings"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-100 bg-slate-50">
-          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+        <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <Accessibility className="text-brand-purple" size={24} />
             Accessibility
           </h2>
-          <button 
+          <button
             onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-500"
+            className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500 dark:text-slate-400"
           >
             <X size={20} />
           </button>
         </div>
 
         <div className="overflow-y-auto p-6 space-y-8">
-          
+
           {/* 1. Font Size */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <label className="font-bold text-slate-700 flex items-center gap-2">
+              <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
                 <Type size={18} /> Font Size
               </label>
-              <span className="text-sm font-mono bg-slate-100 px-2 py-1 rounded text-slate-600">{state.fontSize}%</span>
+              <span className="text-sm font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-600 dark:text-slate-400">{state.fontSize}%</span>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-xs">A</span>
-              <input 
-                type="range" 
-                min="100" 
-                max="200" 
+              <input
+                type="range"
+                min="100"
+                max="200"
                 step="25"
                 value={state.fontSize}
                 onChange={(e) => updateState('fontSize', parseInt(e.target.value))}
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-purple"
+                className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-brand-purple"
               />
               <span className="text-lg font-bold">A</span>
             </div>
@@ -229,95 +229,95 @@ const AccessibilityToolbar: React.FC = () => {
             </div>
           </div>
 
-          <hr className="border-slate-100" />
+          <hr className="border-slate-100 dark:border-slate-800" />
 
           {/* 2. Contrast Mode */}
           <div className="space-y-3">
-             <label className="font-bold text-slate-700 flex items-center gap-2">
-                <Sun size={18} /> Contrast Mode
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  { id: 'normal', label: 'Normal', bg: 'bg-slate-100', text: 'text-slate-900' },
-                  { id: 'high', label: 'High', bg: 'bg-white border-2 border-black', text: 'text-black' },
-                  { id: 'inverted', label: 'Inverted', bg: 'bg-black', text: 'text-white' }
-                ].map((mode) => (
-                  <button
-                    key={mode.id}
-                    onClick={() => updateState('contrastMode', mode.id)}
-                    className={`py-2 px-1 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-1 ${state.contrastMode === mode.id ? 'ring-2 ring-brand-purple ring-offset-1' : ''} ${mode.bg} ${mode.text}`}
-                  >
-                    {state.contrastMode === mode.id && <Check size={12} />}
-                    {mode.label}
-                  </button>
-                ))}
-              </div>
+            <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+              <Sun size={18} /> Contrast Mode
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { id: 'normal', label: 'Normal', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-900 dark:text-slate-300' },
+                { id: 'high', label: 'High', bg: 'bg-white border-2 border-black', text: 'text-black' },
+                { id: 'inverted', label: 'Inverted', bg: 'bg-black', text: 'text-white' }
+              ].map((mode) => (
+                <button
+                  key={mode.id}
+                  onClick={() => updateState('contrastMode', mode.id)}
+                  className={`py-2 px-1 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-1 ${state.contrastMode === mode.id ? 'ring-2 ring-brand-purple ring-offset-1' : ''} ${mode.bg} ${mode.text}`}
+                >
+                  {state.contrastMode === mode.id && <Check size={12} />}
+                  {mode.label}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <hr className="border-slate-100" />
+          <hr className="border-slate-100 dark:border-slate-800" />
 
           {/* 3. Theme Toggle */}
           <div className="flex items-center justify-between">
-            <label className="font-bold text-slate-700 flex items-center gap-2">
+            <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
               {state.isDark ? <Moon size={18} /> : <Sun size={18} />} Theme
             </label>
             <button
               onClick={() => updateState('isDark', !state.isDark)}
-              className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors ${state.isDark ? 'bg-brand-purple' : 'bg-slate-300'}`}
+              className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors ${state.isDark ? 'bg-brand-purple' : 'bg-slate-300 dark:bg-slate-600'}`}
             >
               <span className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${state.isDark ? 'translate-x-9' : 'translate-x-1'}`} />
             </button>
           </div>
 
-          <hr className="border-slate-100" />
+          <hr className="border-slate-100 dark:border-slate-800" />
 
           {/* Grid Features */}
           <div className="grid grid-cols-1 gap-4">
-             {[
-               { key: 'highlightLinks', label: 'Highlight Links', icon: LinkIcon },
-               { key: 'readableFont', label: 'Readable Font', icon: Type },
-               { key: 'textSpacing', label: 'Text Spacing', icon: AlignLeft },
-               { key: 'largeCursor', label: 'Large Cursor', icon: MousePointer },
-               { key: 'hideImages', label: 'Hide Images', icon: ImageIcon },
-               { key: 'disableAnimations', label: 'Disable Animations', icon: Zap },
-             ].map((feature) => (
-               <label key={feature.key} className="flex items-center justify-between cursor-pointer group p-2 hover:bg-slate-50 rounded-lg">
-                 <div className="flex items-center gap-3 text-slate-700">
-                    <feature.icon size={18} className="text-slate-400 group-hover:text-brand-purple transition-colors" />
-                    <span className="font-medium text-sm">{feature.label}</span>
-                 </div>
-                 <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-colors ${state[feature.key as keyof A11yState] ? 'bg-brand-purple border-brand-purple' : 'border-slate-300'}`}>
-                    {state[feature.key as keyof A11yState] && <Check size={14} className="text-white" />}
-                 </div>
-                 <input 
-                   type="checkbox" 
-                   className="hidden"
-                   checked={state[feature.key as keyof A11yState] as boolean}
-                   onChange={(e) => updateState(feature.key as keyof A11yState, e.target.checked)}
-                 />
-               </label>
-             ))}
+            {[
+              { key: 'highlightLinks', label: 'Highlight Links', icon: LinkIcon },
+              { key: 'readableFont', label: 'Readable Font', icon: Type },
+              { key: 'textSpacing', label: 'Text Spacing', icon: AlignLeft },
+              { key: 'largeCursor', label: 'Large Cursor', icon: MousePointer },
+              { key: 'hideImages', label: 'Hide Images', icon: ImageIcon },
+              { key: 'disableAnimations', label: 'Disable Animations', icon: Zap },
+            ].map((feature) => (
+              <label key={feature.key} className="flex items-center justify-between cursor-pointer group p-2 hover:bg-slate-50 rounded-lg">
+                <div className="flex items-center gap-3 text-slate-700">
+                  <feature.icon size={18} className="text-slate-400 group-hover:text-brand-purple transition-colors" />
+                  <span className="font-medium text-sm">{feature.label}</span>
+                </div>
+                <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-colors ${state[feature.key as keyof A11yState] ? 'bg-brand-purple border-brand-purple' : 'border-slate-300'}`}>
+                  {state[feature.key as keyof A11yState] && <Check size={14} className="text-white" />}
+                </div>
+                <input
+                  type="checkbox"
+                  className="hidden"
+                  checked={state[feature.key as keyof A11yState] as boolean}
+                  onChange={(e) => updateState(feature.key as keyof A11yState, e.target.checked)}
+                />
+              </label>
+            ))}
           </div>
 
           <div className="flex gap-3 pt-2">
-            <button 
-                onClick={resetSettings}
-                className="flex-1 py-3 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 hover:text-brand-purple transition-colors flex items-center justify-center gap-2"
+            <button
+              onClick={resetSettings}
+              className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-purple dark:hover:text-brand-purple transition-colors flex items-center justify-center gap-2"
             >
-                <RotateCcw size={16} /> Reset
+              <RotateCcw size={16} /> Reset
             </button>
-            <button 
-                onClick={() => setIsVisible(false)}
-                className="flex-1 py-3 rounded-xl border border-red-100 text-red-500 font-bold text-sm hover:bg-red-50 hover:border-red-200 transition-colors flex items-center justify-center gap-2"
+            <button
+              onClick={() => setIsVisible(false)}
+              className="flex-1 py-3 rounded-xl border border-red-100 dark:border-red-900/30 text-red-500 font-bold text-sm hover:bg-red-50 dark:hover:bg-red-900/10 hover:border-red-200 dark:hover:border-red-800 transition-colors flex items-center justify-center gap-2"
             >
-                <EyeOff size={16} /> Hide
+              <EyeOff size={16} /> Hide
             </button>
           </div>
         </div>
-        
+
         {/* Footer */}
-        <div className="p-3 bg-slate-100 border-t border-slate-200 text-center">
-            <p className="text-[10px] text-slate-500 font-medium">Settings persist across sessions</p>
+        <div className="p-3 bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
+          <p className="text-[10px] text-slate-500 font-medium">Settings persist across sessions</p>
         </div>
       </div>
     </div>
