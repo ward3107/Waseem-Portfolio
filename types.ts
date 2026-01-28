@@ -12,6 +12,7 @@ export interface Service {
   description: string;
   icon: LucideIcon;
   color: string;
+  modalDescription?: string;
 }
 
 export interface Project {

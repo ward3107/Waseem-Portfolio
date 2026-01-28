@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ArrowRight, X, MessageCircle, Code, Globe, Bot, Layout, Box } from 'lucide-react';
+import { Sparkles, ArrowRight, X, MessageCircle, Code, Globe, Bot, Layout, Box, TrendingUp } from 'lucide-react';
 import { Service } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -38,6 +38,13 @@ const Services: React.FC = () => {
       description: t('service_5_desc'),
       icon: Box,
       color: 'text-brand-gold'
+    },
+    {
+      title: t('service_marketing_title'),
+      description: t('service_marketing_desc'),
+      modalDescription: t('service_marketing_modal_desc'),
+      icon: TrendingUp,
+      color: 'text-brand-pink'
     }
   ];
 
@@ -66,9 +73,9 @@ const Services: React.FC = () => {
   };
 
   return (
-    <section 
-      id="what-i-do" 
-      className="py-24 bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center"
+    <section
+      id="what-i-do"
+      className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center transition-colors duration-300"
     >
       {/* Background Ambience */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/10 rounded-full blur-[120px] -z-10 animate-pulse"></div>
@@ -76,40 +83,40 @@ const Services: React.FC = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f0a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f0a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 relative z-10 w-full">
-        
+
         {/* Header Section */}
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 shadow-sm mb-6"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mb-6"
           >
             <Sparkles size={14} className="text-brand-gold" />
-            <span className="text-xs font-bold text-slate-300 tracking-wide uppercase">{t('services_badge')}</span>
+            <span className="text-xs font-bold text-slate-900 dark:text-slate-300 tracking-wide uppercase">{t('services_badge')}</span>
           </motion.div>
-          
-          <motion.h2 
+
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-heading font-bold text-white mb-6"
+            className="text-4xl md:text-5xl font-heading font-bold text-slate-900 dark:text-white mb-6"
           >
             {t('services_title_1')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">{t('services_title_2')}</span>
           </motion.h2>
-          
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-slate-400 text-lg"
+            className="text-slate-600 dark:text-slate-400 text-lg"
           >
             {t('services_subtitle')}
           </motion.p>
         </div>
 
-        {/* Clean Uniform Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Bento Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {localizedServices.map((service, index) => {
             const Icon = service.icon;
             return (
@@ -121,27 +128,30 @@ const Services: React.FC = () => {
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -10 }}
                 onClick={() => setSelectedService(service)}
-                className="cursor-pointer group relative bg-slate-900 border border-slate-800 rounded-2xl p-8 overflow-hidden hover:border-brand-purple/50 transition-all duration-300 flex flex-col h-full"
+                className={`cursor-pointer group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 overflow-hidden hover:border-brand-purple/50 transition-all duration-300 flex flex-col h-full shadow-sm hover:shadow-2xl hover:shadow-brand-purple/5 ${service.title === t('service_3_title') || service.title === t('service_marketing_title')
+                    ? 'lg:col-span-2'
+                    : 'col-span-1'
+                  }`}
               >
-                {/* Internal Glow on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
+                {/* Visual Glassmorphism Glow */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-brand-purple/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity blur-2xl"></div>
+
                 <div className="relative z-10 flex flex-col h-full">
-                  <div className={`w-14 h-14 rounded-xl bg-slate-800 flex items-center justify-center mb-6 group-hover:bg-brand-purple group-hover:text-white transition-colors duration-300 ${service.color}`}>
+                  <div className={`w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-6 group-hover:bg-brand-purple group-hover:text-white transition-all duration-300 ${service.color} group-hover:scale-110 shadow-inner`}>
                     <Icon size={28} />
                   </div>
 
-                  <h3 className="text-xl font-bold text-white mb-3 group-hover:text-brand-cyan transition-colors">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-brand-purple transition-colors">
                     {service.title}
                   </h3>
-                  
-                  <p className="text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
+
+                  <p className="text-slate-600 dark:text-slate-400 text-base leading-relaxed mb-6 flex-grow">
                     {service.description}
                   </p>
-                  
-                  <div className="pt-4 border-t border-slate-800/50 flex items-center text-sm font-bold text-slate-500 group-hover:text-white transition-colors">
-                    <span className="mr-2">Learn more</span>
-                    <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
+
+                  <div className="pt-6 border-t border-slate-100 dark:border-slate-800/50 flex items-center text-sm font-bold text-slate-400 dark:text-slate-500 group-hover:text-brand-purple dark:group-hover:text-white transition-colors">
+                    <span className="mr-2">{t('projects_details')}</span>
+                    <ArrowRight size={16} className="transform group-hover:translate-x-2 transition-transform" />
                   </div>
                 </div>
               </motion.div>
@@ -150,24 +160,24 @@ const Services: React.FC = () => {
 
           {/* CTA Card - Styled to match */}
           <motion.div
-             initial={{ opacity: 0, y: 20 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             viewport={{ once: true }}
-             transition={{ delay: 0.5 }}
-             onClick={handleStartProject}
-             className="cursor-pointer group relative bg-gradient-to-br from-brand-purple to-brand-purpleDark rounded-2xl p-8 overflow-hidden flex flex-col items-center justify-center text-center h-full border border-brand-purpleLight/20 hover:scale-[1.02] transition-transform duration-300"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            onClick={handleStartProject}
+            className="cursor-pointer group relative bg-gradient-to-br from-brand-purple to-brand-purpleDark rounded-3xl p-8 overflow-hidden flex flex-col items-center justify-center text-center h-full border border-brand-purpleLight/20 hover:scale-[1.02] transition-transform duration-300 shadow-xl shadow-brand-purple/10"
           >
-             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-             <div className="relative z-10">
-                <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border border-white/20">
-                    <Sparkles size={32} className="text-brand-gold" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-2">{t('services_cta_title')}</h3>
-                <p className="text-purple-200 text-sm mb-6">{t('services_cta_desc')}</p>
-                <span className="px-6 py-3 bg-white text-brand-purple font-bold rounded-full hover:shadow-lg transition-all inline-block text-sm">
-                   {t('services_cta_btn')}
-                </span>
-             </div>
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            <div className="relative z-10">
+              <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border border-white/20">
+                <Sparkles size={32} className="text-brand-gold" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2">{t('services_cta_title')}</h3>
+              <p className="text-purple-100/80 text-sm mb-6 max-w-[200px] mx-auto">{t('services_cta_desc')}</p>
+              <span className="px-8 py-3 bg-white text-brand-purple font-bold rounded-xl hover:shadow-lg hover:bg-slate-50 transition-all inline-block text-sm">
+                {t('services_cta_btn')}
+              </span>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -183,57 +193,57 @@ const Services: React.FC = () => {
               onClick={() => setSelectedService(null)}
               className="absolute inset-0 bg-black/60 backdrop-blur-md"
             />
-            
+
             <motion.div
               layoutId={`service-${selectedService.title}`}
               initial={{ opacity: 0, scale: 0.8, y: 50 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 50 }}
-              className="relative w-full max-w-lg bg-slate-900 border-2 border-slate-800 rounded-3xl p-8 shadow-2xl overflow-hidden"
+              className="relative w-full max-w-lg bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl p-8 shadow-2xl overflow-hidden"
             >
               {/* Fun Background Pattern */}
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20 animate-pulse"></div>
-              
+
               <div className="relative z-10 flex flex-col items-center text-center">
-                 <button 
-                   onClick={() => setSelectedService(null)}
-                   className="absolute -top-2 -right-2 p-2 bg-slate-800 rounded-full text-slate-400 hover:text-white hover:bg-red-500 transition-colors"
-                 >
-                   <X size={20} />
-                 </button>
+                <button
+                  onClick={() => setSelectedService(null)}
+                  className="absolute -top-2 -right-2 p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-400 hover:text-white hover:bg-red-500 transition-colors"
+                >
+                  <X size={20} />
+                </button>
 
-                 <div className={`w-20 h-20 rounded-2xl bg-slate-800 flex items-center justify-center mb-6 border border-slate-700 shadow-[0_0_30px_rgba(72,58,160,0.3)]`}>
-                    <selectedService.icon size={40} className={selectedService.color} />
-                 </div>
-                 
-                 <h3 className="text-3xl font-heading font-bold text-white mb-2">
-                    {selectedService.title}
-                 </h3>
-                 
-                 <div className="h-1 w-20 bg-gradient-to-r from-brand-purple to-brand-cyan rounded-full mb-6"></div>
-                 
-                 <p className="text-lg text-slate-300 leading-relaxed font-medium mb-8">
-                   {selectedService.description}
-                 </p>
+                <div className={`w-20 h-20 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-6 border border-slate-200 dark:border-slate-700 shadow-[0_0_30px_rgba(72,58,160,0.3)]`}>
+                  <selectedService.icon size={40} className={selectedService.color} />
+                </div>
 
-                 <div className="flex flex-col gap-3 w-full">
-                    <button
-                        onClick={handleModalCTA}
-                        className="w-full px-8 py-3 bg-brand-purple hover:bg-brand-purpleLight text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-brand-purple/40 transform hover:-translate-y-1"
-                    >
-                        {t('modal_btn')}
-                    </button>
-                    
-                    <a 
-                        href={`https://wa.me/972534260632?text=Hi, I'm interested in ${selectedService.title}...`} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 text-slate-400 hover:text-green-500 text-sm font-bold transition-colors py-2"
-                    >
-                        <MessageCircle size={16} />
-                        {t('modal_whatsapp')}
-                    </a>
-                 </div>
+                <h3 className="text-3xl font-heading font-bold text-slate-900 dark:text-white mb-2">
+                  {selectedService.title}
+                </h3>
+
+                <div className="h-1 w-20 bg-gradient-to-r from-brand-purple to-brand-cyan rounded-full mb-6"></div>
+
+                <div className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-medium mb-8 text-left whitespace-pre-wrap">
+                  {selectedService.modalDescription || selectedService.description}
+                </div>
+
+                <div className="flex flex-col gap-3 w-full">
+                  <button
+                    onClick={handleModalCTA}
+                    className="w-full px-8 py-3 bg-brand-purple hover:bg-brand-purpleLight text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-brand-purple/40 transform hover:-translate-y-1"
+                  >
+                    {t('modal_btn')}
+                  </button>
+
+                  <a
+                    href={`https://wa.me/972534260632?text=Hi, I'm interested in ${selectedService.title}...`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 text-slate-400 hover:text-green-500 text-sm font-bold transition-colors py-2"
+                  >
+                    <MessageCircle size={16} />
+                    {t('modal_whatsapp')}
+                  </a>
+                </div>
               </div>
             </motion.div>
           </div>

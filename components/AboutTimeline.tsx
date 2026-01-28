@@ -1,266 +1,263 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useMotionValue, useTransform, useInView, animate } from 'framer-motion';
-import { Download, Brain, Cpu, Zap, ShieldCheck, BadgeCheck } from 'lucide-react';
+import { Brain, Cpu, Zap, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { TimelineItem } from '../types';
 
 // Sub-component for spinning year effect
 const SpinningYear = ({ year }: { year: string }) => {
-  const numericYear = parseInt(year);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-20%" });
-  
-  // Start 75 years in the past to simulate "time passing" until now
-  const count = useMotionValue(isNaN(numericYear) ? 0 : numericYear - 75);
-  const rounded = useTransform(count, (latest) => Math.round(latest));
+    const numericYear = parseInt(year);
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, margin: "-20%" });
 
-  useEffect(() => {
-    if (isInView && !isNaN(numericYear)) {
-      const controls = animate(count, numericYear, {
-        duration: 2.5, // 2.5 seconds of spinning
-        ease: "circOut", // Starts fast, slows down significantly at the end
-      });
-      return controls.stop;
-    }
-  }, [isInView, numericYear, count]);
+    // Start 75 years in the past to simulate "time passing" until now
+    const count = useMotionValue(isNaN(numericYear) ? 0 : numericYear - 75);
+    const rounded = useTransform(count, (latest) => Math.round(latest));
 
-  if (isNaN(numericYear)) return <span>{year}</span>;
+    useEffect(() => {
+        if (isInView && !isNaN(numericYear)) {
+            const controls = animate(count, numericYear, {
+                duration: 2.5, // 2.5 seconds of spinning
+                ease: "circOut", // Starts fast, slows down significantly at the end
+            });
+            return controls.stop;
+        }
+    }, [isInView, numericYear, count]);
 
-  return (
-    <span ref={ref} className="tabular-nums relative inline-block">
-        <motion.span>{rounded}</motion.span>
-    </span>
-  );
+    if (isNaN(numericYear)) return <span>{year}</span>;
+
+    return (
+        <span ref={ref} className="tabular-nums relative inline-block" dir="ltr">
+            <motion.span>{rounded}</motion.span>
+        </span>
+    );
 };
 
 const AboutTimeline: React.FC = () => {
-  const { t } = useLanguage();
+    const { t } = useLanguage();
 
-  const localizedTimeline: TimelineItem[] = [
-    {
-      year: '2025',
-      title: t('timeline_1_title'),
-      description: t('timeline_1_desc')
-    },
-    {
-      year: '2024',
-      title: t('timeline_2_title'),
-      description: t('timeline_2_desc')
-    },
-    {
-      year: '2022',
-      title: t('timeline_3_title'),
-      description: t('timeline_3_desc')
-    }
-  ];
+    const localizedTimeline: TimelineItem[] = [
+        {
+            year: '2025',
+            title: t('timeline_1_title'),
+            description: t('timeline_1_desc')
+        },
+        {
+            year: '2024',
+            title: t('timeline_2_title'),
+            description: t('timeline_2_desc')
+        },
+        {
+            year: '2022',
+            title: t('timeline_3_title'),
+            description: t('timeline_3_desc')
+        }
+    ];
 
-  return (
-    <section id="about" className="py-24 bg-slate-50 relative overflow-hidden">
-      {/* Abstract Background Blobs */}
-      <div className="absolute top-20 left-0 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl -z-10 animate-float"></div>
-      <div className="absolute bottom-20 right-0 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl -z-10 animate-float" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] opacity-30 pointer-events-none"></div>
+    return (
+        <section id="about" className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
+            {/* Abstract Background Blobs */}
+            <div className="absolute top-20 left-0 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl -z-10 animate-float"></div>
+            <div className="absolute bottom-20 right-0 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl -z-10 animate-float" style={{ animationDelay: '2s' }}></div>
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] opacity-30 pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 relative z-10">
-        
-        {/* Section Header - The "Fact" Presentation */}
-        <div className="mb-20 perspective-1000">
-            <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="flex items-center gap-3 mb-6"
-            >
-                <div className="bg-brand-purple text-white p-1 rounded-full">
-                    <BadgeCheck size={16} />
+            <div className="max-w-7xl mx-auto px-6 sm:px-10 relative z-10">
+
+                {/* Section Header - The "Fact" Presentation */}
+                <div className="mb-20 perspective-1000">
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="flex items-center gap-3 mb-6"
+                    >
+                        <div className="bg-brand-purple text-white p-1 rounded-full">
+                            <BadgeCheck size={16} />
+                        </div>
+                        <span className="text-brand-purple font-bold tracking-widest uppercase text-sm">{t('about_badge')}</span>
+                        <span className="h-px w-20 bg-brand-purple/20"></span>
+                    </motion.div>
+
+                    {/* Fade from Back to Front Effect */}
+                    <motion.h2
+                        initial={{ opacity: 0, scale: 0.8, filter: 'blur(10px)' }}
+                        whileInView={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        className="text-4xl md:text-6xl font-heading font-black text-slate-900 dark:text-white leading-tight mb-6"
+                    >
+                        {t('about_title_1')} <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">{t('about_title_2')}</span>
+                    </motion.h2>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.2 }}
+                        className="flex flex-col md:flex-row gap-6 md:items-center p-6 bg-white dark:bg-slate-900 border-l-4 border-brand-green rounded-r-xl shadow-sm max-w-3xl"
+                    >
+                        <div className="flex-shrink-0">
+                            <ShieldCheck size={32} className="text-brand-green" />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{t('about_trusted_title')}</h3>
+                            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                                {t('about_trusted_desc')}
+                            </p>
+                        </div>
+                    </motion.div>
                 </div>
-                <span className="text-brand-purple font-bold tracking-widest uppercase text-sm">{t('about_badge')}</span>
-                <span className="h-px w-20 bg-brand-purple/20"></span>
-            </motion.div>
-            
-            {/* Fade from Back to Front Effect */}
-            <motion.h2 
-                initial={{ opacity: 0, scale: 0.8, filter: 'blur(10px)' }}
-                whileInView={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                viewport={{ once: true }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="text-4xl md:text-6xl font-heading font-black text-slate-900 leading-tight mb-6"
-            >
-                {t('about_title_1')} <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">{t('about_title_2')}</span>
-            </motion.h2>
 
-            <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="flex flex-col md:flex-row gap-6 md:items-center p-6 bg-white border-l-4 border-brand-green rounded-r-xl shadow-sm max-w-3xl"
-            >
-                <div className="flex-shrink-0">
-                    <ShieldCheck size={32} className="text-brand-green" />
-                </div>
-                <div>
-                    <h3 className="text-lg font-bold text-slate-900 mb-1">{t('about_trusted_title')}</h3>
-                    <p className="text-slate-600 text-sm leading-relaxed">
-                        {t('about_trusted_desc')}
-                    </p>
-                </div>
-            </motion.div>
-        </div>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12">
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12">
-          
-          {/* Left Column: Gamified Character Card */}
-          <div className="lg:col-span-5 flex flex-col gap-8">
-            <motion.div
-                initial={{ opacity: 0, rotateY: 15 }}
-                whileInView={{ opacity: 1, rotateY: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                style={{ perspective: '1000px' }}
-                className="relative group"
-            >
-                {/* The Card Container */}
-                <div className="bg-white rounded-3xl p-2 shadow-2xl border border-slate-100 relative overflow-hidden transform transition-transform duration-500 group-hover:scale-[1.02]">
-                    
-                    {/* Header Image Area */}
-                    <div className="relative h-64 rounded-2xl overflow-hidden bg-slate-900">
-                        <img 
-                            src="https://picsum.photos/seed/waseem_profile/800/800" 
-                            alt="Waseem Profile" 
-                            className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
-                        
-                        <div className="absolute bottom-4 left-4 text-white">
-                            <h3 className="text-3xl font-heading font-bold">Waseem</h3>
-                            <p className="text-brand-cyan font-mono text-sm tracking-widest">{t('about_card_lvl')}</p>
+                    {/* Left Column: Gamified Character Card */}
+                    <div className="lg:col-span-5 flex flex-col gap-8">
+                        <motion.div
+                            initial={{ opacity: 0, rotateY: 15 }}
+                            whileInView={{ opacity: 1, rotateY: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8 }}
+                            style={{ perspective: '1000px' }}
+                            className="relative group"
+                        >
+                            {/* The Card Container */}
+                            <div className="bg-white dark:bg-slate-900 rounded-3xl p-2 shadow-2xl border border-slate-100 dark:border-slate-800 relative overflow-hidden transform transition-transform duration-500 group-hover:scale-[1.02]">
+
+                                {/* Header Image Area */}
+                                <div className="relative h-64 rounded-2xl overflow-hidden bg-slate-900">
+                                    <img
+                                        src="https://picsum.photos/seed/waseem_profile/800/800"
+                                        alt="Waseem Profile"
+                                        className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+
+                                    <div className="absolute bottom-4 left-4 text-white">
+                                        <h3 className="text-3xl font-heading font-bold">Waseem</h3>
+                                        <p className="text-brand-cyan font-mono text-sm tracking-widest">{t('about_card_lvl')}</p>
+                                    </div>
+                                </div>
+
+                                {/* Stats Section (RPG Style) */}
+                                <div className="p-6 space-y-6">
+                                    <div className="flex items-center justify-between text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                                        <span>{t('about_attr')}</span>
+                                        <span className="text-brand-purple">{t('about_class')}</span>
+                                    </div>
+
+                                    {/* Stat 1: Logic */}
+                                    <div>
+                                        <div className="flex justify-between text-xs font-bold mb-1">
+                                            <span className="flex items-center gap-1"><Brain size={12} /> {t('about_stat_1')}</span>
+                                            <span className="text-slate-400">100%</span>
+                                        </div>
+                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                whileInView={{ width: '100%' }}
+                                                transition={{ duration: 1, delay: 0.2 }}
+                                                className="h-full bg-brand-purple rounded-full"
+                                            ></motion.div>
+                                        </div>
+                                    </div>
+
+                                    {/* Stat 2: Creativity */}
+                                    <div>
+                                        <div className="flex justify-between text-xs font-bold mb-1">
+                                            <span className="flex items-center gap-1"><Zap size={12} /> {t('about_stat_2')}</span>
+                                            <span className="text-slate-400">95%</span>
+                                        </div>
+                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                whileInView={{ width: '95%' }}
+                                                transition={{ duration: 1, delay: 0.4 }}
+                                                className="h-full bg-brand-cyan rounded-full"
+                                            ></motion.div>
+                                        </div>
+                                    </div>
+
+                                    {/* Stat 3: AI Integration */}
+                                    <div>
+                                        <div className="flex justify-between text-xs font-bold mb-1">
+                                            <span className="flex items-center gap-1"><Cpu size={12} /> {t('about_stat_3')}</span>
+                                            <span className="text-slate-400">100%</span>
+                                        </div>
+                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                            <motion.div
+                                                initial={{ width: 0 }}
+                                                whileInView={{ width: '100%' }}
+                                                transition={{ duration: 1, delay: 0.6 }}
+                                                className="h-full bg-brand-gold rounded-full"
+                                            ></motion.div>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-3">
+
+                                        <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-2xl" title="Coffee Level: High">
+                                            ☕
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Floating Elements behind */}
+                            <div className="absolute -top-4 -right-4 w-24 h-24 bg-brand-purple/20 rounded-full blur-xl -z-10 animate-pulse"></div>
+                            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-brand-cyan/20 rounded-full blur-xl -z-10"></div>
+                        </motion.div>
+                    </div>
+
+                    {/* Right Column: Narrative Timeline */}
+                    <div className="lg:col-span-7 pl-0 lg:pl-10 flex flex-col justify-center">
+                        <div className="prose prose-lg text-slate-600 dark:text-slate-400 mb-12">
+                            <p>
+                                {t('about_narrative_1')}
+                            </p>
+                            <p>
+                                {t('about_narrative_2')}
+                                <span className="text-slate-900 dark:text-white font-bold block mt-2 p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm">
+                                    {t('about_mission')}
+                                </span>
+                            </p>
+                        </div>
+
+                        <div className="relative border-l-2 border-slate-200 dark:border-slate-800 ml-3 space-y-12">
+                            {/* Glowing Line Overlay */}
+                            <div className="absolute left-[-2px] top-0 w-[2px] h-full bg-gradient-to-b from-brand-purple via-brand-cyan to-transparent"></div>
+
+                            {localizedTimeline.map((item, index) => (
+                                <motion.div
+                                    key={index}
+                                    initial={{ opacity: 0, x: 20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: index * 0.2 }}
+                                    className="relative pl-10"
+                                >
+                                    {/* Timeline Dot */}
+                                    <div className="absolute left-[-9px] top-0 w-[18px] h-[18px] rounded-full border-4 border-white bg-brand-purple shadow-[0_0_0_4px_rgba(72,58,160,0.2)]"></div>
+
+                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
+                                        {/* Spinning Year Effect - Updated Color */}
+                                        <span className="text-4xl font-heading font-bold text-brand-purple overflow-hidden h-[40px] flex items-center">
+                                            <SpinningYear year={item.year} />
+                                        </span>
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{item.title}</h3>
+                                    </div>
+                                    <p className="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md">
+                                        {item.description}
+                                    </p>
+                                </motion.div>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Stats Section (RPG Style) */}
-                    <div className="p-6 space-y-6">
-                        <div className="flex items-center justify-between text-sm font-bold text-slate-700 mb-2">
-                             <span>{t('about_attr')}</span>
-                             <span className="text-brand-purple">{t('about_class')}</span>
-                        </div>
-
-                        {/* Stat 1: Logic */}
-                        <div>
-                            <div className="flex justify-between text-xs font-bold mb-1">
-                                <span className="flex items-center gap-1"><Brain size={12} /> {t('about_stat_1')}</span>
-                                <span className="text-slate-400">100%</span>
-                            </div>
-                            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <motion.div 
-                                    initial={{ width: 0 }}
-                                    whileInView={{ width: '100%' }}
-                                    transition={{ duration: 1, delay: 0.2 }}
-                                    className="h-full bg-brand-purple rounded-full"
-                                ></motion.div>
-                            </div>
-                        </div>
-
-                        {/* Stat 2: Creativity */}
-                        <div>
-                            <div className="flex justify-between text-xs font-bold mb-1">
-                                <span className="flex items-center gap-1"><Zap size={12} /> {t('about_stat_2')}</span>
-                                <span className="text-slate-400">95%</span>
-                            </div>
-                            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <motion.div 
-                                    initial={{ width: 0 }}
-                                    whileInView={{ width: '95%' }}
-                                    transition={{ duration: 1, delay: 0.4 }}
-                                    className="h-full bg-brand-cyan rounded-full"
-                                ></motion.div>
-                            </div>
-                        </div>
-
-                        {/* Stat 3: AI Integration */}
-                        <div>
-                            <div className="flex justify-between text-xs font-bold mb-1">
-                                <span className="flex items-center gap-1"><Cpu size={12} /> {t('about_stat_3')}</span>
-                                <span className="text-slate-400">100%</span>
-                            </div>
-                            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                                <motion.div 
-                                    initial={{ width: 0 }}
-                                    whileInView={{ width: '100%' }}
-                                    transition={{ duration: 1, delay: 0.6 }}
-                                    className="h-full bg-brand-gold rounded-full"
-                                ></motion.div>
-                            </div>
-                        </div>
-
-                        <div className="pt-4 border-t border-slate-100 flex gap-3">
-                            <button className="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-brand-purple transition-colors flex items-center justify-center gap-2 group/btn">
-                                <Download size={16} />
-                                <span>{t('about_btn_cv')}</span>
-                            </button>
-                            <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl" title="Coffee Level: High">
-                                ☕
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                
-                {/* Floating Elements behind */}
-                <div className="absolute -top-4 -right-4 w-24 h-24 bg-brand-purple/20 rounded-full blur-xl -z-10 animate-pulse"></div>
-                <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-brand-cyan/20 rounded-full blur-xl -z-10"></div>
-            </motion.div>
-          </div>
-
-          {/* Right Column: Narrative Timeline */}
-          <div className="lg:col-span-7 pl-0 lg:pl-10 flex flex-col justify-center">
-            <div className="prose prose-lg text-slate-600 mb-12">
-                <p>
-                    {t('about_narrative_1')}
-                </p>
-                <p>
-                    {t('about_narrative_2')} 
-                    <span className="text-slate-900 font-bold block mt-2 p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
-                       {t('about_mission')}
-                    </span>
-                </p>
             </div>
-
-            <div className="relative border-l-2 border-slate-200 ml-3 space-y-12">
-              {/* Glowing Line Overlay */}
-              <div className="absolute left-[-2px] top-0 w-[2px] h-full bg-gradient-to-b from-brand-purple via-brand-cyan to-transparent"></div>
-
-              {localizedTimeline.map((item, index) => (
-                <motion.div
-                    key={index}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.2 }}
-                    className="relative pl-10"
-                >
-                    {/* Timeline Dot */}
-                    <div className="absolute left-[-9px] top-0 w-[18px] h-[18px] rounded-full border-4 border-white bg-brand-purple shadow-[0_0_0_4px_rgba(72,58,160,0.2)]"></div>
-                    
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
-                        {/* Spinning Year Effect - Updated Color */}
-                        <span className="text-4xl font-heading font-bold text-brand-purple overflow-hidden h-[40px] flex items-center">
-                            <SpinningYear year={item.year} />
-                        </span>
-                        <h3 className="text-xl font-bold text-slate-900">{item.title}</h3>
-                    </div>
-                    <p className="text-slate-500 leading-relaxed max-w-md">
-                        {item.description}
-                    </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 export default AboutTimeline;

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Share2, Facebook, Linkedin, Twitter, Link as LinkIcon, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '../contexts/LanguageContext';
+// import { useLanguage } from '../contexts/LanguageContext';
 import { useWidgets } from '../contexts/WidgetContext';
 
 const ShareWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { t } = useLanguage();
+  // const { t } = useLanguage();
   const { widgets } = useWidgets();
-  
+
   const url = typeof window !== 'undefined' ? window.location.href : '';
   const text = "Check out Waseem's Portfolio!";
 
@@ -65,8 +65,8 @@ const ShareWidget: React.FC = () => {
         className="p-3 bg-brand-purple text-white rounded-full shadow-lg shadow-brand-purple/50 border border-brand-purpleLight hover:bg-brand-purpleDark transition-all opacity-50 hover:opacity-100"
         aria-label="Share"
         animate={isOpen ? {} : { scale: [1, 1.1, 1] }}
-        transition={isOpen ? {} : { 
-          repeat: Infinity, 
+        transition={isOpen ? {} : {
+          repeat: Infinity,
           duration: 2,
           ease: "easeInOut"
         }}
@@ -96,7 +96,7 @@ const ShareWidget: React.FC = () => {
             ))}
             <button
               onClick={handleNativeShare}
-              className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform bg-white text-slate-700 border border-slate-200"
+              className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform bg-white dark:bg-slate-800 text-slate-700 dark:text-white border border-slate-200 dark:border-slate-700"
               title="Copy Link / Native Share"
             >
               <LinkIcon size={20} />
