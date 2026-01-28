@@ -1,9 +1,21 @@
-import { motion, useMotionValue, useSpring, useTransform, Variants } from 'framer-motion';
-import { ArrowRight, MousePointer2 } from 'lucide-react';
+import { motion, useMotionValue, useSpring, useTransform, Variants, AnimatePresence } from 'framer-motion';
+import { ArrowRight, MousePointer2, Calendar, Heart, Sparkles } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useState } from 'react';
 
 const Hero: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  // Helper function to split text for animation
+  // For Arabic, split by words to preserve letter connections
+  // For other languages, split by characters
+  const splitForAnimation = (text: string) => {
+    if (language === 'ar') {
+      return text.split(' ');
+    }
+    return Array.from(text);
+  };
   // Mouse position state for parallax
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -173,7 +185,7 @@ const Hero: React.FC = () => {
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-bold leading-tight mb-8 text-slate-900 dark:text-white tracking-tight">
             {/* Part 1: I craft digital */}
-            {Array.from(t('hero_title_1')).map((char, index) => (
+            {splitForAnimation(t('hero_title_1')).map((char, index) => (
               <motion.span
                 key={`p1-${index}`}
                 custom={index}
@@ -191,7 +203,7 @@ const Hero: React.FC = () => {
             {/* Using solid color to ensure visibility, z-index to stay on top */}
             <span className="relative inline-block z-50 mr-2">
               <span className="relative z-50 text-brand-purple whitespace-nowrap">
-                {Array.from(t('hero_title_2')).map((char, index) => (
+                {splitForAnimation(t('hero_title_2')).map((char, index) => (
                   <motion.span
                     key={`p2-${index}`}
                     custom={index}
@@ -219,7 +231,7 @@ const Hero: React.FC = () => {
             <br className="hidden md:inline" />
 
             {/* "that " - Standard */}
-            {Array.from(t('hero_title_3')).map((char, index) => (
+            {splitForAnimation(t('hero_title_3')).map((char, index) => (
               <motion.span
                 key={`p3-a-${index}`}
                 custom={index}
@@ -241,7 +253,7 @@ const Hero: React.FC = () => {
                 className="absolute inset-0 bg-brand-purple/20 blur-xl rounded-full"
               ></motion.span>
 
-              {Array.from(t('hero_title_4')).map((char, index) => (
+              {splitForAnimation(t('hero_title_4')).map((char, index) => (
                 <motion.span
                   key={`p3-b-${index}`}
                   custom={index + 5} // Offset for "that "
@@ -285,7 +297,8 @@ const Hero: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href="#projects"
-              onClick={handleViewWork}
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-8 py-4 bg-white dark:bg-transparent text-slate-800 dark:text-white border-2 border-slate-100 dark:border-slate-700 rounded-full font-bold text-lg hover:border-brand-purple/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-2"
             >
               {t('hero_cta_view')}
@@ -326,30 +339,94 @@ const Hero: React.FC = () => {
               rotateY,
               transformStyle: "preserve-3d"
             }}
-            className="relative w-80 h-[480px] bg-slate-900 rounded-3xl p-1 shadow-2xl transition-shadow duration-300"
+            className="relative w-80 h-[480px] cursor-pointer group"
+            onClick={() => setIsFlipped(!isFlipped)}
           >
-            {/* Glossy Reflection overlay */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none z-50 mix-blend-overlay"></div>
+            <motion.div
+              animate={{ rotateY: isFlipped ? 180 : 0 }}
+              transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+              style={{ transformStyle: "preserve-3d" }}
+              className="relative w-full h-full"
+            >
+              {/* Front of Card */}
+              <div className="absolute inset-0 w-full h-full bg-slate-900 rounded-3xl p-1 shadow-2xl backface-hidden">
+                {/* Glossy Reflection overlay */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none z-50 mix-blend-overlay"></div>
 
-            <div className="w-full h-full bg-slate-800 rounded-[20px] overflow-hidden relative">
-              <img
-                src="https://picsum.photos/id/338/600/800"
-                alt="Waseem Profile"
-                className="object-cover w-full h-full opacity-90 hover:scale-105 transition-transform duration-700"
-              />
+                <div className="w-full h-full bg-slate-800 rounded-[20px] overflow-hidden relative">
+                  <img
+                    src="/assets/waseem-profile.jpg"
+                    alt="Waseem Profile"
+                    className="object-cover w-full h-full opacity-90 group-hover:scale-105 transition-transform duration-700"
+                  />
 
-              {/* Card Content Overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent pt-20">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="px-2 py-1 bg-brand-cyan/20 text-brand-cyan text-[10px] font-bold uppercase tracking-wider rounded border border-brand-cyan/20 backdrop-blur-md">
-                    {t('hero_card_role')}
-                  </span>
-                  <MousePointer2 size={16} className="text-slate-400 animate-bounce" />
+                  {/* Card Content Overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent pt-20">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="px-2 py-1 bg-brand-cyan/20 text-brand-cyan text-[10px] font-bold uppercase tracking-wider rounded border border-brand-cyan/20 backdrop-blur-md">
+                        {t('hero_card_role')}
+                      </span>
+                      <MousePointer2 size={16} className="text-slate-400 animate-bounce" />
+                    </div>
+                    <h3 className="text-white text-3xl font-heading font-bold">Waseem</h3>
+                    <p className="text-slate-300 text-sm">{t('hero_card_desc')}</p>
+                  </div>
                 </div>
-                <h3 className="text-white text-3xl font-heading font-bold">Waseem</h3>
-                <p className="text-slate-300 text-sm">{t('hero_card_desc')}</p>
               </div>
-            </div>
+
+              {/* Back of Card - Personal Details */}
+              <div
+                className="absolute inset-0 w-full h-full bg-gradient-to-br from-slate-900 via-slate-800 to-brand-purple rounded-3xl p-6 shadow-2xl backface-hidden"
+                style={{ transform: "rotateY(180deg)" }}
+              >
+                <div className="h-full flex flex-col justify-center">
+                  <div className="text-center mb-6">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-brand-purple to-brand-cyan flex items-center justify-center">
+                      <span className="text-3xl">👨‍💻</span>
+                    </div>
+                    <h3 className="text-white text-2xl font-heading font-bold mb-2">About Me</h3>
+                    <div className="w-16 h-1 bg-brand-gold mx-auto rounded-full"></div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {/* Birthday */}
+                    <div className="flex items-center gap-3 bg-white/5 rounded-xl p-3 backdrop-blur-sm">
+                      <div className="w-10 h-10 rounded-full bg-brand-purple/20 flex items-center justify-center">
+                        <Calendar size={18} className="text-brand-purple" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-slate-400 uppercase tracking-wider">Born</p>
+                        <p className="text-white font-bold text-sm">June 6, 1984</p>
+                      </div>
+                    </div>
+
+                    {/* Passion */}
+                    <div className="flex items-center gap-3 bg-white/5 rounded-xl p-3 backdrop-blur-sm">
+                      <div className="w-10 h-10 rounded-full bg-brand-cyan/20 flex items-center justify-center">
+                        <Heart size={18} className="text-brand-cyan" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-slate-400 uppercase tracking-wider">Passion</p>
+                        <p className="text-white font-bold text-sm">Coding & Building Digital Worlds</p>
+                      </div>
+                    </div>
+
+                    {/* Motivation */}
+                    <div className="flex items-center gap-3 bg-white/5 rounded-xl p-3 backdrop-blur-sm">
+                      <div className="w-10 h-10 rounded-full bg-brand-gold/20 flex items-center justify-center">
+                        <Sparkles size={18} className="text-brand-gold" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-slate-400 uppercase tracking-wider">Powered By</p>
+                        <p className="text-white font-bold text-sm">Learning & Evolving with AI</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-center text-slate-400 text-xs mt-6 italic">Click to flip back</p>
+                </div>
+              </div>
+            </motion.div>
 
             {/* Floating Parallax Elements (Pop out of card) */}
 

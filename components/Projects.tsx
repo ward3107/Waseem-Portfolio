@@ -14,9 +14,9 @@ const Projects: React.FC = () => {
       title: 'Authentic Greek Resturant',
       category: 'Web',
       description: t('project_1_desc'),
-      image: 'https://picsum.photos/seed/nexus/600/400',
+      image: '/assets/souvlaki.png',
       tech: ['Next.js', 'Python', 'TensorFlow'],
-      link: '#'
+      link: 'https://souvlaki-kfaryasif.vercel.app/'
     },
     {
       id: '2',
@@ -25,16 +25,25 @@ const Projects: React.FC = () => {
       description: t('project_2_desc'),
       image: 'https://picsum.photos/seed/gold/600/400',
       tech: ['React', 'Three.js', 'Stripe'],
-      link: '#'
+      link: 'https://seatai.vercel.app/'
     },
     {
       id: '3',
-      title: 'Vibe Chat',
-      category: 'Mobile',
-      description: t('project_3_desc'),
-      image: 'https://picsum.photos/seed/vibe/600/400',
-      tech: ['React Native', 'Firebase', 'Google Cloud'],
-      link: '#'
+      title: 'Law Office Template',
+      category: 'Web',
+      description: 'Professional law office website template with appointment booking and service showcase',
+      image: '/assets/law-office.jpg',
+      tech: ['React', 'Vite', 'Tailwind CSS'],
+      link: 'https://lawofice.netlify.app/'
+    },
+    {
+      id: '4',
+      title: 'Shokha Barbershop',
+      category: 'Web',
+      description: 'Modern barbershop booking app with appointment scheduling and service management',
+      image: '/assets/barbershop.png',
+      tech: ['React', 'Node.js', 'MongoDB'],
+      link: 'https://shokha1.netlify.app/'
     }
   ];
 
@@ -158,7 +167,7 @@ const Projects: React.FC = () => {
                   </div>
 
                   <div className="flex gap-4 mt-6">
-                    <a href="#" className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-purple rounded-xl hover:bg-brand-purpleLight transition-colors font-bold text-sm shadow-lg shadow-brand-purple/20 transform hover:-translate-y-1">
+                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-purple rounded-xl hover:bg-brand-purpleLight transition-colors font-bold text-sm shadow-lg shadow-brand-purple/20 transform hover:-translate-y-1">
                       <ExternalLink size={16} /> {t('projects_demo')}
                     </a>
                     <a href="#" className="flex-1 flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-bold text-sm transform hover:-translate-y-1">

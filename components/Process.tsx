@@ -129,7 +129,7 @@ const Process: React.FC = () => {
                 <h3 className="text-4xl font-heading font-bold mb-6 text-slate-900 dark:text-white leading-tight">
                   {step.title}
                 </h3>
-                <div className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-8">
+                <div className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-8 whitespace-pre-line">
                   {step.desc}
                 </div>
                 <div className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white group cursor-pointer">
@@ -173,7 +173,7 @@ const Process: React.FC = () => {
               <div className="pt-2 pb-8">
                 <span className={`text-xs font-bold uppercase tracking-wider mb-2 block ${step.color}`}>{t('process_step_prefix')} 0{step.id}</span>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{step.title}</h3>
-                <div className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed border-l-2 border-slate-200 dark:border-slate-800 pl-4">
+                <div className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed border-l-2 border-slate-200 dark:border-slate-800 pl-4 whitespace-pre-line">
                   {step.desc}
                 </div>
               </div>
