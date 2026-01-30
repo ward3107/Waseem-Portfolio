@@ -9,7 +9,6 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'AI Solutions', href: '#ai-automation' },
     { name: 'Projects', href: '#projects' },
     { name: 'About', href: '#about' },
-    { name: 'Blog', href: '#blog' },
     { name: 'Contact', href: '#contact' },
   ],
   he: [
@@ -17,7 +16,6 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'פתרונות AI', href: '#ai-automation' },
     { name: 'פרויקטים', href: '#projects' },
     { name: 'אודות', href: '#about' },
-    { name: 'בלוג', href: '#blog' },
     { name: 'צור קשר', href: '#contact' },
   ],
   ar: [
@@ -25,7 +23,6 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'حلول AI', href: '#ai-automation' },
     { name: 'مشاريع', href: '#projects' },
     { name: 'من أنا', href: '#about' },
-    { name: 'المدونة', href: '#blog' },
     { name: 'اتصل بي', href: '#contact' },
   ]
 };

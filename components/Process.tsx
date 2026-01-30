@@ -81,7 +81,7 @@ const Process: React.FC = () => {
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-slate-900 via-transparent to-slate-900 z-10"></div>
 
           {/* Active Step Graphic */}
-          <div className="relative z-20 w-[400px] h-[400px] flex items-center justify-center">
+          <div className="relative z-20 w-[280px] sm:w-[350px] md:w-[400px] h-[280px] sm:h-[350px] md:h-[400px] flex items-center justify-center">
             {steps.map((step, index) => (
               <motion.div
                 key={step.id}
@@ -92,22 +92,22 @@ const Process: React.FC = () => {
                   rotate: activeStep === index ? 0 : 20,
                 }}
                 transition={{ duration: 0.5, ease: "backOut" }}
-                className="absolute inset-0 flex flex-col items-center justify-center p-8 rounded-full border-4 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl"
+                className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 rounded-full border-3 sm:border-4 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl"
                 style={{
                   boxShadow: activeStep === index ? `0 0 50px -10px currentColor` : 'none',
-                  color: activeStep === index ? 'white' : 'transparent' // Just for the shadow color ref hack, actual color applied to children
+                  color: activeStep === index ? 'white' : 'transparent'
                 }}
               >
                 {/* Glowing Ring */}
                 <div className={`absolute inset-0 rounded-full opacity-20 animate-pulse ${step.bg.replace('/10', '/30')}`}></div>
 
-                <div className={`p-6 rounded-3xl mb-6 ${step.bg} ${step.color} transform scale-150`}>
-                  <step.icon size={48} strokeWidth={1.5} />
+                <div className={`p-3 sm:p-4 md:p-6 rounded-2xl sm:rounded-3xl mb-3 sm:mb-4 md:mb-6 ${step.bg} ${step.color} transform scale-125 sm:scale-140 md:scale-150`}>
+                  <step.icon size={32} strokeWidth={1.5} className="sm:size-40 md:size-48" />
                 </div>
-                <h3 className={`text-3xl font-heading font-bold text-center mb-2 ${step.color}`}>
+                <h3 className={`text-xl sm:text-2xl md:text-3xl font-heading font-bold text-center mb-1 sm:mb-2 ${step.color}`}>
                   0{step.id}
                 </h3>
-                <h4 className="text-xl font-bold text-slate-600 dark:text-slate-300">
+                <h4 className="text-sm sm:text-base md:text-xl font-bold text-slate-600 dark:text-slate-300">
                   {step.title}
                 </h4>
               </motion.div>
@@ -120,16 +120,16 @@ const Process: React.FC = () => {
           {steps.map((step, index) => (
             <div
               key={step.id}
-              className={`process-step-text min-h-screen flex items-center px-16 py-20 border-b border-slate-200/50 dark:border-slate-900/50 ${activeStep === index ? 'opacity-100' : 'opacity-30'} transition-opacity duration-500`}
+              className={`process-step-text min-h-screen flex items-center px-8 sm:px-12 lg:px-16 py-16 lg:py-20 border-b border-slate-200/50 dark:border-slate-900/50 ${activeStep === index ? 'opacity-100' : 'opacity-30'} transition-opacity duration-500`}
             >
               <div>
-                <span className={`inline-block px-3 py-1 rounded mb-4 text-xs font-bold uppercase tracking-widest ${step.bg} ${step.color}`}>
+                <span className={`inline-block px-3 py-1 rounded mb-3 sm:mb-4 text-xs font-bold uppercase tracking-widest ${step.bg} ${step.color}`}>
                   {t('process_step_prefix')} 0{step.id}
                 </span>
-                <h3 className="text-4xl font-heading font-bold mb-6 text-slate-900 dark:text-white leading-tight">
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold mb-4 sm:mb-6 text-slate-900 dark:text-white leading-tight">
                   {step.title}
                 </h3>
-                <div className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
+                <div className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
                   {step.desc}
                 </div>
               </div>
@@ -139,15 +139,15 @@ const Process: React.FC = () => {
       </div>
 
       {/* Mobile / Tablet View (Standard Vertical Timeline) */}
-      <div className="lg:hidden py-20 px-6 sm:px-10">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-heading font-bold mb-4">{t('process_mobile_title')}</h2>
-          <p className="text-slate-600 dark:text-slate-400">{t('process_mobile_desc')}</p>
+      <div className="lg:hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10">
+        <div className="text-center mb-10 sm:mb-12 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl font-heading font-bold mb-3 sm:mb-4 text-slate-900 dark:text-white">{t('process_mobile_title')}</h2>
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">{t('process_mobile_desc')}</p>
         </div>
 
-        <div className="relative space-y-12">
+        <div className="relative space-y-10 sm:space-y-12">
           {/* Connecting Line */}
-          <div className="absolute left-8 top-4 bottom-4 w-0.5 bg-slate-200 dark:bg-slate-800"></div>
+          <div className="absolute left-6 sm:left-8 top-4 bottom-4 w-0.5 bg-slate-200 dark:bg-slate-800"></div>
 
           {steps.map((step, index) => (
             <motion.div
@@ -156,20 +156,20 @@ const Process: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
-              className="relative flex gap-8"
+              className="relative flex gap-4 sm:gap-6 md:gap-8"
             >
               {/* Icon Bubble */}
-              <div className={`relative z-10 flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl ${step.color}`}>
-                <step.icon size={28} />
+              <div className={`relative z-10 flex-shrink-0 w-12 h-12 sm:w-14 sm:h-16 md:w-16 md:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl ${step.color}`}>
+                <step.icon size={20} strokeWidth={2.5} className="sm:size-[24px] md:size-28" />
                 {/* Connector dot */}
-                <div className={`absolute -bottom-12 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-slate-200 dark:bg-slate-800 border-2 border-slate-50 dark:border-slate-950 ${index === steps.length - 1 ? 'hidden' : ''}`}></div>
+                <div className={`absolute -bottom-10 sm:-bottom-12 left-1/2 -translate-x-1/2 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-slate-200 dark:bg-slate-800 border-2 border-slate-50 dark:border-slate-950 ${index === steps.length - 1 ? 'hidden' : ''}`}></div>
               </div>
 
               {/* Content Card */}
-              <div className="pt-2 pb-8">
-                <span className={`text-xs font-bold uppercase tracking-wider mb-2 block ${step.color}`}>{t('process_step_prefix')} 0{step.id}</span>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{step.title}</h3>
-                <div className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed border-l-2 border-slate-200 dark:border-slate-800 pl-4 whitespace-pre-line">
+              <div className="pt-1 sm:pt-2 pb-6 sm:pb-8 flex-1">
+                <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-1.5 sm:mb-2 block ${step.color}`}>{t('process_step_prefix')} 0{step.id}</span>
+                <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3">{step.title}</h3>
+                <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed border-l-2 border-slate-200 dark:border-slate-800 pl-3 sm:pl-4 whitespace-pre-line">
                   {step.desc}
                 </div>
               </div>

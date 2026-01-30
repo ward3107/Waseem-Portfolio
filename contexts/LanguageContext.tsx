@@ -15,6 +15,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     // Navigation
     hireMe: "Let's Create the Future",
     letsTalk: "Let's Talk",
+    skipToMain: "Skip to main content",
 
     // Hero
     hero_badge: "Available for New Projects",
@@ -31,6 +32,9 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     hero_profile_alt: "Waseem Profile",
     hero_badge_perf: "High Perf",
     hero_badge_ai: "AI Automation",
+    hero_card_flip_hint: "Click or press Enter to flip. Press Escape to exit.",
+    hero_card_front_aria: "Profile card showing Waseem's photo and role. Press Enter to see more details.",
+    hero_card_back_aria: "Profile card back showing personal details. Press Enter to flip back to front.",
 
     // Services
     services_badge: "Expertise",
@@ -84,7 +88,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     vibe_text_4: "I craft experiences that feel right.",
 
     // About Timeline
-    about_badge: "Verified Expert",
+    about_badge: "Experienced Developer",
     about_title_1: "I don't just write code.",
     about_title_2: "I build the certainty your business needs.",
     about_trusted_title: "The Technical Partner You Can Trust",
@@ -276,6 +280,8 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     required: "Required",
     invalidEmail: "Invalid email",
     tooShort: "Too short",
+    error_submission_failed: "Submission failed. Please try again or contact directly.",
+    error_network: "Network error. Please try again.",
     // Wizard
     wizard_step_count: "Step {current} of {total}",
     wizard_step1_title: "What are we building?",
@@ -305,6 +311,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     // Navigation
     hireMe: "בוא ניצור את העתיד",
     letsTalk: "בוא נדבר",
+    skipToMain: "דלג לתוכן ראשי",
 
     // Hero
     hero_badge: "פנוי לפרויקטים חדשים",
@@ -321,6 +328,9 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     hero_profile_alt: "תמונת פרופיל של וסים",
     hero_badge_perf: "ביצועים",
     hero_badge_ai: "אוטומציה",
+    hero_card_flip_hint: "לחץ או Enter כדי להפוך. Escape ליציאה.",
+    hero_card_front_aria: "כרטיס פרופיל עם תמונה ותפקיד. לחץ Enter לראות פרטים נוספים.",
+    hero_card_back_aria: "גב הכרטיס עם פרטים אישיים. לחץ Enter לחזור לקדמה.",
 
     // Services
     services_badge: "מומחיות",
@@ -374,7 +384,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     vibe_text_4: "אני יוצר חוויות שמרגישות נכון.",
 
     // About Timeline
-    about_badge: "מומחה מאומת",
+    about_badge: "מפתח מנוסה",
     about_title_1: "אני לא רק כותב קוד.",
     about_title_2: "אני בונה את הוודאות שהעסק שלך צריך.",
     about_trusted_title: "השותף הטכני שאפשר לסמוך עליו",
@@ -561,6 +571,8 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     required: "נדרש",
     invalidEmail: "אימייל לא תקין",
     tooShort: "קצר מדי",
+    error_submission_failed: "השליחה נכשלה. אנא נסה שוב או צור קשר ישירות.",
+    error_network: "שגיאת רשת. אנא נסה שוב.",
     // Wizard
     wizard_step_count: "שלב {current} מתוך {total}",
     wizard_step1_title: "מה בונים?",
@@ -590,6 +602,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     // Navigation
     hireMe: "لنصنع المستقبل",
     letsTalk: "تحدث معي",
+    skipToMain: "تخطى إلى المحتوى الرئيسي",
 
     // Hero
     hero_badge: "متاح لمشاريع جديدة",
@@ -606,6 +619,9 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     hero_profile_alt: "صورة وسيم الشخصية",
     hero_badge_perf: "أداء عالي",
     hero_badge_ai: "أتمتة ذكية",
+    hero_card_flip_hint: "انقر أو Enter للقلب. Escape للخروج.",
+    hero_card_front_aria: "بطاقة الملف الشخصي مع الصورة والدور. اضغط Enter لرؤية المزيد من التفاصيل.",
+    hero_card_back_aria: "ظهر البطاقة مع التفاصيل الشخصية. اضغط Enter للعودة إلى الأمام.",
 
     // Services
     services_badge: "الخبرات",
@@ -659,7 +675,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     vibe_text_4: "أصمم تجارب تبدو صحيحة.",
 
     // About Timeline
-    about_badge: "خبير معتمد",
+    about_badge: "مطور ذو خبرة",
     about_title_1: "أنا لا أكتب الكود فقط.",
     about_title_2: "أبني اليقين الذي يحتاجه عملك.",
     about_trusted_title: "الشريك التقني الذي يمكنك الوثوق به",
@@ -848,6 +864,8 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     required: "مطلوب",
     invalidEmail: "بريد غير صالح",
     tooShort: "قصير جداً",
+    error_submission_failed: "فشل الإرسال. يرجى المحاولة مرة أخرى أو التواصل مباشرة.",
+    error_network: "خطأ في الشبكة. يرجى المحاولة مرة أخرى.",
     // Wizard
     wizard_step_count: "خطوة {current} من {total}",
     wizard_step1_title: "ماذا سنبني؟",

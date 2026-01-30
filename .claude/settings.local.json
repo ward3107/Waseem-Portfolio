@@ -12,7 +12,8 @@
       "Bash(curl:*)",
       "Bash(echo \"\n/* Flip card styles */\n.backface-hidden {\n  -webkit-backface-visibility: hidden;\n  backface-visibility: hidden;\n}\")",
       "Bash(git push:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

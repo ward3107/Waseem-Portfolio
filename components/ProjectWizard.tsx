@@ -3,17 +3,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
 
-const ProjectWizard: React.FC = () => {
-    const { t } = useLanguage();
+interface ProjectWizardProps {}
+
+const ProjectWizard: React.FC<ProjectWizardProps> = () => {
+    const { t, language } = useLanguage();
     const [step, setStep] = useState(0);
     const [selections, setSelections] = useState({
         type: '',
         vibe: '',
         budget: '',
-        details: ''
+        details: '',
+        email: '',
+        name: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSent, setIsSent] = useState(false);
+    const [errors, setErrors] = useState<{ email?: string; name?: string; general?: string }>({});
 
     // Mock Steps Data
     const steps = [
@@ -59,9 +64,43 @@ const ProjectWizard: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setErrors({}); // Clear previous errors
+
+        // Validate required fields
+        const newErrors: { email?: string; name?: string; general?: string } = {};
+
+        if (!selections.email) {
+            newErrors.email = t('required');
+        } else {
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(selections.email)) {
+                newErrors.email = t('invalidEmail');
+            }
+        }
+
+        if (!selections.name) {
+            newErrors.name = t('required');
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            setIsSubmitting(false);
+            return;
+        }
 
         try {
-            const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+            // TODO: Replace with your actual Formspree form ID
+            const FORMSPREE_FORM_ID = 'YOUR_FORM_ID';
+
+            if (FORMSPREE_FORM_ID === 'YOUR_FORM_ID') {
+                // Demo mode - simulate submission
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                setIsSent(true);
+                return;
+            }
+
+            const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,12 +108,15 @@ const ProjectWizard: React.FC = () => {
                 },
                 body: JSON.stringify({
                     subject: 'New Project Request from Portfolio Wizard',
-                    email: 'contact@waseem.com', // Default notification email
+                    email: selections.email,
+                    name: selections.name,
                     project_type: selections.type,
                     vibe: selections.vibe,
                     budget: selections.budget,
                     details: selections.details,
                     message: `
+Name: ${selections.name}
+Email: ${selections.email}
 Project Type: ${selections.type}
 Vibe/Style: ${selections.vibe}
 Budget Range: ${selections.budget}
@@ -94,10 +136,10 @@ ${selections.details}
                     });
                 }
             } else {
-                alert('Submission failed. Please try again or contact directly.');
+                setErrors({ general: t('error_submission_failed') });
             }
         } catch (error) {
-            alert('Network error. Please try again.');
+            setErrors({ general: t('error_network') });
         } finally {
             setIsSubmitting(false);
         }
@@ -108,16 +150,16 @@ ${selections.details}
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-2xl border border-brand-purple/20 text-center min-h-[400px] flex flex-col items-center justify-center"
+                className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-brand-purple/20 text-center min-h-[350px] sm:min-h-[400px] flex flex-col items-center justify-center"
             >
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-6">
-                    <Check size={40} />
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-4 sm:mb-6">
+                    <Check size={28} className="sm:size-40" />
                 </div>
-                <h3 className="text-2xl font-heading font-bold text-slate-900 dark:text-white mb-2">{t('wizard_success_title')}</h3>
-                <p className="text-slate-500 dark:text-slate-400 max-w-xs mx-auto mb-8">{t('wizard_success_desc')}</p>
+                <h3 className="text-xl sm:text-2xl font-heading font-bold text-slate-900 dark:text-white mb-2">{t('wizard_success_title')}</h3>
+                <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xs mx-auto mb-6 sm:mb-8">{t('wizard_success_desc')}</p>
                 <button
-                    onClick={() => { setIsSent(false); setStep(0); setSelections({ type: '', vibe: '', budget: '', details: '' }); }}
-                    className="text-brand-purple font-bold hover:underline"
+                    onClick={() => { setIsSent(false); setStep(0); setSelections({ type: '', vibe: '', budget: '', details: '', email: '', name: '' }); }}
+                    className="text-brand-purple font-bold hover:underline text-sm sm:text-base"
                 >
                     {t('wizard_start_over')}
                 </button>
@@ -126,7 +168,7 @@ ${selections.details}
     }
 
     return (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden min-h-[500px] flex flex-col relative">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden min-h-[400px] sm:min-h-[500px] flex flex-col relative">
             {/* Progress Bar */}
             <div className="h-2 bg-slate-50 dark:bg-slate-800 w-full flex">
                 <motion.div
@@ -136,14 +178,14 @@ ${selections.details}
                 ></motion.div>
             </div>
 
-            <div className="p-8 flex-1 flex flex-col">
-                <div className="flex justify-between items-center mb-8">
+            <div className="p-5 sm:p-6 md:p-8 flex-1 flex flex-col">
+                <div className="flex justify-between items-center mb-6 sm:mb-8">
                     {step > 0 ? (
                         <button onClick={() => setStep(step - 1)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
-                            <ArrowLeft size={20} />
+                            <ArrowLeft size={18} className="sm:size-20" />
                         </button>
                     ) : <div></div>}
-                    <span className="text-xs font-bold uppercase tracking-widest text-slate-300 dark:text-slate-600">
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-300 dark:text-slate-600">
                         {t('wizard_step_count').replace('{current}', (step + 1).toString()).replace('{total}', (steps.length + 1).toString())}
                     </span>
                 </div>
@@ -157,19 +199,19 @@ ${selections.details}
                             exit={{ x: -20, opacity: 0 }}
                             className="flex-1 flex flex-col"
                         >
-                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">{steps[step].title}</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4 sm:mb-6">{steps[step].title}</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 {steps[step].options.map((option) => (
                                     <button
                                         key={option.id}
                                         onClick={() => handleSelect(steps[step].id, option.id)}
-                                        className={`p-4 rounded-xl border-2 text-left transition-all duration-200 flex items-center gap-4 group
+                                        className={`p-3 sm:p-4 rounded-xl border-2 text-left transition-all duration-200 flex items-center gap-3 sm:gap-4 group
                                             ${selections[steps[step].id as keyof typeof selections] === option.id
                                                 ? 'border-brand-purple bg-brand-purple/5 dark:bg-brand-purple/20 ring-4 ring-brand-purple/10'
                                                 : 'border-slate-100 dark:border-slate-800 hover:border-brand-purple/50 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
                                     >
-                                        <span className="text-2xl group-hover:scale-110 transition-transform duration-200">{option.icon}</span>
-                                        <span className={`font-bold ${selections[steps[step].id as keyof typeof selections] === option.id ? 'text-brand-purple' : 'text-slate-600 dark:text-slate-300'}`}>
+                                        <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform duration-200">{option.icon}</span>
+                                        <span className={`text-sm sm:text-base font-bold ${selections[steps[step].id as keyof typeof selections] === option.id ? 'text-brand-purple' : 'text-slate-600 dark:text-slate-300'}`}>
                                             {option.label}
                                         </span>
                                     </button>
@@ -184,45 +226,95 @@ ${selections.details}
                             exit={{ x: -20, opacity: 0 }}
                             className="flex-1 flex flex-col"
                         >
-                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">{t('wizard_final_title')}</h3>
-                            <p className="text-slate-500 dark:text-slate-400 mb-6 text-sm">{t('wizard_final_desc')}</p>
+                            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">{t('wizard_final_title')}</h3>
+                            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4 sm:mb-6">{t('wizard_final_desc')}</p>
 
-                            <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-4">
+                            <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-3 sm:gap-4">
                                 <textarea
-                                    className="w-full flex-1 p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple resize-none min-h-[120px] text-slate-900 dark:text-white"
+                                    className="w-full flex-1 p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple resize-none min-h-[100px] sm:min-h-[120px] text-sm sm:text-base text-slate-900 dark:text-white"
                                     placeholder={t('wizard_detail_placeholder')}
                                     value={selections.details}
                                     onChange={(e) => setSelections({ ...selections, details: e.target.value })}
                                     required
                                 ></textarea>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    <input
-                                        type="email"
-                                        placeholder={t('emailLabel')}
-                                        className="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple text-slate-900 dark:text-white"
-                                        required
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder={t('nameLabel')}
-                                        className="p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple text-slate-900 dark:text-white"
-                                        required
-                                    />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                    <div className="relative">
+                                        <input
+                                            type="email"
+                                            id="wizard-email"
+                                            placeholder={t('emailLabel')}
+                                            value={selections.email}
+                                            onChange={(e) => { setSelections({ ...selections, email: e.target.value }); setErrors({ ...errors, email: undefined }); }}
+                                            className={`w-full p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 border ${errors.email ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-slate-200 dark:border-slate-700 focus:ring-brand-purple/20 focus:border-brand-purple'} rounded-xl focus:outline-none focus:ring-2 text-sm sm:text-base text-slate-900 dark:text-white`}
+                                            required
+                                            aria-invalid={errors.email ? 'true' : 'false'}
+                                            aria-describedby={errors.email ? 'email-error' : undefined}
+                                        />
+                                        {errors.email && (
+                                            <motion.p
+                                                initial={{ opacity: 0, y: -5 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                id="email-error"
+                                                className="text-red-500 text-xs mt-1 flex items-center gap-1"
+                                                role="alert"
+                                            >
+                                                <span>⚠️</span> {errors.email}
+                                            </motion.p>
+                                        )}
+                                    </div>
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            id="wizard-name"
+                                            placeholder={t('nameLabel')}
+                                            value={selections.name}
+                                            onChange={(e) => { setSelections({ ...selections, name: e.target.value }); setErrors({ ...errors, name: undefined }); }}
+                                            className={`w-full p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 border ${errors.name ? 'border-red-500 focus:ring-red-500/20 focus:border-red-500' : 'border-slate-200 dark:border-slate-700 focus:ring-brand-purple/20 focus:border-brand-purple'} rounded-xl focus:outline-none focus:ring-2 text-sm sm:text-base text-slate-900 dark:text-white`}
+                                            required
+                                            aria-invalid={errors.name ? 'true' : 'false'}
+                                            aria-describedby={errors.name ? 'name-error' : undefined}
+                                        />
+                                        {errors.name && (
+                                            <motion.p
+                                                initial={{ opacity: 0, y: -5 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                id="name-error"
+                                                className="text-red-500 text-xs mt-1 flex items-center gap-1"
+                                                role="alert"
+                                            >
+                                                <span>⚠️</span> {errors.name}
+                                            </motion.p>
+                                        )}
+                                    </div>
                                 </div>
+
+                                {errors.general && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
+                                        role="alert"
+                                        aria-live="assertive"
+                                    >
+                                        <p className="text-red-600 dark:text-red-400 text-sm flex items-center gap-2">
+                                            <span>⚠️</span> {errors.general}
+                                        </p>
+                                    </motion.div>
+                                )}
 
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="mt-2 w-full py-4 bg-slate-900 dark:bg-brand-purple text-white rounded-xl font-bold text-lg hover:bg-brand-purple dark:hover:bg-brand-purpleLight transition-all shadow-lg hover:shadow-brand-purple/25 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed group"
+                                    className="mt-1 sm:mt-2 w-full py-3 sm:py-4 bg-slate-900 dark:bg-brand-purple text-white rounded-xl font-bold text-base sm:text-lg hover:bg-brand-purple dark:hover:bg-brand-purpleLight transition-all shadow-lg hover:shadow-brand-purple/25 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed group"
                                 >
                                     {isSubmitting ? (
                                         t('sending')
                                     ) : (
                                         <>
-                                            <Sparkles size={20} className="text-brand-gold group-hover:animate-spin-slow" />
-                                            {t('wizard_btn_send')}
-                                            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                                            <Sparkles size={18} className="sm:size-20 text-brand-gold group-hover:animate-spin-slow" />
+                                            <span className="text-sm sm:text-base">{t('wizard_btn_send')}</span>
+                                            <ArrowRight size={16} className="sm:size-20 group-hover:translate-x-1 transition-transform" />
                                         </>
                                     )}
                                 </button>

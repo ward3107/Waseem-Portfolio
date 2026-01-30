@@ -145,22 +145,84 @@ const AISection: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="space-y-4 text-sm font-medium">
-                  <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-tr-xl rounded-bl-xl rounded-br-xl max-w-[85%] border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-300">
+                <motion.div
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={{
+                    hidden: {},
+                    visible: {
+                      transition: {
+                        staggerChildren: 0.7, // 0.7s delay between each message
+                      }
+                    }
+                  }}
+                  className="space-y-4 text-sm font-medium"
+                >
+                  {/* Message 1: AI greeting */}
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, y: 20, scale: 0.9 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        transition: { type: "spring", stiffness: 200, damping: 20 }
+                      }
+                    }}
+                    className="bg-slate-50 dark:bg-slate-800 p-4 rounded-tr-xl rounded-bl-xl rounded-br-xl max-w-[85%] border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+                  >
                     <p>{t('ai_chat_msg_1')}</p>
-                  </div>
-                  <div className="bg-brand-purple p-4 rounded-tl-xl rounded-bl-xl rounded-br-xl max-w-[85%] ml-auto text-white shadow-lg shadow-brand-purple/20">
+                  </motion.div>
+
+                  {/* Message 2: User question */}
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, x: 20, scale: 0.9 },
+                      visible: {
+                        opacity: 1,
+                        x: 0,
+                        scale: 1,
+                        transition: { type: "spring", stiffness: 200, damping: 20 }
+                      }
+                    }}
+                    className="bg-brand-purple p-4 rounded-tl-xl rounded-bl-xl rounded-br-xl max-w-[85%] ml-auto text-white shadow-lg shadow-brand-purple/20"
+                  >
                     <p>{t('ai_chat_msg_2')}</p>
-                  </div>
-                  <div className="bg-slate-50 p-4 rounded-tr-xl rounded-bl-xl rounded-br-xl max-w-[85%] border border-slate-100 text-slate-700">
-                    <div className="flex gap-2 mb-2">
+                  </motion.div>
+
+                  {/* Message 3: AI typing indicator */}
+                  <motion.div
+                    variants={{
+                      hidden: { opacity: 0, y: 20, scale: 0.9 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        transition: { type: "spring", stiffness: 200, damping: 20 }
+                      }
+                    }}
+                    className="bg-slate-50 p-4 rounded-tr-xl rounded-bl-xl rounded-br-xl max-w-[85%] border border-slate-100 text-slate-700"
+                  >
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0, 1, 1, 0] }}
+                      transition={{ duration: 0.8, repeat: 2 }}
+                      className="flex gap-2 mb-2"
+                    >
                       <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
                       <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce delay-75"></span>
                       <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce delay-150"></span>
-                    </div>
-                    <p>{t('ai_chat_msg_3')}</p>
-                  </div>
-                </div>
+                    </motion.div>
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5, duration: 0.3 }}
+                    >
+                      {t('ai_chat_msg_3')}
+                    </motion.p>
+                  </motion.div>
+                </motion.div>
               </div>
             </motion.div>
 

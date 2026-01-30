@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus, MessageCircle, Sparkles, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FAQItem } from '../types';
 
 const FAQ: React.FC = () => {
-    const { t } = useLanguage();
+    const { t, dir } = useLanguage();
     const [openIndex, setOpenIndex] = useState<number | null>(0);
+    const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
     const localizedFaqs: FAQItem[] = [
         { question: t('faq_q1'), answer: t('faq_a1') },
@@ -18,8 +19,37 @@ const FAQ: React.FC = () => {
         { question: t('faq_q7'), answer: t('faq_a7') },
     ];
 
+    // Handle keyboard navigation for accordion
+    const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+        switch (e.key) {
+            case 'Home':
+                e.preventDefault();
+                setOpenIndex(0);
+                buttonRefs.current[0]?.focus();
+                break;
+            case 'End':
+                e.preventDefault();
+                const lastIndex = localizedFaqs.length - 1;
+                setOpenIndex(lastIndex);
+                buttonRefs.current[lastIndex]?.focus();
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                const nextIndex = Math.min(index + 1, localizedFaqs.length - 1);
+                setOpenIndex(nextIndex);
+                buttonRefs.current[nextIndex]?.focus();
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                const prevIndex = Math.max(index - 1, 0);
+                setOpenIndex(prevIndex);
+                buttonRefs.current[prevIndex]?.focus();
+                break;
+        }
+    };
+
     return (
-        <section id="faq" className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
+        <section id="faq" dir={dir} className="py-16 sm:py-20 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
             {/* Clean Background */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-100/50 -skew-x-12"></div>
 
@@ -44,7 +74,7 @@ const FAQ: React.FC = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.1 }}
-                                className="text-4xl md:text-5xl font-heading font-bold text-slate-900 dark:text-white mb-6 leading-tight"
+                                className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-slate-900 dark:text-white mb-6 leading-tight"
                             >
                                 {t('faq_title_1')} <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">{t('faq_title_2')}</span>
@@ -55,7 +85,7 @@ const FAQ: React.FC = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.2 }}
-                                className="text-slate-600 dark:text-slate-400 text-lg mb-10 leading-relaxed"
+                                className="text-slate-600 dark:text-slate-400 text-base sm:text-lg mb-8 sm:mb-10 leading-relaxed"
                             >
                                 {t('faq_desc')}
                             </motion.p>
@@ -70,14 +100,14 @@ const FAQ: React.FC = () => {
                                     href="https://wa.me/972534260632"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group inline-flex items-center gap-4 px-8 py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-2 border-slate-100 dark:border-slate-800 rounded-2xl font-bold hover:border-brand-purple hover:shadow-xl hover:shadow-brand-purple/10 transition-all duration-300"
+                                    className="group inline-flex items-center gap-3 sm:gap-4 px-6 sm:px-8 py-3 sm:py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-2 border-slate-100 dark:border-slate-800 rounded-xl sm:rounded-2xl font-bold hover:border-brand-purple hover:shadow-xl hover:shadow-brand-purple/10 transition-all duration-300"
                                 >
-                                    <div className="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                        <MessageCircle size={20} />
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                        <MessageCircle size={16} className="sm:size-20" />
                                     </div>
                                     <div className="text-left rtl:text-right">
-                                        <span className="block text-xs text-slate-500 uppercase font-bold tracking-wide">{t('faq_cta_unsure')}</span>
-                                        <span className="block text-lg">{t('faq_cta_ask')}</span>
+                                        <span className="block text-[10px] sm:text-xs text-slate-500 uppercase font-bold tracking-wide">{t('faq_cta_unsure')}</span>
+                                        <span className="block text-base sm:text-lg">{t('faq_cta_ask')}</span>
                                     </div>
                                     <ArrowRight className="ml-2 rtl:mr-2 rtl:ml-0 rtl:rotate-180 text-slate-400 group-hover:text-brand-purple group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-all" />
                                 </a>
@@ -86,9 +116,11 @@ const FAQ: React.FC = () => {
                     </div>
 
                     {/* Right Column: Clean Accordion Cards */}
-                    <div className="lg:col-span-7 space-y-4">
+                    <div className="lg:col-span-7 space-y-4" role="list" aria-label={t('faq_title_1') + ' ' + t('faq_title_2')}>
                         {localizedFaqs.map((faq, index) => {
                             const isOpen = openIndex === index;
+                            const panelId = `faq-panel-${index}`;
+                            const buttonId = `faq-button-${index}`;
                             return (
                                 <motion.div
                                     key={index}
@@ -100,32 +132,43 @@ const FAQ: React.FC = () => {
                                             ? 'bg-white dark:bg-slate-900 border-brand-purple shadow-lg shadow-brand-purple/10 ring-1 ring-brand-purple/20'
                                             : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md'
                                         }`}
+                                    role="listitem"
                                 >
-                                    <button
-                                        onClick={() => setOpenIndex(isOpen ? null : index)}
-                                        className="w-full flex items-center justify-between p-6 text-left rtl:text-right focus:outline-none"
-                                    >
-                                        <span className={`text-lg font-bold transition-colors ${isOpen ? 'text-brand-purple' : 'text-slate-800 dark:text-slate-200'}`}>
-                                            {faq.question}
-                                        </span>
-                                        <div className={`flex-shrink-0 ml-4 rtl:mr-4 rtl:ml-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen
-                                                ? 'bg-brand-purple text-white rotate-180'
-                                                : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'
-                                            }`}>
-                                            {isOpen ? <Minus size={18} /> : <Plus size={18} />}
-                                        </div>
-                                    </button>
+                                    <h3>
+                                        <button
+                                            ref={(el) => (buttonRefs.current[index] = el)}
+                                            id={buttonId}
+                                            onClick={() => setOpenIndex(isOpen ? null : index)}
+                                            onKeyDown={(e) => handleKeyDown(e, index)}
+                                            aria-expanded={isOpen}
+                                            aria-controls={panelId}
+                                            className="w-full flex items-center justify-between p-4 sm:p-5 md:p-6 text-left rtl:text-right focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-inset rounded-2xl"
+                                        >
+                                            <span className={`text-base sm:text-lg font-bold transition-colors ${isOpen ? 'text-brand-purple' : 'text-slate-800 dark:text-slate-200'}`}>
+                                                {faq.question}
+                                            </span>
+                                            <div className={`flex-shrink-0 ml-3 rtl:mr-3 rtl:ml-0 sm:ml-4 rtl:sm:mr-4 rtl:sm:ml-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen
+                                                    ? 'bg-brand-purple text-white rotate-180 rtl:rotate-0'
+                                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700'
+                                                }`} aria-hidden="true">
+                                                {isOpen ? <Minus size={14} className="sm:size-[18px]" /> : <Plus size={14} className="sm:size-[18px]" />}
+                                            </div>
+                                        </button>
+                                    </h3>
 
                                     <AnimatePresence>
                                         {isOpen && (
                                             <motion.div
+                                                id={panelId}
+                                                role="region"
+                                                aria-labelledby={buttonId}
                                                 initial={{ height: 0, opacity: 0 }}
                                                 animate={{ height: 'auto', opacity: 1 }}
                                                 exit={{ height: 0, opacity: 0 }}
                                                 transition={{ duration: 0.3, ease: "easeInOut" }}
                                             >
-                                                <div className="px-6 pb-8 pt-0">
-                                                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                                                <div className="px-4 sm:px-5 md:px-6 pb-6 sm:pb-7 md:pb-8 pt-0">
+                                                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
                                                         {faq.answer}
                                                     </p>
                                                 </div>

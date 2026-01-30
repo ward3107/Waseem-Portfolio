@@ -8,7 +8,7 @@ const VibeCoding: React.FC = () => {
   const sentence = t('vibe_text_2');
 
   return (
-    <section className="py-32 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center min-h-[80vh] transition-colors duration-300">
+    <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center min-h-[60vh] md:min-h-[80vh] transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-purple/20 rounded-full blur-[120px] opacity-60"></div>
@@ -24,7 +24,7 @@ const VibeCoding: React.FC = () => {
             initial={{ opacity: 0, scale: 0 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 backdrop-blur-md text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-16 shadow-lg"
+            className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 backdrop-blur-md text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-8 md:mb-16 shadow-lg"
           >
             <Sparkles size={14} className="text-brand-gold" />
             <span>{t('vibe_badge')}</span>
@@ -36,7 +36,7 @@ const VibeCoding: React.FC = () => {
             whileInView={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-            className="text-6xl md:text-9xl font-black text-slate-900 dark:text-white tracking-tighter mb-12 select-none relative"
+            className="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 dark:text-white tracking-tighter mb-8 md:mb-12 select-none relative"
           >
             <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-b from-slate-900 to-slate-500 dark:from-white dark:to-slate-500">{t('vibe_title_1')}</span>
             <span className="block text-4xl md:text-6xl font-normal font-heading tracking-normal text-brand-purpleLight mt-2">
@@ -56,7 +56,7 @@ const VibeCoding: React.FC = () => {
                 whileInView={{ x: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
-                className="text-3xl md:text-5xl font-bold text-slate-600 dark:text-slate-300"
+                className="text-2xl md:text-4xl font-bold text-slate-600 dark:text-slate-300"
               >
                 {t('vibe_text_1')}
               </motion.div>
@@ -78,7 +78,7 @@ const VibeCoding: React.FC = () => {
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
-                    className="text-4xl md:text-6xl font-serif italic text-brand-cyan"
+                    className="text-3xl md:text-5xl font-serif italic text-brand-cyan"
                     style={{
                       textShadow: "0 0 20px rgba(6,182,212,0.5)",
                     }}
@@ -87,7 +87,7 @@ const VibeCoding: React.FC = () => {
                   </motion.div>
                 ) : (
                   // English/Other: Split and animate each character
-                  <div className="text-4xl md:text-6xl font-serif italic text-brand-cyan flex gap-1">
+                  <div className="text-3xl md:text-5xl font-serif italic text-brand-cyan flex gap-1">
                     {sentence.split("").map((char, index) => (
                       <motion.span
                         key={index}
@@ -118,7 +118,7 @@ const VibeCoding: React.FC = () => {
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
-                className="text-xl md:text-3xl text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed mt-4"
+                className="text-lg md:text-2xl text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed mt-4"
               >
                 {t('vibe_text_3')}
               </motion.div>
@@ -129,9 +129,9 @@ const VibeCoding: React.FC = () => {
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
-                className="mt-8 px-8 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl"
+                className="mt-6 md:mt-8 px-6 py-3 md:px-8 md:py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl"
               >
-                <p className="text-brand-purpleLight font-mono text-lg md:text-xl flex items-center gap-3">
+                <p className="text-brand-purpleLight font-mono text-base md:text-lg flex items-center gap-3">
                   <Zap size={20} className="fill-brand-purpleLight" />
                   {t('vibe_text_4')}
                 </p>

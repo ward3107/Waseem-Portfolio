@@ -5,7 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Project } from '../types';
 
 const Projects: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
   const [filter, setFilter] = useState<'All' | 'Web' | 'AI' | 'Mobile'>('All');
 
   const localizedProjects: Project[] = [
@@ -59,12 +59,12 @@ const Projects: React.FC = () => {
   ];
 
   return (
-    <section id="projects" className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
+    <section id="projects" dir={dir} className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-purple/5 rounded-full blur-[100px] -z-10"></div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-end rtl:items-start mb-16 gap-6">
 
           {/* Modernized Header with Drop Animation */}
           <motion.div
@@ -72,27 +72,46 @@ const Projects: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="max-w-2xl"
+            className="w-full max-w-2xl text-left rtl:text-right"
           >
-            <h2 className="text-5xl md:text-7xl font-heading font-black text-slate-900 dark:text-white mb-6 tracking-tight leading-[0.9]">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-black text-slate-900 dark:text-white mb-4 md:mb-6 tracking-tight leading-[0.9]">
               {t('projects_title_1')} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-blue to-brand-cyan">
                 {t('projects_title_2')}
               </span>
             </h2>
-            <div className="h-1.5 w-24 bg-brand-gold rounded-full mb-6"></div>
-            <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+            <div className="h-1.5 w-20 md:w-24 bg-brand-gold rounded-full mb-4 md:mb-6 rtl:ml-auto rtl:mr-0"></div>
+            <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg leading-relaxed">
               {t('projects_subtitle')}
             </p>
           </motion.div>
 
           {/* Filter */}
-          <div className="flex gap-2 mt-8 md:mt-0 bg-white dark:bg-slate-900 p-1.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-            {filters.map((cat) => (
+          <div
+            role="tablist"
+            aria-label={`${t('projects_title_1')} ${t('projects_title_2')} filters`}
+            className="flex gap-2 mt-8 md:mt-0 bg-white dark:bg-slate-900 p-1.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
+          >
+            {filters.map((cat, index) => (
               <button
                 key={cat.key}
+                role="tab"
+                aria-selected={filter === cat.key}
+                aria-controls="projects-grid"
+                id={`filter-${cat.key.toLowerCase()}`}
                 onClick={() => setFilter(cat.key as any)}
-                className={`px-5 py-2.5 rounded-lg text-sm font-bold transition-all ${filter === cat.key
+                onKeyDown={(e) => {
+                  const buttons = Array.from(e.currentTarget.parentElement?.querySelectorAll('button') || []);
+                  const currentIndex = buttons.indexOf(e.currentTarget);
+                  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    const nextIndex = e.key === 'ArrowRight'
+                      ? Math.min(currentIndex + 1, buttons.length - 1)
+                      : Math.max(currentIndex - 1, 0);
+                    (buttons[nextIndex] as HTMLButtonElement).focus();
+                  }
+                }}
+                className={`px-5 py-2.5 rounded-lg text-sm font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 ${filter === cat.key
                     ? 'bg-brand-purple text-white shadow-md'
                     : 'text-slate-500 dark:text-slate-400 hover:text-brand-purple hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
@@ -103,7 +122,7 @@ const Projects: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div id="projects-grid" role="tabpanel" aria-live="polite" aria-label={`${t('projects_title_1')} ${t('projects_title_2')} - ${filter === 'All' ? t('projects_filter_all') : t(`projects_filter_${filter.toLowerCase()}`)}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project, index) => (
             <motion.div
               key={project.id}
@@ -123,6 +142,7 @@ const Projects: React.FC = () => {
                     <img
                       src={project.image}
                       alt={project.title}
+                      loading="lazy"
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
 

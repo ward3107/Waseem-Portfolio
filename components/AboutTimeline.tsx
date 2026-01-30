@@ -17,9 +17,7 @@ const SpinningYear = ({ year }: { year: string }) => {
     });
 
     useEffect(() => {
-        console.log('SpinningYear:', { year, numericYear, isInView, hasAnimated });
         if (isInView && !hasAnimated && !isNaN(numericYear)) {
-            console.log('Starting animation for year:', numericYear);
             const startYear = numericYear - 50;
             let current = startYear;
             const duration = 800; // 0.8 seconds - much faster
@@ -33,7 +31,6 @@ const SpinningYear = ({ year }: { year: string }) => {
                     setDisplayYear(numericYear);
                     clearInterval(timer);
                     setHasAnimated(true);
-                    console.log('Animation complete for year:', numericYear);
                 } else {
                     setDisplayYear(Math.round(current));
                 }
@@ -57,9 +54,9 @@ const AboutTimeline: React.FC = () => {
 
     const localizedTimeline: TimelineItem[] = [
         {
-            year: '2025',
-            title: t('timeline_1_title'),
-            description: t('timeline_1_desc')
+            year: '2022',
+            title: t('timeline_3_title'),
+            description: t('timeline_3_desc')
         },
         {
             year: '2024',
@@ -67,9 +64,9 @@ const AboutTimeline: React.FC = () => {
             description: t('timeline_2_desc')
         },
         {
-            year: '2022',
-            title: t('timeline_3_title'),
-            description: t('timeline_3_desc')
+            year: '2025',
+            title: t('timeline_1_title'),
+            description: t('timeline_1_desc')
         }
     ];
 
@@ -144,7 +141,7 @@ const AboutTimeline: React.FC = () => {
                             <div className="bg-white dark:bg-slate-900 rounded-3xl p-2 shadow-2xl border border-slate-100 dark:border-slate-800 relative overflow-hidden transform transition-transform duration-500 group-hover:scale-[1.02]">
 
                                 {/* Header Image Area */}
-                                <div className="relative h-96 rounded-2xl overflow-hidden bg-slate-900">
+                                <div className="relative h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden bg-slate-900">
                                     <video
                                         src="/assets/waseem-profile-video.mp4"
                                         autoPlay
@@ -155,26 +152,26 @@ const AboutTimeline: React.FC = () => {
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-brand-purpleDark via-brand-purple/50 to-transparent"></div>
 
-                                    <div className="absolute bottom-4 left-4 text-white">
-                                        <h3 className="text-3xl font-heading font-bold">Waseem</h3>
-                                        <p className="text-brand-cyan font-mono text-sm tracking-widest">{t('about_card_lvl')}</p>
+                                    <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 text-white">
+                                        <h3 className="text-2xl md:text-3xl font-heading font-bold">Waseem</h3>
+                                        <p className="text-brand-cyan font-mono text-xs md:text-sm tracking-widest">{t('about_card_lvl')}</p>
                                     </div>
                                 </div>
 
                                 {/* Stats Section (RPG Style) */}
-                                <div className="p-6 space-y-6">
-                                    <div className="flex items-center justify-between text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                                <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+                                    <div className="flex items-center justify-between text-xs md:text-sm font-bold text-slate-700 dark:text-slate-300 mb-1 md:mb-2">
                                         <span>{t('about_attr')}</span>
                                         <span className="text-brand-purple">{t('about_class')}</span>
                                     </div>
 
                                     {/* Stat 1: Logic */}
                                     <div>
-                                        <div className="flex justify-between text-xs font-bold mb-1">
-                                            <span className="flex items-center gap-1"><Brain size={12} /> {t('about_stat_1')}</span>
+                                        <div className="flex justify-between text-[10px] md:text-xs font-bold mb-1">
+                                            <span className="flex items-center gap-1"><Brain size={10} md:size={12} /> {t('about_stat_1')}</span>
                                             <span className="text-slate-400">100%</span>
                                         </div>
-                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <motion.div
                                                 initial={{ width: 0 }}
                                                 whileInView={{ width: '100%' }}
@@ -186,11 +183,11 @@ const AboutTimeline: React.FC = () => {
 
                                     {/* Stat 2: Creativity */}
                                     <div>
-                                        <div className="flex justify-between text-xs font-bold mb-1">
-                                            <span className="flex items-center gap-1"><Zap size={12} /> {t('about_stat_2')}</span>
+                                        <div className="flex justify-between text-[10px] md:text-xs font-bold mb-1">
+                                            <span className="flex items-center gap-1"><Zap size={10} md:size={12} /> {t('about_stat_2')}</span>
                                             <span className="text-slate-400">95%</span>
                                         </div>
-                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <motion.div
                                                 initial={{ width: 0 }}
                                                 whileInView={{ width: '95%' }}
@@ -202,11 +199,11 @@ const AboutTimeline: React.FC = () => {
 
                                     {/* Stat 3: AI Integration */}
                                     <div>
-                                        <div className="flex justify-between text-xs font-bold mb-1">
-                                            <span className="flex items-center gap-1"><Cpu size={12} /> {t('about_stat_3')}</span>
+                                        <div className="flex justify-between text-[10px] md:text-xs font-bold mb-1">
+                                            <span className="flex items-center gap-1"><Cpu size={10} md:size={12} /> {t('about_stat_3')}</span>
                                             <span className="text-slate-400">100%</span>
                                         </div>
-                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <motion.div
                                                 initial={{ width: 0 }}
                                                 whileInView={{ width: '100%' }}
@@ -216,9 +213,9 @@ const AboutTimeline: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-3">
+                                    <div className="pt-3 md:pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-2 md:gap-3">
 
-                                        <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-2xl" title="Coffee Level: High">
+                                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xl md:text-2xl" title="Coffee Level: High">
                                             ☕
                                         </div>
                                     </div>
@@ -233,19 +230,19 @@ const AboutTimeline: React.FC = () => {
 
                     {/* Right Column: Narrative Timeline */}
                     <div className="lg:col-span-7 pl-0 lg:pl-10 flex flex-col justify-center">
-                        <div className="prose prose-lg text-slate-600 dark:text-slate-400 mb-12">
+                        <div className="prose prose-base md:prose-lg text-slate-600 dark:text-slate-400 mb-8 md:mb-12">
                             <p>
                                 {t('about_narrative_1')}
                             </p>
                             <p>
                                 {t('about_narrative_2')}
-                                <span className="text-slate-900 dark:text-white font-bold block mt-2 p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm">
+                                <span className="text-slate-900 dark:text-white font-bold block mt-2 p-3 md:p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg shadow-sm text-sm md:text-base">
                                     {t('about_mission')}
                                 </span>
                             </p>
                         </div>
 
-                        <div className="relative border-l-2 border-slate-200 dark:border-slate-800 ml-3 space-y-12">
+                        <div className="relative border-l-2 border-slate-200 dark:border-slate-800 ml-3 space-y-8 md:space-y-12">
                             {/* Glowing Line Overlay */}
                             <div className="absolute left-[-2px] top-0 w-[2px] h-full bg-gradient-to-b from-brand-purple via-brand-cyan to-transparent"></div>
 
@@ -259,16 +256,16 @@ const AboutTimeline: React.FC = () => {
                                     className="relative pl-10"
                                 >
                                     {/* Timeline Dot */}
-                                    <div className="absolute left-[-9px] top-0 w-[18px] h-[18px] rounded-full border-4 border-white bg-brand-purple shadow-[0_0_0_4px_rgba(72,58,160,0.2)]"></div>
+                                    <div className="absolute left-[-9px] top-0 w-[14px] md:w-[18px] h-[14px] md:h-[18px] rounded-full border-4 border-white bg-brand-purple shadow-[0_0_0_4px_rgba(72,58,160,0.2)]"></div>
 
                                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
                                         {/* Spinning Year Effect - Updated Color */}
-                                        <span className="text-4xl font-heading font-bold text-brand-purple overflow-hidden h-[40px] flex items-center">
+                                        <span className="text-3xl md:text-4xl font-heading font-bold text-brand-purple overflow-hidden h-[32px] md:h-[40px] flex items-center">
                                             <SpinningYear year={item.year} />
                                         </span>
-                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{item.title}</h3>
+                                        <h3 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white">{item.title}</h3>
                                     </div>
-                                    <p className="text-slate-500 dark:text-slate-400 leading-relaxed max-w-md">
+                                    <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 leading-relaxed max-w-md">
                                         {item.description}
                                     </p>
                                 </motion.div>

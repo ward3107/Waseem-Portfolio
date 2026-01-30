@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Github, Linkedin, Twitter, ArrowRight, Heart, Mail, X } from 'lucide-react';
 import { LOGO_SRC, NAV_LINKS, SERVICES } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -9,6 +9,73 @@ const Footer: React.FC = () => {
   const { language, t } = useLanguage();
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
+
+  // Focus trap within legal modal
+  useEffect(() => {
+    if (legalModal && modalRef.current) {
+      // Store the previously focused element
+      previousActiveElementRef.current = document.activeElement as HTMLElement;
+
+      // Find all focusable elements within the modal
+      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+
+      const firstFocusable = focusableElements[0];
+      const lastFocusable = focusableElements[focusableElements.length - 1];
+
+      // Focus the first focusable element
+      firstFocusable?.focus();
+
+      // Handle Tab key to trap focus
+      const handleTabKey = (e: KeyboardEvent) => {
+        if (e.key !== 'Tab') return;
+
+        if (e.shiftKey) {
+          // Shift + Tab
+          if (document.activeElement === firstFocusable) {
+            e.preventDefault();
+            lastFocusable?.focus();
+          }
+        } else {
+          // Tab
+          if (document.activeElement === lastFocusable) {
+            e.preventDefault();
+            firstFocusable?.focus();
+          }
+        }
+      };
+
+      document.addEventListener('keydown', handleTabKey);
+
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+
+      return () => {
+        document.removeEventListener('keydown', handleTabKey);
+        document.body.style.overflow = '';
+
+        // Return focus to the trigger element when modal closes
+        previousActiveElementRef.current?.focus();
+      };
+    }
+  }, [legalModal]);
+
+  // Handle Escape key to close modal
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && legalModal) {
+        setLegalModal(null);
+      }
+    };
+
+    if (legalModal) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [legalModal]);
 
   return (
     <footer id="footer" className="bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-t border-slate-200 dark:border-slate-900 relative overflow-hidden transition-colors duration-300">
@@ -22,19 +89,19 @@ const Footer: React.FC = () => {
 
           {/* Brand Column */}
           <div className="space-y-6">
-            <img src={LOGO_SRC} alt="Waseem Logo" className="h-10 w-auto object-contain" />
+            <img src={LOGO_SRC} alt="Waseem Logo" className="h-10 w-auto object-contain" loading="lazy" />
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
               {t('footer_desc')}
             </p>
             <div className="flex gap-4">
-              <a href="https://github.com/waseem-portfolio" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-purple dark:hover:text-white hover:border-brand-purple hover:bg-brand-purple/10 transition-all duration-300">
-                <Github size={18} />
+              <a href="https://github.com/waseem-portfolio" target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's GitHub profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-purple dark:hover:text-white hover:border-brand-purple hover:bg-brand-purple/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2">
+                <Github size={18} aria-hidden="true" />
               </a>
-              <a href="https://linkedin.com/in/waseem-profile" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-white hover:border-brand-blue hover:bg-brand-blue/10 transition-all duration-300">
-                <Linkedin size={18} />
+              <a href="https://linkedin.com/in/waseem-profile" target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's LinkedIn profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-white hover:border-brand-blue hover:bg-brand-blue/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2">
+                <Linkedin size={18} aria-hidden="true" />
               </a>
-              <a href="https://twitter.com/waseemdev" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-cyan dark:hover:text-white hover:border-brand-cyan hover:bg-brand-cyan/10 transition-all duration-300">
-                <Twitter size={18} />
+              <a href="https://twitter.com/waseemdev" target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's Twitter profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-cyan dark:hover:text-white hover:border-brand-cyan hover:bg-brand-cyan/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2">
+                <Twitter size={18} aria-hidden="true" />
               </a>
             </div>
           </div>
@@ -255,20 +322,26 @@ const Footer: React.FC = () => {
               exit={{ opacity: 0 }}
               onClick={() => setLegalModal(null)}
               className="absolute inset-0 bg-slate-900/40 dark:bg-black/70 backdrop-blur-sm"
+              aria-hidden="true"
             />
             <motion.div
+              ref={modalRef}
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={`legal-${legalModal}-title`}
               className="relative bg-white dark:bg-slate-900 text-slate-900 dark:text-white w-full max-w-2xl max-h-[80vh] rounded-2xl shadow-2xl overflow-hidden flex flex-col"
             >
               <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900/50">
-                <h3 className="text-2xl font-bold font-heading">
+                <h3 id={`legal-${legalModal}-title`} className="text-2xl font-bold font-heading">
                   {legalModal === 'privacy' ? t('legal_privacy_title') : t('legal_terms_title')}
                 </h3>
                 <button
                   onClick={() => setLegalModal(null)}
-                  className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500"
+                  aria-label={t('legal_close')}
+                  className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-purple"
                 >
                   <X size={20} />
                 </button>
@@ -281,7 +354,7 @@ const Footer: React.FC = () => {
               <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 flex justify-end">
                 <button
                   onClick={() => setLegalModal(null)}
-                  className="px-6 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg font-bold hover:bg-brand-purple dark:hover:bg-brand-purple dark:hover:text-white transition-colors"
+                  className="px-6 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg font-bold hover:bg-brand-purple dark:hover:bg-brand-purple dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
                 >
                   {t('legal_close')}
                 </button>

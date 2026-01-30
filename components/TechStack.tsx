@@ -112,6 +112,12 @@ const BossOverlay: React.FC<BossProps> = ({ onDefeat, health: initialHealth }) =
   const [currentHealth, setCurrentHealth] = useState(initialHealth);
   const controls = useAnimation();
   const { t } = useLanguage();
+  const bossButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Auto-focus boss button when overlay appears
+  useEffect(() => {
+    bossButtonRef.current?.focus();
+  }, []);
 
   const handleHit = async () => {
     const newHealth = currentHealth - 1;
@@ -130,44 +136,61 @@ const BossOverlay: React.FC<BossProps> = ({ onDefeat, health: initialHealth }) =
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleHit();
+    }
+  };
+
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4" role="dialog" aria-modal="true" aria-labelledby="boss-title">
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" aria-hidden="true"></div>
 
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0, opacity: 0 }}
-        className="relative bg-slate-900/90 border-2 border-red-500 rounded-lg p-8 max-w-sm w-full text-center shadow-[0_0_100px_rgba(239,68,68,0.4)] overflow-hidden"
+        className="relative bg-slate-900/90 border-2 border-red-500 rounded-lg p-6 sm:p-8 max-w-sm w-full text-center shadow-[0_0_100px_rgba(239,68,68,0.4)] overflow-hidden"
+        style={{ willChange: 'transform, opacity' }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-red-500/10 to-transparent h-full w-full animate-[scan_2s_linear_infinite] pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-red-500/10 to-transparent h-full w-full animate-[scan_2s_linear_infinite] pointer-events-none" aria-hidden="true" style={{ willChange: 'transform' }}></div>
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-red-600 text-white text-xs font-mono font-bold px-4 py-1 rounded-b-lg border border-red-400">
           ⚠ {t('tech_boss_anomaly')}
         </div>
 
-        <motion.div
+        <button
+          ref={bossButtonRef}
           animate={controls}
           onClick={handleHit}
-          className="cursor-crosshair active:scale-95 transition-transform inline-block mt-6 relative group"
+          onKeyDown={handleKeyDown}
+          className="cursor-crosshair active:scale-95 transition-transform inline-block mt-6 relative group bg-transparent border-0 p-0 rounded-full focus:outline-none focus:ring-4 focus:ring-red-500/50"
+          aria-label={`Attack boss! ${Math.ceil((currentHealth / initialHealth) * 100)}% health remaining`}
         >
-          <div className="absolute -inset-4 bg-red-500/20 rounded-full blur-xl group-hover:bg-red-500/40 transition-colors"></div>
-          <Bug size={140} className="text-red-500 drop-shadow-2xl relative z-10" />
-        </motion.div>
+          <motion.div
+            animate={controls}
+            className="relative"
+          >
+            <div className="absolute -inset-4 bg-red-500/20 rounded-full blur-xl group-hover:bg-red-500/40 transition-colors"></div>
+            <Bug size={100} className="sm:size-140 text-red-500 drop-shadow-2xl relative z-10" />
+          </motion.div>
+        </button>
 
-        <h3 className="text-3xl font-black text-white mt-6 font-heading uppercase tracking-widest text-red-500 glitch-text">
+        <h3 id="boss-title" className="text-2xl sm:text-3xl font-black text-white mt-4 sm:mt-6 font-heading uppercase tracking-widest text-red-500 glitch-text">
           {t('tech_boss_name')}
         </h3>
 
-        <div className="mt-6">
+        <div className="mt-4 sm:mt-6">
           <div className="flex justify-between text-xs font-mono text-red-400 mb-1 uppercase">
             <span>Integrity</span>
-            <span>{Math.ceil((currentHealth / initialHealth) * 100)}%</span>
+            <span aria-live="polite">{Math.ceil((currentHealth / initialHealth) * 100)}%</span>
           </div>
-          <div className="w-full h-6 bg-slate-950 rounded-sm border border-slate-700 p-1 relative">
+          <div className="w-full h-5 sm:h-6 bg-slate-950 rounded-sm border border-slate-700 p-1 relative" role="progressbar" aria-valuenow={currentHealth} aria-valuemin={0} aria-valuemax={initialHealth}>
             <motion.div
               initial={{ width: '100%' }}
               animate={{ width: `${(currentHealth / initialHealth) * 100}%` }}
               className="h-full bg-gradient-to-r from-red-600 to-orange-600"
+              style={{ willChange: 'width' }}
             />
           </div>
           <p className="text-slate-400 text-[10px] mt-2 font-mono blink">{t('tech_boss_eliminate')}</p>
@@ -180,41 +203,64 @@ const BossOverlay: React.FC<BossProps> = ({ onDefeat, health: initialHealth }) =
 // --- Win Modal Component ---
 const DiscountReward = ({ onClose }: { onClose: () => void }) => {
   const { t } = useLanguage();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Auto-focus close button when modal appears
+  useEffect(() => {
+    closeButtonRef.current?.focus();
+  }, []);
+
+  // Handle Escape key to close
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [onClose]);
+
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-lg p-4">
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-lg p-4" role="dialog" aria-modal="true" aria-labelledby="win-title">
       <motion.div
         initial={{ scale: 0.5, opacity: 0, rotateX: 90 }}
         animate={{ scale: 1, opacity: 1, rotateX: 0 }}
         exit={{ scale: 0, opacity: 0 }}
         className="bg-slate-900 border-2 border-brand-gold p-1 rounded-2xl shadow-[0_0_60px_rgba(212,175,55,0.3)] max-w-md w-full relative"
+        style={{ willChange: 'transform, opacity' }}
       >
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-gold to-transparent"></div>
-        <div className="p-8 text-center relative overflow-hidden">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[conic-gradient(from_0deg_at_50%_50%,rgba(212,175,55,0.1)_0deg,transparent_60deg,rgba(212,175,55,0.1)_120deg,transparent_180deg)] animate-[spin_10s_linear_infinite] pointer-events-none"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-gold to-transparent" aria-hidden="true"></div>
+        <div className="p-6 sm:p-8 text-center relative overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] sm:w-[500px] sm:h-[500px] bg-[conic-gradient(from_0deg_at_50%_50%,rgba(212,175,55,0.1)_0deg,transparent_60deg,rgba(212,175,55,0.1)_120deg,transparent_180deg)] animate-[spin_10s_linear_infinite] pointer-events-none" style={{ willChange: 'transform' }} aria-hidden="true"></div>
 
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{ repeat: Infinity, duration: 2 }}
-            className="w-24 h-24 bg-gradient-to-br from-brand-gold to-yellow-600 rounded-xl flex items-center justify-center mx-auto mb-6 shadow-xl border border-yellow-300 rotate-3 relative z-10"
+            className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-brand-gold to-yellow-600 rounded-xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-xl border border-yellow-300 rotate-3 relative z-10"
           >
-            <Gift size={48} className="text-slate-900" />
+            <Gift size={36} className="sm:size-48 text-slate-900" />
           </motion.div>
 
-          <h2 className="text-4xl font-black text-white mb-2 font-heading tracking-tight relative z-10">
+          <h2 id="win-title" className="text-3xl sm:text-4xl font-black text-white mb-2 font-heading tracking-tight relative z-10">
             {t('tech_win_title')}
           </h2>
-          <p className="text-slate-300 mb-8 font-mono text-sm relative z-10">
+          <p className="text-slate-300 mb-6 sm:mb-8 font-mono text-sm relative z-10">
             {t('tech_win_desc')}
           </p>
 
-          <div className="bg-slate-950 border border-slate-700 rounded-lg p-6 mb-8 relative z-10">
+          <div className="bg-slate-950 border border-slate-700 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 relative z-10">
             <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em] mb-2">{t('tech_win_code')}</p>
-            <div className="text-3xl font-mono font-bold text-brand-cyan tracking-widest select-all drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">
+            <div className="text-2xl sm:text-3xl font-mono font-bold text-brand-cyan tracking-widest select-all drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">
               VIBE10
             </div>
           </div>
 
-          <button onClick={onClose} className="w-full py-4 bg-brand-gold hover:bg-yellow-400 text-slate-900 font-bold uppercase tracking-wider rounded-lg shadow-lg relative z-10">
+          <button
+            ref={closeButtonRef}
+            onClick={onClose}
+            className="w-full py-3 sm:py-4 bg-brand-gold hover:bg-yellow-400 text-slate-900 font-bold uppercase tracking-wider rounded-lg shadow-lg relative z-10 focus:outline-none focus:ring-4 focus:ring-brand-gold/50 transition-all"
+          >
             {t('tech_win_btn')}
           </button>
         </div>
@@ -233,9 +279,10 @@ interface TechCardProps {
 
 const TechCard: React.FC<TechCardProps> = ({ tech, stage, onPop, triggerShake }) => {
   const [isBroken, setIsBroken] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const particleColors = ['bg-brand-purple', 'bg-brand-cyan', 'bg-brand-gold', 'bg-white'];
 
-  const handleInteraction = (e?: React.MouseEvent) => {
+  const handleInteraction = (e?: React.MouseEvent | React.KeyboardEvent) => {
     if (isBroken) return;
 
     setIsBroken(true);
@@ -260,9 +307,16 @@ const TechCard: React.FC<TechCardProps> = ({ tech, stage, onPop, triggerShake })
     }, respawnTime);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleInteraction(e);
+    }
+  };
+
   const handleMouseEnter = () => {
     // Stage 2+ Feature: Auto-fire / Rapid Fire on Hover
-    if (stage >= 2) {
+    if (stage >= 2 && !isBroken) {
       handleInteraction();
     }
   };
@@ -278,7 +332,7 @@ const TechCard: React.FC<TechCardProps> = ({ tech, stage, onPop, triggerShake })
   };
 
   return (
-    <div className="mx-4 relative min-w-[200px] h-[90px] perspective-500 group">
+    <div className="mx-2 sm:mx-4 relative min-w-[160px] sm:min-w-[200px] h-[80px] sm:h-[90px] perspective-500 group">
       <AnimatePresence>
         {!isBroken ? (
           <motion.div
@@ -287,30 +341,39 @@ const TechCard: React.FC<TechCardProps> = ({ tech, stage, onPop, triggerShake })
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
             whileHover={{ scale: 1.05, y: -5 }}
+            whileFocus={{ scale: 1.05, y: -5 }}
             onClick={handleInteraction}
+            onKeyDown={handleKeyDown}
             onMouseEnter={handleMouseEnter}
-            className={`w-full h-full cursor-crosshair relative flex items-center gap-4 px-6 py-4 backdrop-blur-sm border rounded-lg transition-all duration-200 select-none overflow-hidden
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            tabIndex={0}
+            role="button"
+            aria-label={`Pop ${tech.name} card`}
+            className={`w-full h-full cursor-crosshair relative flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4 backdrop-blur-sm border rounded-lg transition-all duration-200 select-none overflow-hidden outline-none
+                ${isFocused ? 'ring-2 ring-brand-cyan ring-offset-2 ring-offset-white dark:ring-offset-slate-950' : ''}
                 ${stage >= 3 ? 'bg-red-900/40 border-red-500/50 hover:shadow-[0_0_30px_rgba(239,68,68,0.6)]' :
                 stage >= 2 ? 'bg-cyan-900/40 border-brand-cyan/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]' :
                   'bg-slate-900/80 border-brand-purple/30 hover:border-brand-cyan'}`}
+            style={{ willChange: 'transform, opacity' }}
           >
             {/* Stage-based Visuals */}
-            {stage >= 2 && <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[scan_0.5s_linear_infinite]"></div>}
+            {stage >= 2 && <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent animate-[scan_0.5s_linear_infinite] pointer-events-none" style={{ willChange: 'transform' }}></div>}
 
-            <div className="relative z-10 w-12 h-12 flex items-center justify-center bg-slate-800 rounded-md border border-slate-700">
-              <span className="text-2xl">{tech.icon}</span>
+            <div className="relative z-10 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center bg-slate-800 rounded-md border border-slate-700">
+              <span className="text-xl sm:text-2xl">{tech.icon}</span>
             </div>
 
             <div className="flex flex-col relative z-10">
-              <span className="font-bold text-slate-200 text-sm tracking-wide font-mono">{tech.name}</span>
-              <span className="text-[10px] text-brand-purple font-medium uppercase tracking-wider flex items-center gap-1 mt-1">
+              <span className="font-bold text-slate-200 text-xs sm:text-sm tracking-wide font-mono">{tech.name}</span>
+              <span className="text-[9px] sm:text-[10px] text-brand-purple font-medium uppercase tracking-wider flex items-center gap-1 mt-1">
                 {getIcon(tech.category)} {tech.category}
               </span>
             </div>
           </motion.div>
         ) : (
           /* EXPLOSION EFFECTS */
-          <div className="absolute inset-0 w-full h-full pointer-events-none">
+          <div className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
             {/* Stage 3: Bigger explosion */}
             {[...Array(stage >= 3 ? 20 : 12)].map((_, i) => (
               <motion.div
@@ -324,8 +387,8 @@ const TechCard: React.FC<TechCardProps> = ({ tech, stage, onPop, triggerShake })
                   scale: 0
                 }}
                 transition={{ duration: stage >= 3 ? 0.4 : 0.8, ease: "easeOut" }}
-                className={`absolute w-2 h-2 sm:w-3 sm:h-3 rounded-full ${particleColors[Math.floor(Math.random() * particleColors.length)]}`}
-                style={{ left: 0, top: 0 }}
+                className={`absolute w-1.5 h-1.5 sm:w-2 sm:w-3 sm:h-3 rounded-full ${particleColors[Math.floor(Math.random() * particleColors.length)]}`}
+                style={{ left: 0, top: 0, willChange: 'transform, opacity' }}
               />
             ))}
           </div>
@@ -342,12 +405,13 @@ const FlashMessage = ({ text, subtext, color }: { text: string, subtext: string,
     animate={{ scale: [0, 1.2, 1], opacity: [0, 1, 0] }}
     transition={{ duration: 2.5, times: [0, 0.1, 1] }}
     className="absolute inset-0 z-40 flex flex-col items-center justify-center pointer-events-none"
+    style={{ willChange: 'transform, opacity' }}
   >
-    <div className={`relative px-12 py-6 bg-slate-900/80 border-y-4 ${color} backdrop-blur-xl transform -skew-x-12`}>
-      <h2 className={`text-5xl md:text-7xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-tighter drop-shadow-2xl`}>
+    <div className={`relative px-8 sm:px-12 py-4 sm:py-6 bg-slate-900/80 border-y-4 ${color} backdrop-blur-xl transform -skew-x-12`}>
+      <h2 className={`text-4xl sm:text-5xl md:text-7xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-tighter drop-shadow-2xl`}>
         {text}
       </h2>
-      <p className="text-white font-mono font-bold tracking-[0.5em] text-center mt-2">{subtext}</p>
+      <p className="text-white font-mono font-bold tracking-[0.3em] sm:tracking-[0.5em] text-center mt-2 text-sm sm:text-base">{subtext}</p>
     </div>
   </motion.div>
 )
@@ -432,17 +496,17 @@ const TechStack: React.FC = () => {
   } : {};
 
   return (
-    <section className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col justify-center border-t border-slate-200 dark:border-slate-900 min-h-[600px] transition-colors duration-300">
+    <section className="py-16 sm:py-20 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col justify-center border-t border-slate-200 dark:border-slate-900 min-h-[500px] sm:min-h-[600px] transition-colors duration-300">
 
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-slate-50 dark:bg-slate-950 overflow-hidden">
+      <div className="absolute inset-0 bg-slate-50 dark:bg-slate-950 overflow-hidden" aria-hidden="true">
         {/* Moving Grid Floor - Faster in higher stages */}
-        <div className={`absolute inset-0 bg-[linear-gradient(rgba(72,58,160,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(72,58,160,0.1)_1px,transparent_1px)] bg-[size:40px_40px] [transform-style:preserve-3d] [perspective:1000px] opacity-30 ${stage >= 2 ? 'animate-pulse' : ''}`}>
+        <div className={`absolute inset-0 bg-[linear-gradient(rgba(72,58,160,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(72,58,160,0.1)_1px,transparent_1px)] bg-[size:40px_40px] [transform-style:preserve-3d] [perspective:1000px] opacity-30 ${stage >= 2 ? 'animate-pulse' : ''}`} style={{ willChange: 'opacity' }}>
           <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-950 via-transparent to-slate-50 dark:to-slate-950"></div>
         </div>
 
         {/* Stars / Speed Lines */}
-        <div className={`absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 ${stage >= 3 ? 'animate-[ping_0.5s_infinite]' : 'animate-pulse'}`}></div>
+        <div className={`absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 ${stage >= 3 ? 'animate-[ping_0.5s_infinite]' : 'animate-pulse'}`} style={{ willChange: 'transform, opacity' }}></div>
       </div>
 
       {/* Overlays */}
@@ -450,14 +514,14 @@ const TechStack: React.FC = () => {
       <AnimatePresence>{showDiscount && <DiscountReward onClose={() => setShowDiscount(false)} />}</AnimatePresence>
       <AnimatePresence>{flashMsg && <FlashMessage text={flashMsg.title} subtext={flashMsg.sub} color={flashMsg.color} />}</AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 text-center mb-12 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 text-center mb-8 sm:mb-10 md:mb-12 relative z-20">
 
         {/* New Title */}
         <motion.h2
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white text-center mb-4 font-heading uppercase tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+          className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white text-center mb-3 sm:mb-4 font-heading uppercase tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
         >
           {t('tech_title_1')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-brand-purple">{t('tech_title_2')}</span> {t('tech_title_3')}
         </motion.h2>
@@ -468,7 +532,7 @@ const TechStack: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="flex justify-center mb-6"
+          className="flex justify-center mb-4 sm:mb-6"
         >
           <motion.div
             animate={{
@@ -480,22 +544,23 @@ const TechStack: React.FC = () => {
               ]
             }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-brand-gold via-amber-400 to-brand-gold rounded-full border-2 border-amber-300/50 shadow-lg"
+            className="inline-flex items-center gap-2 px-4 sm:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-brand-gold via-amber-400 to-brand-gold rounded-full border-2 border-amber-300/50 shadow-lg"
+            style={{ willChange: 'transform, box-shadow' }}
           >
             <motion.span
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              className="text-xl"
+              className="text-lg sm:text-xl"
             >
               ✨
             </motion.span>
-            <span className="font-bold text-white text-sm md:text-base drop-shadow-md">
+            <span className="font-bold text-white text-xs sm:text-sm md:text-base drop-shadow-md">
               {t('tech_discount_badge')}
             </span>
             <motion.span
               animate={{ rotate: [360, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-              className="text-xl"
+              className="text-lg sm:text-xl"
             >
               🎁
             </motion.span>
@@ -503,35 +568,36 @@ const TechStack: React.FC = () => {
         </motion.div>
 
         {/* HUD */}
-        <div className="flex flex-col items-center justify-center gap-6">
+        <div className="flex flex-col items-center justify-center gap-4 sm:gap-6">
           <motion.div
             animate={{ x: shake ? [-shake, shake, -shake, shake, 0] : 0 }}
-            className="flex flex-wrap justify-center items-center gap-4 md:gap-8 p-4 bg-white dark:bg-slate-900/80 border-y border-slate-200 dark:border-slate-800 backdrop-blur-md w-full max-w-3xl rounded-xl relative"
+            className="flex flex-wrap justify-center items-center gap-3 sm:gap-4 md:gap-8 p-3 sm:p-4 bg-white dark:bg-slate-900/80 border-y border-slate-200 dark:border-slate-800 backdrop-blur-md w-full max-w-3xl rounded-xl relative"
+            style={{ willChange: 'transform' }}
           >
             <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-cyan"></div>
             <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-cyan"></div>
             <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-cyan"></div>
             <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-cyan"></div>
 
-            <div className="flex flex-col items-center min-w-[120px]">
-              <span className="text-[10px] text-brand-purple uppercase tracking-widest font-bold">{t('tech_score')}</span>
-              <span className="text-3xl font-mono font-bold text-slate-900 dark:text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">
+            <div className="flex flex-col items-center min-w-[70px] sm:min-w-[100px] md:min-w-[120px]">
+              <span className="text-[8px] sm:text-[10px] text-brand-purple uppercase tracking-widest font-bold">{t('tech_score')}</span>
+              <span className="text-xl sm:text-2xl md:text-3xl font-mono font-bold text-slate-900 dark:text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">
                 {score.toLocaleString().padStart(6, '0')}
               </span>
             </div>
 
-            <div className="flex flex-col items-center min-w-[120px] border-x border-slate-200 dark:border-slate-800 px-8">
-              <span className="text-[10px] text-brand-gold uppercase tracking-widest font-bold flex items-center gap-1">
-                <ShieldAlert size={10} /> {t('tech_weapon')}
+            <div className="flex flex-col items-center min-w-[70px] sm:min-w-[100px] md:min-w-[120px] border-x border-slate-200 dark:border-slate-800 px-3 sm:px-4 md:px-8">
+              <span className="text-[8px] sm:text-[10px] text-brand-gold uppercase tracking-widest font-bold flex items-center gap-1 justify-center">
+                <ShieldAlert size={8} className="sm:size-10" /> {t('tech_weapon')}
               </span>
-              <div className="text-lg font-bold font-mono mt-1 text-slate-900 dark:text-white">
-                {stage === 1 ? 'STANDARD' : stage === 2 ? <span className="text-brand-cyan animate-pulse">RAPID FIRE</span> : <span className="text-red-500 animate-pulse">BOMB MODE</span>}
+              <div className="text-sm sm:text-base md:text-lg font-bold font-mono mt-1 text-slate-900 dark:text-white">
+                {stage === 1 ? 'STD' : stage === 2 ? <span className="text-brand-cyan animate-pulse">RAPID</span> : <span className="text-red-500 animate-pulse">BOMB</span>}
               </div>
             </div>
 
-            <div className="flex flex-col items-center min-w-[120px] relative">
-              <span className="text-[10px] text-brand-cyan uppercase tracking-widest font-bold">{t('tech_combo')}</span>
-              <motion.span key={combo} initial={{ scale: 0.8 }} animate={{ scale: 1.2 }} className={`text-3xl font-black italic font-heading ${combo > 5 ? 'text-brand-gold' : 'text-slate-400'}`}>
+            <div className="flex flex-col items-center min-w-[70px] sm:min-w-[100px] md:min-w-[120px] relative">
+              <span className="text-[8px] sm:text-[10px] text-brand-cyan uppercase tracking-widest font-bold">{t('tech_combo')}</span>
+              <motion.span key={combo} initial={{ scale: 0.8 }} animate={{ scale: 1.2 }} className={`text-xl sm:text-2xl md:text-3xl font-black italic font-heading ${combo > 5 ? 'text-brand-gold' : 'text-slate-400'}`}>
                 x{combo}
               </motion.span>
             </div>
@@ -540,7 +606,7 @@ const TechStack: React.FC = () => {
       </div>
 
       <div
-        className={`flex flex-col gap-10 relative z-10 pb-10 transition-all duration-200 ${activeBoss ? 'opacity-20 blur-sm pointer-events-none' : 'opacity-100'}`}
+        className={`flex flex-col gap-6 sm:gap-8 md:gap-10 relative z-10 pb-6 sm:pb-8 md:pb-10 transition-all duration-200 ${activeBoss ? 'opacity-20 blur-sm pointer-events-none' : 'opacity-100'}`}
         style={chaosStyle}
         dir="ltr"
       >

@@ -137,7 +137,8 @@ const Hero: React.FC = () => {
         <motion.div
           style={{
             left: useTransform(mouseX, [-0.5, 0.5], ['40%', '60%']),
-            top: useTransform(mouseY, [-0.5, 0.5], ['40%', '60%'])
+            top: useTransform(mouseY, [-0.5, 0.5], ['40%', '60%']),
+            willChange: 'left, top'
           }}
           className="absolute w-[800px] h-[800px] bg-brand-purple/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500"
         />
@@ -183,7 +184,7 @@ const Hero: React.FC = () => {
             {t('hero_badge')}
           </motion.div>
 
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-bold leading-tight mb-8 text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold leading-tight mb-6 md:mb-8 text-slate-900 dark:text-white tracking-tight break-words hyphens-auto overflow-wrap-anywhere">
             {/* Part 1: I craft digital */}
             {splitForAnimation(t('hero_title_1')).map((char, index) => (
               <motion.span
@@ -272,7 +273,7 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.5, duration: 0.6 }}
-            className="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-10 max-w-lg leading-relaxed font-medium"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-600 dark:text-slate-300 mb-6 md:mb-10 max-w-lg leading-relaxed font-medium break-words"
           >
             {t('hero_subtitle')}
           </motion.p>
@@ -281,17 +282,17 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 2.7, duration: 0.6 }}
-            className="flex flex-wrap gap-4"
+            className="flex flex-wrap gap-3 md:gap-4"
           >
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href="#contact"
               onClick={handleStartProject}
-              className="group px-8 py-4 bg-slate-900 dark:bg-brand-purple text-white rounded-full font-bold text-lg shadow-xl hover:shadow-2xl shadow-brand-purple/20 transition-all flex items-center gap-3"
+              className="group px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-slate-900 dark:bg-brand-purple text-white rounded-full font-bold text-sm sm:text-base md:text-lg shadow-xl hover:shadow-2xl shadow-brand-purple/20 transition-all flex items-center gap-2 md:gap-3"
             >
               {t('hero_cta_start')}
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
             </motion.a>
             <motion.a
               whileHover={{ scale: 1.05 }}
@@ -299,7 +300,7 @@ const Hero: React.FC = () => {
               href="#projects"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-8 py-4 bg-white dark:bg-transparent text-slate-800 dark:text-white border-2 border-slate-100 dark:border-slate-700 rounded-full font-bold text-lg hover:border-brand-purple/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-2"
+              className="px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-white dark:bg-transparent text-slate-800 dark:text-white border-2 border-slate-100 dark:border-slate-700 rounded-full font-bold text-sm sm:text-base md:text-lg hover:border-brand-purple/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-2"
             >
               {t('hero_cta_view')}
             </motion.a>
@@ -310,18 +311,18 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2.9, duration: 0.8 }}
-            className="mt-12 flex items-center gap-8 border-t border-slate-200/60 dark:border-slate-800 pt-8"
+            className="mt-6 sm:mt-8 md:mt-12 flex items-center gap-3 sm:gap-4 md:gap-8 border-t border-slate-200/60 dark:border-slate-800 pt-4 sm:pt-6 md:pt-8"
           >
-            <div className="flex -space-x-3">
+            <div className="flex -space-x-2 sm:-space-x-3">
               {[1, 2, 3, 4].map((i) => (
-                <img key={i} className="w-10 h-10 rounded-full border-2 border-white shadow-sm" src={`https://picsum.photos/seed/user${i}/100`} alt="Client" />
+                <img key={i} className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full border-2 border-white shadow-sm" src={`https://picsum.photos/seed/user${i}/100`} alt="Client" loading="lazy" />
               ))}
             </div>
             <div>
-              <div className="flex items-center gap-1 mb-1">
-                {[1, 2, 3, 4, 5].map(i => <span key={i} className="text-brand-gold text-sm">★</span>)}
+              <div className="flex items-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
+                {[1, 2, 3, 4, 5].map(i => <span key={i} className="text-brand-gold text-[10px] sm:text-xs md:text-sm">★</span>)}
               </div>
-              <p className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('hero_trust')}</p>
+              <p className="text-[10px] sm:text-xs md:text-sm font-bold text-slate-700 dark:text-slate-300">{t('hero_trust')}</p>
             </div>
           </motion.div>
         </div>
@@ -331,16 +332,27 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="relative lg:h-[600px] flex items-center justify-center [perspective:2000px]"
+          className="relative lg:h-[500px] h-[350px] sm:h-[400px] flex items-center justify-center [perspective:2000px]"
         >
           <motion.div
             style={{
               rotateX,
               rotateY,
-              transformStyle: "preserve-3d"
+              transformStyle: "preserve-3d",
+              willChange: 'transform'
             }}
-            className="relative w-80 h-[480px] cursor-pointer group"
+            tabIndex={0}
+            role="button"
+            aria-label={isFlipped ? t('hero_card_front_aria') : t('hero_card_back_aria')}
+            aria-pressed={isFlipped}
+            className="relative w-56 sm:w-64 md:w-72 lg:w-80 h-[320px] sm:h-[380px] md:h-[430px] lg:h-[480px] cursor-pointer group focus:outline-none focus:ring-4 focus:ring-brand-purple/50 rounded-3xl"
             onClick={() => setIsFlipped(!isFlipped)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setIsFlipped(!isFlipped);
+              }
+            }}
           >
             <motion.div
               animate={{ rotateY: isFlipped ? 180 : 0 }}
@@ -357,6 +369,7 @@ const Hero: React.FC = () => {
                   <img
                     src="/assets/waseem-profile.jpg"
                     alt={t('hero_profile_alt')}
+                    loading="lazy"
                     className="object-cover w-full h-full opacity-90 group-hover:scale-105 transition-transform duration-700"
                   />
 
@@ -423,7 +436,7 @@ const Hero: React.FC = () => {
                     </div>
                   </div>
 
-                  <p className="text-center text-slate-400 text-xs mt-6 italic">Click to flip back</p>
+                  <p className="text-center text-slate-400 text-xs mt-6 italic">{t('hero_card_flip_hint')}</p>
                 </div>
               </div>
             </motion.div>
@@ -433,23 +446,23 @@ const Hero: React.FC = () => {
             {/* Element 1: Top Right Badge */}
             <motion.div
               style={{ x: layer2X, y: layer2Y, z: 50 }}
-              className="absolute -top-6 -right-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 flex flex-col items-center gap-2 transform translate-z-20"
+              className="absolute -top-4 sm:-top-6 -right-4 sm:-right-6 bg-white p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-slate-100 flex flex-col items-center gap-1 sm:gap-2 transform translate-z-20"
             >
-              <span className="text-3xl">🚀</span>
-              <span className="text-xs font-bold text-slate-900">{t('hero_badge_perf')}</span>
+              <span className="text-xl sm:text-2xl md:text-3xl">🚀</span>
+              <span className="text-[10px] sm:text-xs font-bold text-slate-900">{t('hero_badge_perf')}</span>
             </motion.div>
 
             {/* Element 2: Bottom Left Stat */}
             <motion.div
               style={{ x: layer1X, y: layer1Y, z: 30 }}
-              className="absolute -bottom-8 -left-8 bg-slate-800 p-4 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3 transform translate-z-10"
+              className="absolute -bottom-6 sm:-bottom-8 -left-6 sm:-left-8 bg-slate-800 p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl border border-slate-700 flex items-center gap-2 sm:gap-3 transform translate-z-10"
             >
-              <div className="w-10 h-10 rounded-full bg-brand-purple flex items-center justify-center text-white">
-                <span className="font-bold">AI</span>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-brand-purple flex items-center justify-center text-white">
+                <span className="font-bold text-xs sm:text-sm">AI</span>
               </div>
               <div>
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider">{t('services_badge')}</p>
-                <p className="text-white font-bold">{t('hero_badge_ai')}</p>
+                <p className="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wider">{t('services_badge')}</p>
+                <p className="text-white font-bold text-xs sm:text-sm">{t('hero_badge_ai')}</p>
               </div>
             </motion.div>
 

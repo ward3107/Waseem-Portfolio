@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0 cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
-            <img src={LOGO_SRC} alt="Waseem Logo" className="h-10 w-auto object-contain" />
+            <img src={LOGO_SRC} alt="Waseem Logo" className="h-10 w-auto object-contain" loading="lazy" />
           </div>
 
           {/* Desktop Menu */}
@@ -44,17 +44,16 @@ const Navbar: React.FC = () => {
             ))}
 
             {/* Language Switcher */}
-            {/* Language Switcher */}
             <div className="relative">
               <button
                 onClick={() => {
                   const next = language === 'en' ? 'he' : language === 'he' ? 'ar' : 'en';
                   setLanguage(next);
                 }}
-                className="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight transition-colors p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-                title="Switch Language"
+                aria-label={`Switch language. Current: ${language.toUpperCase()}. Click to change.`}
+                className="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight transition-colors p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
               >
-                <Globe size={20} />
+                <Globe size={20} aria-hidden="true" />
                 <span className="uppercase font-bold text-xs">{language}</span>
               </button>
             </div>
@@ -62,10 +61,10 @@ const Navbar: React.FC = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-              title="Toggle Theme"
+              aria-label={`Toggle ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              className="p-2 text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
             >
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+              {theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
             </button>
 
             <a
@@ -86,23 +85,28 @@ const Navbar: React.FC = () => {
                 const next = language === 'en' ? 'he' : language === 'he' ? 'ar' : 'en';
                 setLanguage(next);
               }}
-              className="text-slate-700 dark:text-slate-300 font-bold uppercase text-sm border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1"
+              aria-label={`Switch language. Current: ${language.toUpperCase()}`}
+              className="text-slate-700 dark:text-slate-300 font-bold uppercase text-sm border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
             >
               {language}
             </button>
 
             <button
               onClick={toggleTheme}
-              className="text-slate-700 dark:text-slate-300 hover:text-brand-purple p-1"
+              aria-label={`Toggle ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              className="text-slate-700 dark:text-slate-300 hover:text-brand-purple p-1 focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"
             >
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+              {theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
             </button>
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-slate-700 dark:text-slate-300 hover:text-brand-purple focus:outline-none"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
+              className="text-slate-700 dark:text-slate-300 hover:text-brand-purple focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"
             >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
+              {isOpen ? <X size={28} aria-hidden="true" /> : <Menu size={28} aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -112,26 +116,47 @@ const Navbar: React.FC = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 overflow-hidden"
+            className="md:hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 overflow-hidden relative z-50"
+            role="navigation"
+            aria-label="Main navigation menu"
           >
             <div className="px-6 pt-4 pb-8 space-y-4 flex flex-col">
               {NAV_LINKS[language].map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-slate-600 dark:text-slate-300 hover:text-brand-purple text-lg font-medium"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsOpen(false);
+                    setTimeout(() => {
+                      const target = document.querySelector(link.href);
+                      if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }, 100);
+                  }}
+                  className="text-slate-600 dark:text-slate-300 hover:text-brand-purple text-lg font-medium focus:outline-none focus:ring-2 focus:ring-brand-purple rounded-lg px-2 py-1 -mx-2 block cursor-pointer"
                 >
                   {link.name}
                 </a>
               ))}
               <a
                 href="#contact"
-                onClick={() => setIsOpen(false)}
-                className="w-full text-center py-3 rounded-xl bg-brand-purple text-white font-medium shadow-md"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsOpen(false);
+                  setTimeout(() => {
+                    const target = document.querySelector('#contact');
+                    if (target) {
+                      target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }, 100);
+                }}
+                className="w-full text-center py-3 rounded-xl bg-brand-purple text-white font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 cursor-pointer"
               >
                 {t('letsTalk')}
               </a>
