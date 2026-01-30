@@ -7,7 +7,12 @@
       "Bash(git init:*)",
       "Bash(git remote add:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(mkdir:*)",
+      "Bash(curl:*)",
+      "Bash(echo \"\n/* Flip card styles */\n.backface-hidden {\n  -webkit-backface-visibility: hidden;\n  backface-visibility: hidden;\n}\")",
+      "Bash(git push:*)",
+      "Bash(timeout:*)"
     ]
   }
 }

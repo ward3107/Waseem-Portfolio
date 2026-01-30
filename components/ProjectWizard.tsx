@@ -56,14 +56,51 @@ const ProjectWizard: React.FC = () => {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // Simulate API call
-        setTimeout(() => {
+
+        try {
+            const response = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    subject: 'New Project Request from Portfolio Wizard',
+                    email: 'contact@waseem.com', // Default notification email
+                    project_type: selections.type,
+                    vibe: selections.vibe,
+                    budget: selections.budget,
+                    details: selections.details,
+                    message: `
+Project Type: ${selections.type}
+Vibe/Style: ${selections.vibe}
+Budget Range: ${selections.budget}
+
+Details:
+${selections.details}
+                    `.trim()
+                }),
+            });
+
+            if (response.ok) {
+                setIsSent(true);
+                // Track analytics event
+                if (typeof window !== 'undefined' && (window as any).gtag) {
+                    (window as any).gtag('event', 'generate_lead', {
+                        form_type: 'project_wizard'
+                    });
+                }
+            } else {
+                alert('Submission failed. Please try again or contact directly.');
+            }
+        } catch (error) {
+            alert('Network error. Please try again.');
+        } finally {
             setIsSubmitting(false);
-            setIsSent(true);
-        }, 1500);
+        }
     };
 
     if (isSent) {

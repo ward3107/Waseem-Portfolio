@@ -61,12 +61,12 @@ const Contact: React.FC = () => {
               transition={{ delay: 0.3 }}
               className="grid grid-cols-1 sm:grid-cols-2 gap-4"
             >
-              <a href="mailto:waseem@example.com" className="group flex flex-col p-6 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-brand-purple/20 hover:shadow-xl transition-all duration-300">
+              <a href="mailto:contact@waseem-dev.com" className="group flex flex-col p-6 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-brand-purple/20 hover:shadow-xl transition-all duration-300">
                 <div className="w-12 h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-slate-900 dark:text-white group-hover:bg-brand-purple group-hover:text-white transition-colors mb-4 shadow-sm">
                   <Mail size={20} />
                 </div>
                 <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">{t('contact_email_btn')}</p>
-                <p className="font-bold text-slate-900 dark:text-white text-lg group-hover:text-brand-purple transition-colors">waseem@example.com</p>
+                <p className="font-bold text-slate-900 dark:text-white text-lg group-hover:text-brand-purple transition-colors">contact@waseem-dev.com</p>
               </a>
 
               {/* Updated WhatsApp Block to be Green */}

@@ -129,12 +129,8 @@ const Process: React.FC = () => {
                 <h3 className="text-4xl font-heading font-bold mb-6 text-slate-900 dark:text-white leading-tight">
                   {step.title}
                 </h3>
-                <div className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-8 whitespace-pre-line">
+                <div className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
                   {step.desc}
-                </div>
-                <div className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white group cursor-pointer">
-                  <div className={`w-8 h-[2px] ${step.bg.replace('bg-', 'bg-') === step.bg ? step.bg.replace('/10', '/100').replace('text-', 'bg-') : 'bg-slate-900 dark:bg-white'} transition-all group-hover:w-16`}></div>
-                  {t('process_read_specs')}
                 </div>
               </div>
             </div>

@@ -356,7 +356,7 @@ const Hero: React.FC = () => {
                 <div className="w-full h-full bg-slate-800 rounded-[20px] overflow-hidden relative">
                   <img
                     src="/assets/waseem-profile.jpg"
-                    alt="Waseem Profile"
+                    alt={t('hero_profile_alt')}
                     className="object-cover w-full h-full opacity-90 group-hover:scale-105 transition-transform duration-700"
                   />
 

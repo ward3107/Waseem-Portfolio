@@ -8,6 +8,7 @@ import AboutTimeline from './components/AboutTimeline';
 import Projects from './components/Projects';
 import Process from './components/Process';
 import TechStack from './components/TechStack';
+import Blog from './components/Blog';
 import Contact from './components/Contact';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
@@ -37,6 +38,7 @@ const App: React.FC = () => {
               <Process />
               <TechStack />
               <SocialHub />
+              <Blog />
               <FAQ />
               <Contact />
             </main>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useTransform, useInView, animate } from 'framer-motion';
 import { Brain, Cpu, Zap, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -7,28 +7,47 @@ import { TimelineItem } from '../types';
 // Sub-component for spinning year effect
 const SpinningYear = ({ year }: { year: string }) => {
     const numericYear = parseInt(year);
-    const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, margin: "-20%" });
+    const ref = useRef<HTMLSpanElement>(null);
+    const [hasAnimated, setHasAnimated] = useState(false);
+    const [displayYear, setDisplayYear] = useState(isNaN(numericYear) ? 0 : numericYear);
 
-    // Start 75 years in the past to simulate "time passing" until now
-    const count = useMotionValue(isNaN(numericYear) ? 0 : numericYear - 75);
-    const rounded = useTransform(count, (latest) => Math.round(latest));
+    const isInView = useInView(ref, {
+        amount: "any", // More lenient - trigger when ANY pixel is visible
+        margin: "0px" // No margin, trigger when actually visible
+    });
 
     useEffect(() => {
-        if (isInView && !isNaN(numericYear)) {
-            const controls = animate(count, numericYear, {
-                duration: 2.5, // 2.5 seconds of spinning
-                ease: "circOut", // Starts fast, slows down significantly at the end
-            });
-            return controls.stop;
+        console.log('SpinningYear:', { year, numericYear, isInView, hasAnimated });
+        if (isInView && !hasAnimated && !isNaN(numericYear)) {
+            console.log('Starting animation for year:', numericYear);
+            const startYear = numericYear - 50;
+            let current = startYear;
+            const duration = 800; // 0.8 seconds - much faster
+            const steps = 60; // 60 frames
+            const increment = (numericYear - startYear) / steps;
+            const interval = duration / steps;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= numericYear) {
+                    setDisplayYear(numericYear);
+                    clearInterval(timer);
+                    setHasAnimated(true);
+                    console.log('Animation complete for year:', numericYear);
+                } else {
+                    setDisplayYear(Math.round(current));
+                }
+            }, interval);
+
+            return () => clearInterval(timer);
         }
-    }, [isInView, numericYear, count]);
+    }, [isInView, hasAnimated, numericYear]);
 
     if (isNaN(numericYear)) return <span>{year}</span>;
 
     return (
         <span ref={ref} className="tabular-nums relative inline-block" dir="ltr">
-            <motion.span>{rounded}</motion.span>
+            {displayYear}
         </span>
     );
 };
@@ -125,13 +144,16 @@ const AboutTimeline: React.FC = () => {
                             <div className="bg-white dark:bg-slate-900 rounded-3xl p-2 shadow-2xl border border-slate-100 dark:border-slate-800 relative overflow-hidden transform transition-transform duration-500 group-hover:scale-[1.02]">
 
                                 {/* Header Image Area */}
-                                <div className="relative h-64 rounded-2xl overflow-hidden bg-slate-900">
-                                    <img
-                                        src="https://picsum.photos/seed/waseem_profile/800/800"
-                                        alt="Waseem Profile"
-                                        className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700"
+                                <div className="relative h-96 rounded-2xl overflow-hidden bg-slate-900">
+                                    <video
+                                        src="/assets/waseem-profile-video.mp4"
+                                        autoPlay
+                                        loop
+                                        muted
+                                        playsInline
+                                        className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                                    <div className="absolute inset-0 bg-gradient-to-t from-brand-purpleDark via-brand-purple/50 to-transparent"></div>
 
                                     <div className="absolute bottom-4 left-4 text-white">
                                         <h3 className="text-3xl font-heading font-bold">Waseem</h3>

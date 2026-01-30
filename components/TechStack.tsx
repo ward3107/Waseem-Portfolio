@@ -457,10 +457,50 @@ const TechStack: React.FC = () => {
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white text-center mb-8 font-heading uppercase tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+          className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white text-center mb-4 font-heading uppercase tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
         >
           {t('tech_title_1')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-brand-purple">{t('tech_title_2')}</span> {t('tech_title_3')}
         </motion.h2>
+
+        {/* Discount Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="flex justify-center mb-6"
+        >
+          <motion.div
+            animate={{
+              scale: [1, 1.05, 1],
+              boxShadow: [
+                "0 0 0 0 rgba(234, 179, 8, 0.7)",
+                "0 0 20px 5px rgba(234, 179, 8, 0.4)",
+                "0 0 0 0 rgba(234, 179, 8, 0)"
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="inline-flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-brand-gold via-amber-400 to-brand-gold rounded-full border-2 border-amber-300/50 shadow-lg"
+          >
+            <motion.span
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              className="text-xl"
+            >
+              ✨
+            </motion.span>
+            <span className="font-bold text-white text-sm md:text-base drop-shadow-md">
+              {t('tech_discount_badge')}
+            </span>
+            <motion.span
+              animate={{ rotate: [360, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              className="text-xl"
+            >
+              🎁
+            </motion.span>
+          </motion.div>
+        </motion.div>
 
         {/* HUD */}
         <div className="flex flex-col items-center justify-center gap-6">

@@ -16,6 +16,7 @@ const ContactForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -44,14 +45,54 @@ const ContactForm: React.FC = () => {
     if (!validate()) return;
 
     setIsLoading(true);
+    setSubmitError(null);
 
-    // Simulate API call and network delay
-    setTimeout(() => {
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'YOUR_ACCESS_KEY', // Replace with your Web3Forms access key
+          subject: 'New Contact from Portfolio',
+          from_name: formData.name,
+          reply_to: formData.email,
+          project_type: formData.projectType,
+          budget: formData.budget,
+          message: `
+Name: ${formData.name}
+Email: ${formData.email}
+Project Type: ${formData.projectType || 'Not specified'}
+Budget: ${formData.budget || 'Not specified'}
+
+Message:
+${formData.message}
+          `.trim()
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setIsSuccess(true);
+        setFormData({ name: '', email: '', projectType: '', budget: '', message: '' });
+        setErrors({});
+
+        // Track analytics event
+        if (typeof window !== 'undefined' && (window as any).gtag) {
+          (window as any).gtag('event', 'generate_lead', {
+            form_type: 'contact'
+          });
+        }
+      } else {
+        setSubmitError(result.message || 'Submission failed. Please try again.');
+      }
+    } catch (error) {
+      setSubmitError('Network error. Please try again.');
+    } finally {
       setIsLoading(false);
-      setIsSuccess(true);
-      setFormData({ name: '', email: '', projectType: '', budget: '', message: '' });
-      setErrors({});
-    }, 1500);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -126,6 +167,20 @@ const ContactForm: React.FC = () => {
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit} noValidate aria-label="Contact form">
+          {/* Error Message */}
+          <AnimatePresence>
+            {submitError && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 rounded-lg flex items-center gap-2"
+              >
+                <AlertCircle size={16} className="text-red-500" />
+                <span className="text-sm text-red-700 dark:text-red-300">{submitError}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-bold text-slate-700 flex justify-between">

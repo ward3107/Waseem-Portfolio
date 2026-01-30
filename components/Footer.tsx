@@ -8,6 +8,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const { language, t } = useLanguage();
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   return (
     <footer id="footer" className="bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-t border-slate-200 dark:border-slate-900 relative overflow-hidden transition-colors duration-300">
@@ -26,13 +27,13 @@ const Footer: React.FC = () => {
               {t('footer_desc')}
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-purple dark:hover:text-white hover:border-brand-purple hover:bg-brand-purple/10 transition-all duration-300">
+              <a href="https://github.com/waseem-portfolio" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-purple dark:hover:text-white hover:border-brand-purple hover:bg-brand-purple/10 transition-all duration-300">
                 <Github size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-white hover:border-brand-blue hover:bg-brand-blue/10 transition-all duration-300">
+              <a href="https://linkedin.com/in/waseem-profile" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-white hover:border-brand-blue hover:bg-brand-blue/10 transition-all duration-300">
                 <Linkedin size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-cyan dark:hover:text-white hover:border-brand-cyan hover:bg-brand-cyan/10 transition-all duration-300">
+              <a href="https://twitter.com/waseemdev" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-cyan dark:hover:text-white hover:border-brand-cyan hover:bg-brand-cyan/10 transition-all duration-300">
                 <Twitter size={18} />
               </a>
             </div>
@@ -67,26 +68,164 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Newsletter / Contact */}
-          <div>
-            <h4 className="text-lg font-bold mb-6 text-slate-900 dark:text-white">{t('footer_stay_updated')}</h4>
-            <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">
-              {t('footer_sub_text')}
-            </p>
-            <form className="flex flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
-              <div className="relative">
-                <Mail size={16} className="absolute left-3 rtl:right-3 rtl:left-auto top-1/2 -translate-y-1/2 text-slate-500" />
-                <input
-                  type="email"
-                  placeholder={t('footer_email_placeholder')}
-                  className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg pl-10 rtl:pr-10 rtl:pl-4 pr-4 py-3 text-sm focus:outline-none focus:border-brand-purple transition-colors text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-600"
-                />
-              </div>
-              <button className="w-full bg-white text-slate-900 font-bold py-3 rounded-lg hover:bg-brand-purple hover:text-white transition-all duration-300 text-sm">
-                {t('footer_sub_btn')}
-              </button>
-            </form>
-          </div>
+          {/* Newsletter / Contact - Enhanced with highlighting */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            {/* Glowing background effect */}
+            <motion.div
+              animate={{
+                boxShadow: [
+                  "0 0 20px rgba(147, 51, 234, 0.1)",
+                  "0 0 40px rgba(147, 51, 234, 0.2)",
+                  "0 0 20px rgba(147, 51, 234, 0.1)",
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="absolute -inset-1 bg-gradient-to-r from-brand-purple via-brand-cyan to-brand-gold rounded-2xl opacity-30 blur-sm"
+            />
+
+            <div className="relative bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 rounded-xl p-5 border-2 border-brand-purple/20 shadow-lg">
+              {/* Animated badge */}
+              <motion.div
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-brand-gold to-amber-400 rounded-full flex items-center justify-center shadow-lg"
+              >
+                <span className="text-xs">✨</span>
+              </motion.div>
+
+              <h4 className="text-lg font-bold mb-2 bg-gradient-to-r from-brand-purple to-brand-cyan bg-clip-text text-transparent">
+                {t('footer_stay_updated')}
+              </h4>
+              <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">
+                {t('footer_sub_text')}
+              </p>
+
+              {/* Lead Magnet Incentive */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="mb-4 p-3 bg-gradient-to-r from-brand-purple/10 to-brand-cyan/10 border border-brand-purple/30 rounded-lg relative overflow-hidden group"
+              >
+                <div className="absolute top-0 right-0 w-20 h-20 bg-brand-gold/20 rounded-full blur-2xl group-hover:bg-brand-gold/30 transition-colors"></div>
+                <div className="relative flex items-start gap-3">
+                  <motion.span
+                    animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="text-2xl flex-shrink-0"
+                  >
+                    🎁
+                  </motion.span>
+                  <div className="text-sm">
+                    <p className="font-bold text-slate-900 dark:text-white mb-1">{t('footer_lead_magnet_title')}</p>
+                    <p className="text-slate-600 dark:text-slate-400">{t('footer_lead_magnet_desc')}</p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Success Message */}
+              <AnimatePresence>
+                {newsletterStatus === 'success' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="mb-4 p-3 bg-green-100 dark:bg-green-900/20 border border-green-400 rounded-lg flex items-center gap-2"
+                  >
+                    <span className="text-green-600 dark:text-green-400">✓</span>
+                    <span className="text-sm text-green-700 dark:text-green-300 font-medium">
+                      {language === 'he' ? 'נרשמת בהצלחה!' : language === 'ar' ? 'تم الاشتراك بنجاح!' : 'Successfully subscribed!'}
+                    </span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <form
+                className="flex flex-col gap-3"
+                action="https://formspree.io/f/YOUR_FORM_ID"
+                method="POST"
+                onSubmit={(e) => {
+                  // Handle client-side submission tracking
+                  const formData = new FormData(e.currentTarget);
+                  fetch(e.currentTarget.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                  }).then(response => {
+                    if (response.ok) {
+                      setNewsletterStatus('success');
+                      // Track signup event
+                      if (typeof window !== 'undefined' && (window as any).gtag) {
+                        (window as any).gtag('event', 'sign_up', { form_type: 'newsletter' });
+                      }
+                    } else {
+                      setNewsletterStatus('error');
+                    }
+                  });
+                }}
+              >
+                <input type="hidden" name="subject" value="Newsletter Subscription from Portfolio" />
+                <motion.div
+                  className="relative"
+                  animate={{
+                    boxShadow: [
+                      "0 0 0 0 rgba(147, 51, 234, 0)",
+                      "0 0 0 8px rgba(147, 51, 234, 0.1)",
+                      "0 0 0 16px rgba(147, 51, 234, 0.05)",
+                      "0 0 0 0 rgba(147, 51, 234, 0)",
+                    ],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Mail size={16} className="absolute left-3 rtl:right-3 rtl:left-auto top-1/2 -translate-y-1/2 text-slate-500 z-10" />
+                  <motion.input
+                    type="email"
+                    name="email"
+                    placeholder={t('footer_email_placeholder')}
+                    required
+                    animate={{
+                      borderColor: [
+                        "rgb(226, 232, 240)",
+                        "rgb(168, 85, 247)",
+                        "rgb(226, 232, 240)",
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    disabled={newsletterStatus === 'success'}
+                    className="w-full bg-white dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-700 rounded-lg pl-10 rtl:pr-10 rtl:pl-4 pr-4 py-3 text-sm focus:outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 transition-all text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                </motion.div>
+                <motion.button
+                  whileHover={{ scale: newsletterStatus === 'success' ? 1 : 1.02 }}
+                  whileTap={{ scale: newsletterStatus === 'success' ? 1 : 0.98 }}
+                  disabled={newsletterStatus === 'success'}
+                  className="w-full bg-gradient-to-r from-brand-purple to-brand-cyan text-white font-bold py-3 rounded-lg hover:shadow-lg hover:shadow-brand-purple/30 transition-all duration-300 text-sm relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    {newsletterStatus === 'success'
+                      ? (language === 'he' ? 'נרשמת!' : language === 'ar' ? 'مشترك!' : 'Subscribed!')
+                      : <>
+                        {t('footer_sub_btn')}
+                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                      </>
+                    }
+                  </span>
+                  {newsletterStatus !== 'success' && (
+                    <motion.div
+                      animate={{ x: ['-100%', '200%'] }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 2, ease: "linear" }}
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
+                    />
+                  )}
+                </motion.button>
+              </form>
+            </div>
+          </motion.div>
         </div>
 
         {/* Bottom Bar */}
@@ -101,7 +240,7 @@ const Footer: React.FC = () => {
             </button>
           </div>
           <p className="flex items-center gap-1">
-            {t('footer_made_with')} <Heart size={12} className="text-red-500 fill-red-500" /> {t('footer_tel_aviv')}
+            {t('footer_made_with')} {t('footer_tel_aviv')}
           </p>
         </div>
       </div>

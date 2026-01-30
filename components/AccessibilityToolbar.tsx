@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Accessibility, X, RotateCcw, Sun, Moon, Type,
   MousePointer, Image as ImageIcon, Zap, Link as LinkIcon,
   AlignLeft, Check, EyeOff
 } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 type ContrastMode = 'normal' | 'high' | 'inverted';
 
@@ -32,10 +34,20 @@ const DEFAULT_STATE: A11yState = {
 };
 
 const AccessibilityToolbar: React.FC = () => {
+  const { language, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [state, setState] = useState<A11yState>(DEFAULT_STATE);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  // Get accessibility label based on language
+  const getAccessibilityLabel = () => {
+    switch (language) {
+      case 'he': return 'נגישות';
+      case 'ar': return 'إمكانية الوصول';
+      default: return 'Accessibility';
+    }
+  };
 
   // Load from session storage on mount
   useEffect(() => {
@@ -162,13 +174,17 @@ const AccessibilityToolbar: React.FC = () => {
 
   if (!isOpen) {
     return (
-      <button
+      <motion.button
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-slate-900 dark:bg-slate-800 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group"
-        aria-label="Accessibility Options"
+        className="fixed bottom-6 right-6 z-50 bg-gradient-to-br from-brand-purple to-brand-purpleLight text-white p-4 rounded-full shadow-2xl hover:shadow-brand-purple/50 transition-all focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group border-2 border-white/20"
+        aria-label={getAccessibilityLabel() + ' Options'}
       >
-        <Accessibility size={28} className="group-hover:rotate-12 transition-transform duration-500" />
-      </button>
+        <Accessibility size={28} className="group-hover:rotate-12 transition-transform duration-500 drop-shadow-lg" />
+      </motion.button>
     );
   }
 
@@ -184,14 +200,16 @@ const AccessibilityToolbar: React.FC = () => {
         aria-label="Accessibility Settings"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <Accessibility className="text-brand-purple" size={24} />
-            Accessibility
+        <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-brand-purple/10 to-brand-cyan/10">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 drop-shadow-sm">
+            <Accessibility className="text-brand-purple drop-shadow-md" size={24} />
+            <span className="bg-gradient-to-r from-brand-purple to-brand-cyan bg-clip-text text-transparent font-extrabold">
+              {getAccessibilityLabel()}
+            </span>
           </h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500 dark:text-slate-400"
+            className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500 dark:text-slate-400 hover:text-red-500"
           >
             <X size={20} />
           </button>
@@ -252,21 +270,6 @@ const AccessibilityToolbar: React.FC = () => {
                 </button>
               ))}
             </div>
-          </div>
-
-          <hr className="border-slate-100 dark:border-slate-800" />
-
-          {/* 3. Theme Toggle */}
-          <div className="flex items-center justify-between">
-            <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-              {state.isDark ? <Moon size={18} /> : <Sun size={18} />} Theme
-            </label>
-            <button
-              onClick={() => updateState('isDark', !state.isDark)}
-              className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors ${state.isDark ? 'bg-brand-purple' : 'bg-slate-300 dark:bg-slate-600'}`}
-            >
-              <span className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${state.isDark ? 'translate-x-9' : 'translate-x-1'}`} />
-            </button>
           </div>
 
           <hr className="border-slate-100 dark:border-slate-800" />
