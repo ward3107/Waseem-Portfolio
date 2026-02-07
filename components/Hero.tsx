@@ -1,11 +1,16 @@
 import { motion, useMotionValue, useSpring, useTransform, Variants, AnimatePresence } from 'framer-motion';
-import { ArrowRight, MousePointer2, Calendar, Heart, Sparkles } from 'lucide-react';
+import { ArrowRight, ArrowLeft, MousePointer2, Calendar, Heart, Sparkles } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useState } from 'react';
 
 const Hero: React.FC = () => {
   const { t, language } = useLanguage();
   const [isFlipped, setIsFlipped] = useState(false);
+
+  // Check for reduced motion preference
+  const prefersReducedMotion = typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
 
   // Helper function to split text for animation
   // For Arabic, split by words to preserve letter connections
@@ -36,6 +41,8 @@ const Hero: React.FC = () => {
   const layer2Y = useTransform(mouseY, [-0.5, 0.5], [30, -30]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
+    if (prefersReducedMotion) return; // Skip mouse tracking for reduced motion
+
     const rect = e.currentTarget.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
@@ -71,11 +78,13 @@ const Hero: React.FC = () => {
 
   // Standard letter animation
   const letterVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 20 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      transition: {
+      transition: prefersReducedMotion ? {
+        duration: 0
+      } : {
         delay: i * 0.03, // Fast typing
         type: "spring",
         damping: 12,
@@ -88,17 +97,19 @@ const Hero: React.FC = () => {
   const emphasizedVariants: Variants = {
     hidden: {
       opacity: 0,
-      scale: 5, // Start HUGE (5x size)
+      scale: prefersReducedMotion ? 1 : 5,
       y: 0,
-      filter: "blur(10px)",
+      filter: prefersReducedMotion ? "blur(0px)" : "blur(10px)",
     },
     visible: (i: number) => ({
       opacity: 1,
       scale: 1,
       y: 0,
       filter: "blur(0px)",
-      transition: {
-        delay: 0.8 + (i * 0.06), // Start after "I craft digital"
+      transition: prefersReducedMotion ? {
+        duration: 0
+      } : {
+        delay: 0.4 + (i * 0.04), // Faster: Start after "I craft digital"
         type: "spring",
         damping: 15,
         stiffness: 250, // Snappy spring
@@ -109,12 +120,14 @@ const Hero: React.FC = () => {
 
   // Part 3 animation - delayed after "experiences"
   const part3Variants: Variants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 20 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      transition: {
-        delay: 2.0 + (i * 0.03), // Start after "experiences" finishes
+      transition: prefersReducedMotion ? {
+        duration: 0
+      } : {
+        delay: 1.0 + (i * 0.02), // Faster: Start after "experiences" finishes
         type: "spring",
         damping: 12,
         stiffness: 100
@@ -144,27 +157,29 @@ const Hero: React.FC = () => {
         />
 
         {/* Fresh Green Wave on the Right Side */}
-        <div className="absolute top-0 right-0 h-full w-[60%] pointer-events-none opacity-80">
-          {/* Primary Wave */}
-          <motion.div
-            animate={{
-              scale: [1, 1.05, 1],
-              rotate: [0, 3, 0],
-              x: [0, 20, 0]
-            }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-[20%] -right-[20%] w-[900px] h-[1000px] bg-gradient-to-bl from-emerald-100/50 via-teal-50/30 to-transparent rounded-[40%] blur-[80px]"
-          />
-          {/* Secondary Wave for Depth */}
-          <motion.div
-            animate={{
-              scale: [1, 1.15, 1],
-              y: [0, -40, 0]
-            }}
-            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-            className="absolute top-[20%] -right-[30%] w-[700px] h-[700px] bg-gradient-to-bl from-brand-green/5 via-green-100/20 to-transparent rounded-full blur-[90px]"
-          />
-        </div>
+        {!prefersReducedMotion && (
+          <div className="absolute top-0 right-0 h-full w-[60%] pointer-events-none opacity-80">
+            {/* Primary Wave */}
+            <motion.div
+              animate={{
+                scale: [1, 1.05, 1],
+                rotate: [0, 3, 0],
+                x: [0, 20, 0]
+              }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -top-[20%] -right-[20%] w-[900px] h-[1000px] bg-gradient-to-bl from-emerald-100/50 via-teal-50/30 to-transparent rounded-[40%] blur-[80px]"
+            />
+            {/* Secondary Wave for Depth */}
+            <motion.div
+              animate={{
+                scale: [1, 1.15, 1],
+                y: [0, -40, 0]
+              }}
+              transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              className="absolute top-[20%] -right-[30%] w-[700px] h-[700px] bg-gradient-to-bl from-brand-green/5 via-green-100/20 to-transparent rounded-full blur-[90px]"
+            />
+          </div>
+        )}
       </div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
@@ -184,7 +199,7 @@ const Hero: React.FC = () => {
             {t('hero_badge')}
           </motion.div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold leading-tight mb-6 md:mb-8 text-slate-900 dark:text-white tracking-tight break-words hyphens-auto overflow-wrap-anywhere">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold leading-tight mb-4 md:mb-6 lg:mb-8 text-slate-900 dark:text-white tracking-tight break-words hyphens-auto overflow-wrap-anywhere">
             {/* Part 1: I craft digital */}
             {splitForAnimation(t('hero_title_1')).map((char, index) => (
               <motion.span
@@ -203,7 +218,7 @@ const Hero: React.FC = () => {
             {/* Part 2: experiences - The "Zoom In" Effect */}
             {/* Using solid color to ensure visibility, z-index to stay on top */}
             <span className="relative inline-block z-50 mr-2">
-              <span className="relative z-50 text-brand-purple whitespace-nowrap">
+              <span className="relative z-50 text-brand-purple">
                 {splitForAnimation(t('hero_title_2')).map((char, index) => (
                   <motion.span
                     key={`p2-${index}`}
@@ -223,7 +238,7 @@ const Hero: React.FC = () => {
                 style={{ x: layer1X }}
                 initial={{ scaleX: 0, opacity: 0 }}
                 animate={{ scaleX: 1, opacity: 1 }}
-                transition={{ delay: 2.2, duration: 0.8, ease: "easeOut" }}
+                transition={{ delay: 1.2, duration: 0.5, ease: "easeOut" }}
                 className="absolute -bottom-2 left-0 right-0 h-3 md:h-5 bg-brand-gold/30 -skew-x-12 -z-10 rounded-full blur-sm origin-left"
               ></motion.span>
             </span>
@@ -248,11 +263,13 @@ const Hero: React.FC = () => {
             {/* "feel alive." - Soulful Gradient & Serif Font */}
             <span className="inline-block relative">
               {/* Breathing glow effect behind the text - Darker glow to fix "too light" issue */}
-              <motion.span
-                animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.05, 1] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-0 bg-brand-purple/20 blur-xl rounded-full"
-              ></motion.span>
+              {!prefersReducedMotion && (
+                <motion.span
+                  animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.05, 1] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute inset-0 bg-brand-purple/20 blur-xl rounded-full"
+                ></motion.span>
+              )}
 
               {splitForAnimation(t('hero_title_4')).map((char, index) => (
                 <motion.span
@@ -272,7 +289,7 @@ const Hero: React.FC = () => {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.5, duration: 0.6 }}
+            transition={{ delay: 1.4, duration: 0.5 }}
             className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-600 dark:text-slate-300 mb-6 md:mb-10 max-w-lg leading-relaxed font-medium break-words"
           >
             {t('hero_subtitle')}
@@ -281,7 +298,7 @@ const Hero: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 2.7, duration: 0.6 }}
+            transition={{ delay: 1.6, duration: 0.5 }}
             className="flex flex-wrap gap-3 md:gap-4"
           >
             <motion.a
@@ -289,10 +306,14 @@ const Hero: React.FC = () => {
               whileTap={{ scale: 0.95 }}
               href="#contact"
               onClick={handleStartProject}
-              className="group px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-slate-900 dark:bg-brand-purple text-white rounded-full font-bold text-sm sm:text-base md:text-lg shadow-xl hover:shadow-2xl shadow-brand-purple/20 transition-all flex items-center gap-2 md:gap-3"
+              className="group px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-slate-900 dark:bg-brand-purple text-white rounded-full font-bold text-xs sm:text-sm md:text-base shadow-xl hover:shadow-2xl shadow-brand-purple/20 transition-all flex items-center gap-1.5 sm:gap-2 md:gap-3"
             >
               {t('hero_cta_start')}
-              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+              {language === 'he' || language === 'ar' ? (
+                <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:-translate-x-1 transition-transform" />
+              ) : (
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
+              )}
             </motion.a>
             <motion.a
               whileHover={{ scale: 1.05 }}
@@ -300,24 +321,19 @@ const Hero: React.FC = () => {
               href="#projects"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-white dark:bg-transparent text-slate-800 dark:text-white border-2 border-slate-100 dark:border-slate-700 rounded-full font-bold text-sm sm:text-base md:text-lg hover:border-brand-purple/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-2"
+              className="px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-white dark:bg-transparent text-slate-800 dark:text-white border-2 border-slate-100 dark:border-slate-700 rounded-full font-bold text-xs sm:text-sm md:text-base hover:border-brand-purple/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-1.5 sm:gap-2"
             >
               {t('hero_cta_view')}
             </motion.a>
           </motion.div>
 
-          {/* Trust Indicators */}
+          {/* Trust Indicators - Simple version without placeholder images */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2.9, duration: 0.8 }}
-            className="mt-6 sm:mt-8 md:mt-12 flex items-center gap-3 sm:gap-4 md:gap-8 border-t border-slate-200/60 dark:border-slate-800 pt-4 sm:pt-6 md:pt-8"
+            transition={{ delay: 1.8, duration: 0.5 }}
+            className="mt-6 sm:mt-8 md:mt-12 flex items-center gap-3 sm:gap-4 border-t border-slate-200/60 dark:border-slate-800 pt-4 sm:pt-6 md:pt-8"
           >
-            <div className="flex -space-x-2 sm:-space-x-3">
-              {[1, 2, 3, 4].map((i) => (
-                <img key={i} className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full border-2 border-white shadow-sm" src={`https://picsum.photos/seed/user${i}/100`} alt="Client" loading="lazy" />
-              ))}
-            </div>
             <div>
               <div className="flex items-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
                 {[1, 2, 3, 4, 5].map(i => <span key={i} className="text-brand-gold text-[10px] sm:text-xs md:text-sm">★</span>)}
@@ -332,7 +348,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="relative lg:h-[500px] h-[350px] sm:h-[400px] flex items-center justify-center [perspective:2000px]"
+          className="relative lg:h-[500px] h-[280px] sm:h-[350px] flex items-center justify-center [perspective:2000px]"
         >
           <motion.div
             style={{
@@ -341,11 +357,22 @@ const Hero: React.FC = () => {
               transformStyle: "preserve-3d",
               willChange: 'transform'
             }}
+            initial={{ rotateY: [-5, 5, -5, 0] }}
+            animate={{ rotateY: [0, 0, 0, isFlipped ? 180 : 0] }}
+            transition={{
+              rotateY: {
+                times: [0, 0.2, 0.4, 1],
+                duration: 2,
+                ease: "easeInOut",
+                repeat: 1,
+                repeatDelay: 3
+              }
+            }}
             tabIndex={0}
             role="button"
             aria-label={isFlipped ? t('hero_card_front_aria') : t('hero_card_back_aria')}
             aria-pressed={isFlipped}
-            className="relative w-56 sm:w-64 md:w-72 lg:w-80 h-[320px] sm:h-[380px] md:h-[430px] lg:h-[480px] cursor-pointer group focus:outline-none focus:ring-4 focus:ring-brand-purple/50 rounded-3xl"
+            className="relative w-44 sm:w-56 md:w-64 lg:w-72 h-[260px] sm:h-[320px] md:h-[380px] lg:h-[420px] cursor-pointer group focus:outline-none focus:ring-4 focus:ring-brand-purple/50 rounded-3xl"
             onClick={() => setIsFlipped(!isFlipped)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
@@ -379,7 +406,14 @@ const Hero: React.FC = () => {
                       <span className="px-2 py-1 bg-brand-cyan/20 text-brand-cyan text-[10px] font-bold uppercase tracking-wider rounded border border-brand-cyan/20 backdrop-blur-md">
                         {t('hero_card_role')}
                       </span>
-                      <MousePointer2 size={16} className="text-slate-400 animate-bounce" />
+                      <motion.div
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        className="flex items-center gap-1 text-white/70 text-xs"
+                      >
+                        <span>Click to flip</span>
+                        <MousePointer2 size={14} />
+                      </motion.div>
                     </div>
                     <h3 className="text-white text-3xl font-heading font-bold">Waseem</h3>
                     <p className="text-slate-300 text-sm">{t('hero_card_desc')}</p>
@@ -441,40 +475,43 @@ const Hero: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Floating Parallax Elements (Pop out of card) */}
+            {/* Floating Parallax Elements (Pop out of card) - Disabled for reduced motion */}
+            {!prefersReducedMotion && (
+              <>
+                {/* Element 1: Top Right Badge */}
+                <motion.div
+                  style={{ x: layer2X, y: layer2Y, z: 50 }}
+                  className="absolute -top-4 sm:-top-6 -right-4 sm:-right-6 bg-white p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-slate-100 flex flex-col items-center gap-1 sm:gap-2 transform translate-z-20"
+                >
+                  <span className="text-xl sm:text-2xl md:text-3xl">🚀</span>
+                  <span className="text-[10px] sm:text-xs font-bold text-slate-900">{t('hero_badge_perf')}</span>
+                </motion.div>
 
-            {/* Element 1: Top Right Badge */}
-            <motion.div
-              style={{ x: layer2X, y: layer2Y, z: 50 }}
-              className="absolute -top-4 sm:-top-6 -right-4 sm:-right-6 bg-white p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl border border-slate-100 flex flex-col items-center gap-1 sm:gap-2 transform translate-z-20"
-            >
-              <span className="text-xl sm:text-2xl md:text-3xl">🚀</span>
-              <span className="text-[10px] sm:text-xs font-bold text-slate-900">{t('hero_badge_perf')}</span>
-            </motion.div>
+                {/* Element 2: Bottom Left Stat */}
+                <motion.div
+                  style={{ x: layer1X, y: layer1Y, z: 30 }}
+                  className="absolute -bottom-6 sm:-bottom-8 -left-6 sm:-left-8 bg-slate-800 p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl border border-slate-700 flex items-center gap-2 sm:gap-3 transform translate-z-10"
+                >
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-brand-purple flex items-center justify-center text-white">
+                    <span className="font-bold text-xs sm:text-sm">AI</span>
+                  </div>
+                  <div>
+                    <p className="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wider">{t('services_badge')}</p>
+                    <p className="text-white font-bold text-xs sm:text-sm">{t('hero_badge_ai')}</p>
+                  </div>
+                </motion.div>
 
-            {/* Element 2: Bottom Left Stat */}
-            <motion.div
-              style={{ x: layer1X, y: layer1Y, z: 30 }}
-              className="absolute -bottom-6 sm:-bottom-8 -left-6 sm:-left-8 bg-slate-800 p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl shadow-lg sm:shadow-2xl border border-slate-700 flex items-center gap-2 sm:gap-3 transform translate-z-10"
-            >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-brand-purple flex items-center justify-center text-white">
-                <span className="font-bold text-xs sm:text-sm">AI</span>
-              </div>
-              <div>
-                <p className="text-[8px] sm:text-[10px] text-slate-400 uppercase tracking-wider">{t('services_badge')}</p>
-                <p className="text-white font-bold text-xs sm:text-sm">{t('hero_badge_ai')}</p>
-              </div>
-            </motion.div>
-
-            {/* Element 3: Decorative Floating Shapes */}
-            <motion.div
-              style={{ x: layer2X, y: layer1Y, z: -20 }}
-              className="absolute top-1/2 -right-20 w-16 h-16 bg-brand-gold rounded-full blur-2xl opacity-40 animate-pulse"
-            />
-            <motion.div
-              style={{ x: layer1X, y: layer2Y, z: -20 }}
-              className="absolute -top-10 -left-10 w-32 h-32 bg-brand-purple rounded-full blur-3xl opacity-30"
-            />
+                {/* Element 3: Decorative Floating Shapes */}
+                <motion.div
+                  style={{ x: layer2X, y: layer1Y, z: -20 }}
+                  className="absolute top-1/2 -right-20 w-16 h-16 bg-brand-gold rounded-full blur-2xl opacity-40 animate-pulse"
+                />
+                <motion.div
+                  style={{ x: layer1X, y: layer2Y, z: -20 }}
+                  className="absolute -top-10 -left-10 w-32 h-32 bg-brand-purple rounded-full blur-3xl opacity-30"
+                />
+              </>
+            )}
 
           </motion.div>
         </motion.div>

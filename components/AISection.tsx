@@ -8,23 +8,30 @@ const AISection: React.FC = () => {
   // Split words for animation
   const sentenceWords = t('ai_title_start').split(" ");
 
+  // Check for reduced motion preference
+  const prefersReducedMotion = typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
+
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05, // Very fast stagger
-        delayChildren: 0.1,
+        staggerChildren: prefersReducedMotion ? 0 : 0.05,
+        delayChildren: prefersReducedMotion ? 0 : 0.1,
       },
     },
   };
 
   const wordVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
+      transition: prefersReducedMotion ? {
+        duration: 0
+      } : {
         type: "spring",
         damping: 12,
         stiffness: 100,
@@ -35,7 +42,7 @@ const AISection: React.FC = () => {
   return (
     <section id="ai-automation" className="py-24 bg-white dark:bg-slate-950 overflow-hidden relative transition-colors duration-300">
       {/* Background Gradients (Lighter) */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/5 rounded-full blur-[100px] -z-10 animate-pulse"></div>
+      <div className={`absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/5 rounded-full blur-[100px] -z-10 ${!prefersReducedMotion && 'animate-pulse'}`}></div>
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-brand-cyan/5 rounded-full blur-[100px] -z-10"></div>
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
 
@@ -45,9 +52,9 @@ const AISection: React.FC = () => {
 
             {/* Eye-catching badge */}
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.2 }}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 dark:bg-slate-900 border border-brand-cyan/30 text-brand-cyan text-sm font-bold shadow-lg shadow-brand-cyan/10 mb-8"
             >
               <Zap size={16} className="fill-brand-cyan" />

@@ -52,6 +52,11 @@ const SpinningYear = ({ year }: { year: string }) => {
 const AboutTimeline: React.FC = () => {
     const { t } = useLanguage();
 
+    // Check for reduced motion preference
+    const prefersReducedMotion = typeof window !== 'undefined'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        : false;
+
     const localizedTimeline: TimelineItem[] = [
         {
             year: '2022',
@@ -73,8 +78,8 @@ const AboutTimeline: React.FC = () => {
     return (
         <section id="about" className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
             {/* Abstract Background Blobs */}
-            <div className="absolute top-20 left-0 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl -z-10 animate-float"></div>
-            <div className="absolute bottom-20 right-0 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl -z-10 animate-float" style={{ animationDelay: '2s' }}></div>
+            <div className={`absolute top-20 left-0 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl -z-10 ${!prefersReducedMotion && 'animate-float'}`}></div>
+            <div className={`absolute bottom-20 right-0 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl -z-10 ${!prefersReducedMotion && 'animate-float'}`} style={prefersReducedMotion ? {} : { animationDelay: '2s' }}></div>
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] opacity-30 pointer-events-none"></div>
 
             <div className="max-w-7xl mx-auto px-6 sm:px-10 relative z-10">

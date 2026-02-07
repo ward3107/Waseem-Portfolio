@@ -9,6 +9,11 @@ const FAQ: React.FC = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
     const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
+    // Check for reduced motion preference
+    const prefersReducedMotion = typeof window !== 'undefined'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        : false;
+
     const localizedFaqs: FAQItem[] = [
         { question: t('faq_q1'), answer: t('faq_a1') },
         { question: t('faq_q2'), answer: t('faq_a2') },
@@ -60,9 +65,10 @@ const FAQ: React.FC = () => {
                     <div className="lg:col-span-5">
                         <div className="lg:sticky lg:top-32">
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
+                                transition={prefersReducedMotion ? { duration: 0 } : undefined}
                                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-brand-purple text-xs font-bold uppercase tracking-wider mb-6 shadow-sm"
                             >
                                 <Sparkles size={14} />
@@ -70,10 +76,10 @@ const FAQ: React.FC = () => {
                             </motion.div>
 
                             <motion.h2
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: 0.1 }}
+                                transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1 }}
                                 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-slate-900 dark:text-white mb-6 leading-tight"
                             >
                                 {t('faq_title_1')} <br />
@@ -81,20 +87,20 @@ const FAQ: React.FC = () => {
                             </motion.h2>
 
                             <motion.p
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: 0.2 }}
+                                transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.2 }}
                                 className="text-slate-600 dark:text-slate-400 text-base sm:text-lg mb-8 sm:mb-10 leading-relaxed"
                             >
                                 {t('faq_desc')}
                             </motion.p>
 
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: 0.3 }}
+                                transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.3 }}
                             >
                                 <a
                                     href="https://wa.me/972534260632"
@@ -124,10 +130,10 @@ const FAQ: React.FC = () => {
                             return (
                                 <motion.div
                                     key={index}
-                                    initial={{ opacity: 0, y: 20 }}
+                                    initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
-                                    transition={{ delay: index * 0.1 }}
+                                    transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 }}
                                     className={`group rounded-2xl border transition-all duration-300 overflow-hidden ${isOpen
                                             ? 'bg-white dark:bg-slate-900 border-brand-purple shadow-lg shadow-brand-purple/10 ring-1 ring-brand-purple/20'
                                             : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md'
@@ -165,7 +171,7 @@ const FAQ: React.FC = () => {
                                                 initial={{ height: 0, opacity: 0 }}
                                                 animate={{ height: 'auto', opacity: 1 }}
                                                 exit={{ height: 0, opacity: 0 }}
-                                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.3, ease: "easeInOut" }}
                                             >
                                                 <div className="px-4 sm:px-5 md:px-6 pb-6 sm:pb-7 md:pb-8 pt-0">
                                                     <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">

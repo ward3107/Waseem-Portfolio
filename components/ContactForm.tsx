@@ -4,7 +4,7 @@ import { Send, CheckCircle2, Zap, Mail, AlertCircle, Loader2 } from 'lucide-reac
 import { useLanguage } from '../contexts/LanguageContext';
 
 const ContactForm: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -303,7 +303,7 @@ ${formData.message}
              ) : (
                  <>
                     {t('sendMessage')}
-                    <Send size={18} className="group-hover:translate-x-1 transition-transform" />
+                    <Send size={18} className={`transition-transform ${language === 'he' || language === 'ar' ? 'group-hover:-translate-x-1' : 'group-hover:translate-x-1'}`} />
                  </>
              )}
           </motion.button>

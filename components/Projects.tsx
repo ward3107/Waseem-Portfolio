@@ -8,6 +8,11 @@ const Projects: React.FC = () => {
   const { t, dir } = useLanguage();
   const [filter, setFilter] = useState<'All' | 'Web' | 'AI' | 'Mobile'>('All');
 
+  // Check for reduced motion preference
+  const prefersReducedMotion = typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
+
   const localizedProjects: Project[] = [
     {
       id: '1',
@@ -23,7 +28,7 @@ const Projects: React.FC = () => {
       title: 'SeatAi',
       category: 'AI',
       description: t('project_2_desc'),
-      image: 'https://picsum.photos/seed/gold/600/400',
+      image: '/assets/seatai.png',
       tech: ['React', 'Three.js', 'Stripe'],
       link: 'https://seatai.vercel.app/'
     },
@@ -68,10 +73,10 @@ const Projects: React.FC = () => {
 
           {/* Modernized Header with Drop Animation */}
           <motion.div
-            initial={{ opacity: 0, y: -60 }}
+            initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -60 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.8, ease: "easeOut" }}
             className="w-full max-w-2xl text-left rtl:text-right"
           >
             <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-black text-slate-900 dark:text-white mb-4 md:mb-6 tracking-tight leading-[0.9]">
@@ -126,13 +131,13 @@ const Projects: React.FC = () => {
           {filteredProjects.map((project, index) => (
             <motion.div
               key={project.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 }}
               className="group h-96 w-full [perspective:1000px] cursor-pointer"
             >
-              <div className="relative h-full w-full transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+              <div className={`relative h-full w-full ${prefersReducedMotion ? '' : 'transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]'}`}>
                 {/* Front */}
                 <div className="absolute inset-0 h-full w-full rounded-3xl bg-white dark:bg-slate-900 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden [backface-visibility:hidden]">
 

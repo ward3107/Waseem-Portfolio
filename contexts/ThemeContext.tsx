@@ -12,18 +12,17 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [theme, setTheme] = useState<Theme>(() => {
-        // 1. Check local storage
+        // Default to dark mode
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem('vibe_theme') as Theme;
-            if (saved === 'light' || saved === 'dark') {
-                return saved;
-            }
-            // 2. Check system preference
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            // Only use saved value if explicitly set to dark, otherwise default to dark
+            if (saved === 'dark') {
                 return 'dark';
             }
+            // Force dark mode as default
+            return 'dark';
         }
-        return 'light'; // Default to light
+        return 'dark';
     });
 
     useEffect(() => {

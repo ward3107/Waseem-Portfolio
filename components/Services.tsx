@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Sparkles, ArrowRight, X, MessageCircle, Code, Globe, Bot, Layout, Box, TrendingUp, Search } from 'lucide-react';
+import { Sparkles, ArrowRight, ArrowLeft, X, MessageCircle, Code, Globe, Bot, Layout, Box, TrendingUp } from 'lucide-react';
 import { Service } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -104,14 +104,17 @@ const FloatingParticles = ({ color }: { color: string }) => (
   </>
 );
 
-const ServiceCard = ({ service, index, onClick, t }: {
+const ServiceCard = ({ service, index, onClick, t, dir, prefersReducedMotion }: {
   service: Service;
   index: number;
   onClick: () => void;
   t: (key: string) => string;
+  dir: 'ltr' | 'rtl';
+  prefersReducedMotion: boolean;
 }) => {
   const Icon = service.icon;
   const [isHovered, setIsHovered] = useState(false);
+  const isRTL = dir === 'rtl';
 
   // Only enable 3D tilt on desktop (lg breakpoint and above)
   const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
@@ -197,37 +200,38 @@ const ServiceCard = ({ service, index, onClick, t }: {
         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
       />
 
-      {/* Enhanced floating particles with more movement */}
-      <motion.div
-        animate={{
-          y: [0, -15, 0],
-          x: [0, 5, 0],
-          opacity: [0.3, 0.7, 0.3],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className={`absolute top-3 right-3 sm:top-4 sm:right-4 w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full ${service.color.replace('text-', 'bg-').split(' ')[0]}/50 blur-[1px] sm:blur-[2px]`}
-      />
-      <motion.div
-        animate={{
-          y: [0, 18, 0],
-          x: [0, -5, 0],
-          opacity: [0.2, 0.6, 0.2],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-        className={`absolute bottom-4 left-3 sm:bottom-8 sm:left-4 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${service.color.replace('text-', 'bg-').split(' ')[0]}/40 blur-[1px] sm:blur-[2px]`}
-      />
-      <motion.div
-        animate={{
-          x: [0, 12, 0],
-          y: [0, 8, 0],
-          opacity: [0.2, 0.5, 0.2],
-          scale: [1, 1.4, 1],
-        }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className={`absolute top-1/2 right-4 sm:right-8 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full ${service.color.replace('text-', 'bg-').split(' ')[0]}/30 blur-[1px] sm:blur-[2px]`}
-      />
+      {/* Enhanced floating particles with more movement - Disabled for reduced motion */}
+      {!prefersReducedMotion && (
+        <>
+          <motion.div
+            animate={{
+              y: [0, -15, 0],
+              x: [0, 5, 0],
+              opacity: [0.3, 0.7, 0.3],
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className={`absolute top-3 right-3 sm:top-4 sm:right-4 w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full ${service.color.replace('text-', 'bg-').split(' ')[0]}/50 blur-[1px] sm:blur-[2px]`}
+          />
+          <motion.div
+            animate={{
+              y: [0, 18, 0],
+              x: [0, -5, 0],
+              opacity: [0.2, 0.6, 0.2],
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            className={`absolute bottom-4 left-3 sm:bottom-8 sm:left-4 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${service.color.replace('text-', 'bg-').split(' ')[0]}/40 blur-[1px] sm:blur-[2px]`}
+          />
+          <motion.div
+            animate={{
+              x: [0, 12, 0],
+              y: [0, 8, 0],
+              opacity: [0.2, 0.5, 0.2],
+            }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            className={`absolute top-1/2 right-4 sm:right-8 w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full ${service.color.replace('text-', 'bg-').split(' ')[0]}/30 blur-[1px] sm:blur-[2px]`}
+          />
+        </>
+      )}
 
       {/* Corner decorations with animation */}
       <motion.div
@@ -297,15 +301,15 @@ const ServiceCard = ({ service, index, onClick, t }: {
 
         {/* Animated CTA */}
         <motion.div
-          whileHover={{ x: 8 }}
+          whileHover={{ x: isRTL ? -8 : 8 }}
           className="pt-3 sm:pt-4 md:pt-6 border-t border-slate-100 dark:border-slate-800/50 flex items-center text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 group-hover:text-brand-purple dark:group-hover:text-white transition-colors"
         >
-          <span className="mr-2">{t('projects_details')}</span>
+          <span className={isRTL ? 'ml-2' : 'mr-2'}>{t('projects_details')}</span>
           <motion.div
-            animate={{ x: [0, 8, 0] }}
+            animate={{ x: [0, isRTL ? -8 : 8, 0] }}
             transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 0.5 }}
           >
-            <ArrowRight size={12} className="sm:size-14 md:size-16" />
+            {isRTL ? <ArrowLeft size={12} className="sm:size-14 md:size-16" /> : <ArrowRight size={12} className="sm:size-14 md:size-16" />}
           </motion.div>
         </motion.div>
       </div>
@@ -314,10 +318,15 @@ const ServiceCard = ({ service, index, onClick, t }: {
 };
 
 const Services: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, dir } = useLanguage();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
+
+  // Check for reduced motion preference
+  const prefersReducedMotion = typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
 
   // Focus trap within modal
   useEffect(() => {
@@ -513,6 +522,8 @@ const Services: React.FC = () => {
               index={index}
               onClick={() => setSelectedService(service)}
               t={t}
+              dir={dir}
+              prefersReducedMotion={prefersReducedMotion}
             />
           ))}
 
@@ -649,7 +660,7 @@ const Services: React.FC = () => {
 
                 <div className="h-1 w-16 sm:w-20 bg-gradient-to-r from-brand-purple to-brand-cyan rounded-full mb-4 sm:mb-6" aria-hidden="true"></div>
 
-                <div className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-medium mb-5 sm:mb-6 md:mb-8 text-left whitespace-pre-wrap">
+                <div className={`text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-medium mb-5 sm:mb-6 md:mb-8 whitespace-pre-wrap ${dir === 'rtl' ? 'text-right' : 'text-left'}`}>
                   {selectedService.modalDescription || selectedService.description}
                 </div>
 

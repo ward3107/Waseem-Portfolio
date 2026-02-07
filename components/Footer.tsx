@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, Linkedin, Twitter, ArrowRight, Heart, Mail, X } from 'lucide-react';
-import { LOGO_SRC, NAV_LINKS, SERVICES } from '../constants';
+import { Github, Linkedin, Twitter, ArrowRight, ArrowLeft, Heart, Mail, X } from 'lucide-react';
+import { NAV_LINKS, SERVICES } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -89,7 +89,7 @@ const Footer: React.FC = () => {
 
           {/* Brand Column */}
           <div className="space-y-6">
-            <img src={LOGO_SRC} alt="Waseem Logo" className="h-10 w-auto object-contain" loading="lazy" />
+            <h3 className="font-heading font-bold text-xl sm:text-2xl text-brand-purple dark:text-brand-purpleLight">Waseem</h3>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
               {t('footer_desc')}
             </p>
@@ -278,7 +278,11 @@ const Footer: React.FC = () => {
                       ? (language === 'he' ? 'נרשמת!' : language === 'ar' ? 'مشترك!' : 'Subscribed!')
                       : <>
                         {t('footer_sub_btn')}
-                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                        {language === 'he' || language === 'ar' ? (
+                          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                        ) : (
+                          <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                        )}
                       </>
                     }
                   </span>

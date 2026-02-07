@@ -314,7 +314,11 @@ ${selections.details}
                                         <>
                                             <Sparkles size={18} className="sm:size-20 text-brand-gold group-hover:animate-spin-slow" />
                                             <span className="text-sm sm:text-base">{t('wizard_btn_send')}</span>
-                                            <ArrowRight size={16} className="sm:size-20 group-hover:translate-x-1 transition-transform" />
+                                            {language === 'he' || language === 'ar' ? (
+                                                <ArrowLeft size={16} className="sm:size-20 group-hover:-translate-x-1 transition-transform" />
+                                            ) : (
+                                                <ArrowRight size={16} className="sm:size-20 group-hover:translate-x-1 transition-transform" />
+                                            )}
                                         </>
                                     )}
                                 </button>

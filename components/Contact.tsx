@@ -7,6 +7,11 @@ import { useLanguage } from '../contexts/LanguageContext';
 const Contact: React.FC = () => {
   const { t } = useLanguage();
 
+  // Check for reduced motion preference
+  const prefersReducedMotion = typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
+
   return (
     <section id="contact" className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
       {/* Background Gradients */}
@@ -21,23 +26,24 @@ const Contact: React.FC = () => {
           {/* Left Column: Copy & Info */}
           <div className="flex flex-col">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              transition={prefersReducedMotion ? { duration: 0 } : undefined}
               className="inline-flex items-center gap-2 px-3 py-1 sm:px-3 sm:py-1.5 rounded-full bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30 text-green-600 dark:text-green-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-6 sm:mb-8 w-fit"
             >
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                {!prefersReducedMotion && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>}
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
               {t('contact_avail')}
             </motion.div>
 
             <motion.h2
-              initial={{ opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1 }}
               className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-slate-900 dark:text-white mb-5 sm:mb-6 leading-tight"
             >
               {t('contact_title_1')} <br className="hidden sm:block" />
@@ -45,20 +51,20 @@ const Contact: React.FC = () => {
             </motion.h2>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.2 }}
               className="text-slate-500 dark:text-slate-400 mb-8 sm:mb-10 text-base sm:text-lg leading-relaxed max-w-lg"
             >
               {t('contact_desc')}
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.3 }}
               className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
             >
               <a href="mailto:contact@waseem-dev.com" className="group flex flex-col p-4 sm:p-5 md:p-6 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-brand-purple/20 hover:shadow-xl transition-all duration-300">
@@ -82,10 +88,10 @@ const Contact: React.FC = () => {
 
           {/* Right Column: Contact Form */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
+            transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.4 }}
             className="relative mt-8 lg:mt-0"
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-brand-purple/20 to-brand-cyan/20 rounded-2xl sm:rounded-3xl blur-xl sm:blur-2xl transform rotate-3 scale-95 -z-10"></div>

@@ -8,6 +8,11 @@ const SocialHub: React.FC = () => {
     const { t, dir } = useLanguage();
     const { widgets } = useWidgets();
 
+    // Check for reduced motion preference
+    const prefersReducedMotion = typeof window !== 'undefined'
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        : false;
+
     if (!widgets.facebook && !widgets.instagram && !widgets.tiktok) return null;
 
     const isRTL = dir === 'rtl';
@@ -29,15 +34,15 @@ const SocialHub: React.FC = () => {
                     <AnimatePresence>
                         {widgets.facebook && (
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
-                                whileHover={{ y: -5 }}
+                                whileHover={prefersReducedMotion ? {} : { y: -5 }}
                                 className="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl shadow-lg border border-slate-100 dark:border-slate-800 overflow-hidden"
                             >
                                 <div className="h-20 sm:h-24 bg-[#1877F2] relative">
-                                    <div className={`absolute bottom-[-20px] sm:bottom-[-24px] ${isRTL ? 'right-4 sm:right-6' : 'left-4 sm:left-6'} w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full p-1`}>
-                                        <img src="https://picsum.photos/seed/fb/100" className="w-full h-full rounded-full object-cover" alt="Profile" />
+                                    <div className={`absolute bottom-[-20px] sm:bottom-[-24px] ${isRTL ? 'right-4 sm:right-6' : 'left-4 sm:left-6'} w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full p-1 flex items-center justify-center`}>
+                                        <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm sm:text-base">W</div>
                                     </div>
                                 </div>
                                 <div className="pt-6 sm:pt-8 px-4 sm:px-6 pb-4 sm:pb-6">
@@ -63,17 +68,17 @@ const SocialHub: React.FC = () => {
                     <AnimatePresence>
                         {widgets.instagram && (
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
-                                whileHover={{ y: -5 }}
+                                whileHover={prefersReducedMotion ? {} : { y: -5 }}
                                 className="bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl shadow-lg border border-slate-100 dark:border-slate-800 overflow-hidden"
                             >
                                 <div className="p-4 sm:p-6 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white">
                                     <div className="flex items-center justify-between mb-3 sm:mb-4 gap-2">
                                         <div className="flex items-center gap-2 sm:gap-3">
-                                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur rounded-full p-0.5">
-                                                <img src="https://picsum.photos/seed/insta/100" className="w-full h-full rounded-full object-cover border-2 border-white" alt="Profile" />
+                                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur rounded-full p-0.5 flex items-center justify-center">
+                                                <div className="w-full h-full rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm sm:text-base">W</div>
                                             </div>
                                             <div className={isRTL ? 'text-right' : 'text-left'}>
                                                 <p className="font-bold text-xs sm:text-sm">waseem.code</p>
@@ -91,9 +96,9 @@ const SocialHub: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-3 gap-0.5">
-                                    {[1, 2, 3, 4, 5, 6].map(i => (
-                                        <div key={i} className="aspect-square bg-slate-100 dark:bg-slate-800 relative group cursor-pointer">
-                                            <img src={`https://picsum.photos/seed/${i}/300`} className="w-full h-full object-cover" alt="Post" loading="lazy" />
+                                    {['from-purple-500 to-pink-500', 'from-pink-500 to-orange-500', 'from-orange-500 to-yellow-500', 'from-blue-500 to-purple-500', 'from-green-500 to-teal-500', 'from-teal-500 to-blue-500'].map((gradient, i) => (
+                                        <div key={i} className={`aspect-square bg-gradient-to-br ${gradient} relative group cursor-pointer flex items-center justify-center`}>
+                                            <span className="text-white/50 text-2xl font-bold">{i + 1}</span>
                                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white gap-2">
                                                 <Heart size={10} className="sm:size-12" fill="white" />
                                             </div>
@@ -108,17 +113,17 @@ const SocialHub: React.FC = () => {
                     <AnimatePresence>
                         {widgets.tiktok && (
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
-                                whileHover={{ y: -5 }}
+                                whileHover={prefersReducedMotion ? {} : { y: -5 }}
                                 className="bg-black text-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden border border-slate-800"
                             >
                                 <div className="p-4 sm:p-6 pb-1.5 sm:pb-2">
                                     <div className="flex items-center justify-between gap-2">
                                         <div className="flex items-center gap-2 sm:gap-3">
-                                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-slate-700 overflow-hidden">
-                                                <img src="https://picsum.photos/seed/tiktok/100" className="w-full h-full object-cover" alt="TikTok" loading="lazy" />
+                                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-slate-700 overflow-hidden flex items-center justify-center">
+                                                <div className="w-full h-full bg-gradient-to-br from-[#FE2C55] to-[#25F4EE] flex items-center justify-center text-white font-bold text-sm sm:text-base">@</div>
                                             </div>
                                             <div className={isRTL ? 'text-right' : 'text-left'}>
                                                 <p className="font-bold text-xs sm:text-sm">@waseem_ai</p>
@@ -131,9 +136,12 @@ const SocialHub: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="p-3 sm:p-4 pt-0">
-                                    <div className="relative aspect-[9/16] bg-slate-900 rounded-lg sm:rounded-xl overflow-hidden mt-3 sm:mt-4 group cursor-pointer">
-                                        <img src="https://picsum.photos/seed/video/400/700" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" alt="Video Cover" loading="lazy" />
-                                        <div className="absolute inset-0 flex flex-col justify-end p-2.5 sm:p-4 bg-gradient-to-t from-black/80 to-transparent">
+                                    <div className="relative aspect-[9/16] bg-gradient-to-br from-slate-800 via-black to-slate-900 rounded-lg sm:rounded-xl overflow-hidden mt-3 sm:mt-4 group cursor-pointer">
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <Video size={32} className="sm:size-40 text-white/20" />
+                                        </div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent group-hover:opacity-60 transition-opacity"></div>
+                                        <div className="absolute inset-0 flex flex-col justify-end p-2.5 sm:p-4">
                                             <p className="text-[10px] sm:text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 line-clamp-2 sm:line-clamp-none">Build your own AI Agent in 30 seconds 🚀 #coding #ai</p>
                                             <div className={`flex items-center gap-2 sm:gap-4 text-[10px] sm:text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
                                                 <span className="flex items-center gap-1"><Video size={10} className="sm:size-14" /> 15.2K</span>

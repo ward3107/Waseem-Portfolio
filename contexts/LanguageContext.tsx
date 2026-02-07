@@ -61,7 +61,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     service_marketing_title: 'Performance Marketing',
     service_marketing_desc: 'Data-driven campaigns on Google, Meta, TikTok, & Instagram that target your ideal audience and maximize ROI.',
     service_marketing_modal_title: 'Performance Marketing & PPC',
-    service_marketing_modal_desc: "Maximize your ROI with data-driven campaigns across Google, Meta, TikTok, and Instagram. I offer tailored packages to suit your growth stage:\n\n**1. The Launch (3,000 ₪/mo):** Perfect for starters. 1 Platform, Campaign Setup, AI Copywriting, Weekly Optimization.\n\n**2. The Growth (5,500 ₪/mo):** Recommended for scaling. 2 Platforms, A/B Testing, Retargeting, Bi-Weekly Strategy.\n\n**3. The Dominance (9,000 ₪/mo):** Full-stack management. All Platforms, Advanced Automation, Video Editing assistance, 24/7 Support.\n\nWhy me? I combine marketing with technical expertise (Pixel API, Event Tracking) to ensure every cent is tracked.",
+    service_marketing_modal_desc: "Maximize your ROI with data-driven campaigns across Google, Meta, TikTok, and Instagram. I offer tailored packages to suit your needs:\n\n**1. Starter (800 ₪/project):** Perfect for beginners. 1 Platform, Campaign Setup, AI Copywriting, Basic Analytics.\n\n**2. Growth (1,500 ₪/project):** Best value. 2 Platforms, A/B Testing, Retargeting, Weekly Reports.\n\n**3. Advanced (2,500 ₪/project):** Complete solution. All Platforms, Advanced Automation, Video Editing assistance, Priority Support.\n\nWhy me? I combine marketing with technical expertise (Pixel API, Event Tracking) to ensure every cent is tracked.",
 
     // AI Section
     ai_badge: "Next-Gen Automation",
@@ -357,7 +357,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     service_marketing_title: 'שיווק ביצועים (PPC)',
     service_marketing_desc: 'קמפיינים מבוססי נתונים בגוגל, פייסבוק, טיקטוק ואינסטגרם שמכוונים לקהל היעד שלך וממקסמים החזר השקעה.',
     service_marketing_modal_title: 'שיווק דיגיטלי ו-PPC',
-    service_marketing_modal_desc: "מקסם את החזר ההשקעה שלך עם קמפיינים מבוססי נתונים בגוגל, פייסבוק, טיקטוק ואינסטגרם. חבילות מותאמות אישית:\n\n**1. חבילת ההשקה (3,000 ₪/חודש):** מתאימה למתחילים. פלטפורמה אחת, הקמת קמפיין, קופירייטינג מבוסס AI, אופטימיזציה שבועית.\n\n**2. חבילת הצמיחה (5,500 ₪/חודש):** מומלצת לגדילה. 2 פלטפורמות, בדיקות A/B, ריטרגטינג, אסטרטגיה דו-שבועית.\n\n**3. חבילת השליטה (9,000 ₪/חודש):** ניהול מלא. כל הפלטפורמות, אוטומציה מתקדמת, עריכת וידאו, תמיכה 24/7.",
+    service_marketing_modal_desc: "מקסם את החזר ההשקעה שלך עם קמפיינים מבוססי נתונים בגוגל, פייסבוק, טיקטוק ואינסטגרם. חבילות מותאמות אישית:\n\n**1. חבילת בסיס (800 ₪/פרויקט):** מתאימה למתחילים. פלטפורמה אחת, הקמת קמפיין, קופירייטינג מבוסס AI, אנליטיקס בסיסי.\n\n**2. חבילת צמיחה (1,500 ₪/פרויקט):** הערך הכי טוב. 2 פלטפורמות, בדיקות A/B, ריטרגטינג, דוחות שבועיים.\n\n**3. חבילת מתקדמים (2,500 ₪/פרויקט):** פתרון מלא. כל הפלטפורמות, אוטומציה מתקדמת, עריכת וידאו, תמיכה בעדיפות.",
 
     // AI Section
     ai_badge: "אוטומציה מתקדמת",
@@ -648,7 +648,7 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     service_marketing_title: 'التسويق الرقمي والأداء',
     service_marketing_desc: 'حملات مدفوعة تعتمد على البيانات عبر Google و Meta و TikTok و Instagram تستهدف جمهورك المثالي وتحقق أعلى عائد استثمار.',
     service_marketing_modal_title: 'إدارة الحملات الإعلانية (PPC)',
-    service_marketing_modal_desc: "حقق أقصى عائد على الاستثمار من خلال حملات تعتمد على البيانات عبر Google و Meta و TikTok و Instagram. باقات مصممة لتناسب مرحلة نموك:\n\n**1. باقة الانطلاق (3,000 شيكل/شهرياً):** مثالية للمبتدئين. منصة واحدة، إعداد الحملة، كتابة إعلانات بالذكاء الاصطناعي، تحسين أسبوعي.\n\n**2. باقة النمو (5,500 شيكل/شهرياً):** موصى بها للتوسع. منصتان، اختبار A/B، إعادة الاستهداف، استراتيجية نصف شهرية.\n\n**3. باقة السيطرة (9,000 شيكل/شهرياً):** إدارة شاملة. جميع المنصات، أتمتة متقدمة، مساعدة في تحرير الفيديو، دعم 24/7.",
+    service_marketing_modal_desc: "حقق أقصى عائد على الاستثمار من خلال حملات تعتمد على البيانات عبر Google و Meta و TikTok و Instagram. باقات مصممة لتناسب احتياجاتك:\n\n**1. الباقة الأساسية (800 شيكل/مشروع):** مثالية للمبتدئين. منصة واحدة، إعداد الحملة، كتابة إعلانات بالذكاء الاصطناعي، تحليلات أساسية.\n\n**2. باقة النمو (1,500 شيكل/مشروع):** أفضل قيمة. منصتان، اختبار A/B، إعادة الاستهداف، تقارير أسبوعية.\n\n**3. الباقة المتقدمة (2,500 شيكل/مشروع):** حل شامل. جميع المنصات، أتمتة متقدمة، مساعدة في تحرير الفيديو، دعم ذو أولوية.",
 
     // AI Section
     ai_badge: "أتمتة الجيل القادم",

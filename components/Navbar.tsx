@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Globe, Moon, Sun } from 'lucide-react';
-import { NAV_LINKS, LOGO_SRC } from '../constants';
+import { NAV_LINKS } from '../constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -27,8 +27,8 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="flex-shrink-0 cursor-pointer" onClick={() => window.scrollTo(0, 0)}>
-            <img src={LOGO_SRC} alt="Waseem Logo" className="h-10 w-auto object-contain" loading="lazy" />
+          <div className="flex-shrink-0 cursor-pointer font-heading font-bold text-xl sm:text-2xl text-brand-purple dark:text-brand-purpleLight" onClick={() => window.scrollTo(0, 0)}>
+            Waseem
           </div>
 
           {/* Desktop Menu */}
@@ -66,15 +66,6 @@ const Navbar: React.FC = () => {
             >
               {theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
             </button>
-
-            <a
-              href="https://wa.me/972534260632"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-full bg-brand-purple text-white font-medium text-sm hover:bg-brand-purpleDark transition-all shadow-lg shadow-brand-purple/20 border border-transparent hover:border-brand-gold"
-            >
-              {t('hireMe')}
-            </a>
           </div>
 
           {/* Mobile Toggle */}
