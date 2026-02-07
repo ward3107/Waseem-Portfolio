@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[context.production]
+  command = "npm run build"
+  publish = "dist"
+
+# Deploy to Cloudflare Pages using Wrangler
+[context.deploy-preview]
+  command = "npm run build"
+  publish = "dist"
