@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle2, Zap, Mail, AlertCircle, Loader2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { trackEvent } from '../utils/globalTypes';
 
 const ContactForm: React.FC = () => {
   const { t, language } = useLanguage();
@@ -80,11 +81,9 @@ ${formData.message}
         setErrors({});
 
         // Track analytics event
-        if (typeof window !== 'undefined' && (window as any).gtag) {
-          (window as any).gtag('event', 'generate_lead', {
-            form_type: 'contact'
-          });
-        }
+        trackEvent('generate_lead', {
+          form_type: 'contact'
+        });
       } else {
         setSubmitError(result.message || 'Submission failed. Please try again.');
       }

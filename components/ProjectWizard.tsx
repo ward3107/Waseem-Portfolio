@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
+import { trackEvent } from '../utils/globalTypes';
 
 interface ProjectWizardProps {}
 
@@ -130,11 +131,9 @@ ${selections.details}
             if (response.ok) {
                 setIsSent(true);
                 // Track analytics event
-                if (typeof window !== 'undefined' && (window as any).gtag) {
-                    (window as any).gtag('event', 'generate_lead', {
-                        form_type: 'project_wizard'
-                    });
-                }
+                trackEvent('generate_lead', {
+                    form_type: 'project_wizard'
+                });
             } else {
                 setErrors({ general: t('error_submission_failed') });
             }

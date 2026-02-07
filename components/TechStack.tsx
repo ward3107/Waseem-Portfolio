@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { Code2, Database, Globe, Cpu, Cloud, Gift, Bug, ShieldAlert } from 'lucide-react';
 import { TechItem } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getAudioContext } from '../utils/globalTypes';
 
 // --- Game Constants ---
 const STAGE_THRESHOLDS = {
@@ -15,10 +16,10 @@ const STAGE_THRESHOLDS = {
 // --- Audio Helper ---
 const playSound = (type: 'pop' | 'hit' | 'win' | 'boss' | 'shatter' | 'laser' | 'bomb') => {
   try {
-    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioContext) return;
+    const AudioContextConstructor = getAudioContext();
+    if (!AudioContextConstructor) return;
 
-    const ctx = new AudioContext();
+    const ctx = new AudioContextConstructor();
     const now = ctx.currentTime;
     const gainNode = ctx.createGain();
 

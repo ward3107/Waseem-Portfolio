@@ -4,6 +4,7 @@ import { NAV_LINKS, SERVICES } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '../hooks/useFocusTrap';
+import { trackEvent } from '../utils/globalTypes';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -187,9 +188,7 @@ const Footer: React.FC = () => {
                     if (response.ok) {
                       setNewsletterStatus('success');
                       // Track signup event
-                      if (typeof window !== 'undefined' && (window as any).gtag) {
-                        (window as any).gtag('event', 'sign_up', { form_type: 'newsletter' });
-                      }
+                      trackEvent('sign_up', { form_type: 'newsletter' });
                     } else {
                       setNewsletterStatus('error');
                     }
