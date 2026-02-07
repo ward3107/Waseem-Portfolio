@@ -3,14 +3,13 @@ import { Mail, MessageSquare } from 'lucide-react';
 import ProjectWizard from './ProjectWizard';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 const Contact: React.FC = () => {
   const { t } = useLanguage();
 
   // Check for reduced motion preference
-  const prefersReducedMotion = typeof window !== 'undefined'
-    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    : false;
+  const prefersReducedMotion = getPrefersReducedMotion();
 
   return (
     <section id="contact" className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">

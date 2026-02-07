@@ -3,6 +3,8 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from
 import { Sparkles, ArrowRight, ArrowLeft, X, MessageCircle, Code, Globe, Bot, Layout, Box, TrendingUp } from 'lucide-react';
 import { Service } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { useFocusTrap, useEscapeKey } from '../hooks/useFocusTrap';
 
 // Platform icons component with clean SVG paths
 const GoogleIcon = () => (
@@ -324,72 +326,28 @@ const Services: React.FC = () => {
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   // Check for reduced motion preference
-  const prefersReducedMotion = typeof window !== 'undefined'
-    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    : false;
+  const prefersReducedMotion = getPrefersReducedMotion();
 
   // Focus trap within modal
+  const handleCloseModal = () => setSelectedService(null);
+  useFocusTrap(modalRef, selectedService !== null);
+  useEscapeKey(selectedService !== null, handleCloseModal);
+
+  // Handle body scroll and previous element focus when modal is open
   useEffect(() => {
     if (selectedService && modalRef.current) {
       // Store the previously focused element
       previousActiveElementRef.current = document.activeElement as HTMLElement;
 
-      // Find all focusable elements within the modal
-      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      );
-
-      const firstFocusable = focusableElements[0];
-      const lastFocusable = focusableElements[focusableElements.length - 1];
-
-      // Focus the first focusable element
-      firstFocusable?.focus();
-
-      // Handle Tab key to trap focus
-      const handleTabKey = (e: KeyboardEvent) => {
-        if (e.key !== 'Tab') return;
-
-        if (e.shiftKey) {
-          // Shift + Tab
-          if (document.activeElement === firstFocusable) {
-            e.preventDefault();
-            lastFocusable?.focus();
-          }
-        } else {
-          // Tab
-          if (document.activeElement === lastFocusable) {
-            e.preventDefault();
-            firstFocusable?.focus();
-          }
-        }
-      };
-
-      document.addEventListener('keydown', handleTabKey);
-
       // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
 
       return () => {
-        document.removeEventListener('keydown', handleTabKey);
         document.body.style.overflow = '';
 
         // Return focus to the trigger element when modal closes
         previousActiveElementRef.current?.focus();
       };
-    }
-  }, [selectedService]);
-
-  // Handle Escape key to close modal
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && selectedService) {
-        setSelectedService(null);
-      }
-    };
-
-    if (selectedService) {
-      document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
     }
   }, [selectedService]);
 

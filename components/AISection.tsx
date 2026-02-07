@@ -2,6 +2,7 @@ import React from 'react';
 import { Bot, MessageSquare, Calendar, Zap } from 'lucide-react';
 import { motion, Variants } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 const AISection: React.FC = () => {
   const { t } = useLanguage();
@@ -9,9 +10,7 @@ const AISection: React.FC = () => {
   const sentenceWords = t('ai_title_start').split(" ");
 
   // Check for reduced motion preference
-  const prefersReducedMotion = typeof window !== 'undefined'
-    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    : false;
+  const prefersReducedMotion = getPrefersReducedMotion();
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },

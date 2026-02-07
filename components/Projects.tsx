@@ -3,15 +3,14 @@ import { ExternalLink, Github, Hand } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Project } from '../types';
+import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 const Projects: React.FC = () => {
   const { t, dir } = useLanguage();
   const [filter, setFilter] = useState<'All' | 'Web' | 'AI' | 'Mobile'>('All');
 
   // Check for reduced motion preference
-  const prefersReducedMotion = typeof window !== 'undefined'
-    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    : false;
+  const prefersReducedMotion = getPrefersReducedMotion();
 
   const localizedProjects: Project[] = [
     {

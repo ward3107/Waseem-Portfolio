@@ -3,6 +3,7 @@ import { Github, Linkedin, Twitter, ArrowRight, ArrowLeft, Heart, Mail, X } from
 import { NAV_LINKS, SERVICES } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useFocusTrap, useEscapeKey } from '../hooks/useFocusTrap';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -12,68 +13,27 @@ const Footer: React.FC = () => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
-  // Focus trap within legal modal
+  const handleCloseModal = () => setLegalModal(null);
+
+  // Use custom hooks for focus trap and escape key
+  useFocusTrap(modalRef, legalModal !== null);
+  useEscapeKey(legalModal !== null, handleCloseModal);
+
+  // Handle body scroll when modal is open
   useEffect(() => {
     if (legalModal && modalRef.current) {
       // Store the previously focused element
       previousActiveElementRef.current = document.activeElement as HTMLElement;
 
-      // Find all focusable elements within the modal
-      const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      );
-
-      const firstFocusable = focusableElements[0];
-      const lastFocusable = focusableElements[focusableElements.length - 1];
-
-      // Focus the first focusable element
-      firstFocusable?.focus();
-
-      // Handle Tab key to trap focus
-      const handleTabKey = (e: KeyboardEvent) => {
-        if (e.key !== 'Tab') return;
-
-        if (e.shiftKey) {
-          // Shift + Tab
-          if (document.activeElement === firstFocusable) {
-            e.preventDefault();
-            lastFocusable?.focus();
-          }
-        } else {
-          // Tab
-          if (document.activeElement === lastFocusable) {
-            e.preventDefault();
-            firstFocusable?.focus();
-          }
-        }
-      };
-
-      document.addEventListener('keydown', handleTabKey);
-
       // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
 
       return () => {
-        document.removeEventListener('keydown', handleTabKey);
         document.body.style.overflow = '';
 
         // Return focus to the trigger element when modal closes
         previousActiveElementRef.current?.focus();
       };
-    }
-  }, [legalModal]);
-
-  // Handle Escape key to close modal
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && legalModal) {
-        setLegalModal(null);
-      }
-    };
-
-    if (legalModal) {
-      document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
     }
   }, [legalModal]);
 

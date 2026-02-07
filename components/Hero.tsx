@@ -2,15 +2,14 @@ import { motion, useMotionValue, useSpring, useTransform, Variants, AnimatePrese
 import { ArrowRight, ArrowLeft, MousePointer2, Calendar, Heart, Sparkles } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useState } from 'react';
+import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 const Hero: React.FC = () => {
   const { t, language } = useLanguage();
   const [isFlipped, setIsFlipped] = useState(false);
 
   // Check for reduced motion preference
-  const prefersReducedMotion = typeof window !== 'undefined'
-    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    : false;
+  const prefersReducedMotion = getPrefersReducedMotion();
 
   // Helper function to split text for animation
   // For Arabic, split by words to preserve letter connections

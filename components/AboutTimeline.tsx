@@ -3,6 +3,7 @@ import { motion, useMotionValue, useTransform, useInView, animate } from 'framer
 import { Brain, Cpu, Zap, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { TimelineItem } from '../types';
+import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 // Sub-component for spinning year effect
 const SpinningYear = ({ year }: { year: string }) => {
@@ -53,9 +54,7 @@ const AboutTimeline: React.FC = () => {
     const { t } = useLanguage();
 
     // Check for reduced motion preference
-    const prefersReducedMotion = typeof window !== 'undefined'
-        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        : false;
+    const prefersReducedMotion = getPrefersReducedMotion();
 
     const localizedTimeline: TimelineItem[] = [
         {
