@@ -53,7 +53,12 @@ const AccessibilityToolbar: React.FC = () => {
   useEffect(() => {
     const saved = sessionStorage.getItem('a11y-settings');
     if (saved) {
-      setState(JSON.parse(saved));
+      try {
+        setState(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to parse accessibility settings:', e);
+        // Keep default state if data is corrupted
+      }
     } else {
       // Check system preference for dark mode
       if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {

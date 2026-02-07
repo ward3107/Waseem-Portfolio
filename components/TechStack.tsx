@@ -98,7 +98,8 @@ const playSound = (type: 'pop' | 'hit' | 'win' | 'boss' | 'shatter' | 'laser' | 
       });
     }
   } catch (e) {
-    // Ignore audio errors
+    // Audio errors are non-critical, log for debugging
+    console.debug('Audio playback error:', e);
   }
 };
 
