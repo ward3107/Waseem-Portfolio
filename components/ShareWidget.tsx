@@ -50,7 +50,8 @@ const ShareWidget: React.FC = () => {
           url: url,
         });
       } catch (err) {
-        console.error('Error sharing:', err);
+        // User cancelled share or share failed - silently handle
+        // No action needed as this is expected behavior
       }
     } else {
       navigator.clipboard.writeText(url);
