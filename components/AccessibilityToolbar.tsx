@@ -56,8 +56,8 @@ const AccessibilityToolbar: React.FC = () => {
       try {
         setState(JSON.parse(saved));
       } catch (e) {
-        console.error('Failed to parse accessibility settings:', e);
-        // Keep default state if data is corrupted
+        // Failed to parse saved settings - keep default state if data is corrupted
+        // This gracefully handles corrupted sessionStorage without disrupting UX
       }
     } else {
       // Check system preference for dark mode
