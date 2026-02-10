@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Media Image Generator</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: #1e1e2e;
+      color: #cdd6f4;
+    }
+    h1 {
+      color: #cba6f7;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #a6adc8;
+      margin-bottom: 40px;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .card {
+      background: #313244;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+    h2 {
+      color: #f9e2af;
+      margin-top: 0;
+      font-size: 20px;
+    }
+    canvas {
+      width: 100%;
+      border-radius: 8px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.3s;
+    }
+    canvas:hover {
+      border-color: #cba6f7;
+    }
+    button {
+      background: linear-gradient(135deg, #483AA0 0%, #7965C1 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 10px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(72, 58, 160, 0.4);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .info {
+      background: #45475a;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #bac2de;
+    }
+    .info code {
+      background: #313244;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #f9e2af;
+      font-family: 'Courier New', monospace;
+    }
+    .status {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+    }
+    .status.success {
+      background: #a6e3a1;
+      color: #1e1e2e;
+      display: block;
+    }
+    .instructions {
+      background: #313244;
+      padding: 30px;
+      border-radius: 12px;
+      margin-top: 40px;
+    }
+    .instructions h3 {
+      color: #89dceb;
+      margin-top: 0;
+    }
+    .instructions ol {
+      line-height: 1.8;
+    }
+    .instructions li {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 Social Media Image Generator</h1>
+  <p class="subtitle">Generate placeholder images for your portfolio's social media sharing</p>
+
+  <div class="container">
+    <div class="card">
+      <h2>📘 Open Graph Image</h2>
+      <p style="color: #a6adc8; font-size: 14px;">1200 × 630px - For Facebook, LinkedIn, WhatsApp</p>
+      <canvas id="ogCanvas" width="1200" height="630"></canvas>
+      <button onclick="downloadImage('ogCanvas', 'og-image.png')">⬇️ Download og-image.png</button>
+      <div id="ogStatus" class="status"></div>
+      <div class="info">
+        Save this as <code>public/og-image.png</code> in your project
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🐦 Twitter Card Image</h2>
+      <p style="color: #a6adc8; font-size: 14px;">1200 × 675px - For Twitter/X sharing</p>
+      <canvas id="twitterCanvas" width="1200" height="675"></canvas>
+      <button onclick="downloadImage('twitterCanvas', 'twitter-image.png')">⬇️ Download twitter-image.png</button>
+      <div id="twitterStatus" class="status"></div>
+      <div class="info">
+        Save this as <code>public/twitter-image.png</code> in your project
+      </div>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <h3>📋 How to Use</h3>
+    <ol>
+      <li>Click the <strong>Download</strong> buttons above to save both images</li>
+      <li>Place the images in your <code>public/</code> directory:
+        <ul>
+          <li><code>public/og-image.png</code></li>
+          <li><code>public/twitter-image.png</code></li>
+        </ul>
+      </li>
+      <li>The images are already referenced in your <code>index.html</code> - no code changes needed!</li>
+      <li>Deploy your site and test with:
+        <ul>
+          <li><a href="https://developers.facebook.com/tools/debug/" target="_blank" style="color: #89dceb;">Facebook Sharing Debugger</a></li>
+          <li><a href="https://cards-dev.twitter.com/validator" target="_blank" style="color: #89dceb;">Twitter Card Validator</a></li>
+        </ul>
+      </li>
+      <li><strong>Optional:</strong> Customize these images later in Canva or Figma with your branding</li>
+    </ol>
+  </div>
+
+  <script>
+    // Brand colors from your portfolio
+    const brandColors = {
+      purple: '#483AA0',
+      purpleLight: '#7965C1',
+      gold: '#d4af37',
+      cyan: '#00E5FF'
+    };
+
+    function drawOGImage() {
+      const canvas = document.getElementById('ogCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // Gradient background
+      const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+      gradient.addColorStop(0, brandColors.purple);
+      gradient.addColorStop(1, brandColors.purpleLight);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 1200, 630);
+
+      // Decorative circles
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.beginPath();
+      ctx.arc(1000, 100, 200, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(200, 500, 150, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Main text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 80px Inter, -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Waseem', 600, 240);
+
+      // Subtitle
+      ctx.font = '40px Inter, -apple-system, sans-serif';
+      ctx.fillStyle = brandColors.gold;
+      ctx.fillText('Full Stack Developer & AI Specialist', 600, 320);
+
+      // Tech stack
+      ctx.font = '28px Inter, -apple-system, sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.fillText('React • TypeScript • Node.js • AI Automation', 600, 400);
+
+      // Bottom accent
+      ctx.fillStyle = brandColors.cyan;
+      ctx.fillRect(0, 580, 1200, 50);
+      ctx.fillStyle = brandColors.purple;
+      ctx.font = 'bold 24px Inter, -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('waseem-portfolio.netlify.app', 600, 612);
+    }
+
+    function drawTwitterImage() {
+      const canvas = document.getElementById('twitterCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // Gradient background
+      const gradient = ctx.createLinearGradient(0, 0, 1200, 675);
+      gradient.addColorStop(0, brandColors.purple);
+      gradient.addColorStop(1, brandColors.purpleLight);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 1200, 675);
+
+      // Decorative circles
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.beginPath();
+      ctx.arc(1000, 100, 200, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(200, 550, 150, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Main text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 85px Inter, -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Waseem', 600, 270);
+
+      // Subtitle
+      ctx.font = '42px Inter, -apple-system, sans-serif';
+      ctx.fillStyle = brandColors.gold;
+      ctx.fillText('Full Stack Developer & AI Specialist', 600, 350);
+
+      // Tech stack
+      ctx.font = '30px Inter, -apple-system, sans-serif';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      ctx.fillText('React • TypeScript • Node.js • Python', 600, 430);
+
+      // Bottom accent
+      ctx.fillStyle = brandColors.cyan;
+      ctx.fillRect(0, 615, 1200, 60);
+      ctx.fillStyle = brandColors.purple;
+      ctx.font = 'bold 26px Inter, -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('waseem-portfolio.netlify.app', 600, 655);
+    }
+
+    function downloadImage(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+      // Show success message
+      const statusId = canvasId === 'ogCanvas' ? 'ogStatus' : 'twitterStatus';
+      const statusEl = document.getElementById(statusId);
+      statusEl.textContent = `✓ ${filename} downloaded successfully!`;
+      statusEl.className = 'status success';
+      setTimeout(() => {
+        statusEl.style.display = 'none';
+      }, 3000);
+    }
+
+    // Draw images on load
+    window.addEventListener('load', () => {
+      drawOGImage();
+      drawTwitterImage();
+    });
+  </script>
+</body>
+</html>
