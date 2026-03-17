@@ -37,8 +37,8 @@ export const en: Record<string, string> = {
     // Service Items
     service_1_title: "Full Stack Dev",
     service_1_desc: "End-to-end web applications using Next.js, React, and Node.js. Scalable, secure, and fast.",
-    service_2_title: "Digital Products",
-    service_2_desc: "Converting ideas into profitable SaaS platforms and e-commerce solutions.",
+    service_2_title: "SEO • GEO • AEO",
+    service_2_desc: "Get found everywhere — Google search, AI assistants (ChatGPT, Claude), and voice search optimization.",
     service_3_title: "AI Automation",
     service_3_desc: "Custom AI chatbots, workflow automation, and intelligent data processing.",
     service_4_title: "Websites",
@@ -92,6 +92,8 @@ export const en: Record<string, string> = {
     about_mission: "To eliminate technical risk and deliver a product that just works.",
 
     // Timeline Items
+    timeline_0_title: "Multi-Project Scale",
+    timeline_0_desc: "Managing multiple large-scale projects simultaneously, expanding impact across diverse industries.",
     timeline_1_title: "Vibe Coding & Design",
     timeline_1_desc: "Professing the art of vibe coding and design, merging aesthetics with high-performance engineering.",
     timeline_2_title: "Senior Full Stack Dev",

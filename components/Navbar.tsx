@@ -25,7 +25,15 @@ const Navbar: React.FC = () => {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm border-b border-brand-gold/20 dark:border-slate-800' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
-        <div className="flex items-center justify-end h-20">
+        <div className="flex items-center justify-between h-20">
+          {/* Logo/Name */}
+          <a
+            href="#"
+            className="text-xl font-heading font-bold text-slate-900 dark:text-white hover:text-brand-purple dark:hover:text-brand-purpleLight transition-colors"
+          >
+            Waseem
+          </a>
+
           {/* Desktop Menu */}
           <div className="hidden md:flex gap-8 items-center">
             {NAV_LINKS[language].map((link) => (
@@ -59,9 +67,25 @@ const Navbar: React.FC = () => {
               aria-label={`Toggle ${theme === 'dark' ? 'light' : 'dark'} mode`}
               className="p-2 text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
             >
-              {theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
+              {theme === 'dark' ? <Moon size={20} aria-hidden="true" /> : <Sun size={20} aria-hidden="true" />}
             </button>
+
+            {/* CTA Button */}
+            <a
+              href="#contact"
+              className="px-4 py-2 bg-brand-purple text-white rounded-full font-bold text-sm shadow-md hover:shadow-lg hover:bg-brand-purpleLight transition-all"
+            >
+              {t('hero_cta_start')}
+            </a>
           </div>
+
+          {/* Mobile Logo */}
+          <a
+            href="#"
+            className="md:hidden text-lg font-heading font-bold text-slate-900 dark:text-white"
+          >
+            Waseem
+          </a>
 
           {/* Mobile Toggle */}
           <div className="md:hidden flex items-center gap-4">
@@ -82,7 +106,7 @@ const Navbar: React.FC = () => {
               aria-label={`Toggle ${theme === 'dark' ? 'light' : 'dark'} mode`}
               className="text-slate-700 dark:text-slate-300 hover:text-brand-purple p-1 focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"
             >
-              {theme === 'dark' ? <Sun size={20} aria-hidden="true" /> : <Moon size={20} aria-hidden="true" />}
+              {theme === 'dark' ? <Moon size={20} aria-hidden="true" /> : <Sun size={20} aria-hidden="true" />}
             </button>
 
             <button

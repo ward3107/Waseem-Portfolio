@@ -37,8 +37,8 @@ export const he: Record<string, string> = {
     // Service Items
     service_1_title: "פיתוח פול-סטאק",
     service_1_desc: "אפליקציות ווב מקצה לקצה בשימוש Next.js, React ו-Node.js. מאובטח ומהיר.",
-    service_2_title: "מוצרים דיגיטליים",
-    service_2_desc: "המרת רעיונות לפלטפורמות SaaS רווחיות ופתרונות איקומרס.",
+    service_2_title: "SEO • GEO • AEO",
+    service_2_desc: "הופעו בכל מקום — חיפוש גוגל, עוזרי AI (ChatGPT, Claude), ואופטימיזציה לחיפוש קולי.",
     service_3_title: "אוטומציה ו-AI",
     service_3_desc: "צ'אטבוטים חכמים, אוטומציה של תהליכים ועיבוד נתונים חכם.",
     service_4_title: "אתרי אינטרנט",
@@ -91,6 +91,8 @@ export const he: Record<string, string> = {
     about_mission: "להסיר סיכון טכני ולספק מוצר שפשוט עובד.",
 
     // Timeline Items
+    timeline_0_title: "קנה מידה רב-פרויקטי",
+    timeline_0_desc: "ניהול מספר פרויקטים גדולים במקביל, הרחבת השפעה בתעשיות מגוונות.",
     timeline_1_title: "Vibe Coding & Design",
     timeline_1_desc: "שילוב אומנות הקוד והעיצוב, מיזוג אסתטיקה עם הנדסה בביצועים גבוהים.",
     timeline_2_title: "מפתח פול-סטאק בכיר",

@@ -318,8 +318,6 @@ const Hero: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href="#projects"
-              target="_blank"
-              rel="noopener noreferrer"
               className="px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-white dark:bg-transparent text-slate-800 dark:text-white border-2 border-slate-100 dark:border-slate-700 rounded-full font-bold text-xs sm:text-sm md:text-base hover:border-brand-purple/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-1.5 sm:gap-2"
             >
               {t('hero_cta_view')}
@@ -393,7 +391,7 @@ const Hero: React.FC = () => {
 
                 <div className="w-full h-full bg-slate-800 rounded-[20px] overflow-hidden relative">
                   <img
-                    src="/assets/waseem-profile.jpg"
+                    src="/assets/waseem-profile.webp"
                     alt={t('hero_profile_alt')}
                     loading="lazy"
                     className="object-cover w-full h-full opacity-90 group-hover:scale-105 transition-transform duration-700"

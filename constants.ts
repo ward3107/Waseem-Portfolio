@@ -92,6 +92,11 @@ export const PROJECTS: Project[] = [
 
 export const TIMELINE: TimelineItem[] = [
   {
+    year: '2026',
+    title: 'Multi-Project Scale',
+    description: 'Managing multiple large-scale projects simultaneously, expanding impact across diverse industries.'
+  },
+  {
     year: '2025',
     title: 'Vibe Coding & Design',
     description: 'Professing the art of vibe coding and design, merging aesthetics with high-performance engineering.'

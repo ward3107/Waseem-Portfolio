@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Sparkles, ArrowRight, ArrowLeft, X, MessageCircle, Code, Globe, Bot, Layout, Box, TrendingUp } from 'lucide-react';
+import { Sparkles, ArrowRight, ArrowLeft, X, MessageCircle, Code, Globe, Bot, Box, TrendingUp, Search } from 'lucide-react';
 import { Service } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
@@ -8,7 +8,7 @@ import { useFocusTrap, useEscapeKey } from '../hooks/useFocusTrap';
 
 // Platform icons component with clean SVG paths
 const GoogleIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-4 h-4">
+  <svg viewBox="0 0 24 24" className="w-5 h-5">
     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 2.53H12v-4.54h10.56z"/>
     <path fill="#34A853" d="M12 22c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 18.86 7.7 22 12 22z"/>
     <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.26.81-.58z"/>
@@ -17,13 +17,13 @@ const GoogleIcon = () => (
 );
 
 const FacebookIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-4 h-4">
+  <svg viewBox="0 0 24 24" className="w-5 h-5">
     <path fill="#1877F2" d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99H7.9V12h2.54V9.79c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.45 2.89h-2.33v6.99C18.34 21.13 22 16.99 22 12z"/>
   </svg>
 );
 
 const TikTokIcon = () => (
-  <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
     <path fill="#000000" d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
   </svg>
 );
@@ -37,20 +37,20 @@ const InstagramIcon = () => (
 );
 
 const PlatformIcons = () => (
-  <div className="flex items-center gap-2 flex-wrap mt-1">
-    <span className="flex items-center gap-1 text-xs bg-red-500/10 text-red-600 px-2 py-1 rounded-full">
+  <div className="flex items-center gap-2.5 flex-wrap mt-2">
+    <span className="flex items-center gap-1.5 text-sm bg-red-500/10 text-red-600 px-3 py-1.5 rounded-full">
       <GoogleIcon />
       <span>Google</span>
     </span>
-    <span className="flex items-center gap-1 text-xs bg-blue-600/10 text-blue-600 px-2 py-1 rounded-full">
+    <span className="flex items-center gap-1.5 text-sm bg-blue-600/10 text-blue-600 px-3 py-1.5 rounded-full">
       <FacebookIcon />
       <span>Meta</span>
     </span>
-    <span className="flex items-center gap-1 text-xs bg-pink-500/10 text-pink-600 px-2 py-1 rounded-full">
+    <span className="flex items-center gap-1.5 text-sm bg-pink-500/10 text-pink-600 px-3 py-1.5 rounded-full">
       <TikTokIcon />
       <span>TikTok</span>
     </span>
-    <span className="flex items-center gap-1 text-xs bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 px-2 py-1 rounded-full">
+    <span className="flex items-center gap-1.5 text-sm bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1.5 rounded-full">
       <InstagramIcon />
       <span>Instagram</span>
     </span>
@@ -172,7 +172,7 @@ const ServiceCard = ({ service, index, onClick, t, dir, prefersReducedMotion }: 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={transformStyle}
-      className={`cursor-pointer group relative bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 ${borderColorClass} rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 overflow-hidden transition-all duration-500 flex flex-col h-full shadow-lg hover:shadow-3xl ${glowColorClass} ${
+      className={`cursor-pointer group relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 ${borderColorClass} rounded-lg sm:rounded-xl p-2.5 sm:p-3 overflow-hidden transition-all duration-500 flex flex-col h-full shadow-lg hover:shadow-3xl ${glowColorClass} ${
         service.title === t('service_3_title') || service.title === t('service_marketing_title')
           ? 'lg:col-span-2'
           : 'col-span-1'
@@ -187,7 +187,6 @@ const ServiceCard = ({ service, index, onClick, t, dir, prefersReducedMotion }: 
         transition={{ duration: 2, repeat: Infinity }}
         className={`absolute inset-0 bg-gradient-to-br ${gradientClass} transition-opacity duration-500`}
       />
-
       {/* Dramatic shimmer effect - always visible but subtle */}
       <motion.div
         animate={{ x: ['-100%', '250%'] }}
@@ -264,7 +263,7 @@ const ServiceCard = ({ service, index, onClick, t, dir, prefersReducedMotion }: 
             scale: [1, 1.1, 1.15, 1.1, 1],
           } : {}}
           transition={{ duration: 0.6 }}
-          className={`w-10 h-10 sm:w-14 md:w-16 sm:h-14 md:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center mb-3 sm:mb-4 md:mb-6 transition-all duration-300 ${service.color} shadow-lg group-hover:shadow-2xl relative overflow-hidden`}
+          className={`w-8 h-8 sm:w-9 md:w-10 sm:h-9 md:h-10 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center mb-1.5 sm:mb-2 transition-all duration-300 ${service.color} shadow-lg group-hover:shadow-2xl relative overflow-hidden`}
         >
           {/* Enhanced pulsing ring around icon */}
           <motion.div
@@ -284,17 +283,17 @@ const ServiceCard = ({ service, index, onClick, t, dir, prefersReducedMotion }: 
             transition={{ duration: 2.5, repeat: Infinity, delay: 0.5 }}
             className={`absolute inset-0 rounded-xl sm:rounded-2xl ${service.color.replace('text-', 'bg-').split(' ')[0]}/20`}
           />
-          <Icon size={20} className="sm:size-24 md:size-32 relative z-10" />
+          <Icon size={16} className="sm:size-18 md:size-20 relative z-10" />
         </motion.div>
 
         {/* Title */}
-        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-brand-purple group-hover:to-brand-cyan transition-all duration-300">
+        <h3 className="text-sm sm:text-base md:text-lg font-bold text-slate-900 dark:text-white mb-1 sm:mb-1.5 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-brand-purple group-hover:to-brand-cyan transition-all duration-300">
           {service.title}
         </h3>
 
         {/* Description */}
-        <div className="mb-3 sm:mb-4 md:mb-6 flex-grow">
-          <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
+        <div className="mb-1.5 sm:mb-2 flex-grow">
+          <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">
             {service.description}
           </p>
           {/* Platform Icons for Performance Marketing */}
@@ -304,7 +303,7 @@ const ServiceCard = ({ service, index, onClick, t, dir, prefersReducedMotion }: 
         {/* Animated CTA */}
         <motion.div
           whileHover={{ x: isRTL ? -8 : 8 }}
-          className="pt-3 sm:pt-4 md:pt-6 border-t border-slate-100 dark:border-slate-800/50 flex items-center text-xs sm:text-sm font-bold text-slate-400 dark:text-slate-500 group-hover:text-brand-purple dark:group-hover:text-white transition-colors"
+          className="pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-800/50 flex items-center text-[11px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-brand-purple dark:group-hover:text-white transition-colors"
         >
           <span className={isRTL ? 'ml-2' : 'mr-2'}>{t('projects_details')}</span>
           <motion.div
@@ -361,7 +360,7 @@ const Services: React.FC = () => {
     {
       title: t('service_2_title'),
       description: t('service_2_desc'),
-      icon: Layout,
+      icon: Search,
       color: 'text-brand-blue'
     },
     {
@@ -418,7 +417,7 @@ const Services: React.FC = () => {
   return (
     <section
       id="what-i-do"
-      className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center transition-colors duration-300"
+      className="py-8 sm:py-10 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center transition-colors duration-300"
     >
       {/* Background Ambience */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/10 rounded-full blur-[120px] -z-10 animate-pulse"></div>
@@ -428,7 +427,7 @@ const Services: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10 w-full">
 
         {/* Header Section */}
-        <div className="text-center mb-10 sm:mb-12 md:mb-16 max-w-2xl mx-auto">
+        <div className="text-center mb-4 sm:mb-6 max-w-2xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -436,14 +435,14 @@ const Services: React.FC = () => {
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mb-4 sm:mb-6"
           >
             <Sparkles size={12} className="sm:size-14 text-brand-gold" />
-            <span className="text-[10px] sm:text-xs font-bold text-slate-900 dark:text-slate-300 tracking-wide uppercase">{t('services_badge')}</span>
+            <span className="text-[9px] sm:text-[10px] font-bold text-slate-900 dark:text-slate-300 tracking-wide uppercase">{t('services_badge')}</span>
           </motion.div>
 
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-slate-900 dark:text-white mb-4 sm:mb-6"
+            className="text-xl sm:text-2xl md:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-2 sm:mb-3"
           >
             {t('services_title_1')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">{t('services_title_2')}</span>
           </motion.h2>
@@ -452,7 +451,7 @@ const Services: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg"
+            className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm md:text-base"
           >
             {t('services_subtitle')}
           </motion.p>
@@ -471,7 +470,7 @@ const Services: React.FC = () => {
               },
             },
           }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3"
         >
           {localizedServices.map((service, index) => (
             <ServiceCard
@@ -497,7 +496,7 @@ const Services: React.FC = () => {
             }}
             onClick={handleStartProject}
             whileHover={{ scale: 1.03, y: -5 }}
-            className="cursor-pointer group relative bg-gradient-to-br from-brand-purple via-brand-purpleLight to-brand-purpleDark rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 overflow-hidden flex flex-col items-center justify-center text-center h-full border-2 border-brand-purpleLight/40 hover:border-brand-gold/50 transition-all duration-500 shadow-2xl shadow-brand-purple/20 hover:shadow-brand-gold/30"
+            className="cursor-pointer group relative bg-gradient-to-br from-brand-purple via-brand-purpleLight to-brand-purpleDark rounded-lg sm:rounded-xl p-2.5 sm:p-3 overflow-hidden flex flex-col items-center justify-center text-center h-full border border-brand-purpleLight/40 hover:border-brand-gold/50 transition-all duration-500 shadow-2xl shadow-brand-purple/20 hover:shadow-brand-gold/30"
           >
             {/* Animated background patterns */}
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
@@ -540,7 +539,7 @@ const Services: React.FC = () => {
               <motion.div
                 whileHover={{ rotate: [0, 15, -15, 0], scale: 1.1 }}
                 transition={{ duration: 0.6 }}
-                className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-white/15 flex items-center justify-center mx-auto mb-3 sm:mb-4 md:mb-6 backdrop-blur-md border-2 border-white/30 shadow-2xl relative overflow-hidden"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-white/15 flex items-center justify-center mx-auto mb-1.5 sm:mb-2 backdrop-blur-md border border-white/30 shadow-2xl relative overflow-hidden"
               >
                 {/* Pulsing glow */}
                 <motion.div
@@ -548,17 +547,17 @@ const Services: React.FC = () => {
                   transition={{ duration: 2, repeat: Infinity }}
                   className="absolute inset-0 bg-brand-gold/30 rounded-xl sm:rounded-2xl"
                 />
-                <Sparkles size={24} className="sm:size-36 text-brand-gold relative z-10" />
+                <Sparkles size={16} className="sm:size-20 text-brand-gold relative z-10" />
               </motion.div>
 
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-1.5 sm:mb-2 drop-shadow-lg">{t('services_cta_title')}</h3>
-              <p className="text-purple-100/90 text-xs sm:text-sm mb-3 sm:mb-4 md:mb-6 max-w-[180px] sm:max-w-[200px] mx-auto drop-shadow leading-relaxed sm:leading-normal">{t('services_cta_desc')}</p>
+              <h3 className="text-sm sm:text-base md:text-lg font-bold text-white mb-1 drop-shadow-lg">{t('services_cta_title')}</h3>
+              <p className="text-purple-100/90 text-[11px] sm:text-xs mb-1.5 sm:mb-2 max-w-[140px] sm:max-w-[160px] mx-auto drop-shadow leading-relaxed">{t('services_cta_desc')}</p>
 
               {/* Enhanced button */}
               <motion.span
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-5 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 bg-gradient-to-r from-white to-slate-100 text-brand-purple font-bold rounded-lg sm:rounded-xl shadow-lg hover:shadow-2xl transition-all inline-block text-xs sm:text-sm relative overflow-hidden group"
+                className="px-3 sm:px-4 py-1 sm:py-1.5 bg-gradient-to-r from-white to-slate-100 text-brand-purple font-bold rounded-lg shadow-lg hover:shadow-2xl transition-all inline-block text-[11px] relative overflow-hidden group"
               >
                 <span className="relative z-10">{t('services_cta_btn')}</span>
                 <motion.div

@@ -101,8 +101,8 @@ const Process: React.FC = () => {
                 {/* Glowing Ring */}
                 <div className={`absolute inset-0 rounded-full opacity-20 animate-pulse ${step.bg.replace('/10', '/30')}`}></div>
 
-                <div className={`p-3 sm:p-4 md:p-6 rounded-2xl sm:rounded-3xl mb-3 sm:mb-4 md:mb-6 ${step.bg} ${step.color} transform scale-125 sm:scale-140 md:scale-150`}>
-                  <step.icon size={32} strokeWidth={1.5} className="sm:size-40 md:size-48" />
+                <div className={`p-3 sm:p-4 md:p-6 rounded-2xl sm:rounded-3xl mb-3 sm:mb-4 md:mb-6 ${step.bg} ${step.color}`}>
+                  <step.icon size={32} strokeWidth={1.5} className="sm:w-10 sm:h-10 md:w-12 md:h-12" />
                 </div>
                 <h3 className={`text-xl sm:text-2xl md:text-3xl font-heading font-bold text-center mb-1 sm:mb-2 ${step.color}`}>
                   0{step.id}

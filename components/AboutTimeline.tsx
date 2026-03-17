@@ -71,6 +71,11 @@ const AboutTimeline: React.FC = () => {
             year: '2025',
             title: t('timeline_1_title'),
             description: t('timeline_1_desc')
+        },
+        {
+            year: '2026',
+            title: t('timeline_0_title'),
+            description: t('timeline_0_desc')
         }
     ];
 
@@ -147,13 +152,17 @@ const AboutTimeline: React.FC = () => {
                                 {/* Header Image Area */}
                                 <div className="relative h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden bg-slate-900">
                                     <video
-                                        src="/assets/waseem-profile-video.mp4"
                                         autoPlay
                                         loop
                                         muted
                                         playsInline
+                                        preload="metadata"
+                                        poster="/assets/waseem-profile.webp"
                                         className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
-                                    />
+                                    >
+                                        <source src="/assets/waseem-profile-video.webm" type="video/webm" />
+                                        <source src="/assets/waseem-profile-video.mp4" type="video/mp4" />
+                                    </video>
                                     <div className="absolute inset-0 bg-gradient-to-t from-brand-purpleDark via-brand-purple/50 to-transparent"></div>
 
                                     <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 text-white">

@@ -37,8 +37,8 @@ export const ar: Record<string, string> = {
     // Service Items
     service_1_title: "تطوير شامل (Full Stack)",
     service_1_desc: "تطبيقات ويب متكاملة باستخدام Next.js و React و Node.js. قابلة للتوسع، آمنة، وسريعة.",
-    service_2_title: "منتجات رقمية",
-    service_2_desc: "تحويل الأفكار إلى منصات SaaS مربحة وحلول تجارة إلكترونية.",
+    service_2_title: "SEO • GEO • AEO",
+    service_2_desc: "يظهر في كل مكان — بحث جوجل، مساعدي الذكاء الاصطناعي (ChatGPT, Claude)، وتحسين البحث الصوتي.",
     service_3_title: "أتمتة الذكاء الاصطناعي",
     service_3_desc: "روبوتات دردشة مخصصة، أتمتة سير العمل، ومعالجة ذكية للبيانات.",
     service_4_title: "مواقع إلكترونية",
@@ -92,6 +92,8 @@ export const ar: Record<string, string> = {
     about_mission: "إزالة المخاطر التقنية وتقديم منتج يعمل ببساطة.",
 
     // Timeline Items
+    timeline_0_title: "توسع متعدد المشاريع",
+    timeline_0_desc: "إدارة مشاريع كبيرة متعددة في وقت واحد، توسيع التأثير عبر صناعات متنوعة.",
     timeline_1_title: "Vibe Coding & Design",
     timeline_1_desc: "ممارسة فن الكود والتصميم، دمج الجماليات مع الهندسة عالية الأداء.",
     timeline_2_title: "مطور شامل أول",

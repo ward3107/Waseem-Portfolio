@@ -18,7 +18,6 @@ import { ThemeProvider } from './contexts/ThemeContext';
 const Projects = lazy(() => import('./components/Projects'));
 const Process = lazy(() => import('./components/Process'));
 const TechStack = lazy(() => import('./components/TechStack'));
-const SocialHub = lazy(() => import('./components/SocialHub'));
 const FAQ = lazy(() => import('./components/FAQ'));
 const Contact = lazy(() => import('./components/Contact'));
 
@@ -54,9 +53,6 @@ const AppContent: React.FC = () => {
         </Suspense>
         <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-slate-600 dark:text-slate-400">Loading tech stack...</div>}>
           <TechStack />
-        </Suspense>
-        <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-slate-600 dark:text-slate-400">Loading social hub...</div>}>
-          <SocialHub />
         </Suspense>
         <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-slate-600 dark:text-slate-400">Loading FAQ...</div>}>
           <FAQ />
