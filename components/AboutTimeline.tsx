@@ -160,7 +160,6 @@ const AboutTimeline: React.FC = () => {
                                         poster="/assets/waseem-profile.webp"
                                         className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
                                     >
-                                        <source src="/assets/waseem-profile-video.webm" type="video/webm" />
                                         <source src="/assets/waseem-profile-video.mp4" type="video/mp4" />
                                     </video>
                                     <div className="absolute inset-0 bg-gradient-to-t from-brand-purpleDark via-brand-purple/50 to-transparent"></div>

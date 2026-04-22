@@ -31,6 +31,8 @@ export const emphasizedVariants = (reduced: boolean): Variants => ({
           damping: 15,
           stiffness: 250,
           mass: 0.5,
+          // Spring overshoots — blur can't be negative, so tween it linearly.
+          filter: { type: 'tween', duration: 0.6, ease: 'easeOut' },
         },
   }),
 });
