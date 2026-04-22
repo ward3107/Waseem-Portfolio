@@ -150,6 +150,12 @@ const Projects: React.FC = () => {
                       decoding="async"
                       width="600"
                       height="400"
+                      onError={(e) => {
+                        const img = e.currentTarget;
+                        if (img.src.indexOf('data:') !== 0) {
+                          img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%23483AA0'/><text x='50%25' y='50%25' fill='white' font-family='sans-serif' font-size='32' text-anchor='middle' dominant-baseline='middle'>Project image coming soon</text></svg>";
+                        }
+                      }}
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
 
