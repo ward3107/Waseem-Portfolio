@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { Code2, Database, Globe, Cpu, Cloud, Gift, Bug, ShieldAlert } from 'lucide-react';
 import { TechItem } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getAudioContext } from '../utils/globalTypes';
+import { getAudioContext } from '../utils';
 
 // --- Game Constants ---
 const STAGE_THRESHOLDS = {

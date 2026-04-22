@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring, useTransform, Variants, AnimatePresence } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform, Variants } from 'framer-motion';
 import { ArrowRight, ArrowLeft, MousePointer2, Calendar, Heart, Sparkles } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useState } from 'react';
@@ -64,14 +64,6 @@ const Hero: React.FC = () => {
         const nameInput = document.getElementById('name');
         if (nameInput) nameInput.focus();
       }, 1000);
-    }
-  };
-
-  const handleViewWork = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const projectsSection = document.getElementById('projects');
-    if (projectsSection) {
-      projectsSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -192,7 +184,7 @@ const Hero: React.FC = () => {
             className="inline-flex items-center px-3 py-1 rounded-full border border-brand-green/30 bg-green-50 dark:bg-green-900/20 text-brand-green text-xs font-bold uppercase tracking-wider mb-6 shadow-sm"
           >
             <span className="relative flex h-2 w-2 mr-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              {!prefersReducedMotion && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>}
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
             </span>
             {t('hero_badge')}
@@ -349,14 +341,16 @@ const Hero: React.FC = () => {
         >
           <motion.div
             style={{
-              rotateX,
-              rotateY,
+              rotateX: prefersReducedMotion ? 0 : rotateX,
+              rotateY: prefersReducedMotion ? 0 : rotateY,
               transformStyle: "preserve-3d",
               willChange: 'transform'
             }}
-            initial={{ rotateY: [-5, 5, -5, 0] }}
-            animate={{ rotateY: [0, 0, 0, isFlipped ? 180 : 0] }}
-            transition={{
+            animate={prefersReducedMotion
+              ? { rotateY: isFlipped ? 180 : 0 }
+              : { rotateY: [0, 0, 0, isFlipped ? 180 : 0] }
+            }
+            transition={prefersReducedMotion ? { duration: 0 } : {
               rotateY: {
                 times: [0, 0.2, 0.4, 1],
                 duration: 2,
@@ -380,7 +374,7 @@ const Hero: React.FC = () => {
           >
             <motion.div
               animate={{ rotateY: isFlipped ? 180 : 0 }}
-              transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.6, type: "spring", stiffness: 100 }}
               style={{ transformStyle: "preserve-3d" }}
               className="relative w-full h-full"
             >
@@ -393,7 +387,11 @@ const Hero: React.FC = () => {
                   <img
                     src="/assets/waseem-profile.webp"
                     alt={t('hero_profile_alt')}
-                    loading="lazy"
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
+                    width="512"
+                    height="640"
                     className="object-cover w-full h-full opacity-90 group-hover:scale-105 transition-transform duration-700"
                   />
 
@@ -404,8 +402,8 @@ const Hero: React.FC = () => {
                         {t('hero_card_role')}
                       </span>
                       <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        animate={prefersReducedMotion ? {} : { x: [0, 5, 0] }}
+                        transition={prefersReducedMotion ? { duration: 0 } : { duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                         className="flex items-center gap-1 text-white/70 text-xs"
                       >
                         <span>Click to flip</span>

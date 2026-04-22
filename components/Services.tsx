@@ -5,6 +5,7 @@ import { Service } from '../types';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useFocusTrap, useEscapeKey } from '../hooks/useFocusTrap';
+import { CONTACT } from '../constants';
 
 // Platform icons component with clean SVG paths
 const GoogleIcon = () => (
@@ -84,27 +85,6 @@ const cardGlowColors = [
   'group-hover:shadow-amber-500/20',
   'group-hover:shadow-pink-500/20',
 ];
-
-// Floating particles for visual interest
-const FloatingParticles = ({ color }: { color: string }) => (
-  <>
-    <motion.div
-      animate={{ y: [0, -10, 0], opacity: [0.3, 0.6, 0.3] }}
-      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      className={`absolute top-4 right-4 w-2 h-2 rounded-full ${color} blur-[1px]`}
-    />
-    <motion.div
-      animate={{ y: [0, 15, 0], opacity: [0.2, 0.5, 0.2] }}
-      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-      className={`absolute bottom-8 left-4 w-1.5 h-1.5 rounded-full ${color} blur-[1px]`}
-    />
-    <motion.div
-      animate={{ x: [0, 10, 0], opacity: [0.2, 0.4, 0.2] }}
-      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-      className={`absolute top-1/2 right-8 w-1 h-1 rounded-full ${color} blur-[1px]`}
-    />
-  </>
-);
 
 const ServiceCard = ({ service, index, onClick, t, dir, prefersReducedMotion }: {
   service: Service;
@@ -630,7 +610,7 @@ const Services: React.FC = () => {
                   </button>
 
                   <a
-                    href={`https://wa.me/972534260632?text=Hi, I'm interested in ${selectedService.title}...`}
+                    href={`${CONTACT.whatsappUrl}?text=${encodeURIComponent(`Hi, I'm interested in ${selectedService.title}...`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 text-slate-400 hover:text-green-500 text-xs sm:text-sm font-bold transition-colors py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"

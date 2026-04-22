@@ -21,6 +21,26 @@ const TechStack = lazy(() => import('./components/TechStack'));
 const FAQ = lazy(() => import('./components/FAQ'));
 const Contact = lazy(() => import('./components/Contact'));
 
+const SectionSkeleton: React.FC = () => (
+  <div
+    role="status"
+    aria-label="Loading section"
+    className="min-h-[50vh] flex items-center justify-center"
+  >
+    <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-16 animate-pulse">
+      <div className="h-8 w-40 bg-slate-200 dark:bg-slate-800 rounded-full mb-6" />
+      <div className="h-12 w-3/4 max-w-2xl bg-slate-200 dark:bg-slate-800 rounded-lg mb-4" />
+      <div className="h-4 w-1/2 max-w-lg bg-slate-200 dark:bg-slate-800 rounded mb-10" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="h-40 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+        <div className="h-40 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+        <div className="h-40 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+      </div>
+    </div>
+    <span className="sr-only">Loading…</span>
+  </div>
+);
+
 // Skip link component with proper accessibility
 const SkipLink: React.FC = () => {
   const { t } = useLanguage();
@@ -45,19 +65,19 @@ const AppContent: React.FC = () => {
         <AISection />
         <VibeCoding />
         <AboutTimeline />
-        <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-slate-600 dark:text-slate-400">Loading projects...</div>}>
+        <Suspense fallback={<SectionSkeleton />}>
           <Projects />
         </Suspense>
-        <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-slate-600 dark:text-slate-400">Loading process...</div>}>
+        <Suspense fallback={<SectionSkeleton />}>
           <Process />
         </Suspense>
-        <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-slate-600 dark:text-slate-400">Loading tech stack...</div>}>
+        <Suspense fallback={<SectionSkeleton />}>
           <TechStack />
         </Suspense>
-        <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-slate-600 dark:text-slate-400">Loading FAQ...</div>}>
+        <Suspense fallback={<SectionSkeleton />}>
           <FAQ />
         </Suspense>
-        <Suspense fallback={<div className="min-h-[50vh] flex items-center justify-center text-slate-600 dark:text-slate-400">Loading contact...</div>}>
+        <Suspense fallback={<SectionSkeleton />}>
           <Contact />
         </Suspense>
       </main>

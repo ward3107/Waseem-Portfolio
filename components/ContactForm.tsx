@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle2, Zap, Mail, AlertCircle, Loader2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { trackEvent } from '../utils/globalTypes';
+import { trackEvent } from '../utils';
 
 const ContactForm: React.FC = () => {
   const { t, language } = useLanguage();
@@ -48,6 +48,13 @@ const ContactForm: React.FC = () => {
     setIsLoading(true);
     setSubmitError(null);
 
+    const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
+    if (!accessKey) {
+      setSubmitError('Contact form is not configured. Please email directly.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
@@ -55,7 +62,7 @@ const ContactForm: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          access_key: 'YOUR_ACCESS_KEY', // Replace with your Web3Forms access key
+          access_key: accessKey,
           subject: 'New Contact from Portfolio',
           from_name: formData.name,
           reply_to: formData.email,

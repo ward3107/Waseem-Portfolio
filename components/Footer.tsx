@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, Linkedin, Twitter, ArrowRight, ArrowLeft, Heart, Mail, X } from 'lucide-react';
-import { NAV_LINKS, SERVICES } from '../constants';
+import { Github, Linkedin, Twitter, ArrowRight, ArrowLeft, Mail, X } from 'lucide-react';
+import { NAV_LINKS, CONTACT } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '../hooks/useFocusTrap';
-import { trackEvent } from '../utils/globalTypes';
+import { trackEvent } from '../utils';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -55,13 +55,13 @@ const Footer: React.FC = () => {
               {t('footer_desc')}
             </p>
             <div className="flex gap-4">
-              <a href="https://github.com/waseem-portfolio" target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's GitHub profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-purple dark:hover:text-white hover:border-brand-purple hover:bg-brand-purple/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2">
+              <a href={CONTACT.github} target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's GitHub profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-purple dark:hover:text-white hover:border-brand-purple hover:bg-brand-purple/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2">
                 <Github size={18} aria-hidden="true" />
               </a>
-              <a href="https://linkedin.com/in/waseem-profile" target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's LinkedIn profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-white hover:border-brand-blue hover:bg-brand-blue/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2">
+              <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's LinkedIn profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-white hover:border-brand-blue hover:bg-brand-blue/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2">
                 <Linkedin size={18} aria-hidden="true" />
               </a>
-              <a href="https://twitter.com/waseemdev" target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's Twitter profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-cyan dark:hover:text-white hover:border-brand-cyan hover:bg-brand-cyan/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2">
+              <a href={CONTACT.twitter} target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's Twitter profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-cyan dark:hover:text-white hover:border-brand-cyan hover:bg-brand-cyan/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2">
                 <Twitter size={18} aria-hidden="true" />
               </a>
             </div>
@@ -156,7 +156,7 @@ const Footer: React.FC = () => {
                 </div>
               </motion.div>
 
-              {/* Success Message */}
+              {/* Success / Error Message */}
               <AnimatePresence>
                 {newsletterStatus === 'success' && (
                   <motion.div
@@ -171,28 +171,40 @@ const Footer: React.FC = () => {
                     </span>
                   </motion.div>
                 )}
+                {newsletterStatus === 'error' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="mb-4 p-3 bg-red-100 dark:bg-red-900/20 border border-red-400 rounded-lg text-sm text-red-700 dark:text-red-300"
+                  >
+                    {language === 'he' ? 'ההרשמה נכשלה. נסה שוב מאוחר יותר.' : language === 'ar' ? 'فشل الاشتراك. يرجى المحاولة لاحقاً.' : 'Subscription failed. Please try again.'}
+                  </motion.div>
+                )}
               </AnimatePresence>
 
               <form
                 className="flex flex-col gap-3"
-                action="https://formspree.io/f/YOUR_FORM_ID"
-                method="POST"
                 onSubmit={(e) => {
-                  // Handle client-side submission tracking
+                  e.preventDefault();
+                  const endpoint = import.meta.env.VITE_NEWSLETTER_ENDPOINT;
+                  if (!endpoint) {
+                    setNewsletterStatus('error');
+                    return;
+                  }
                   const formData = new FormData(e.currentTarget);
-                  fetch(e.currentTarget.action, {
+                  fetch(endpoint, {
                     method: 'POST',
                     body: formData,
                     headers: { 'Accept': 'application/json' }
                   }).then(response => {
                     if (response.ok) {
                       setNewsletterStatus('success');
-                      // Track signup event
                       trackEvent('sign_up', { form_type: 'newsletter' });
                     } else {
                       setNewsletterStatus('error');
                     }
-                  });
+                  }).catch(() => setNewsletterStatus('error'));
                 }}
               >
                 <input type="hidden" name="subject" value="Newsletter Subscription from Portfolio" />

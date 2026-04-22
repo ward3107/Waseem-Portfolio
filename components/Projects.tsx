@@ -147,6 +147,9 @@ const Projects: React.FC = () => {
                       src={project.image}
                       alt={project.title}
                       loading="lazy"
+                      decoding="async"
+                      width="600"
+                      height="400"
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
 
