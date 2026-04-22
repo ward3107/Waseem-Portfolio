@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
-import { trackEvent } from '../utils/globalTypes';
+import { trackEvent } from '../utils';
 
 interface ProjectWizardProps {}
 

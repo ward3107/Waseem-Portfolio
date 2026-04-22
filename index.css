@@ -16,3 +16,22 @@ body {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
+
+/* TechStack game animations */
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-33.33%); }
+}
+@keyframes scroll-right {
+  0% { transform: translateX(-33.33%); }
+  100% { transform: translateX(0); }
+}
+@keyframes scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+.glitch-text { text-shadow: 2px 0 #fff, -2px 0 #ff00c1; }
+.blink { animation: blink 1s step-end infinite; }

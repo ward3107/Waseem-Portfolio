@@ -4,6 +4,7 @@ import { Plus, Minus, MessageCircle, Sparkles, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FAQItem } from '../types';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { CONTACT } from '../constants';
 
 const FAQ: React.FC = () => {
     const { t, dir } = useLanguage();
@@ -102,7 +103,7 @@ const FAQ: React.FC = () => {
                                 transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.3 }}
                             >
                                 <a
-                                    href="https://wa.me/972534260632"
+                                    href={CONTACT.whatsappUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="group inline-flex items-center gap-3 sm:gap-4 px-6 sm:px-8 py-3 sm:py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-2 border-slate-100 dark:border-slate-800 rounded-xl sm:rounded-2xl font-bold hover:border-brand-purple hover:shadow-xl hover:shadow-brand-purple/10 transition-all duration-300"
