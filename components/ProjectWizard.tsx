@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
@@ -20,6 +20,7 @@ const ProjectWizard: React.FC<ProjectWizardProps> = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSent, setIsSent] = useState(false);
     const [errors, setErrors] = useState<{ email?: string; name?: string; general?: string }>({});
+    const honeypotRef = useRef<HTMLInputElement>(null);
 
     // Mock Steps Data
     const steps = [
@@ -90,31 +91,36 @@ const ProjectWizard: React.FC<ProjectWizardProps> = () => {
             return;
         }
 
+        // Honeypot — if filled, silently pretend success without sending.
+        if (honeypotRef.current?.value) {
+            setIsSent(true);
+            setIsSubmitting(false);
+            return;
+        }
+
+        const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
+        if (!accessKey) {
+            setErrors({ general: t('error_submission_failed') });
+            setIsSubmitting(false);
+            return;
+        }
+
         try {
-            // TODO: Replace with your actual Formspree form ID
-            const FORMSPREE_FORM_ID = 'YOUR_FORM_ID';
-
-            if (FORMSPREE_FORM_ID === 'YOUR_FORM_ID') {
-                // Demo mode - simulate submission
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                setIsSent(true);
-                return;
-            }
-
-            const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
+            const response = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
+                    access_key: accessKey,
                     subject: 'New Project Request from Portfolio Wizard',
-                    email: selections.email,
-                    name: selections.name,
+                    from_name: selections.name,
+                    reply_to: selections.email,
                     project_type: selections.type,
                     vibe: selections.vibe,
                     budget: selections.budget,
-                    details: selections.details,
+                    botcheck: '',
                     message: `
 Name: ${selections.name}
 Email: ${selections.email}
@@ -128,16 +134,17 @@ ${selections.details}
                 }),
             });
 
-            if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
                 setIsSent(true);
                 // Track analytics event
                 trackEvent('generate_lead', {
                     form_type: 'project_wizard'
                 });
             } else {
-                setErrors({ general: t('error_submission_failed') });
+                setErrors({ general: result.message || t('error_submission_failed') });
             }
-        } catch (error) {
+        } catch {
             setErrors({ general: t('error_network') });
         } finally {
             setIsSubmitting(false);
@@ -229,6 +236,16 @@ ${selections.details}
                             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4 sm:mb-6">{t('wizard_final_desc')}</p>
 
                             <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-3 sm:gap-4">
+                                {/* Honeypot — invisible to humans, bots fill it and get silently rejected. */}
+                                <input
+                                    ref={honeypotRef}
+                                    type="text"
+                                    name="botcheck"
+                                    tabIndex={-1}
+                                    autoComplete="off"
+                                    aria-hidden="true"
+                                    style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }}
+                                />
                                 <textarea
                                     className="w-full flex-1 p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple resize-none min-h-[100px] sm:min-h-[120px] text-sm sm:text-base text-slate-900 dark:text-white"
                                     placeholder={t('wizard_detail_placeholder')}
