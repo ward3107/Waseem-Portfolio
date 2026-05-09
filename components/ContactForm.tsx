@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle2, Zap, Mail, AlertCircle, Loader2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -18,6 +18,7 @@ const ContactForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -48,6 +49,14 @@ const ContactForm: React.FC = () => {
     setIsLoading(true);
     setSubmitError(null);
 
+    // Honeypot — if filled, silently pretend success without sending.
+    if (honeypotRef.current?.value) {
+      setIsSuccess(true);
+      setFormData({ name: '', email: '', projectType: '', budget: '', message: '' });
+      setIsLoading(false);
+      return;
+    }
+
     const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
     if (!accessKey) {
       setSubmitError('Contact form is not configured. Please email directly.');
@@ -68,6 +77,7 @@ const ContactForm: React.FC = () => {
           reply_to: formData.email,
           project_type: formData.projectType,
           budget: formData.budget,
+          botcheck: '',
           message: `
 Name: ${formData.name}
 Email: ${formData.email}
@@ -173,6 +183,16 @@ ${formData.message}
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit} noValidate aria-label="Contact form">
+          {/* Honeypot — invisible to humans, bots fill it and get silently rejected. */}
+          <input
+            ref={honeypotRef}
+            type="text"
+            name="botcheck"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }}
+          />
           {/* Error Message */}
           <AnimatePresence>
             {submitError && (
