@@ -62,7 +62,7 @@ const textSvg = Buffer.from(`
   <text x="640" y="425" class="pill">React · TypeScript</text>
   <rect x="824" y="395" width="138" height="44" rx="22" fill="#ffffff" fill-opacity="0.10" stroke="#ffffff" stroke-opacity="0.25"/>
   <text x="844" y="425" class="pill">AI · Automation</text>
-  <text x="620" y="500" class="url">waseem-portfolio.netlify.app</text>
+  <text x="620" y="500" class="url">wwas.netlify.app</text>
 </svg>
 `);
 

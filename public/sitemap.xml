@@ -4,21 +4,21 @@
 
   <!-- Main page -->
   <url>
-    <loc>https://waseem-portfolio.netlify.app/</loc>
+    <loc>https://wwas.netlify.app/</loc>
     <lastmod>2026-05-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
 
     <!-- Language alternates -->
-    <xhtml:link rel="alternate" hreflang="en" href="https://waseem-portfolio.netlify.app/" />
-    <xhtml:link rel="alternate" hreflang="he" href="https://waseem-portfolio.netlify.app/?lang=he" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://waseem-portfolio.netlify.app/?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://wwas.netlify.app/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://wwas.netlify.app/?lang=he" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://wwas.netlify.app/?lang=ar" />
   </url>
 
   <!-- Add more pages as needed when site grows -->
   <!--
   <url>
-    <loc>https://waseem-portfolio.netlify.app/projects</loc>
+    <loc>https://wwas.netlify.app/projects</loc>
     <lastmod>2026-04-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
