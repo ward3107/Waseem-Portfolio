@@ -5,9 +5,11 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Project } from '../types';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
+type FilterCategory = 'All' | 'Web' | 'AI' | 'Mobile';
+
 const Projects: React.FC = () => {
   const { t, dir } = useLanguage();
-  const [filter, setFilter] = useState<'All' | 'Web' | 'AI' | 'Mobile'>('All');
+  const [filter, setFilter] = useState<FilterCategory>('All');
 
   // Check for reduced motion preference
   const prefersReducedMotion = getPrefersReducedMotion();
@@ -55,7 +57,7 @@ const Projects: React.FC = () => {
     ? localizedProjects
     : localizedProjects.filter(p => p.category === filter);
 
-  const filters = [
+  const filters: { key: FilterCategory; label: string }[] = [
     { key: 'All', label: t('projects_filter_all') },
     { key: 'Web', label: t('projects_filter_web') },
     { key: 'AI', label: t('projects_filter_ai') },
@@ -96,14 +98,14 @@ const Projects: React.FC = () => {
             aria-label={`${t('projects_title_1')} ${t('projects_title_2')} filters`}
             className="flex gap-2 mt-8 md:mt-0 bg-white dark:bg-slate-900 p-1.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
           >
-            {filters.map((cat, index) => (
+            {filters.map((cat) => (
               <button
                 key={cat.key}
                 role="tab"
                 aria-selected={filter === cat.key}
                 aria-controls="projects-grid"
                 id={`filter-${cat.key.toLowerCase()}`}
-                onClick={() => setFilter(cat.key as any)}
+                onClick={() => setFilter(cat.key)}
                 onKeyDown={(e) => {
                   const buttons = Array.from(e.currentTarget.parentElement?.querySelectorAll('button') || []);
                   const currentIndex = buttons.indexOf(e.currentTarget);

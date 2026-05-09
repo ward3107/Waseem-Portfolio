@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useTransform, useInView, animate } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { Brain, Cpu, Zap, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { TimelineItem } from '../types';
@@ -13,8 +13,8 @@ const SpinningYear = ({ year }: { year: string }) => {
     const [displayYear, setDisplayYear] = useState(isNaN(numericYear) ? 0 : numericYear);
 
     const isInView = useInView(ref, {
-        amount: "any", // More lenient - trigger when ANY pixel is visible
-        margin: "0px" // No margin, trigger when actually visible
+        amount: "some", // trigger when any pixel is visible
+        margin: "0px"
     });
 
     useEffect(() => {
@@ -55,6 +55,13 @@ const AboutTimeline: React.FC = () => {
 
     // Check for reduced motion preference
     const prefersReducedMotion = getPrefersReducedMotion();
+
+    // Lazy-mount the hero video only when the card scrolls into view, so the
+    // ~1.5 MB MP4 isn't downloaded on initial page load. With reduced-motion
+    // we skip the video entirely and stay on the static poster.
+    const videoContainerRef = useRef<HTMLDivElement>(null);
+    const isVideoInView = useInView(videoContainerRef, { once: true, margin: '200px' });
+    const showVideo = !prefersReducedMotion && isVideoInView;
 
     const localizedTimeline: TimelineItem[] = [
         {
@@ -150,18 +157,31 @@ const AboutTimeline: React.FC = () => {
                             <div className="bg-white dark:bg-slate-900 rounded-3xl p-2 shadow-2xl border border-slate-100 dark:border-slate-800 relative overflow-hidden transform transition-transform duration-500 group-hover:scale-[1.02]">
 
                                 {/* Header Image Area */}
-                                <div className="relative h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden bg-slate-900">
-                                    <video
-                                        autoPlay
-                                        loop
-                                        muted
-                                        playsInline
-                                        preload="metadata"
-                                        poster="/assets/waseem-profile.webp"
-                                        className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
-                                    >
-                                        <source src="/assets/waseem-profile-video.mp4" type="video/mp4" />
-                                    </video>
+                                <div ref={videoContainerRef} className="relative h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden bg-slate-900">
+                                    {showVideo ? (
+                                        <video
+                                            autoPlay
+                                            loop
+                                            muted
+                                            playsInline
+                                            preload="metadata"
+                                            poster="/assets/waseem-profile.webp"
+                                            aria-label={t('hero_profile_alt')}
+                                            className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
+                                        >
+                                            <source src="/assets/waseem-profile-video.mp4" type="video/mp4" />
+                                        </video>
+                                    ) : (
+                                        <img
+                                            src="/assets/waseem-profile.webp"
+                                            alt={t('hero_profile_alt')}
+                                            loading="lazy"
+                                            decoding="async"
+                                            width={800}
+                                            height={600}
+                                            className="w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-700"
+                                        />
+                                    )}
                                     <div className="absolute inset-0 bg-gradient-to-t from-brand-purpleDark via-brand-purple/50 to-transparent"></div>
 
                                     <div className="absolute bottom-3 left-3 md:bottom-4 md:left-4 text-white">
@@ -180,7 +200,7 @@ const AboutTimeline: React.FC = () => {
                                     {/* Stat 1: Logic */}
                                     <div>
                                         <div className="flex justify-between text-[10px] md:text-xs font-bold mb-1">
-                                            <span className="flex items-center gap-1"><Brain size={10} md:size={12} /> {t('about_stat_1')}</span>
+                                            <span className="flex items-center gap-1"><Brain className="w-2.5 h-2.5 md:w-3 md:h-3" /> {t('about_stat_1')}</span>
                                             <span className="text-slate-400">100%</span>
                                         </div>
                                         <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -196,7 +216,7 @@ const AboutTimeline: React.FC = () => {
                                     {/* Stat 2: Creativity */}
                                     <div>
                                         <div className="flex justify-between text-[10px] md:text-xs font-bold mb-1">
-                                            <span className="flex items-center gap-1"><Zap size={10} md:size={12} /> {t('about_stat_2')}</span>
+                                            <span className="flex items-center gap-1"><Zap className="w-2.5 h-2.5 md:w-3 md:h-3" /> {t('about_stat_2')}</span>
                                             <span className="text-slate-400">95%</span>
                                         </div>
                                         <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -212,7 +232,7 @@ const AboutTimeline: React.FC = () => {
                                     {/* Stat 3: AI Integration */}
                                     <div>
                                         <div className="flex justify-between text-[10px] md:text-xs font-bold mb-1">
-                                            <span className="flex items-center gap-1"><Cpu size={10} md:size={12} /> {t('about_stat_3')}</span>
+                                            <span className="flex items-center gap-1"><Cpu className="w-2.5 h-2.5 md:w-3 md:h-3" /> {t('about_stat_3')}</span>
                                             <span className="text-slate-400">100%</span>
                                         </div>
                                         <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">

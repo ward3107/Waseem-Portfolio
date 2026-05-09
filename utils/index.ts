@@ -5,7 +5,7 @@
 // Google Analytics gtag function
 declare global {
   interface Window {
-    gtag?: (command: string, targetId: string, config?: Record<string, any>) => void;
+    gtag?: (command: string, targetId: string, config?: Record<string, unknown>) => void;
     webkitAudioContext?: typeof AudioContext;
   }
 }
@@ -20,7 +20,7 @@ export const hasGtag = (): boolean => {
 /**
  * Safely call gtag with proper type checking
  */
-export const trackEvent = (eventName: string, parameters?: Record<string, any>): void => {
+export const trackEvent = (eventName: string, parameters?: Record<string, unknown>): void => {
   if (hasGtag() && window.gtag) {
     window.gtag('event', eventName, parameters);
   }
