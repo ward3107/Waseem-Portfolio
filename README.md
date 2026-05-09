@@ -10,7 +10,7 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8)](https://tailwindcss.com/)
 [![CI](https://github.com/ward3107/Waseem-Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/ward3107/Waseem-Portfolio/actions/workflows/ci.yml)
 
-[Live Demo](https://waseem-portfolio.netlify.app/) | [Report Bug](https://github.com/ward3107/Waseem-Portfolio/issues) | [Request Feature](https://github.com/ward3107/Waseem-Portfolio/issues)
+[Live Demo](https://wwas.netlify.app/) | [Report Bug](https://github.com/ward3107/Waseem-Portfolio/issues) | [Request Feature](https://github.com/ward3107/Waseem-Portfolio/issues)
 
 </div>
 
