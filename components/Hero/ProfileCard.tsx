@@ -94,9 +94,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 height="640"
                 className="object-cover w-full h-full opacity-90 group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent pt-20">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="px-2 py-1 bg-brand-cyan/20 text-brand-cyan text-[10px] font-bold uppercase tracking-wider rounded border border-brand-cyan/20 backdrop-blur-md">
+              <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent pt-16 sm:pt-20">
+                <div className="flex items-center justify-between mb-2 gap-2">
+                  <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-brand-cyan/20 text-brand-cyan text-[9px] sm:text-[10px] font-bold uppercase tracking-wider rounded border border-brand-cyan/20 backdrop-blur-md whitespace-nowrap">
                     {t('hero_card_role')}
                   </span>
                   <motion.div
@@ -106,14 +106,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                         ? { duration: 0 }
                         : { duration: 1.5, repeat: Infinity, ease: 'easeInOut' }
                     }
-                    className="flex items-center gap-1 text-white/70 text-xs"
+                    className="flex items-center gap-1 text-white/70 text-[10px] sm:text-xs whitespace-nowrap"
                   >
-                    <span>Click to flip</span>
-                    <MousePointer2 size={14} />
+                    <span className="hidden sm:inline">Click to flip</span>
+                    <MousePointer2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   </motion.div>
                 </div>
-                <h3 className="text-white text-3xl font-heading font-bold">Waseem</h3>
-                <p className="text-slate-300 text-sm">{t('hero_card_desc')}</p>
+                <h3 className="text-white text-2xl sm:text-3xl font-heading font-bold">Waseem</h3>
+                <p className="text-slate-300 text-xs sm:text-sm">{t('hero_card_desc')}</p>
               </div>
             </div>
           </div>
