@@ -8,6 +8,7 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
 [![React](https://img.shields.io/badge/React-18.2-cyan)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-7.3-purple)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8)](https://tailwindcss.com/)
+[![CI](https://github.com/ward3107/Waseem-Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/ward3107/Waseem-Portfolio/actions/workflows/ci.yml)
 
 [Live Demo](https://waseem-portfolio.netlify.app/) | [Report Bug](https://github.com/ward3107/Waseem-Portfolio/issues) | [Request Feature](https://github.com/ward3107/Waseem-Portfolio/issues)
 
@@ -70,7 +71,7 @@ This is a personal portfolio website showcasing my work, skills, and services as
 - [TypeScript 5.2](https://www.typescriptlang.org/) - Type safety
 
 ### Build Tool
-- [Vite 5.2](https://vitejs.dev/) - Next generation frontend tooling
+- [Vite 7.3](https://vitejs.dev/) - Next generation frontend tooling
 
 ### Styling
 - [Tailwind CSS 3.4](https://tailwindcss.com/) - Utility-first CSS framework
@@ -156,6 +157,11 @@ npm run preview
 | `npm run dev` | Start development server |
 | `npm run build` | Build for production |
 | `npm run preview` | Preview production build |
+| `npm run typecheck` | Run TypeScript type checking |
+| `npm run lint` | Run ESLint |
+| `npm run lint:fix` | Run ESLint with auto-fix |
+| `npm run format` | Format files with Prettier |
+| `npm run format:check` | Check formatting without writing |
 
 ---
 
