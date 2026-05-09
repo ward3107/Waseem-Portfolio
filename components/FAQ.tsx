@@ -112,7 +112,7 @@ const FAQ: React.FC = () => {
                                     className="group inline-flex items-center gap-3 sm:gap-4 px-6 sm:px-8 py-3 sm:py-4 bg-white dark:bg-slate-900 text-slate-900 dark:text-white border-2 border-slate-100 dark:border-slate-800 rounded-xl sm:rounded-2xl font-bold hover:border-brand-purple hover:shadow-xl hover:shadow-brand-purple/10 transition-all duration-300"
                                 >
                                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                        <MessageCircle size={16} className="sm:size-20" />
+                                        <MessageCircle size={16} className="sm:w-5 sm:h-5" />
                                     </div>
                                     <div className="text-left rtl:text-right">
                                         <span className="block text-[10px] sm:text-xs text-slate-500 uppercase font-bold tracking-wide">{t('faq_cta_unsure')}</span>

@@ -152,7 +152,7 @@ ${selections.details}
                 className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-brand-purple/20 text-center min-h-[350px] sm:min-h-[400px] flex flex-col items-center justify-center"
             >
                 <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-4 sm:mb-6">
-                    <Check size={28} className="sm:size-40" />
+                    <Check size={28} className="sm:w-10 sm:h-10" />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-heading font-bold text-slate-900 dark:text-white mb-2">{t('wizard_success_title')}</h3>
                 <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-xs mx-auto mb-6 sm:mb-8">{t('wizard_success_desc')}</p>
@@ -181,7 +181,7 @@ ${selections.details}
                 <div className="flex justify-between items-center mb-6 sm:mb-8">
                     {step > 0 ? (
                         <button onClick={() => setStep(step - 1)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
-                            <ArrowLeft size={18} className="sm:size-20" />
+                            <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
                         </button>
                     ) : <div></div>}
                     <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-300 dark:text-slate-600">
@@ -311,12 +311,12 @@ ${selections.details}
                                         t('sending')
                                     ) : (
                                         <>
-                                            <Sparkles size={18} className="sm:size-20 text-brand-gold group-hover:animate-spin-slow" />
+                                            <Sparkles size={18} className="sm:w-5 sm:h-5 text-brand-gold group-hover:animate-spin-slow" />
                                             <span className="text-sm sm:text-base">{t('wizard_btn_send')}</span>
                                             {language === 'he' || language === 'ar' ? (
-                                                <ArrowLeft size={16} className="sm:size-20 group-hover:-translate-x-1 transition-transform" />
+                                                <ArrowLeft size={16} className="sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
                                             ) : (
-                                                <ArrowRight size={16} className="sm:size-20 group-hover:translate-x-1 transition-transform" />
+                                                <ArrowRight size={16} className="sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                                             )}
                                         </>
                                     )}

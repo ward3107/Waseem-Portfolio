@@ -69,7 +69,7 @@ const Contact: React.FC = () => {
             >
               <a href={`mailto:${CONTACT.email}`} className="group flex flex-col p-4 sm:p-5 md:p-6 bg-slate-50 dark:bg-slate-900 hover:bg-white dark:hover:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-brand-purple/20 hover:shadow-xl transition-all duration-300">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-slate-900 dark:text-white group-hover:bg-brand-purple group-hover:text-white transition-colors mb-3 sm:mb-4 shadow-sm">
-                  <Mail size={16} className="sm:size-20" />
+                  <Mail size={16} className="sm:w-5 sm:h-5" />
                 </div>
                 <p className="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">{t('contact_email_btn')}</p>
                 <p className="font-bold text-slate-900 dark:text-white text-sm sm:text-base md:text-lg group-hover:text-brand-purple transition-colors break-all">{CONTACT.email}</p>
@@ -78,7 +78,7 @@ const Contact: React.FC = () => {
               {/* Updated WhatsApp Block to be Green */}
               <a href={CONTACT.whatsappUrl} className="group flex flex-col p-4 sm:p-5 md:p-6 bg-green-50/50 dark:bg-green-900/10 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-xl sm:rounded-2xl border border-green-100 dark:border-green-900/30 hover:border-green-300 hover:shadow-xl hover:shadow-green-100 transition-all duration-300">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-green-900/30 border border-green-100 dark:border-green-800 flex items-center justify-center text-green-600 dark:text-green-400 group-hover:bg-green-600 group-hover:text-white transition-colors mb-3 sm:mb-4 shadow-sm">
-                  <MessageSquare size={16} className="sm:size-20" />
+                  <MessageSquare size={16} className="sm:w-5 sm:h-5" />
                 </div>
                 <p className="text-[10px] sm:text-xs text-green-600/80 dark:text-green-400/80 font-bold uppercase tracking-wider mb-1">{t('contact_whatsapp_btn')}</p>
                 <p className="font-bold text-slate-900 dark:text-white text-sm sm:text-base md:text-lg group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors" dir="ltr">{CONTACT.whatsappDisplay}</p>

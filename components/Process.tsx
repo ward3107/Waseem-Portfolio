@@ -159,8 +159,8 @@ const Process: React.FC = () => {
               className="relative flex gap-4 sm:gap-6 md:gap-8"
             >
               {/* Icon Bubble */}
-              <div className={`relative z-10 flex-shrink-0 w-12 h-12 sm:w-14 sm:h-16 md:w-16 md:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl ${step.color}`}>
-                <step.icon size={20} strokeWidth={2.5} className="sm:size-[24px] md:size-28" />
+              <div className={`relative z-10 flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl ${step.color}`}>
+                <step.icon size={20} strokeWidth={2.5} className="sm:size-[24px] md:w-7 md:h-7" />
                 {/* Connector dot */}
                 <div className={`absolute -bottom-10 sm:-bottom-12 left-1/2 -translate-x-1/2 w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-slate-200 dark:bg-slate-800 border-2 border-slate-50 dark:border-slate-950 ${index === steps.length - 1 ? 'hidden' : ''}`}></div>
               </div>
