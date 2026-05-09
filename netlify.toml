@@ -9,3 +9,27 @@
 [context.deploy-preview]
   command = "npm run build"
   publish = "dist"
+
+# Security headers applied to every response.
+# CSP allows: self, Google Fonts, Web3Forms, Formspree, FormSubmit.
+# 'unsafe-inline' on script-src is required for the locale-detection inline
+# script in index.html and can be tightened later via a SHA-256 hash.
+# 'unsafe-inline' on style-src is required by Tailwind/Framer Motion which
+# inject inline style attributes at runtime.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; media-src 'self'; connect-src 'self' https://api.web3forms.com https://formspree.io https://formsubmit.co; frame-ancestors 'none'; form-action 'self' https://api.web3forms.com https://formspree.io https://formsubmit.co; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=(), usb=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Cross-Origin-Opener-Policy = "same-origin"
+    X-DNS-Prefetch-Control = "on"
+
+# Long-cache hashed build assets (Vite emits content-hashed filenames).
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

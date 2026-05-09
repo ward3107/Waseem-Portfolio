@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
-  Accessibility, X, RotateCcw, Sun, Moon, Type,
+  Accessibility, X, RotateCcw, Sun, Type,
   MousePointer, Image as ImageIcon, Zap, Link as LinkIcon,
   AlignLeft, Check, EyeOff
 } from 'lucide-react';
@@ -34,7 +34,7 @@ const DEFAULT_STATE: A11yState = {
 };
 
 const AccessibilityToolbar: React.FC = () => {
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [state, setState] = useState<A11yState>(DEFAULT_STATE);
@@ -163,7 +163,7 @@ const AccessibilityToolbar: React.FC = () => {
     styleTag.innerHTML = css;
   };
 
-  const updateState = (key: keyof A11yState, value: any) => {
+  const updateState = <K extends keyof A11yState>(key: K, value: A11yState[K]) => {
     setState(prev => ({ ...prev, [key]: value }));
   };
 
@@ -260,11 +260,11 @@ const AccessibilityToolbar: React.FC = () => {
               <Sun size={18} /> Contrast Mode
             </label>
             <div className="grid grid-cols-3 gap-2">
-              {[
+              {([
                 { id: 'normal', label: 'Normal', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-900 dark:text-slate-300' },
                 { id: 'high', label: 'High', bg: 'bg-white border-2 border-black', text: 'text-black' },
                 { id: 'inverted', label: 'Inverted', bg: 'bg-black', text: 'text-white' }
-              ].map((mode) => (
+              ] as const).map((mode) => (
                 <button
                   key={mode.id}
                   onClick={() => updateState('contrastMode', mode.id)}

@@ -32,24 +32,27 @@ const FAQ: React.FC = () => {
                 setOpenIndex(0);
                 buttonRefs.current[0]?.focus();
                 break;
-            case 'End':
+            case 'End': {
                 e.preventDefault();
                 const lastIndex = localizedFaqs.length - 1;
                 setOpenIndex(lastIndex);
                 buttonRefs.current[lastIndex]?.focus();
                 break;
-            case 'ArrowDown':
+            }
+            case 'ArrowDown': {
                 e.preventDefault();
                 const nextIndex = Math.min(index + 1, localizedFaqs.length - 1);
                 setOpenIndex(nextIndex);
                 buttonRefs.current[nextIndex]?.focus();
                 break;
-            case 'ArrowUp':
+            }
+            case 'ArrowUp': {
                 e.preventDefault();
                 const prevIndex = Math.max(index - 1, 0);
                 setOpenIndex(prevIndex);
                 buttonRefs.current[prevIndex]?.focus();
                 break;
+            }
         }
     };
 
