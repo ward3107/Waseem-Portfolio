@@ -78,7 +78,7 @@ const VibeCoding: React.FC = () => {
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
-                    className="text-3xl md:text-5xl font-serif italic text-brand-cyan"
+                    className="text-2xl sm:text-3xl md:text-5xl font-serif italic text-brand-cyan"
                     style={{
                       textShadow: "0 0 20px rgba(6,182,212,0.5)",
                     }}
@@ -87,7 +87,7 @@ const VibeCoding: React.FC = () => {
                   </motion.div>
                 ) : (
                   // English/Other: Split and animate each character
-                  <div className="text-3xl md:text-5xl font-serif italic text-brand-cyan flex gap-1">
+                  <div className="text-2xl sm:text-3xl md:text-5xl font-serif italic text-brand-cyan flex flex-wrap justify-center gap-0.5 sm:gap-1">
                     {sentence.split("").map((char, index) => (
                       <motion.span
                         key={index}
@@ -101,8 +101,7 @@ const VibeCoding: React.FC = () => {
                         className="inline-block"
                         style={{
                           textShadow: "0 0 20px rgba(6,182,212,0.5)",
-                          display: char === " " ? "inline-block" : "inline-block",
-                          width: char === " " ? "1rem" : "auto"
+                          width: char === " " ? "0.5rem" : "auto"
                         }}
                       >
                         {char}

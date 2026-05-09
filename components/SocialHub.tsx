@@ -51,12 +51,12 @@ const SocialHub: React.FC = () => {
                                             <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">Full Stack & AI</p>
                                         </div>
                                         <button className="flex items-center gap-1.5 sm:gap-2 bg-[#1877F2] text-white px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md text-[10px] sm:text-xs sm:text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
-                                            <ThumbsUp size={12} className="sm:size-14" /> <span className="hidden sm:inline">Like</span>
+                                            <ThumbsUp size={12} className="sm:w-3.5 sm:h-3.5" /> <span className="hidden sm:inline">Like</span>
                                         </button>
                                     </div>
                                     <div className={`flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3 sm:pt-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                                        <span className="flex items-center gap-1"><UserPlus size={12} className="sm:size-14" /> 2.5K {t('followers')}</span>
-                                        <span className="flex items-center gap-1"><ThumbsUp size={12} className="sm:size-14" /> 1.2K {t('likes')}</span>
+                                        <span className="flex items-center gap-1"><UserPlus size={12} className="sm:w-3.5 sm:h-3.5" /> 2.5K {t('followers')}</span>
+                                        <span className="flex items-center gap-1"><ThumbsUp size={12} className="sm:w-3.5 sm:h-3.5" /> 1.2K {t('likes')}</span>
                                     </div>
                                 </div>
                             </motion.div>
@@ -99,7 +99,7 @@ const SocialHub: React.FC = () => {
                                         <div key={i} className={`aspect-square bg-gradient-to-br ${gradient} relative group cursor-pointer flex items-center justify-center`}>
                                             <span className="text-white/50 text-2xl font-bold">{i + 1}</span>
                                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white gap-2">
-                                                <Heart size={10} className="sm:size-12" fill="white" />
+                                                <Heart size={10} className="sm:w-3 sm:h-3" fill="white" />
                                             </div>
                                         </div>
                                     ))}
@@ -137,14 +137,14 @@ const SocialHub: React.FC = () => {
                                 <div className="p-3 sm:p-4 pt-0">
                                     <div className="relative aspect-[9/16] bg-gradient-to-br from-slate-800 via-black to-slate-900 rounded-lg sm:rounded-xl overflow-hidden mt-3 sm:mt-4 group cursor-pointer">
                                         <div className="absolute inset-0 flex items-center justify-center">
-                                            <Video size={32} className="sm:size-40 text-white/20" />
+                                            <Video size={32} className="sm:w-10 sm:h-10 text-white/20" />
                                         </div>
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent group-hover:opacity-60 transition-opacity"></div>
                                         <div className="absolute inset-0 flex flex-col justify-end p-2.5 sm:p-4">
                                             <p className="text-[10px] sm:text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 line-clamp-2 sm:line-clamp-none">Build your own AI Agent in 30 seconds 🚀 #coding #ai</p>
                                             <div className={`flex items-center gap-2 sm:gap-4 text-[10px] sm:text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
-                                                <span className="flex items-center gap-1"><Video size={10} className="sm:size-14" /> 15.2K</span>
-                                                <span className="flex items-center gap-1"><Heart size={10} className="sm:size-14" /> 2.1K</span>
+                                                <span className="flex items-center gap-1"><Video size={10} className="sm:w-3.5 sm:h-3.5" /> 15.2K</span>
+                                                <span className="flex items-center gap-1"><Heart size={10} className="sm:w-3.5 sm:h-3.5" /> 2.1K</span>
                                             </div>
                                         </div>
                                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
