@@ -96,7 +96,7 @@ const Projects: React.FC = () => {
           <div
             role="tablist"
             aria-label={`${t('projects_title_1')} ${t('projects_title_2')} filters`}
-            className="flex gap-2 mt-8 md:mt-0 bg-white dark:bg-slate-900 p-1.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
+            className="flex flex-wrap gap-2 mt-8 md:mt-0 bg-white dark:bg-slate-900 p-1.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
           >
             {filters.map((cat) => (
               <button
@@ -117,7 +117,7 @@ const Projects: React.FC = () => {
                     (buttons[nextIndex] as HTMLButtonElement).focus();
                   }
                 }}
-                className={`px-5 py-2.5 rounded-lg text-sm font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 ${filter === cat.key
+                className={`px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 ${filter === cat.key
                     ? 'bg-brand-purple text-white shadow-md'
                     : 'text-slate-500 dark:text-slate-400 hover:text-brand-purple hover:bg-slate-50 dark:hover:bg-slate-800'
                   }`}
