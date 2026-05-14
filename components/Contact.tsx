@@ -30,7 +30,7 @@ const Contact: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={prefersReducedMotion ? { duration: 0 } : undefined}
-              className="inline-flex items-center gap-2 px-3 py-1 sm:px-3 sm:py-1.5 rounded-full bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30 text-green-600 dark:text-green-400 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-6 sm:mb-8 w-fit"
+              className="inline-flex items-center gap-2 px-3 py-1 sm:px-3 sm:py-1.5 rounded-full bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30 text-green-600 dark:text-green-400 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-6 sm:mb-8 w-fit"
             >
               <span className="relative flex h-2 w-2">
                 {!prefersReducedMotion && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>}
@@ -71,7 +71,7 @@ const Contact: React.FC = () => {
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-slate-900 dark:text-white group-hover:bg-brand-purple group-hover:text-white transition-colors mb-3 sm:mb-4 shadow-sm">
                   <Mail size={16} className="sm:w-5 sm:h-5" />
                 </div>
-                <p className="text-[10px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">{t('contact_email_btn')}</p>
+                <p className="text-[11px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">{t('contact_email_btn')}</p>
                 <p className="font-bold text-slate-900 dark:text-white text-sm sm:text-base md:text-lg group-hover:text-brand-purple transition-colors break-all">{CONTACT.email}</p>
               </a>
 
@@ -80,7 +80,7 @@ const Contact: React.FC = () => {
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-green-900/30 border border-green-100 dark:border-green-800 flex items-center justify-center text-green-600 dark:text-green-400 group-hover:bg-green-600 group-hover:text-white transition-colors mb-3 sm:mb-4 shadow-sm">
                   <MessageSquare size={16} className="sm:w-5 sm:h-5" />
                 </div>
-                <p className="text-[10px] sm:text-xs text-green-600/80 dark:text-green-400/80 font-bold uppercase tracking-wider mb-1">{t('contact_whatsapp_btn')}</p>
+                <p className="text-[11px] sm:text-xs text-green-600/80 dark:text-green-400/80 font-bold uppercase tracking-wider mb-1">{t('contact_whatsapp_btn')}</p>
                 <p className="font-bold text-slate-900 dark:text-white text-sm sm:text-base md:text-lg group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors" dir="ltr">{CONTACT.whatsappDisplay}</p>
               </a>
             </motion.div>

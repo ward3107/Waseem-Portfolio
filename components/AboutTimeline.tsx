@@ -199,9 +199,9 @@ const AboutTimeline: React.FC = () => {
 
                                     {/* Stat 1: Logic */}
                                     <div>
-                                        <div className="flex justify-between text-[10px] md:text-xs font-bold mb-1">
+                                        <div className="flex justify-between text-[11px] md:text-xs font-bold mb-1">
                                             <span className="flex items-center gap-1"><Brain className="w-2.5 h-2.5 md:w-3 md:h-3" /> {t('about_stat_1')}</span>
-                                            <span className="text-slate-400">100%</span>
+                                            <span className="text-slate-600 dark:text-slate-400">100%</span>
                                         </div>
                                         <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <motion.div
@@ -215,9 +215,9 @@ const AboutTimeline: React.FC = () => {
 
                                     {/* Stat 2: Creativity */}
                                     <div>
-                                        <div className="flex justify-between text-[10px] md:text-xs font-bold mb-1">
+                                        <div className="flex justify-between text-[11px] md:text-xs font-bold mb-1">
                                             <span className="flex items-center gap-1"><Zap className="w-2.5 h-2.5 md:w-3 md:h-3" /> {t('about_stat_2')}</span>
-                                            <span className="text-slate-400">95%</span>
+                                            <span className="text-slate-600 dark:text-slate-400">95%</span>
                                         </div>
                                         <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <motion.div
@@ -231,9 +231,9 @@ const AboutTimeline: React.FC = () => {
 
                                     {/* Stat 3: AI Integration */}
                                     <div>
-                                        <div className="flex justify-between text-[10px] md:text-xs font-bold mb-1">
+                                        <div className="flex justify-between text-[11px] md:text-xs font-bold mb-1">
                                             <span className="flex items-center gap-1"><Cpu className="w-2.5 h-2.5 md:w-3 md:h-3" /> {t('about_stat_3')}</span>
-                                            <span className="text-slate-400">100%</span>
+                                            <span className="text-slate-600 dark:text-slate-400">100%</span>
                                         </div>
                                         <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <motion.div

@@ -191,7 +191,7 @@ ${selections.details}
                             <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
                         </button>
                     ) : <div></div>}
-                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-300 dark:text-slate-600">
+                    <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
                         {t('wizard_step_count').replace('{current}', (step + 1).toString()).replace('{total}', (steps.length + 1).toString())}
                     </span>
                 </div>

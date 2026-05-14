@@ -50,7 +50,7 @@ const SocialHub: React.FC = () => {
                                             <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">Waseem Dev</h3>
                                             <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Full Stack & AI</p>
                                         </div>
-                                        <button className="flex items-center gap-1.5 sm:gap-2 bg-[#1877F2] text-white px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md text-[11px] sm:text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
+                                        <button className="flex items-center gap-1.5 sm:gap-2 bg-[#1877F2] text-white px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-[11px] sm:text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
                                             <ThumbsUp size={12} className="sm:w-3.5 sm:h-3.5" /> <span className="hidden sm:inline">Like</span>
                                         </button>
                                     </div>
@@ -84,7 +84,7 @@ const SocialHub: React.FC = () => {
                                                 <p className="text-[11px] sm:text-xs opacity-90">Developer Life</p>
                                             </div>
                                         </div>
-                                        <button className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
+                                        <button className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-sm font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
                                             {t('followMe')}
                                         </button>
                                     </div>
@@ -129,7 +129,7 @@ const SocialHub: React.FC = () => {
                                                 <p className="text-[11px] sm:text-xs text-slate-400">Tech & Automation</p>
                                             </div>
                                         </div>
-                                        <button className="bg-[#FE2C55] text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-md text-[11px] sm:text-sm font-bold hover:bg-opacity-90 transition-opacity whitespace-nowrap">
+                                        <button className="bg-[#FE2C55] text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-md text-[11px] sm:text-sm font-bold hover:bg-opacity-90 transition-opacity whitespace-nowrap">
                                             {t('followMe')}
                                         </button>
                                     </div>

@@ -115,7 +115,7 @@ const FAQ: React.FC = () => {
                                         <MessageCircle size={16} className="sm:w-5 sm:h-5" />
                                     </div>
                                     <div className="text-left rtl:text-right">
-                                        <span className="block text-[10px] sm:text-xs text-slate-500 uppercase font-bold tracking-wide">{t('faq_cta_unsure')}</span>
+                                        <span className="block text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wide">{t('faq_cta_unsure')}</span>
                                         <span className="block text-base sm:text-lg">{t('faq_cta_ask')}</span>
                                     </div>
                                     <ArrowRight className="ml-2 rtl:mr-2 rtl:ml-0 rtl:rotate-180 text-slate-400 group-hover:text-brand-purple group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-all" />

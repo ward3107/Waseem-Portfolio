@@ -294,7 +294,7 @@ ${formData.message}
                 <label htmlFor="message" className="text-sm font-bold text-slate-700 flex items-center gap-2">
                     {t('messageLabel')} <span className="text-red-500">*</span>
                 </label>
-                <span className={`text-xs ${formData.message.length >= 10 ? 'text-green-600' : 'text-slate-400'}`}>
+                <span className={`text-xs ${formData.message.length >= 10 ? 'text-green-600' : 'text-slate-500'}`}>
                     {formData.message.length} / 10 {t('minChars')}
                 </span>
             </div>
