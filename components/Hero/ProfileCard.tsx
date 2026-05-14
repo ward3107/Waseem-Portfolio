@@ -30,7 +30,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8 }}
-      className="relative lg:h-[500px] h-[280px] sm:h-[350px] flex items-center justify-center [perspective:2000px]"
+      className="relative lg:h-[500px] h-[380px] sm:h-[400px] flex items-center justify-center [perspective:2000px] overflow-hidden md:overflow-visible"
     >
       <motion.div
         style={{
@@ -39,29 +39,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           transformStyle: 'preserve-3d',
           willChange: 'transform',
         }}
-        animate={
-          prefersReducedMotion
-            ? { rotateY: isFlipped ? 180 : 0 }
-            : { rotateY: [0, 0, 0, isFlipped ? 180 : 0] }
-        }
-        transition={
-          prefersReducedMotion
-            ? { duration: 0 }
-            : {
-                rotateY: {
-                  times: [0, 0.2, 0.4, 1],
-                  duration: 2,
-                  ease: 'easeInOut',
-                  repeat: 1,
-                  repeatDelay: 3,
-                },
-              }
-        }
         tabIndex={0}
         role="button"
         aria-label={isFlipped ? t('hero_card_front_aria') : t('hero_card_back_aria')}
         aria-pressed={isFlipped}
-        className="relative w-44 sm:w-56 md:w-64 lg:w-72 h-[260px] sm:h-[320px] md:h-[380px] lg:h-[420px] cursor-pointer group focus:outline-none focus:ring-4 focus:ring-brand-purple/50 rounded-3xl"
+        className="relative w-64 sm:w-64 md:w-64 lg:w-72 h-[340px] sm:h-[360px] md:h-[380px] lg:h-[420px] cursor-pointer group focus:outline-none focus:ring-4 focus:ring-brand-purple/50 rounded-3xl"
         onClick={() => setIsFlipped(!isFlipped)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -108,6 +90,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     }
                     className="flex items-center gap-1 text-white/70 text-[10px] sm:text-xs whitespace-nowrap"
                   >
+                    <span className="sm:hidden">Tap to flip</span>
                     <span className="hidden sm:inline">Click to flip</span>
                     <MousePointer2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   </motion.div>
@@ -196,11 +179,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
             <motion.div
               style={{ x: layer2X, y: layer1Y, z: -20 }}
-              className="absolute top-1/2 -right-20 w-16 h-16 bg-brand-gold rounded-full blur-2xl opacity-40 animate-pulse"
+              className="hidden md:block absolute top-1/2 -right-20 w-16 h-16 bg-brand-gold rounded-full blur-2xl opacity-40 animate-pulse"
             />
             <motion.div
               style={{ x: layer1X, y: layer2Y, z: -20 }}
-              className="absolute -top-10 -left-10 w-32 h-32 bg-brand-purple rounded-full blur-3xl opacity-30"
+              className="hidden md:block absolute -top-10 -left-10 w-32 h-32 bg-brand-purple rounded-full blur-3xl opacity-30"
             />
           </>
         )}
