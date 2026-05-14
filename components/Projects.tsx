@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ExternalLink, Github, Hand } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -10,9 +10,13 @@ type FilterCategory = 'All' | 'Web' | 'AI' | 'Mobile';
 const Projects: React.FC = () => {
   const { t, dir } = useLanguage();
   const [filter, setFilter] = useState<FilterCategory>('All');
+  const [flippedId, setFlippedId] = useState<string | null>(null);
 
-  // Check for reduced motion preference
   const prefersReducedMotion = getPrefersReducedMotion();
+
+  // Reset flipped card whenever the filter changes so users don't see a flipped
+  // card after switching categories.
+  useEffect(() => setFlippedId(null), [filter]);
 
   const localizedProjects: Project[] = [
     {
@@ -129,16 +133,30 @@ const Projects: React.FC = () => {
         </div>
 
         <div id="projects-grid" role="tabpanel" aria-live="polite" aria-label={`${t('projects_title_1')} ${t('projects_title_2')} - ${filter === 'All' ? t('projects_filter_all') : t(`projects_filter_${filter.toLowerCase()}`)}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
+          {filteredProjects.map((project, index) => {
+            const isFlipped = flippedId === project.id;
+            const toggleFlip = () => setFlippedId(prev => prev === project.id ? null : project.id);
+            return (
             <motion.div
               key={project.id}
               initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 }}
-              className="group h-96 w-full [perspective:1000px] cursor-pointer"
+              role="button"
+              tabIndex={0}
+              aria-pressed={isFlipped}
+              aria-label={`${project.title}. ${t('projects_hint')}`}
+              onClick={toggleFlip}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  toggleFlip();
+                }
+              }}
+              className="group h-96 w-full [perspective:1000px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded-3xl"
             >
-              <div className={`relative h-full w-full ${prefersReducedMotion ? '' : 'transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]'}`}>
+              <div className={`relative h-full w-full ${prefersReducedMotion ? '' : 'transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]'} ${isFlipped && !prefersReducedMotion ? '[transform:rotateY(180deg)]' : ''}`}>
                 {/* Front */}
                 <div className="absolute inset-0 h-full w-full rounded-3xl bg-white dark:bg-slate-900 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden [backface-visibility:hidden]">
 
@@ -202,17 +220,28 @@ const Projects: React.FC = () => {
                   </div>
 
                   <div className="flex gap-4 mt-6">
-                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-purple rounded-xl hover:bg-brand-purpleLight transition-colors font-bold text-sm shadow-lg shadow-brand-purple/20 transform hover:-translate-y-1">
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-purple rounded-xl hover:bg-brand-purpleLight transition-colors font-bold text-sm shadow-lg shadow-brand-purple/20 transform hover:-translate-y-1"
+                    >
                       <ExternalLink size={16} /> {t('projects_demo')}
                     </a>
-                    <a href="#" className="flex-1 flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-bold text-sm transform hover:-translate-y-1">
+                    <a
+                      href="#"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-bold text-sm transform hover:-translate-y-1"
+                    >
                       <Github size={16} /> {t('projects_code')}
                     </a>
                   </div>
                 </div>
               </div>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
