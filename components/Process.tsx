@@ -167,7 +167,7 @@ const Process: React.FC = () => {
 
               {/* Content Card */}
               <div className="pt-1 sm:pt-2 pb-6 sm:pb-8 flex-1">
-                <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-1.5 sm:mb-2 block ${step.color}`}>{t('process_step_prefix')} 0{step.id}</span>
+                <span className={`text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1.5 sm:mb-2 block ${step.color}`}>{t('process_step_prefix')} 0{step.id}</span>
                 <h3 className="text-base sm:text-lg md:text-xl font-bold text-slate-900 dark:text-white mb-2 sm:mb-3">{step.title}</h3>
                 <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed border-l-2 border-slate-200 dark:border-slate-800 pl-3 sm:pl-4 whitespace-pre-line">
                   {step.desc}

@@ -180,7 +180,7 @@ const Projects: React.FC = () => {
                     />
 
                     {/* Mobile Hint - Visible on Mobile & Tablet (hidden on large desktops) */}
-                    <div className="lg:hidden absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white text-[10px] font-bold px-3 py-1.5 rounded-full border border-white/20 animate-pulse shadow-lg">
+                    <div className="lg:hidden absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 animate-pulse shadow-lg">
                       <Hand size={12} className="text-brand-gold" />
                       <span>{t('projects_hint')}</span>
                     </div>

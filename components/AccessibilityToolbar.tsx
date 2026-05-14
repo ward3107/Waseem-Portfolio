@@ -243,7 +243,7 @@ const AccessibilityToolbar: React.FC = () => {
               />
               <span className="text-lg font-bold">A</span>
             </div>
-            <div className="flex justify-between text-xs text-slate-400 px-1">
+            <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
               <span>100%</span>
               <span>125%</span>
               <span>150%</span>
@@ -291,7 +291,7 @@ const AccessibilityToolbar: React.FC = () => {
             ].map((feature) => (
               <label key={feature.key} className="flex items-center justify-between cursor-pointer group p-2 hover:bg-slate-50 rounded-lg">
                 <div className="flex items-center gap-3 text-slate-700">
-                  <feature.icon size={18} className="text-slate-400 group-hover:text-brand-purple transition-colors" />
+                  <feature.icon size={18} className="text-slate-500 dark:text-slate-400 group-hover:text-brand-purple transition-colors" />
                   <span className="font-medium text-sm">{feature.label}</span>
                 </div>
                 <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-colors ${state[feature.key as keyof A11yState] ? 'bg-brand-purple border-brand-purple' : 'border-slate-300'}`}>
@@ -325,7 +325,7 @@ const AccessibilityToolbar: React.FC = () => {
 
         {/* Footer */}
         <div className="p-3 bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
-          <p className="text-[10px] text-slate-500 font-medium">Settings persist across sessions</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Settings persist across sessions</p>
         </div>
       </div>
     </div>
