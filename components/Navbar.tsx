@@ -28,8 +28,13 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo/Name — single instance, scales with viewport */}
           <a
-            href="#"
-            className="text-lg md:text-xl font-heading font-bold text-slate-900 dark:text-white hover:text-brand-purple dark:hover:text-brand-purpleLight transition-colors"
+            href="#hero"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsOpen(false);
+              document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="text-lg md:text-xl font-heading font-bold text-slate-900 dark:text-white hover:text-brand-purple dark:hover:text-brand-purpleLight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded"
           >
             Waseem
           </a>

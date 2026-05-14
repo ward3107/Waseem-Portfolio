@@ -48,13 +48,13 @@ const SocialHub: React.FC = () => {
                                     <div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
                                         <div className={isRTL ? 'text-right' : 'text-left'}>
                                             <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">Waseem Dev</h3>
-                                            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">Full Stack & AI</p>
+                                            <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Full Stack & AI</p>
                                         </div>
-                                        <button className="flex items-center gap-1.5 sm:gap-2 bg-[#1877F2] text-white px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md text-[10px] sm:text-xs sm:text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
+                                        <button className="flex items-center gap-1.5 sm:gap-2 bg-[#1877F2] text-white px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md text-[11px] sm:text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
                                             <ThumbsUp size={12} className="sm:w-3.5 sm:h-3.5" /> <span className="hidden sm:inline">Like</span>
                                         </button>
                                     </div>
-                                    <div className={`flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3 sm:pt-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                    <div className={`flex items-center gap-3 sm:gap-4 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3 sm:pt-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
                                         <span className="flex items-center gap-1"><UserPlus size={12} className="sm:w-3.5 sm:h-3.5" /> 2.5K {t('followers')}</span>
                                         <span className="flex items-center gap-1"><ThumbsUp size={12} className="sm:w-3.5 sm:h-3.5" /> 1.2K {t('likes')}</span>
                                     </div>
@@ -81,14 +81,14 @@ const SocialHub: React.FC = () => {
                                             </div>
                                             <div className={isRTL ? 'text-right' : 'text-left'}>
                                                 <p className="font-bold text-xs sm:text-sm">waseem.code</p>
-                                                <p className="text-[10px] sm:text-xs opacity-90">Developer Life</p>
+                                                <p className="text-[11px] sm:text-xs opacity-90">Developer Life</p>
                                             </div>
                                         </div>
-                                        <button className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs sm:text-sm font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
+                                        <button className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-lg text-[11px] sm:text-sm font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors whitespace-nowrap">
                                             {t('followMe')}
                                         </button>
                                     </div>
-                                    <div className={`flex justify-between text-center text-[10px] sm:text-xs font-medium ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                    <div className={`flex justify-between text-center text-[11px] sm:text-xs font-medium ${isRTL ? 'flex-row-reverse' : ''}`}>
                                         <div><span className="block font-bold text-xs sm:text-sm">124</span>{t('posts')}</div>
                                         <div><span className="block font-bold text-xs sm:text-sm">4.8k</span>{t('followers')}</div>
                                         <div><span className="block font-bold text-xs sm:text-sm">342</span>Following</div>
@@ -126,10 +126,10 @@ const SocialHub: React.FC = () => {
                                             </div>
                                             <div className={isRTL ? 'text-right' : 'text-left'}>
                                                 <p className="font-bold text-xs sm:text-sm">@waseem_ai</p>
-                                                <p className="text-[10px] sm:text-xs text-slate-400">Tech & Automation</p>
+                                                <p className="text-[11px] sm:text-xs text-slate-400">Tech & Automation</p>
                                             </div>
                                         </div>
-                                        <button className="bg-[#FE2C55] text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-md text-[10px] sm:text-xs sm:text-sm font-bold hover:bg-opacity-90 transition-opacity whitespace-nowrap">
+                                        <button className="bg-[#FE2C55] text-white px-3 sm:px-4 py-1 sm:py-1.5 rounded-md text-[11px] sm:text-sm font-bold hover:bg-opacity-90 transition-opacity whitespace-nowrap">
                                             {t('followMe')}
                                         </button>
                                     </div>
@@ -141,8 +141,8 @@ const SocialHub: React.FC = () => {
                                         </div>
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent group-hover:opacity-60 transition-opacity"></div>
                                         <div className="absolute inset-0 flex flex-col justify-end p-2.5 sm:p-4">
-                                            <p className="text-[10px] sm:text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 line-clamp-2 sm:line-clamp-none">Build your own AI Agent in 30 seconds 🚀 #coding #ai</p>
-                                            <div className={`flex items-center gap-2 sm:gap-4 text-[10px] sm:text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
+                                            <p className="text-[11px] sm:text-sm font-medium mb-1.5 sm:mb-2 line-clamp-2 sm:line-clamp-none">Build your own AI Agent in 30 seconds 🚀 #coding #ai</p>
+                                            <div className={`flex items-center gap-2 sm:gap-4 text-[11px] sm:text-xs ${isRTL ? 'flex-row-reverse' : ''}`}>
                                                 <span className="flex items-center gap-1"><Video size={10} className="sm:w-3.5 sm:h-3.5" /> 15.2K</span>
                                                 <span className="flex items-center gap-1"><Heart size={10} className="sm:w-3.5 sm:h-3.5" /> 2.1K</span>
                                             </div>
