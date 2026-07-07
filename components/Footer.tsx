@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Github, Linkedin, Twitter, ArrowRight, ArrowLeft, Mail, X } from 'lucide-react';
-import { NAV_LINKS, CONTACT } from '../constants';
+import { NAV_LINKS, CONTACT, SERVICE_AREAS } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '../hooks/useFocusTrap';
@@ -39,7 +39,10 @@ const Footer: React.FC = () => {
   }, [legalModal]);
 
   return (
-    <footer id="footer" className="bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-t border-slate-200 dark:border-slate-900 relative overflow-hidden transition-colors duration-300">
+    <footer
+      id="footer"
+      className="bg-white dark:bg-slate-950 text-slate-900 dark:text-white border-t border-slate-200 dark:border-slate-900 relative overflow-hidden transition-colors duration-300"
+    >
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-purple via-brand-cyan to-brand-gold"></div>
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-purple/5 rounded-full blur-[100px] pointer-events-none"></div>
@@ -47,21 +50,40 @@ const Footer: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 pt-20 pb-10 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-
           {/* Brand Column */}
           <div className="space-y-6">
-            <h3 className="font-heading font-bold text-xl sm:text-2xl text-brand-purple dark:text-brand-purpleLight">Waseem</h3>
+            <h3 className="font-heading font-bold text-xl sm:text-2xl text-brand-purple dark:text-brand-purpleLight">
+              Waseem
+            </h3>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
               {t('footer_desc')}
             </p>
             <div className="flex gap-4">
-              <a href={CONTACT.github} target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's GitHub profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-purple dark:hover:text-white hover:border-brand-purple hover:bg-brand-purple/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2">
+              <a
+                href={CONTACT.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit Waseem's GitHub profile"
+                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-purple dark:hover:text-white hover:border-brand-purple hover:bg-brand-purple/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
+              >
                 <Github size={18} aria-hidden="true" />
               </a>
-              <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's LinkedIn profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-white hover:border-brand-blue hover:bg-brand-blue/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2">
+              <a
+                href={CONTACT.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit Waseem's LinkedIn profile"
+                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-white hover:border-brand-blue hover:bg-brand-blue/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2"
+              >
                 <Linkedin size={18} aria-hidden="true" />
               </a>
-              <a href={CONTACT.twitter} target="_blank" rel="noopener noreferrer" aria-label="Visit Waseem's Twitter profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-cyan dark:hover:text-white hover:border-brand-cyan hover:bg-brand-cyan/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2">
+              <a
+                href={CONTACT.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit Waseem's Twitter profile"
+                className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-cyan dark:hover:text-white hover:border-brand-cyan hover:bg-brand-cyan/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2"
+              >
                 <Twitter size={18} aria-hidden="true" />
               </a>
             </div>
@@ -69,13 +91,50 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-bold mb-6 text-slate-900 dark:text-white">{t('footer_links')}</h4>
+            <h4 className="text-lg font-bold mb-6 text-slate-900 dark:text-white">
+              {t('footer_links')}
+            </h4>
             <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
               {NAV_LINKS[language].map((link) => (
                 <li key={link.name}>
-                  <a href={link.href} className="hover:text-brand-purple transition-colors flex items-center gap-2 group">
-                    <ArrowRight size={14} className="opacity-0 -ml-4 rtl:-mr-4 rtl:ml-0 rtl:rotate-180 group-hover:opacity-100 group-hover:ml-0 rtl:group-hover:mr-0 transition-all duration-300 text-brand-purple" />
+                  <a
+                    href={link.href}
+                    className="hover:text-brand-purple transition-colors flex items-center gap-2 group"
+                  >
+                    <ArrowRight
+                      size={14}
+                      className="opacity-0 -ml-4 rtl:-mr-4 rtl:ml-0 rtl:rotate-180 group-hover:opacity-100 group-hover:ml-0 rtl:group-hover:mr-0 transition-all duration-300 text-brand-purple"
+                    />
                     {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* Service Areas — internal links to local SEO landing pages */}
+            <h4 className="text-sm font-bold mt-8 mb-4 text-slate-900 dark:text-white">
+              {language === 'ar'
+                ? 'مناطق الخدمة'
+                : language === 'en'
+                  ? 'Service Areas'
+                  : 'אזורי שירות'}
+            </h4>
+            <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+              {SERVICE_AREAS.map((area) => (
+                <li key={area.slug}>
+                  <a
+                    href={`/${area.slug}/`}
+                    className="hover:text-brand-cyan transition-colors flex items-center gap-2 group"
+                  >
+                    <ArrowRight
+                      size={14}
+                      className="opacity-0 -ml-4 rtl:-mr-4 rtl:ml-0 rtl:rotate-180 group-hover:opacity-100 group-hover:ml-0 rtl:group-hover:mr-0 transition-all duration-300 text-brand-cyan"
+                    />
+                    {language === 'ar'
+                      ? area.ar
+                      : language === 'en'
+                        ? `Web Design ${area.en}`
+                        : `בניית אתרים ${area.he}`}
                   </a>
                 </li>
               ))}
@@ -84,7 +143,9 @@ const Footer: React.FC = () => {
 
           {/* Services */}
           <div>
-            <h4 className="text-lg font-bold mb-6 text-slate-900 dark:text-white">{t('footer_services')}</h4>
+            <h4 className="text-lg font-bold mb-6 text-slate-900 dark:text-white">
+              {t('footer_services')}
+            </h4>
             <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
               {[1, 2, 3, 4, 5].map((i) => (
                 <li key={i}>
@@ -107,9 +168,9 @@ const Footer: React.FC = () => {
             <motion.div
               animate={{
                 boxShadow: [
-                  "0 0 20px rgba(147, 51, 234, 0.1)",
-                  "0 0 40px rgba(147, 51, 234, 0.2)",
-                  "0 0 20px rgba(147, 51, 234, 0.1)",
+                  '0 0 20px rgba(147, 51, 234, 0.1)',
+                  '0 0 40px rgba(147, 51, 234, 0.2)',
+                  '0 0 20px rgba(147, 51, 234, 0.1)',
                 ],
               }}
               transition={{ duration: 3, repeat: Infinity }}
@@ -150,8 +211,12 @@ const Footer: React.FC = () => {
                     🎁
                   </motion.span>
                   <div className="text-sm">
-                    <p className="font-bold text-slate-900 dark:text-white mb-1">{t('footer_lead_magnet_title')}</p>
-                    <p className="text-slate-600 dark:text-slate-400">{t('footer_lead_magnet_desc')}</p>
+                    <p className="font-bold text-slate-900 dark:text-white mb-1">
+                      {t('footer_lead_magnet_title')}
+                    </p>
+                    <p className="text-slate-600 dark:text-slate-400">
+                      {t('footer_lead_magnet_desc')}
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -167,7 +232,11 @@ const Footer: React.FC = () => {
                   >
                     <span className="text-green-600 dark:text-green-400">✓</span>
                     <span className="text-sm text-green-700 dark:text-green-300 font-medium">
-                      {language === 'he' ? 'נרשמת בהצלחה!' : language === 'ar' ? 'تم الاشتراك بنجاح!' : 'Successfully subscribed!'}
+                      {language === 'he'
+                        ? 'נרשמת בהצלחה!'
+                        : language === 'ar'
+                          ? 'تم الاشتراك بنجاح!'
+                          : 'Successfully subscribed!'}
                     </span>
                   </motion.div>
                 )}
@@ -178,7 +247,11 @@ const Footer: React.FC = () => {
                     exit={{ opacity: 0, y: -10 }}
                     className="mb-4 p-3 bg-red-100 dark:bg-red-900/20 border border-red-400 rounded-lg text-sm text-red-700 dark:text-red-300"
                   >
-                    {language === 'he' ? 'ההרשמה נכשלה. נסה שוב מאוחר יותר.' : language === 'ar' ? 'فشل الاشتراك. يرجى المحاولة لاحقاً.' : 'Subscription failed. Please try again.'}
+                    {language === 'he'
+                      ? 'ההרשמה נכשלה. נסה שוב מאוחר יותר.'
+                      : language === 'ar'
+                        ? 'فشل الاشتراك. يرجى المحاولة لاحقاً.'
+                        : 'Subscription failed. Please try again.'}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -196,31 +269,40 @@ const Footer: React.FC = () => {
                   fetch(endpoint, {
                     method: 'POST',
                     body: formData,
-                    headers: { 'Accept': 'application/json' }
-                  }).then(response => {
-                    if (response.ok) {
-                      setNewsletterStatus('success');
-                      trackEvent('sign_up', { form_type: 'newsletter' });
-                    } else {
-                      setNewsletterStatus('error');
-                    }
-                  }).catch(() => setNewsletterStatus('error'));
+                    headers: { Accept: 'application/json' },
+                  })
+                    .then((response) => {
+                      if (response.ok) {
+                        setNewsletterStatus('success');
+                        trackEvent('sign_up', { form_type: 'newsletter' });
+                      } else {
+                        setNewsletterStatus('error');
+                      }
+                    })
+                    .catch(() => setNewsletterStatus('error'));
                 }}
               >
-                <input type="hidden" name="subject" value="Newsletter Subscription from Portfolio" />
+                <input
+                  type="hidden"
+                  name="subject"
+                  value="Newsletter Subscription from Portfolio"
+                />
                 <motion.div
                   className="relative"
                   animate={{
                     boxShadow: [
-                      "0 0 0 0 rgba(147, 51, 234, 0)",
-                      "0 0 0 8px rgba(147, 51, 234, 0.1)",
-                      "0 0 0 16px rgba(147, 51, 234, 0.05)",
-                      "0 0 0 0 rgba(147, 51, 234, 0)",
+                      '0 0 0 0 rgba(147, 51, 234, 0)',
+                      '0 0 0 8px rgba(147, 51, 234, 0.1)',
+                      '0 0 0 16px rgba(147, 51, 234, 0.05)',
+                      '0 0 0 0 rgba(147, 51, 234, 0)',
                     ],
                   }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <Mail size={16} className="absolute left-3 rtl:right-3 rtl:left-auto top-1/2 -translate-y-1/2 text-slate-500 z-10" />
+                  <Mail
+                    size={16}
+                    className="absolute left-3 rtl:right-3 rtl:left-auto top-1/2 -translate-y-1/2 text-slate-500 z-10"
+                  />
                   <motion.input
                     type="email"
                     name="email"
@@ -228,9 +310,9 @@ const Footer: React.FC = () => {
                     required
                     animate={{
                       borderColor: [
-                        "rgb(226, 232, 240)",
-                        "rgb(168, 85, 247)",
-                        "rgb(226, 232, 240)",
+                        'rgb(226, 232, 240)',
+                        'rgb(168, 85, 247)',
+                        'rgb(226, 232, 240)',
                       ],
                     }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -245,22 +327,35 @@ const Footer: React.FC = () => {
                   className="w-full bg-gradient-to-r from-brand-purple to-brand-cyan text-white font-bold py-3 rounded-lg hover:shadow-lg hover:shadow-brand-purple/30 transition-all duration-300 text-sm relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    {newsletterStatus === 'success'
-                      ? (language === 'he' ? 'נרשמת!' : language === 'ar' ? 'مشترك!' : 'Subscribed!')
-                      : <>
+                    {newsletterStatus === 'success' ? (
+                      language === 'he' ? (
+                        'נרשמת!'
+                      ) : language === 'ar' ? (
+                        'مشترك!'
+                      ) : (
+                        'Subscribed!'
+                      )
+                    ) : (
+                      <>
                         {t('footer_sub_btn')}
                         {language === 'he' || language === 'ar' ? (
-                          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                          <ArrowLeft
+                            size={16}
+                            className="group-hover:-translate-x-1 transition-transform"
+                          />
                         ) : (
-                          <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight
+                            size={16}
+                            className="group-hover:translate-x-1 transition-transform"
+                          />
                         )}
                       </>
-                    }
+                    )}
                   </span>
                   {newsletterStatus !== 'success' && (
                     <motion.div
                       animate={{ x: ['-100%', '200%'] }}
-                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 2, ease: "linear" }}
+                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 2, ease: 'linear' }}
                       className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
                     />
                   )}
@@ -272,12 +367,20 @@ const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-200 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
-          <p>© {currentYear} Waseem. {t('footer_rights')}</p>
+          <p>
+            © {currentYear} Waseem. {t('footer_rights')}
+          </p>
           <div className="flex gap-8 font-medium">
-            <button onClick={() => setLegalModal('privacy')} className="hover:text-brand-purple hover:underline underline-offset-4 transition-all duration-300">
+            <button
+              onClick={() => setLegalModal('privacy')}
+              className="hover:text-brand-purple hover:underline underline-offset-4 transition-all duration-300"
+            >
               {t('footer_privacy')}
             </button>
-            <button onClick={() => setLegalModal('terms')} className="hover:text-brand-cyan hover:underline underline-offset-4 transition-all duration-300">
+            <button
+              onClick={() => setLegalModal('terms')}
+              className="hover:text-brand-cyan hover:underline underline-offset-4 transition-all duration-300"
+            >
               {t('footer_terms')}
             </button>
           </div>
@@ -338,7 +441,6 @@ const Footer: React.FC = () => {
           </div>
         )}
       </AnimatePresence>
-
     </footer>
   );
 };

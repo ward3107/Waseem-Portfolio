@@ -48,7 +48,7 @@ The fix is **consistency**, not spend.
 - ✅ **LocalBusiness schema** (כתובת כפר יאסיף + אזורי שירות) — נוסף.
 - ✅ **FAQPage schema** — נוסף (rich results בגוגל).
 - ✅ מילות מפתח מקומיות ב-meta — נוספו.
-- ⬜ **Next:** עמוד נחיתה לכל אזור: `בניית אתרים כפר יאסיף / עכו / כרמיאל / נהריה / חיפה`.
+- ✅ **עמודי נחיתה מקומיים** לכל אזור — נוספו: `/web-design-kfar-yasif/`, `/web-design-akko/`, `/web-design-karmiel/`, `/web-design-nahariya/`, `/web-design-haifa/`. כל עמוד עם תוכן ייחודי + LocalBusiness/FAQ/Breadcrumb schema, ומקושר מה-footer ומה-sitemap. לעריכה/הוספת עיר: `.dev-scripts/generate-landing-pages.mjs`.
 - ⬜ **Next:** בלוג קצר: *"כמה עולה אתר תדמית"*, *"אתר חנות מול אתר תדמית"*.
 - ⬜ **Next:** כשמצטברות ביקורות אמיתיות → הוסף `AggregateRating` ל-schema.
 

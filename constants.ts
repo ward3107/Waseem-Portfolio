@@ -15,6 +15,17 @@ export const CONTACT = {
   twitter: 'https://twitter.com/ward3107',
 } as const;
 
+// Local SEO landing pages (static HTML in /public). Linked from the footer
+// so search engines discover them via internal links. See
+// .dev-scripts/generate-landing-pages.mjs
+export const SERVICE_AREAS: { he: string; ar: string; en: string; slug: string }[] = [
+  { he: 'כפר יאסיף', ar: 'كفر ياسيف', en: 'Kfar Yasif', slug: 'web-design-kfar-yasif' },
+  { he: 'עכו', ar: 'عكا', en: 'Acre', slug: 'web-design-akko' },
+  { he: 'כרמיאל', ar: 'كرمئيل', en: 'Karmiel', slug: 'web-design-karmiel' },
+  { he: 'נהריה', ar: 'نهاريا', en: 'Nahariya', slug: 'web-design-nahariya' },
+  { he: 'חיפה', ar: 'حيفا', en: 'Haifa', slug: 'web-design-haifa' },
+];
+
 export const NAV_LINKS: Record<Language, NavLink[]> = {
   en: [
     { name: 'Services', href: '#what-i-do' },
@@ -36,7 +47,7 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'مشاريع', href: '#projects' },
     { name: 'من أنا', href: '#about' },
     { name: 'اتصل بي', href: '#contact' },
-  ]
+  ],
 };
 
 export const TECH_STACK: TechItem[] = [
