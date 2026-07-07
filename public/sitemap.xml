@@ -2,27 +2,45 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-  <!-- Main page -->
   <url>
     <loc>https://wwas.netlify.app/</loc>
     <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-
-    <!-- Language alternates -->
     <xhtml:link rel="alternate" hreflang="en" href="https://wwas.netlify.app/" />
     <xhtml:link rel="alternate" hreflang="he" href="https://wwas.netlify.app/?lang=he" />
     <xhtml:link rel="alternate" hreflang="ar" href="https://wwas.netlify.app/?lang=ar" />
   </url>
 
-  <!-- Add more pages as needed when site grows -->
-  <!--
   <url>
-    <loc>https://wwas.netlify.app/projects</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://wwas.netlify.app/web-design-kfar-yasif/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  -->
+  <url>
+    <loc>https://wwas.netlify.app/web-design-akko/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://wwas.netlify.app/web-design-karmiel/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://wwas.netlify.app/web-design-nahariya/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://wwas.netlify.app/web-design-haifa/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
 </urlset>
