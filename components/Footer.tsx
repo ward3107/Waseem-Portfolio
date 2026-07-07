@@ -109,15 +109,23 @@ const Footer: React.FC = () => {
                   </a>
                 </li>
               ))}
+              <li>
+                <a
+                  href="/blog/"
+                  className="hover:text-brand-purple transition-colors flex items-center gap-2 group"
+                >
+                  <ArrowRight
+                    size={14}
+                    className="opacity-0 -ml-4 rtl:-mr-4 rtl:ml-0 rtl:rotate-180 group-hover:opacity-100 group-hover:ml-0 rtl:group-hover:mr-0 transition-all duration-300 text-brand-purple"
+                  />
+                  {{ ar: 'مدونة', en: 'Blog', he: 'בלוג' }[language]}
+                </a>
+              </li>
             </ul>
 
             {/* Service Areas — internal links to local SEO landing pages */}
             <h4 className="text-sm font-bold mt-8 mb-4 text-slate-900 dark:text-white">
-              {language === 'ar'
-                ? 'مناطق الخدمة'
-                : language === 'en'
-                  ? 'Service Areas'
-                  : 'אזורי שירות'}
+              {{ ar: 'مناطق الخدمة', en: 'Service Areas', he: 'אזורי שירות' }[language]}
             </h4>
             <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
               {SERVICE_AREAS.map((area) => (
@@ -130,11 +138,13 @@ const Footer: React.FC = () => {
                       size={14}
                       className="opacity-0 -ml-4 rtl:-mr-4 rtl:ml-0 rtl:rotate-180 group-hover:opacity-100 group-hover:ml-0 rtl:group-hover:mr-0 transition-all duration-300 text-brand-cyan"
                     />
-                    {language === 'ar'
-                      ? area.ar
-                      : language === 'en'
-                        ? `Web Design ${area.en}`
-                        : `בניית אתרים ${area.he}`}
+                    {
+                      {
+                        ar: area.ar,
+                        en: `Web Design ${area.en}`,
+                        he: `בניית אתרים ${area.he}`,
+                      }[language]
+                    }
                   </a>
                 </li>
               ))}

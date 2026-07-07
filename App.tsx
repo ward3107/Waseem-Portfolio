@@ -16,6 +16,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 
 // Lazy load below-the-fold components for code splitting
 const Projects = lazy(() => import('./components/Projects'));
+const Reviews = lazy(() => import('./components/Reviews'));
 const Process = lazy(() => import('./components/Process'));
 const TechStack = lazy(() => import('./components/TechStack'));
 const FAQ = lazy(() => import('./components/FAQ'));
@@ -67,6 +68,9 @@ const AppContent: React.FC = () => {
         <AboutTimeline />
         <Suspense fallback={<SectionSkeleton />}>
           <Projects />
+        </Suspense>
+        <Suspense fallback={null}>
+          <Reviews />
         </Suspense>
         <Suspense fallback={<SectionSkeleton />}>
           <Process />
