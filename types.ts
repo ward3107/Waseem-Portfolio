@@ -41,3 +41,16 @@ export interface FAQItem {
   question: string;
   answer: string;
 }
+
+export interface Review {
+  /** Reviewer's name as it should appear publicly. */
+  author: string;
+  /** Star rating, 1–5. */
+  rating: number;
+  /** The review text. */
+  text: string;
+  /** City / context, e.g. "עכו" (optional). */
+  location?: string;
+  /** ISO date the review was given, e.g. "2026-07-01" (optional). */
+  date?: string;
+}

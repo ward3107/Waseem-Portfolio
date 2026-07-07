@@ -49,7 +49,9 @@ The fix is **consistency**, not spend.
 - ✅ **FAQPage schema** — נוסף (rich results בגוגל).
 - ✅ מילות מפתח מקומיות ב-meta — נוספו.
 - ✅ **עמודי נחיתה מקומיים** לכל אזור — נוספו: `/web-design-kfar-yasif/`, `/web-design-akko/`, `/web-design-karmiel/`, `/web-design-nahariya/`, `/web-design-haifa/`. כל עמוד עם תוכן ייחודי + LocalBusiness/FAQ/Breadcrumb schema, ומקושר מה-footer ומה-sitemap. לעריכה/הוספת עיר: `.dev-scripts/generate-landing-pages.mjs`.
-- ⬜ **Next:** בלוג קצר: *"כמה עולה אתר תדמית"*, *"אתר חנות מול אתר תדמית"*.
+- ✅ **בלוג SEO מקומי** — נוסף `/blog/` עם 4 מאמרים (מחירים, תדמית מול חנות, למה עסק צריך אתר, SEO מקומי). כל מאמר עם BlogPosting/Breadcrumb schema וקישורים פנימיים. להוספת מאמר: `.dev-scripts/generate-blog.mjs`.
+- ✅ **מנגנון ביקורות + AggregateRating** — סעיף המלצות באתר שמופיע רק כשמוסיפים ביקורות אמיתיות ל-`data/reviews.ts` (בלי להמציא דירוגים). כשתאסוף ביקורות Google, העתק אותן לשם → יופיע סעיף המלצות + כוכבים בגוגל.
+- ⬜ **Next:** להמשיך להוסיף מאמר בלוג בערך פעם בחודש (רעיונות: "וורדפרס מול אתר בהתאמה אישית", "כמה זמן לוקח לבנות אתר").
 - ⬜ **Next:** כשמצטברות ביקורות אמיתיות → הוסף `AggregateRating` ל-schema.
 
 ### 6. Free Backlinks — קישורים בחינם

@@ -12,10 +12,11 @@ dist
 dist-ssr
 *.local
 
-# Generated at build time by .dev-scripts/generate-landing-pages.mjs
-# (kept out of version control so the templated pages aren't flagged as
-# duplicate source; regenerated into public/ during `npm run build`).
+# Generated at build time by the generators in .dev-scripts/ (kept out of
+# version control so the templated pages aren't flagged as duplicate source;
+# regenerated into public/ during `npm run build`).
 /public/web-design-*/
+/public/blog/
 
 # Environment variables
 .env

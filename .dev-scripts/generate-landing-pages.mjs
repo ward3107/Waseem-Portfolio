@@ -448,8 +448,16 @@ for (const city of cities) {
 }
 
 // ---------------------------------------------------------------------------
-// Regenerate sitemap.xml (homepage + all city pages)
+// Regenerate sitemap.xml (homepage + city pages + blog).
+// Blog slugs mirror .dev-scripts/generate-blog.mjs — keep in sync.
 // ---------------------------------------------------------------------------
+const BLOG_SLUGS = [
+  'kama-ole-atar-tadmit',
+  'atar-tadmit-mul-hanut-online',
+  'lama-esek-tzarich-atar',
+  'seo-mekomi-tzafon',
+];
+
 const urlEntry = (loc, priority) => `  <url>
     <loc>${loc}</loc>
     <lastmod>${LASTMOD}</lastmod>
@@ -472,6 +480,9 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
   </url>
 
 ${cities.map((c) => urlEntry(`${SITE}/${c.slug}/`, '0.8')).join('\n')}
+
+${urlEntry(`${SITE}/blog/`, '0.7')}
+${BLOG_SLUGS.map((s) => urlEntry(`${SITE}/blog/${s}/`, '0.6')).join('\n')}
 
 </urlset>
 `;

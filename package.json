@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node .dev-scripts/generate-landing-pages.mjs && vite build",
+    "build": "node .dev-scripts/generate-landing-pages.mjs && node .dev-scripts/generate-blog.mjs && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
