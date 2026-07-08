@@ -131,7 +131,7 @@ const Footer: React.FC = () => {
               {SERVICE_AREAS.map((area) => (
                 <li key={area.slug}>
                   <a
-                    href={`/${area.slug}/`}
+                    href={language === 'ar' ? `/ar/${area.slug}/` : `/${area.slug}/`}
                     className="hover:text-brand-cyan transition-colors flex items-center gap-2 group"
                   >
                     <ArrowRight

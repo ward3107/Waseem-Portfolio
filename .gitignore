@@ -16,6 +16,7 @@ dist-ssr
 # version control so the templated pages aren't flagged as duplicate source;
 # regenerated into public/ during `npm run build`).
 /public/web-design-*/
+/public/ar/
 /public/blog/
 
 # Environment variables
