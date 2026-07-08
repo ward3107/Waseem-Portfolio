@@ -521,6 +521,8 @@ const BLOG_SLUGS = [
   'atar-tadmit-mul-hanut-online',
   'lama-esek-tzarich-atar',
   'seo-mekomi-tzafon',
+  'wordpress-mul-react',
+  'kama-zman-lokeach-livnot-atar',
 ];
 
 const simpleEntry = (loc, priority) => `  <url>
