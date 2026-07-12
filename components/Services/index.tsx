@@ -6,6 +6,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { getPrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import ServiceCard from './ServiceCard';
 import ServiceModal from './ServiceModal';
+import Dimensional3DWord, { fontForLanguage } from '../three/Dimensional3DWord';
 
 const scrollToContact = () => {
   const contactSection = document.getElementById('contact');
@@ -18,7 +19,7 @@ const scrollToContact = () => {
 };
 
 const Services: React.FC = () => {
-  const { t, dir } = useLanguage();
+  const { t, dir, language } = useLanguage();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const prefersReducedMotion = getPrefersReducedMotion();
 
@@ -77,9 +78,13 @@ const Services: React.FC = () => {
             className="text-xl sm:text-2xl md:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-2 sm:mb-3"
           >
             {t('services_title_1')}{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">
-              {t('services_title_2')}
-            </span>
+            <Dimensional3DWord
+              word={t('services_title_2')}
+              font={fontForLanguage(language)}
+              color="#9683d6"
+              depthColor="#2b2168"
+              fallbackClassName="inline-block text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan"
+            />
           </motion.h2>
 
           <motion.p
