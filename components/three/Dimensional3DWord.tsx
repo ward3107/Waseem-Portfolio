@@ -5,7 +5,12 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import * as THREE from 'three';
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 
-const HEBREW_FONT = '/fonts/heebo.ttf';
+// Heebo covers Hebrew + Latin; Cairo covers Arabic + Latin. troika needs a font
+// whose glyphs actually include the string's script, so callers pick per language.
+export const FONT_HE = '/fonts/heebo.ttf';
+export const FONT_AR = '/fonts/cairo.ttf';
+export const fontForLanguage = (language: string): string =>
+  language === 'ar' ? FONT_AR : FONT_HE;
 
 const detectWebGL = (): boolean => {
   if (typeof window === 'undefined') return false;
@@ -19,13 +24,14 @@ const detectWebGL = (): boolean => {
 
 interface DepthWordProps {
   word: string;
+  font: string;
   color: string;
   depthColor: string;
   still: boolean;
 }
 
-/** The emphasized word as a shallow stack of troika layers → dimensional but refined. */
-const DepthWord: React.FC<DepthWordProps> = ({ word, color, depthColor, still }) => {
+/** The word as a shallow stack of troika layers → dimensional but refined. */
+const DepthWord: React.FC<DepthWordProps> = ({ word, font, color, depthColor, still }) => {
   const outer = useRef<THREE.Group>(null); // holds the fit scale
   const inner = useRef<THREE.Group>(null); // holds the tilt animation
   const { viewport } = useThree();
@@ -63,7 +69,7 @@ const DepthWord: React.FC<DepthWordProps> = ({ word, color, depthColor, still })
         {stack.map((l, i) => (
           <Text
             key={l.key}
-            font={HEBREW_FONT}
+            font={font}
             fontSize={1}
             position={[0, 0, l.z]}
             color={l.color}
@@ -88,26 +94,32 @@ const DepthWord: React.FC<DepthWordProps> = ({ word, color, depthColor, still })
   );
 };
 
-interface Hero3DWordProps {
+interface Dimensional3DWordProps {
   /** The word to render dimensionally (also used for the accessible/fallback copy). */
   word: string;
-  /** Class names for the styled fallback word (reduced-motion / no-WebGL / SSR). */
+  /** Class names for the styled fallback word (reduced-motion / no-WebGL / SSR / phones). */
   fallbackClassName: string;
+  /** Font URL whose glyphs cover the word's script — use fontForLanguage(). */
+  font?: string;
   color?: string;
   depthColor?: string;
 }
 
 /**
- * Hero3DWord — renders one headline word as dimensional 3D type, inline.
+ * Dimensional3DWord — renders one word as dimensional 3D type, inline, at the
+ * size of the surrounding text. Introduced for the hero's emphasized word and
+ * reused for section headings.
  *
  * The styled fallback word always occupies the box (so line-height and wrapping
- * are unchanged); when WebGL is available and motion is allowed, a transparent
- * canvas is overlaid on that exact box and the fallback is hidden. A visually
- * hidden copy keeps the word in the accessibility tree and for SEO.
+ * are unchanged); when WebGL is available, motion is allowed, and the viewport
+ * is wide enough, a transparent canvas is overlaid on that exact box and the
+ * fallback is hidden. A visually hidden copy keeps the word in the accessibility
+ * tree and for SEO.
  */
-const Hero3DWord: React.FC<Hero3DWordProps> = ({
+const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
   word,
   fallbackClassName,
+  font = FONT_HE,
   color = '#efe4b0',
   depthColor = '#8a6d16',
 }) => {
@@ -145,7 +157,7 @@ const Hero3DWord: React.FC<Hero3DWordProps> = ({
           >
             <ambientLight intensity={0.7} />
             <directionalLight position={[2, 3, 4]} intensity={1.2} />
-            <DepthWord word={word} color={color} depthColor={depthColor} still={false} />
+            <DepthWord word={word} font={font} color={color} depthColor={depthColor} still={false} />
             <EffectComposer>
               <Bloom intensity={0.35} luminanceThreshold={0.6} luminanceSmoothing={0.9} mipmapBlur />
             </EffectComposer>
@@ -158,4 +170,4 @@ const Hero3DWord: React.FC<Hero3DWordProps> = ({
   );
 };
 
-export default Hero3DWord;
+export default Dimensional3DWord;

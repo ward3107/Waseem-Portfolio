@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, MotionValue } from 'framer-motion';
 import { letterVariants, emphasizedVariants, part3Variants, splitForAnimation } from './animations';
-import Hero3DWord from '../three/Hero3DWord';
+import Dimensional3DWord, { fontForLanguage } from '../three/Dimensional3DWord';
 
 interface AnimatedHeadlineProps {
   t: (key: string) => string;
@@ -87,8 +87,9 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
 
         {/* Emphasized final word rendered as dimensional 3D type; the styled word
             below is the accessible fallback (reduced-motion / no-WebGL). */}
-        <Hero3DWord
+        <Dimensional3DWord
           word={t('hero_title_4')}
+          font={fontForLanguage(language)}
           fallbackClassName="inline-block whitespace-pre font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-yellow-500 to-brand-gold bg-[length:200%_auto] relative z-10"
         />
       </span>
