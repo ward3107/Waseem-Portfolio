@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, MotionValue } from 'framer-motion';
 import { letterVariants, emphasizedVariants, part3Variants, splitForAnimation } from './animations';
+import Hero3DWord from '../three/Hero3DWord';
 
 interface AnimatedHeadlineProps {
   t: (key: string) => string;
@@ -80,22 +81,16 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
           <motion.span
             animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.05, 1] }}
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute inset-0 bg-brand-purple/20 blur-xl rounded-full"
+            className="absolute inset-0 bg-brand-gold/20 blur-xl rounded-full"
           ></motion.span>
         )}
 
-        {splitForAnimation(t('hero_title_4'), language).map((char, index) => (
-          <motion.span
-            key={`p3-b-${index}`}
-            custom={index + 5}
-            variants={part3}
-            initial="hidden"
-            animate="visible"
-            className="inline-block whitespace-pre font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-brand-purpleDark via-fuchsia-600 to-brand-purpleDark bg-[length:200%_auto] relative z-10"
-          >
-            {char}
-          </motion.span>
-        ))}
+        {/* Emphasized final word rendered as dimensional 3D type; the styled word
+            below is the accessible fallback (reduced-motion / no-WebGL). */}
+        <Hero3DWord
+          word={t('hero_title_4')}
+          fallbackClassName="inline-block whitespace-pre font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-yellow-500 to-brand-gold bg-[length:200%_auto] relative z-10"
+        />
       </span>
     </h1>
   );
