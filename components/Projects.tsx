@@ -4,11 +4,12 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Project } from '../types';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 
 type FilterCategory = 'All' | 'Web' | 'AI' | 'Mobile';
 
 const Projects: React.FC = () => {
-  const { t, dir } = useLanguage();
+  const { t, dir, language } = useLanguage();
   const [filter, setFilter] = useState<FilterCategory>('All');
   const [flippedId, setFlippedId] = useState<string | null>(null);
 
@@ -86,9 +87,13 @@ const Projects: React.FC = () => {
           >
             <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-black text-slate-900 dark:text-white mb-4 md:mb-6 tracking-tight leading-[0.9]">
               {t('projects_title_1')} <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-blue to-brand-cyan">
-                {t('projects_title_2')}
-              </span>
+              <Dimensional3DWord
+                word={t('projects_title_2')}
+                font={fontForLanguage(language)}
+                color="#9683d6"
+                depthColor="#2b2168"
+                fallbackClassName="inline-block text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-blue to-brand-cyan"
+              />
             </h2>
             <div className="h-1.5 w-20 md:w-24 bg-brand-gold rounded-full mb-4 md:mb-6 rtl:ml-auto rtl:mr-0"></div>
             <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg leading-relaxed">

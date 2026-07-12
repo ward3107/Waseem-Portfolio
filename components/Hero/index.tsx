@@ -45,7 +45,7 @@ const Hero: React.FC = () => {
     >
       <HeroBackground mouseX={mouseX} mouseY={mouseY} prefersReducedMotion={prefersReducedMotion} />
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+      <div className="max-w-7xl mx-auto px-6 sm:px-10 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-12 items-center relative z-10">
         <div className="relative z-20">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -112,7 +112,7 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.8, duration: 0.5 }}
-            className="mt-6 sm:mt-8 md:mt-12 flex items-center gap-3 sm:gap-4 border-t border-slate-200/60 dark:border-slate-800 pt-4 sm:pt-6 md:pt-8"
+            className="mt-4 sm:mt-8 md:mt-12 flex items-center gap-3 sm:gap-4 border-t border-slate-200/60 dark:border-slate-800 pt-3 sm:pt-6 md:pt-8"
           >
             <div>
               <div className="flex items-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">

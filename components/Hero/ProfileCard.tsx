@@ -30,7 +30,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8 }}
-      className="relative lg:h-[500px] h-[380px] sm:h-[400px] flex items-center justify-center [perspective:2000px] overflow-hidden md:overflow-visible"
+      className="relative h-[300px] sm:h-[380px] lg:h-[500px] flex items-center justify-center [perspective:2000px] overflow-hidden md:overflow-visible"
     >
       <motion.div
         style={{
@@ -43,7 +43,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         role="button"
         aria-label={isFlipped ? t('hero_card_front_aria') : t('hero_card_back_aria')}
         aria-pressed={isFlipped}
-        className="relative w-64 sm:w-64 md:w-64 lg:w-72 h-[340px] sm:h-[360px] md:h-[380px] lg:h-[420px] cursor-pointer group focus:outline-none focus:ring-4 focus:ring-brand-purple/50 rounded-3xl"
+        className="relative w-52 sm:w-60 md:w-64 lg:w-72 h-[280px] sm:h-[340px] md:h-[380px] lg:h-[420px] cursor-pointer group focus:outline-none focus:ring-4 focus:ring-brand-purple/50 rounded-3xl"
         onClick={() => setIsFlipped(!isFlipped)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {

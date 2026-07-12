@@ -128,6 +128,11 @@ const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
   // Inline WebGL type reads well at headline scale (md+); on phones the box is
   // too small for it to land, so we keep the crisp styled word there instead.
   const [isWide, setIsWide] = useState(false);
+  // Only mount the canvas while the word is near the viewport. Several words on
+  // one page would otherwise hold that many live WebGL contexts at once, and the
+  // browser silently drops the oldest — making earlier words blank out.
+  const [inView, setInView] = useState(false);
+  const wrapRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     setWebglOk(detectWebGL());
@@ -138,10 +143,24 @@ const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
     return () => mq.removeEventListener('change', update);
   }, []);
 
-  const active = webglOk && !prefersReducedMotion && isWide;
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => setInView(entries.some((e) => e.isIntersecting)),
+      { rootMargin: '250px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const active = webglOk && !prefersReducedMotion && isWide && inView;
 
   return (
-    <span className="relative inline-block align-baseline" style={{ lineHeight: 1 }}>
+    <span ref={wrapRef} className="relative inline-block align-baseline" style={{ lineHeight: 1 }}>
       {/* Sizing + fallback. Hidden (but still laid out) when the canvas is active. */}
       <span className={fallbackClassName} style={active ? { opacity: 0 } : undefined} aria-hidden={active}>
         {word}

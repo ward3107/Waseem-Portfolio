@@ -5,9 +5,10 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { FAQItem } from '../types';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { CONTACT } from '../constants';
+import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 
 const FAQ: React.FC = () => {
-    const { t, dir } = useLanguage();
+    const { t, dir, language } = useLanguage();
     const [openIndex, setOpenIndex] = useState<number | null>(0);
     const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -86,7 +87,13 @@ const FAQ: React.FC = () => {
                                 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-slate-900 dark:text-white mb-6 leading-tight"
                             >
                                 {t('faq_title_1')} <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">{t('faq_title_2')}</span>
+                                <Dimensional3DWord
+                                    word={t('faq_title_2')}
+                                    font={fontForLanguage(language)}
+                                    color="#9683d6"
+                                    depthColor="#2b2168"
+                                    fallbackClassName="inline-block text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan"
+                                />
                             </motion.h2>
 
                             <motion.p

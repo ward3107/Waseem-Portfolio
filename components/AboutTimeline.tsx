@@ -4,6 +4,7 @@ import { Brain, Cpu, Zap, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { TimelineItem } from '../types';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 
 // Sub-component for spinning year effect
 const SpinningYear = ({ year }: { year: string }) => {
@@ -51,7 +52,7 @@ const SpinningYear = ({ year }: { year: string }) => {
 };
 
 const AboutTimeline: React.FC = () => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     // Check for reduced motion preference
     const prefersReducedMotion = getPrefersReducedMotion();
@@ -119,7 +120,13 @@ const AboutTimeline: React.FC = () => {
                         className="text-4xl md:text-6xl font-heading font-black text-slate-900 dark:text-white leading-tight mb-6"
                     >
                         {t('about_title_1')} <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">{t('about_title_2')}</span>
+                        <Dimensional3DWord
+                            word={t('about_title_2')}
+                            font={fontForLanguage(language)}
+                            color="#9683d6"
+                            depthColor="#2b2168"
+                            fallbackClassName="inline-block text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan"
+                        />
                     </motion.h2>
 
                     <motion.div
