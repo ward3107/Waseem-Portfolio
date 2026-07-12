@@ -185,10 +185,10 @@ const AccessibilityToolbar: React.FC = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-gradient-to-br from-brand-purple to-brand-purpleLight text-white p-4 rounded-full shadow-2xl hover:shadow-brand-purple/50 transition-all focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group border-2 border-white/20"
+        className="fixed bottom-6 right-6 z-50 bg-gradient-to-br from-brand-purple to-brand-purpleLight text-white p-2.5 md:p-4 rounded-full shadow-2xl hover:shadow-brand-purple/50 transition-all focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group border-2 border-white/20"
         aria-label={getAccessibilityLabel() + ' Options'}
       >
-        <Accessibility size={28} className="group-hover:rotate-12 transition-transform duration-500 drop-shadow-lg" />
+        <Accessibility className="w-6 h-6 md:w-7 md:h-7 group-hover:rotate-12 transition-transform duration-500 drop-shadow-lg" />
       </motion.button>
     );
   }
