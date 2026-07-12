@@ -5,9 +5,10 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { CONTACT } from '../constants';
+import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 
 const Contact: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // Check for reduced motion preference
   const prefersReducedMotion = getPrefersReducedMotion();
@@ -47,7 +48,13 @@ const Contact: React.FC = () => {
               className="text-4xl sm:text-5xl md:text-6xl font-heading font-bold text-slate-900 dark:text-white mb-5 sm:mb-6 leading-tight"
             >
               {t('contact_title_1')} <br className="hidden sm:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan">{t('contact_title_2')}</span>
+              <Dimensional3DWord
+                word={t('contact_title_2')}
+                font={fontForLanguage(language)}
+                color="#9683d6"
+                depthColor="#2b2168"
+                fallbackClassName="inline-block text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-cyan"
+              />
             </motion.h2>
 
             <motion.p
