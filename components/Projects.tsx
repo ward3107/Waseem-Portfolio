@@ -25,7 +25,7 @@ const Projects: React.FC = () => {
       title: 'Authentic Greek Resturant',
       category: 'Web',
       description: t('project_1_desc'),
-      image: '/assets/souvlaki.webp',
+      image: '/assets/souvlaki.png',
       tech: ['Next.js', 'Python', 'TensorFlow'],
       link: 'https://souvlaki-kfaryasif.vercel.app/'
     },
@@ -43,7 +43,7 @@ const Projects: React.FC = () => {
       title: 'Law Office Template',
       category: 'Web',
       description: 'Professional law office website template with appointment booking and service showcase',
-      image: '/assets/law-office.webp',
+      image: '/assets/law-office.png',
       tech: ['React', 'Vite', 'Tailwind CSS'],
       link: 'https://lawofice.netlify.app/'
     },
@@ -52,7 +52,7 @@ const Projects: React.FC = () => {
       title: 'Shokha Barbershop',
       category: 'Web',
       description: 'Modern barbershop booking app with appointment scheduling and service management',
-      image: '/assets/barbershop.webp',
+      image: '/assets/barbershop.png',
       tech: ['React', 'Node.js', 'MongoDB'],
       link: 'https://shokha1.netlify.app/'
     }
