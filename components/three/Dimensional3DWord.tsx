@@ -36,8 +36,10 @@ const DepthWord: React.FC<DepthWordProps> = ({ word, font, color, depthColor, st
   const inner = useRef<THREE.Group>(null); // holds the tilt animation
   const { viewport } = useThree();
   const [wordWidth, setWordWidth] = useState(0);
-  const LAYERS = 10;
-  const DEPTH = 0.32;
+  // 10 stacked troika layers produced visible ghosting on high-DPI displays;
+  // 6 keeps the depth cue while sharpening the front-face silhouette.
+  const LAYERS = 6;
+  const DEPTH = 0.28;
   const FILL = 0.9; // fraction of the canvas width the word should span
 
   const stack = useMemo(() => {
@@ -101,7 +103,9 @@ interface Dimensional3DWordProps {
   fallbackClassName: string;
   /** Font URL whose glyphs cover the word's script — use fontForLanguage(). */
   font?: string;
+  /** Front-face color (dark-mode only — light mode uses the styled fallback). */
   color?: string;
+  /** Back-depth color (word extrudes from this to `color`). */
   depthColor?: string;
 }
 
@@ -125,13 +129,9 @@ const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
 }) => {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [webglOk, setWebglOk] = useState(false);
-  // Inline WebGL type reads well at headline scale (md+); on phones the box is
-  // too small for it to land, so we keep the crisp styled word there instead.
   const [isWide, setIsWide] = useState(false);
-  // Only mount the canvas while the word is near the viewport. Several words on
-  // one page would otherwise hold that many live WebGL contexts at once, and the
-  // browser silently drops the oldest — making earlier words blank out.
   const [inView, setInView] = useState(false);
+  const [isDark, setIsDark] = useState(true);
   const wrapRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -141,6 +141,19 @@ const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
     update();
     mq.addEventListener('change', update);
     return () => mq.removeEventListener('change', update);
+  }, []);
+
+  // Follow the app's `dark` class on <html>, not just the OS preference — the
+  // portfolio has a theme toggle. Colors that read on `bg-slate-50` differ from
+  // colors that read on `bg-slate-950`.
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    const update = () => setIsDark(root.classList.contains('dark'));
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -157,7 +170,13 @@ const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  const active = webglOk && !prefersReducedMotion && isWide && inView;
+  // Only mount the WebGL word in dark mode. On light backgrounds the layered
+  // troika stack reads as visible gold slashes instead of depth (the tilt +
+  // per-layer color lerp both fight the light bg), and the styled gradient
+  // fallback below already looks clean.
+  const active = webglOk && !prefersReducedMotion && isWide && inView && isDark;
+  const activeColor = color;
+  const activeDepthColor = depthColor;
 
   return (
     <span ref={wrapRef} className="relative inline-block align-baseline" style={{ lineHeight: 1 }}>
@@ -169,14 +188,14 @@ const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
       {active && (
         <span className="absolute inset-0" aria-hidden="true" style={{ pointerEvents: 'none' }}>
           <Canvas
-            dpr={[1, 1.75]}
+            dpr={[1, 1.5]}
             gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
             camera={{ position: [0, 0, 4], fov: 40 }}
             style={{ overflow: 'visible' }}
           >
             <ambientLight intensity={0.7} />
             <directionalLight position={[2, 3, 4]} intensity={1.2} />
-            <DepthWord word={word} font={font} color={color} depthColor={depthColor} still={false} />
+            <DepthWord word={word} font={font} color={activeColor} depthColor={activeDepthColor} still={false} />
             <EffectComposer>
               <Bloom intensity={0.35} luminanceThreshold={0.6} luminanceSmoothing={0.9} mipmapBlur />
             </EffectComposer>

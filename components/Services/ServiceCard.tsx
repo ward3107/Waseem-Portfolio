@@ -173,7 +173,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
         <motion.div
           whileHover={{ x: isRTL ? -8 : 8 }}
-          className="pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-800/50 flex items-center text-[11px] font-bold text-slate-400 dark:text-slate-500 group-hover:text-brand-purple dark:group-hover:text-white transition-colors"
+          className="pt-1.5 sm:pt-2 border-t border-slate-100 dark:border-slate-800/50 flex items-center text-[11px] font-bold text-slate-600 dark:text-slate-500 group-hover:text-brand-purple dark:group-hover:text-white transition-colors"
         >
           <span className={isRTL ? 'ml-2' : 'mr-2'}>{t('projects_details')}</span>
           <motion.div

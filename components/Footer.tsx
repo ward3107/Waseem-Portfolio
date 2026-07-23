@@ -311,7 +311,7 @@ const Footer: React.FC = () => {
                 >
                   <Mail
                     size={16}
-                    className="absolute left-3 rtl:right-3 rtl:left-auto top-1/2 -translate-y-1/2 text-slate-500 z-10"
+                    className="absolute left-3 rtl:right-3 rtl:left-auto top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-400 z-10"
                   />
                   <motion.input
                     type="email"
@@ -376,7 +376,7 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-200 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+        <div className="pt-8 border-t border-slate-200 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-600 dark:text-slate-500">
           <p>
             © {currentYear} Waseem. {t('footer_rights')}
           </p>
@@ -429,7 +429,7 @@ const Footer: React.FC = () => {
                 <button
                   onClick={() => setLegalModal(null)}
                   aria-label={t('legal_close')}
-                  className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-purple"
+                  className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-purple"
                 >
                   <X size={20} />
                 </button>

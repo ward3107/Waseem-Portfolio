@@ -63,9 +63,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           className="relative w-full h-full"
         >
           {/* Front */}
-          <div className="absolute inset-0 w-full h-full bg-slate-900 rounded-3xl p-1 shadow-2xl backface-hidden">
+          <div className="absolute inset-0 w-full h-full bg-slate-200 dark:bg-slate-900 rounded-3xl p-1 shadow-2xl backface-hidden ring-1 ring-slate-300 dark:ring-transparent">
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/10 to-transparent pointer-events-none z-50 mix-blend-overlay"></div>
-            <div className="w-full h-full bg-slate-800 rounded-[20px] overflow-hidden relative">
+            <div className="w-full h-full bg-slate-100 dark:bg-slate-800 rounded-[20px] overflow-hidden relative">
               <img
                 src="/assets/waseem-profile.webp"
                 alt={t('hero_profile_alt')}

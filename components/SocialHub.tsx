@@ -126,7 +126,7 @@ const SocialHub: React.FC = () => {
                                             </div>
                                             <div className={isRTL ? 'text-right' : 'text-left'}>
                                                 <p className="font-bold text-xs sm:text-sm">@waseem_ai</p>
-                                                <p className="text-[11px] sm:text-xs text-slate-400">Tech & Automation</p>
+                                                <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400">Tech & Automation</p>
                                             </div>
                                         </div>
                                         <button className="bg-[#FE2C55] text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-md text-[11px] sm:text-sm font-bold hover:bg-opacity-90 transition-opacity whitespace-nowrap">

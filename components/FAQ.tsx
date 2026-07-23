@@ -125,7 +125,7 @@ const FAQ: React.FC = () => {
                                         <span className="block text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wide">{t('faq_cta_unsure')}</span>
                                         <span className="block text-base sm:text-lg">{t('faq_cta_ask')}</span>
                                     </div>
-                                    <ArrowRight className="ml-2 rtl:mr-2 rtl:ml-0 rtl:rotate-180 text-slate-400 group-hover:text-brand-purple group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-all" />
+                                    <ArrowRight className="ml-2 rtl:mr-2 rtl:ml-0 rtl:rotate-180 text-slate-600 dark:text-slate-400 group-hover:text-brand-purple group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-all" />
                                 </a>
                             </motion.div>
                         </div>

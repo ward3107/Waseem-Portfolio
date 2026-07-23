@@ -22,7 +22,12 @@ export interface Project {
   description: string;
   image: string;
   tech: string[];
+  /** Live demo URL. */
   link?: string;
+  /** Public GitHub repository URL. Omit to hide the Code button. */
+  github?: string;
+  /** Extra gallery screenshots beyond the card image. */
+  screenshots?: string[];
 }
 
 export interface TimelineItem {

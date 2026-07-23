@@ -78,7 +78,7 @@ const Contact: React.FC = () => {
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex items-center justify-center text-slate-900 dark:text-white group-hover:bg-brand-purple group-hover:text-white transition-colors mb-3 sm:mb-4 shadow-sm">
                   <Mail size={16} className="sm:w-5 sm:h-5" />
                 </div>
-                <p className="text-[11px] sm:text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">{t('contact_email_btn')}</p>
+                <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider mb-1">{t('contact_email_btn')}</p>
                 <p className="font-bold text-slate-900 dark:text-white text-sm sm:text-base md:text-lg group-hover:text-brand-purple transition-colors break-all">{CONTACT.email}</p>
               </a>
 

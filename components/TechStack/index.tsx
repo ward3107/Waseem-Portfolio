@@ -97,16 +97,11 @@ const TechStack: React.FC = () => {
     <section className="py-16 sm:py-20 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col justify-center border-t border-slate-200 dark:border-slate-900 min-h-[500px] sm:min-h-[600px] transition-colors duration-300">
       <div className="absolute inset-0 bg-slate-50 dark:bg-slate-950 overflow-hidden" aria-hidden="true">
         <div
-          className={`absolute inset-0 bg-[linear-gradient(rgba(72,58,160,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(72,58,160,0.1)_1px,transparent_1px)] bg-[size:40px_40px] [transform-style:preserve-3d] [perspective:1000px] opacity-30 ${stage >= 2 ? 'animate-pulse' : ''}`}
+          className={`absolute inset-0 bg-[linear-gradient(rgba(72,58,160,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(72,58,160,0.22)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(140,120,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(140,120,255,0.12)_1px,transparent_1px)] bg-[size:40px_40px] [transform-style:preserve-3d] [perspective:1000px] opacity-40 dark:opacity-30 ${stage >= 2 ? 'animate-pulse' : ''}`}
           style={{ willChange: 'opacity' }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-950 via-transparent to-slate-50 dark:to-slate-950"></div>
         </div>
-
-        <div
-          className={`absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-40 ${stage >= 3 ? 'animate-[ping_0.5s_infinite]' : 'animate-pulse'}`}
-          style={{ willChange: 'transform, opacity' }}
-        ></div>
       </div>
 
       <AnimatePresence>
@@ -126,7 +121,7 @@ const TechStack: React.FC = () => {
           initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white text-center mb-3 sm:mb-4 font-heading uppercase tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+          className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white text-center mb-3 sm:mb-4 font-heading uppercase tracking-widest dark:drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
         >
           {t('tech_title_1')}{' '}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-cyan to-brand-purple">
@@ -190,8 +185,8 @@ const TechStack: React.FC = () => {
               <span className="text-[8px] sm:text-[10px] text-brand-purple uppercase tracking-widest font-bold">
                 {t('tech_score')}
               </span>
-              <span className="text-xl sm:text-2xl md:text-3xl font-mono font-bold text-slate-900 dark:text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">
-                {score.toLocaleString().padStart(6, '0')}
+              <span className="text-xl sm:text-2xl md:text-3xl font-mono font-bold text-slate-900 dark:text-white dark:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]">
+                {String(score).padStart(6, '0')}
               </span>
             </div>
 
@@ -218,7 +213,7 @@ const TechStack: React.FC = () => {
                 key={combo}
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1.2 }}
-                className={`text-xl sm:text-2xl md:text-3xl font-black italic font-heading ${combo > 5 ? 'text-brand-gold' : 'text-slate-400'}`}
+                className={`text-xl sm:text-2xl md:text-3xl font-black italic font-heading ${combo > 5 ? 'text-brand-gold' : 'text-slate-600 dark:text-slate-400'}`}
               >
                 x{combo}
               </motion.span>

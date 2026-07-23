@@ -187,7 +187,7 @@ ${selections.details}
             <div className="p-5 sm:p-6 md:p-8 flex-1 flex flex-col">
                 <div className="flex justify-between items-center mb-6 sm:mb-8">
                     {step > 0 ? (
-                        <button onClick={() => setStep(step - 1)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+                        <button onClick={() => setStep(step - 1)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                             <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
                         </button>
                     ) : <div></div>}

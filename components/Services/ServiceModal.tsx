@@ -63,7 +63,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, onCTA, t,
               <button
                 onClick={onClose}
                 aria-label={t('legal_close')}
-                className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 p-1.5 sm:p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-400 hover:text-white hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple"
+                className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 p-1.5 sm:p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-600 dark:text-slate-400 hover:text-white hover:bg-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple"
               >
                 <X size={16} aria-hidden="true" />
               </button>
@@ -105,7 +105,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, onCTA, t,
                   href={`${CONTACT.whatsappUrl}?text=${encodeURIComponent(`Hi, I'm interested in ${service.title}...`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 text-slate-400 hover:text-green-500 text-xs sm:text-sm font-bold transition-colors py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                  className="flex items-center justify-center gap-2 text-slate-600 dark:text-slate-400 hover:text-green-500 text-xs sm:text-sm font-bold transition-colors py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                 >
                   <MessageCircle size={14} aria-hidden="true" />
                   {t('modal_whatsapp')}

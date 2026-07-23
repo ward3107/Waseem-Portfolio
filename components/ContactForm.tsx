@@ -166,7 +166,7 @@ ${formData.message}
                 <Send size={24} className="text-brand-purple" />
                 {t('formTitle')}
             </h3>
-            <p className="text-slate-500 mb-4">{t('formSubtitle')}</p>
+            <p className="text-slate-600 mb-4">{t('formSubtitle')}</p>
             
             {/* Trust Badges */}
             <div className="flex flex-wrap gap-4 text-xs font-semibold text-emerald-600">
@@ -259,7 +259,7 @@ ${formData.message}
                         <option value="maintenance">{t('optMaintenance')}</option>
                         <option value="other">{t('optOther')}</option>
                     </select>
-                    <div className="absolute inset-y-0 right-0 left-auto rtl:right-auto rtl:left-0 flex items-center px-4 pointer-events-none text-slate-500">
+                    <div className="absolute inset-y-0 right-0 left-auto rtl:right-auto rtl:left-0 flex items-center px-4 pointer-events-none text-slate-600">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                 </div>
@@ -282,7 +282,7 @@ ${formData.message}
                         <option value="25k-50k">{t('budget25k50k')}</option>
                         <option value="50k-plus">{t('budget50kPlus')}</option>
                     </select>
-                    <div className="absolute inset-y-0 right-0 left-auto rtl:right-auto rtl:left-0 flex items-center px-4 pointer-events-none text-slate-500">
+                    <div className="absolute inset-y-0 right-0 left-auto rtl:right-auto rtl:left-0 flex items-center px-4 pointer-events-none text-slate-600">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                 </div>
@@ -294,7 +294,7 @@ ${formData.message}
                 <label htmlFor="message" className="text-sm font-bold text-slate-700 flex items-center gap-2">
                     {t('messageLabel')} <span className="text-red-500">*</span>
                 </label>
-                <span className={`text-xs ${formData.message.length >= 10 ? 'text-green-600' : 'text-slate-500'}`}>
+                <span className={`text-xs ${formData.message.length >= 10 ? 'text-green-600' : 'text-slate-600'}`}>
                     {formData.message.length} / 10 {t('minChars')}
                 </span>
             </div>

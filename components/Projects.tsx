@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ExternalLink, Github, Hand } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Project } from '../types';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
+import { getLocalizedProjects } from '../data/projects';
 
 type FilterCategory = 'All' | 'Web' | 'AI' | 'Mobile';
 
@@ -19,44 +19,7 @@ const Projects: React.FC = () => {
   // card after switching categories.
   useEffect(() => setFlippedId(null), [filter]);
 
-  const localizedProjects: Project[] = [
-    {
-      id: '1',
-      title: 'Authentic Greek Resturant',
-      category: 'Web',
-      description: t('project_1_desc'),
-      image: '/assets/souvlaki.png',
-      tech: ['Next.js', 'Python', 'TensorFlow'],
-      link: 'https://souvlaki-kfaryasif.vercel.app/'
-    },
-    {
-      id: '2',
-      title: 'SeatAi',
-      category: 'AI',
-      description: t('project_2_desc'),
-      image: '/assets/seatai.png',
-      tech: ['React', 'Three.js', 'Stripe'],
-      link: 'https://seatai.vercel.app/'
-    },
-    {
-      id: '3',
-      title: 'Law Office Template',
-      category: 'Web',
-      description: 'Professional law office website template with appointment booking and service showcase',
-      image: '/assets/law-office.png',
-      tech: ['React', 'Vite', 'Tailwind CSS'],
-      link: 'https://lawofice.netlify.app/'
-    },
-    {
-      id: '4',
-      title: 'Shokha Barbershop',
-      category: 'Web',
-      description: 'Modern barbershop booking app with appointment scheduling and service management',
-      image: '/assets/barbershop.png',
-      tech: ['React', 'Node.js', 'MongoDB'],
-      link: 'https://shokha1.netlify.app/'
-    }
-  ];
+  const localizedProjects = getLocalizedProjects(t);
 
   const filteredProjects = filter === 'All'
     ? localizedProjects
@@ -90,7 +53,7 @@ const Projects: React.FC = () => {
               <Dimensional3DWord
                 word={t('projects_title_2')}
                 font={fontForLanguage(language)}
-                color="#9683d6"
+                color="#7c5cff"
                 depthColor="#2b2168"
                 fallbackClassName="inline-block text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-blue to-brand-cyan"
               />
@@ -170,7 +133,7 @@ const Projects: React.FC = () => {
                     <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-colors z-10"></div>
                     <img
                       src={project.image}
-                      alt={project.title}
+                      alt={`${project.title} — ${project.category} project screenshot`}
                       loading="lazy"
                       decoding="async"
                       width="600"
@@ -198,7 +161,7 @@ const Projects: React.FC = () => {
                       </span>
                     </div>
                     <h3 className="text-2xl font-bold mt-2 text-slate-900 dark:text-white">{project.title}</h3>
-                    <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm line-clamp-2 leading-relaxed">
+                    <p className="text-slate-600 dark:text-slate-400 mt-2 text-sm line-clamp-2 leading-relaxed">
                       {project.description}
                     </p>
                     <div className="mt-auto pt-4 flex items-center text-brand-blue font-bold text-sm">
@@ -225,22 +188,28 @@ const Projects: React.FC = () => {
                   </div>
 
                   <div className="flex gap-4 mt-6">
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-purple rounded-xl hover:bg-brand-purpleLight transition-colors font-bold text-sm shadow-lg shadow-brand-purple/20 transform hover:-translate-y-1"
-                    >
-                      <ExternalLink size={16} /> {t('projects_demo')}
-                    </a>
-                    <a
-                      href="#"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-bold text-sm transform hover:-translate-y-1"
-                    >
-                      <Github size={16} /> {t('projects_code')}
-                    </a>
+                    {project.link && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-purple rounded-xl hover:bg-brand-purpleLight transition-colors font-bold text-sm shadow-lg shadow-brand-purple/20 transform hover:-translate-y-1"
+                      >
+                        <ExternalLink size={16} /> {t('projects_demo')}
+                      </a>
+                    )}
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-bold text-sm transform hover:-translate-y-1"
+                      >
+                        <Github size={16} /> {t('projects_code')}
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

@@ -113,9 +113,14 @@ export const en: Record<string, string> = {
     projects_details: "Details",
     projects_demo: "Live Demo",
     projects_code: "Code",
-    project_1_desc: "A comprehensive analytics dashboard for AI model performance tracking.",
-    project_2_desc: "Luxury jewelry e-commerce platform with 3D product viewer.",
-    project_3_desc: "Real-time messaging app with instant translation features.",
+    project_1_desc: "Authentic Greek restaurant site with menu, gallery, and online ordering — built on Next.js.",
+    project_2_desc: "AI-powered restaurant seating optimizer that maximizes turnover and guest experience.",
+    project_3_desc: "Professional law office template with appointment booking and service showcase.",
+    project_4_desc: "Modern barbershop booking app with appointment scheduling and service management.",
+    project_5_desc: "Gamified vocabulary learning app for EFL students.",
+    project_6_desc: "Aluminum and steel design solutions company website.",
+    project_7_desc: "Professional medical website for Dr. Maya Khalil.",
+    project_8_desc: "Festive Christmas sale landing page with countdown and offers.",
 
     // Process
     process_step_1_title: "🧭 Discovery & Strategy",

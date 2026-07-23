@@ -295,7 +295,7 @@ const businessJsonLd = (city, lang) => ({
   },
   geo: { '@type': 'GeoCoordinates', latitude: city.geo.lat, longitude: city.geo.lng },
   knowsLanguage: ['he', 'ar', 'en'],
-  sameAs: ['https://github.com/ward3107', 'https://linkedin.com/in/waseem-profile'],
+  sameAs: ['https://github.com/ward3107', 'https://www.linkedin.com/in/waseem-abu-akel-334486374/'],
 });
 
 const breadcrumbJsonLd = (city, lang) => ({

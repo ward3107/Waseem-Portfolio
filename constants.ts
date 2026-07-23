@@ -11,7 +11,7 @@ export const CONTACT = {
   whatsappUrl: `https://wa.me/${WHATSAPP_NUMBER}`,
   whatsappDisplay: `+${WHATSAPP_NUMBER.slice(0, 3)} ${WHATSAPP_NUMBER.slice(3, 5)} ${WHATSAPP_NUMBER.slice(5, 8)} ${WHATSAPP_NUMBER.slice(8)}`,
   github: 'https://github.com/ward3107',
-  linkedin: 'https://linkedin.com/in/waseem-profile',
+  linkedin: 'https://www.linkedin.com/in/waseem-abu-akel-334486374/',
   twitter: 'https://twitter.com/ward3107',
 } as const;
 
