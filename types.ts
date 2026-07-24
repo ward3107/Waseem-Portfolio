@@ -36,6 +36,18 @@ export interface TimelineItem {
   description: string;
 }
 
+export interface Certification {
+  id: string;
+  title: string;
+  issuer: string;
+  /** ISO date, e.g. "2026-07-16" */
+  issueDate: string;
+  /** ISO date, e.g. "2027-07-16" */
+  expiryDate: string;
+  /** Public credential verification URL. */
+  credentialUrl: string;
+}
+
 export interface TechItem {
   name: string;
   icon: string; // URL or simplified icon name

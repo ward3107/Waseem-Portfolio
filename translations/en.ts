@@ -91,6 +91,15 @@ export const en: Record<string, string> = {
     about_narrative_2: "Today, I leverage that mastery to help businesses like yours scale. My mission is simple:",
     about_mission: "To eliminate technical risk and deliver a product that just works.",
 
+    // Certifications
+    certifications_badge: "Certified",
+    certifications_title_1: "Certifications &",
+    certifications_title_2: "Credentials",
+    certifications_subtitle: "Verified credentials from industry-recognized issuers.",
+    cert_issued: "Issued",
+    cert_expires: "Expires",
+    cert_verify: "Verify Credential",
+
     // Timeline Items
     timeline_0_title: "Multi-Project Scale",
     timeline_0_desc: "Managing multiple large-scale projects simultaneously, expanding impact across diverse industries.",
@@ -114,7 +123,7 @@ export const en: Record<string, string> = {
     projects_demo: "Live Demo",
     projects_code: "Code",
     project_1_desc: "Authentic Greek restaurant site with menu, gallery, and online ordering — built on Next.js.",
-    project_2_desc: "AI-powered restaurant seating optimizer that maximizes turnover and guest experience.",
+    project_2_desc: "AI-powered classroom seating optimizer that balances academic levels, behavior, and accessibility needs.",
     project_3_desc: "Professional law office template with appointment booking and service showcase.",
     project_4_desc: "Modern barbershop booking app with appointment scheduling and service management.",
     project_5_desc: "Gamified vocabulary learning app for EFL students.",

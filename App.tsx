@@ -19,6 +19,7 @@ const Projects = lazy(() => import('./components/Projects'));
 const Reviews = lazy(() => import('./components/Reviews'));
 const Process = lazy(() => import('./components/Process'));
 const TechStack = lazy(() => import('./components/TechStack'));
+const Certifications = lazy(() => import('./components/Certifications'));
 const FAQ = lazy(() => import('./components/FAQ'));
 const Contact = lazy(() => import('./components/Contact'));
 
@@ -77,6 +78,9 @@ const AppContent: React.FC = () => {
         </Suspense>
         <Suspense fallback={<SectionSkeleton />}>
           <TechStack />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton />}>
+          <Certifications />
         </Suspense>
         <Suspense fallback={<SectionSkeleton />}>
           <FAQ />

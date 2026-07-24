@@ -90,6 +90,15 @@ export const he: Record<string, string> = {
     about_narrative_2: "היום, אני משתמש בידע הזה כדי לעזור לעסקים לצמוח. המשימה שלי פשוטה:",
     about_mission: "להסיר סיכון טכני ולספק מוצר שפשוט עובד.",
 
+    // Certifications
+    certifications_badge: "מוסמך",
+    certifications_title_1: "הסמכות",
+    certifications_title_2: "ותעודות",
+    certifications_subtitle: "הסמכות מאומתות מגורמים מוכרים בתעשייה.",
+    cert_issued: "הונפק",
+    cert_expires: "בתוקף עד",
+    cert_verify: "אימות ההסמכה",
+
     // Timeline Items
     timeline_0_title: "קנה מידה רב-פרויקטי",
     timeline_0_desc: "ניהול מספר פרויקטים גדולים במקביל, הרחבת השפעה בתעשיות מגוונות.",
@@ -113,7 +122,7 @@ export const he: Record<string, string> = {
     projects_demo: "דמו חי",
     projects_code: "קוד",
     project_1_desc: "אתר למסעדה יוונית אותנטית עם תפריט, גלריה והזמנה אונליין — מבוסס Next.js.",
-    project_2_desc: "מערכת אופטימיזציה מבוססת AI לישיבת סועדים במסעדות למקסום מחזור ואיכות אירוח.",
+    project_2_desc: "מערכת אופטימיזציה מבוססת AI לסידורי ישיבה בכיתות, המאזנת רמות אקדמיות, התנהגות ונגישות.",
     project_3_desc: "תבנית מקצועית למשרד עורכי דין עם הזמנת פגישות והצגת שירותים.",
     project_4_desc: "אפליקציה מודרנית להזמנת תורים במספרה עם ניהול שירותים ולוח זמנים.",
     project_5_desc: "אפליקציית משחוק ללימוד אוצר מילים לתלמידי אנגלית כשפה זרה.",
