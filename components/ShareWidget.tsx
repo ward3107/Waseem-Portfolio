@@ -60,10 +60,10 @@ const ShareWidget: React.FC = () => {
   };
 
   return (
-    <div className="hidden md:flex fixed bottom-6 left-6 z-50 flex-col-reverse items-start gap-4">
+    <div className="flex fixed bottom-24 left-6 md:bottom-6 z-50 flex-col-reverse items-start gap-4">
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-3 bg-brand-purple text-white rounded-full shadow-lg shadow-brand-purple/50 border border-brand-purpleLight hover:bg-brand-purpleDark transition-all opacity-50 hover:opacity-100"
+        className="p-2.5 bg-brand-purple text-white rounded-full shadow-lg shadow-brand-purple/50 border border-brand-purpleLight hover:bg-brand-purpleDark transition-all opacity-50 hover:opacity-100"
         aria-label="Share"
         animate={isOpen ? {} : { scale: [1, 1.1, 1] }}
         transition={isOpen ? {} : {
