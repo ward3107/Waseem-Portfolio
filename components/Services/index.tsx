@@ -4,24 +4,20 @@ import { Sparkles, Code, Globe, Bot, Box, TrendingUp, Search } from 'lucide-reac
 import { Service } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getPrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { useSectionNavigate } from '../../hooks/useSectionNavigate';
 import ServiceCard from './ServiceCard';
 import ServiceModal from './ServiceModal';
 import Dimensional3DWord, { fontForLanguage } from '../three/Dimensional3DWord';
-
-const scrollToContact = () => {
-  const contactSection = document.getElementById('contact');
-  if (contactSection) {
-    contactSection.scrollIntoView({ behavior: 'smooth' });
-    setTimeout(() => {
-      document.getElementById('name')?.focus();
-    }, 800);
-  }
-};
 
 const Services: React.FC = () => {
   const { t, dir, language } = useLanguage();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const prefersReducedMotion = getPrefersReducedMotion();
+  const navigateToSection = useSectionNavigate();
+
+  const scrollToContact = () => {
+    navigateToSection('/about#contact', { focusId: 'name' });
+  };
 
   const localizedServices: Service[] = [
     { title: t('service_1_title'), description: t('service_1_desc'), icon: Code, color: 'text-brand-purple' },

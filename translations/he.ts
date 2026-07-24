@@ -304,4 +304,14 @@ export const he: Record<string, string> = {
     wizard_success_title: "הבקשה התקבלה!",
     wizard_success_desc: "קיבלתי את המפרט שלך. אעבור עליו ואחזור אליך תוך 24 שעות.",
     wizard_start_over: "התחל בקשה חדשה",
+
+    // Home page — featured projects teaser + closing CTA band
+    home_projects_badge: "עבודות נבחרות",
+    home_projects_title_1: "טעימה מ",
+    home_projects_title_2: "העבודות שלי",
+    home_projects_subtitle: "כמה פרויקטים אחרונים — לקייס-סטאדי המלא בקרו בעמוד הפרויקטים.",
+    home_projects_cta: "לכל הפרויקטים",
+    home_cta_title: "מוכנים לבנות משהו מעולה?",
+    home_cta_desc: "בואו נדבר על הפרויקט שלכם ונהפוך אותו למציאות.",
+    home_cta_btn: "צרו קשר",
 };

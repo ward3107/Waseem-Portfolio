@@ -1,15 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
 
 const BackToTop: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isDarkBackground, setIsDarkBackground] = useState(false);
-  
+  const location = useLocation();
+
   // Use a ref to keep track of intersecting sections across callbacks
   const intersectingSections = useRef<Set<string>>(new Set());
 
   useEffect(() => {
+    // Reset stale ids from the previous page — its dark sections no longer
+    // exist in the DOM once the route changes.
+    intersectingSections.current = new Set();
+    setIsDarkBackground(false);
+
     // 1. Scroll Visibility Logic
     const toggleVisibility = () => {
       setIsVisible(window.scrollY > 300);
@@ -17,9 +24,11 @@ const BackToTop: React.FC = () => {
 
     window.addEventListener('scroll', toggleVisibility);
 
-    // 2. Background Detection Logic
+    // 2. Background Detection Logic — target ids live on whichever page is
+    // currently mounted (re-run per route change since each page only
+    // renders a subset of these sections).
     const darkSectionsIds = ['ai-automation', 'process', 'footer'];
-    
+
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -42,17 +51,23 @@ const BackToTop: React.FC = () => {
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
-    
-    darkSectionsIds.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
+
+    // Lazy-loaded (Suspense) sections on the newly-mounted page may not exist
+    // in the DOM yet at this exact instant — give them a moment, same pattern
+    // used elsewhere in this codebase for post-navigation DOM lookups.
+    const observeTimer = setTimeout(() => {
+      darkSectionsIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    }, 200);
 
     return () => {
       window.removeEventListener('scroll', toggleVisibility);
+      clearTimeout(observeTimer);
       observer.disconnect();
     };
-  }, []);
+  }, [location.pathname]);
 
   const scrollToTop = () => {
     window.scrollTo({

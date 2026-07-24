@@ -66,7 +66,7 @@ const AboutTimeline: React.FC = () => {
 
     const localizedTimeline: TimelineItem[] = [
         {
-            year: '2022',
+            year: '2021',
             title: t('timeline_3_title'),
             description: t('timeline_3_desc')
         },
@@ -88,11 +88,16 @@ const AboutTimeline: React.FC = () => {
     ];
 
     return (
-        <section id="about" className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
-            {/* Abstract Background Blobs */}
-            <div className={`absolute top-20 left-0 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl -z-10 ${!prefersReducedMotion && 'animate-float'}`}></div>
-            <div className={`absolute bottom-20 right-0 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl -z-10 ${!prefersReducedMotion && 'animate-float'}`} style={prefersReducedMotion ? {} : { animationDelay: '2s' }}></div>
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] opacity-30 pointer-events-none"></div>
+        <section id="about" className="py-24 bg-slate-50 dark:bg-slate-950 relative isolate transition-colors duration-300">
+            {/* Abstract Background Blobs — clipped to this wrapper (not the section)
+                so position:sticky on the profile card below still tracks page scroll;
+                overflow-hidden on the section itself would make it the sticky
+                containing block and the card would never appear to move. */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+                <div className={`absolute top-20 left-0 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl ${!prefersReducedMotion && 'animate-float'}`}></div>
+                <div className={`absolute bottom-20 right-0 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl ${!prefersReducedMotion && 'animate-float'}`} style={prefersReducedMotion ? {} : { animationDelay: '2s' }}></div>
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] opacity-30"></div>
+            </div>
 
             <div className="max-w-7xl mx-auto px-6 sm:px-10 relative z-10">
 
@@ -148,10 +153,11 @@ const AboutTimeline: React.FC = () => {
                     </motion.div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 lg:gap-12">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 lg:gap-12 lg:items-start">
 
-                    {/* Left Column: Gamified Character Card */}
-                    <div className="lg:col-span-5 flex flex-col gap-8">
+                    {/* Left Column: Gamified Character Card — pinned on desktop while the
+                        timeline scrolls past, so the narrative reads as a guided story. */}
+                    <div className="lg:col-span-5 flex flex-col gap-8 lg:sticky lg:top-28">
                         <motion.div
                             initial={{ opacity: 0, rotateY: 15 }}
                             whileInView={{ opacity: 1, rotateY: 0 }}

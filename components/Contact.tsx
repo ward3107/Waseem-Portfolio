@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Mail, MessageSquare } from 'lucide-react';
 import ProjectWizard from './ProjectWizard';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { CONTACT } from '../constants';
@@ -13,12 +13,25 @@ const Contact: React.FC = () => {
   // Check for reduced motion preference
   const prefersReducedMotion = getPrefersReducedMotion();
 
+  // Background blobs drift slower than the content as the section scrolls
+  // through the viewport — classic parallax depth cue.
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const blobAY = useTransform(scrollYProgress, [0, 1], [-180, 180]);
+  const blobBY = useTransform(scrollYProgress, [0, 1], [180, -180]);
+
   return (
-    <section id="contact" className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
-      {/* Background Gradients */}
+    <section id="contact" ref={sectionRef} className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
+      {/* Background Gradients — parallax layer */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[300px] sm:w-[400px] md:w-[500px] h-[300px] sm:h-[400px] md:h-[500px] bg-brand-purple/5 rounded-full blur-[80px] sm:blur-[100px]"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[300px] sm:w-[400px] md:w-[500px] h-[300px] sm:h-[400px] md:h-[500px] bg-brand-cyan/5 rounded-full blur-[80px] sm:blur-[100px]"></div>
+        <motion.div
+          style={prefersReducedMotion ? undefined : { y: blobAY }}
+          className="absolute top-[-10%] left-[-10%] w-[300px] sm:w-[400px] md:w-[500px] h-[300px] sm:h-[400px] md:h-[500px] bg-brand-purple/25 rounded-full blur-[40px]"
+        ></motion.div>
+        <motion.div
+          style={prefersReducedMotion ? undefined : { y: blobBY }}
+          className="absolute bottom-[-10%] right-[-10%] w-[300px] sm:w-[400px] md:w-[500px] h-[300px] sm:h-[400px] md:h-[500px] bg-brand-cyan/25 rounded-full blur-[40px]"
+        ></motion.div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10">
@@ -99,7 +112,7 @@ const Contact: React.FC = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.4 }}
-            className="relative mt-8 lg:mt-0"
+            className="relative isolate mt-8 lg:mt-0"
           >
             <div className="absolute inset-0 bg-gradient-to-tr from-brand-purple/20 to-brand-cyan/20 rounded-2xl sm:rounded-3xl blur-xl sm:blur-2xl transform rotate-3 scale-95 -z-10"></div>
             <ProjectWizard />

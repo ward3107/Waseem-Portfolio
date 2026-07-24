@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { TECH_STACK } from '../../constants';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ShieldAlert } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { STAGE_THRESHOLDS, BOSS_CLICKS, bossHealthFor } from './config';
@@ -28,6 +28,12 @@ const TechStack: React.FC = () => {
 
   const comboTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clicksRef = useRef(0);
+
+  // Parallax backdrop grid — drifts vertically as the section scrolls, purely
+  // on the background layer so it never touches the marquee/click-to-pop game.
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const gridBackgroundPositionY = useTransform(scrollYProgress, [0, 1], ['0px', '320px']);
 
   const triggerShake = () => {
     setShake(10);
@@ -94,14 +100,14 @@ const TechStack: React.FC = () => {
   const chaosStyle = stage >= 2 ? { transform: 'perspective(1000px) rotateX(10deg)' } : {};
 
   return (
-    <section className="py-16 sm:py-20 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col justify-center border-t border-slate-200 dark:border-slate-900 min-h-[500px] sm:min-h-[600px] transition-colors duration-300">
+    <section ref={sectionRef} className="py-16 sm:py-20 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col justify-center border-t border-slate-200 dark:border-slate-900 min-h-[500px] sm:min-h-[600px] transition-colors duration-300">
       <div className="absolute inset-0 bg-slate-50 dark:bg-slate-950 overflow-hidden" aria-hidden="true">
-        <div
+        <motion.div
           className={`absolute inset-0 bg-[linear-gradient(rgba(72,58,160,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(72,58,160,0.22)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(140,120,255,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(140,120,255,0.12)_1px,transparent_1px)] bg-[size:40px_40px] [transform-style:preserve-3d] [perspective:1000px] opacity-40 dark:opacity-30 ${stage >= 2 ? 'animate-pulse' : ''}`}
-          style={{ willChange: 'opacity' }}
+          style={{ willChange: 'opacity, background-position', backgroundPositionY: gridBackgroundPositionY }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-slate-50 dark:from-slate-950 via-transparent to-slate-50 dark:to-slate-950"></div>
-        </div>
+        </motion.div>
       </div>
 
       <AnimatePresence>

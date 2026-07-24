@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Globe, Moon, Sun } from 'lucide-react';
 import { NAV_LINKS } from '../constants';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { useSectionNavigate } from '../hooks/useSectionNavigate';
 
 
 const Navbar: React.FC = () => {
@@ -13,6 +14,8 @@ const Navbar: React.FC = () => {
 
   const { language, setLanguage, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
+  const { scrollYProgress } = useScroll();
+  const navigateToSection = useSectionNavigate();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -28,11 +31,11 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo/Name — single instance, scales with viewport */}
           <a
-            href="#hero"
+            href="/"
             onClick={(e) => {
               e.preventDefault();
               setIsOpen(false);
-              document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
+              navigateToSection('/');
             }}
             className="text-lg md:text-xl font-heading font-bold text-slate-900 dark:text-white hover:text-brand-purple dark:hover:text-brand-purpleLight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded"
           >
@@ -45,6 +48,10 @@ const Navbar: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToSection(link.href);
+                }}
                 className="text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight transition-colors font-medium text-sm tracking-wide"
               >
                 {link.name}
@@ -77,7 +84,11 @@ const Navbar: React.FC = () => {
 
             {/* CTA Button */}
             <a
-              href="#contact"
+              href="/about#contact"
+              onClick={(e) => {
+                e.preventDefault();
+                navigateToSection('/about#contact', { focusId: 'name' });
+              }}
               className="px-4 py-2 bg-brand-purple text-white rounded-full font-bold text-sm shadow-md hover:shadow-lg hover:bg-brand-purpleLight transition-all"
             >
               {t('hero_cta_start')}
@@ -139,12 +150,7 @@ const Navbar: React.FC = () => {
                   onClick={(e) => {
                     e.preventDefault();
                     setIsOpen(false);
-                    setTimeout(() => {
-                      const target = document.querySelector(link.href);
-                      if (target) {
-                        target.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }, 100);
+                    setTimeout(() => navigateToSection(link.href), 100);
                   }}
                   className="text-slate-600 dark:text-slate-300 hover:text-brand-purple text-lg font-medium focus:outline-none focus:ring-2 focus:ring-brand-purple rounded-lg px-2 py-1 -mx-2 block cursor-pointer"
                 >
@@ -152,16 +158,11 @@ const Navbar: React.FC = () => {
                 </a>
               ))}
               <a
-                href="#contact"
+                href="/about#contact"
                 onClick={(e) => {
                   e.preventDefault();
                   setIsOpen(false);
-                  setTimeout(() => {
-                    const target = document.querySelector('#contact');
-                    if (target) {
-                      target.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }, 100);
+                  setTimeout(() => navigateToSection('/about#contact', { focusId: 'name' }), 100);
                 }}
                 className="w-full text-center py-3 rounded-xl bg-brand-purple text-white font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 cursor-pointer"
               >
@@ -171,6 +172,15 @@ const Navbar: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Scroll progress — always fills left-to-right regardless of page
+          direction, matching the universal reading-progress convention. */}
+      <motion.div
+        dir="ltr"
+        aria-hidden="true"
+        style={{ scaleX: scrollYProgress, transformOrigin: '0%' }}
+        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-brand-purple to-brand-cyan"
+      />
     </nav>
   );
 };

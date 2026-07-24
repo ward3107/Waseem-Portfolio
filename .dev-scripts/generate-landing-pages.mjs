@@ -442,7 +442,7 @@ ${JSON.stringify(faqJsonLd(city, lang), null, 2)}
       <p class="lead">${esc(c.lead)}</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="${wa}" target="_blank" rel="noopener">${esc(s.heroBtn)}</a>
-        <a class="btn btn-ghost" href="${SITE}/#projects">${esc(s.viewWork)}</a>
+        <a class="btn btn-ghost" href="${SITE}/projects">${esc(s.viewWork)}</a>
       </div>
     </section>
 
@@ -489,7 +489,7 @@ ${JSON.stringify(faqJsonLd(city, lang), null, 2)}
     </div>
     <div class="fine">
       <span>${esc(s.credit)} <a href="${SITE}/" style="color:var(--purple-2)">${esc(s.toMain)}</a></span>
-      <span><a href="${wa}" target="_blank" rel="noopener">${esc(s.whatsapp)}</a> · <a href="${SITE}/#contact">${esc(s.contact)}</a></span>
+      <span><a href="${wa}" target="_blank" rel="noopener">${esc(s.whatsapp)}</a> · <a href="${SITE}/about#contact">${esc(s.contact)}</a></span>
     </div>
   </footer>
 </body>
@@ -560,6 +560,9 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <xhtml:link rel="alternate" hreflang="he" href="${SITE}/?lang=he" />
     <xhtml:link rel="alternate" hreflang="ar" href="${SITE}/?lang=ar" />
   </url>
+
+${simpleEntry(`${SITE}/projects`, '0.9')}
+${simpleEntry(`${SITE}/about`, '0.9')}
 
 ${cityEntries}
 

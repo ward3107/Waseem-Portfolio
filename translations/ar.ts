@@ -306,4 +306,14 @@ export const ar: Record<string, string> = {
     wizard_success_title: "تم استلام الطلب!",
     wizard_success_desc: "لقد استلمت مواصفات مشروعك. سأراجعها وأعود إليك خلال 24 ساعة.",
     wizard_start_over: "بدء طلب جديد",
+
+    // Home page — featured projects teaser + closing CTA band
+    home_projects_badge: "أعمال مختارة",
+    home_projects_title_1: "لمحة عن",
+    home_projects_title_2: "أعمالي",
+    home_projects_subtitle: "بعض المشاريع الأخيرة — لدراسات الحالة الكاملة زوروا صفحة المشاريع.",
+    home_projects_cta: "عرض جميع المشاريع",
+    home_cta_title: "مستعد لبناء شيء رائع؟",
+    home_cta_desc: "لنتحدث عن مشروعك ونحوّله إلى واقع.",
+    home_cta_btn: "تواصل معي",
 };

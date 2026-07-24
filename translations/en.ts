@@ -309,4 +309,14 @@ export const en: Record<string, string> = {
     wizard_success_title: "Request Received!",
     wizard_success_desc: "I've received your project specs. I'll review them and get back to you within 24 hours.",
     wizard_start_over: "Start New Request",
+
+    // Home page — featured projects teaser + closing CTA band
+    home_projects_badge: "Selected Work",
+    home_projects_title_1: "A Taste of",
+    home_projects_title_2: "My Work",
+    home_projects_subtitle: "A few recent builds — see the full case studies on the Projects page.",
+    home_projects_cta: "View All Projects",
+    home_cta_title: "Ready to build something great?",
+    home_cta_desc: "Let's talk about your project and turn it into reality.",
+    home_cta_btn: "Get in Touch",
 };

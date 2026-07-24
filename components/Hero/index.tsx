@@ -1,8 +1,9 @@
-import React from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getPrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { useSectionNavigate } from '../../hooks/useSectionNavigate';
 import HeroBackground from './HeroBackground';
 import AnimatedHeadline from './AnimatedHeadline';
 import ProfileCard from './ProfileCard';
@@ -24,6 +25,14 @@ const Hero: React.FC = () => {
   const layer2X = useTransform(mouseX, [-0.5, 0.5], [30, -30]);
   const layer2Y = useTransform(mouseY, [-0.5, 0.5], [30, -30]);
 
+  // Scroll handoff: as the hero scrolls past, its content recedes (fades + drifts
+  // up) instead of just being covered, so the transition into About reads as one
+  // continuous motion rather than two independent sections.
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
+  const scrollOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+  const scrollY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+
   const handleMouseMove = (e: React.MouseEvent) => {
     if (prefersReducedMotion) return;
     const rect = e.currentTarget.getBoundingClientRect();
@@ -31,21 +40,25 @@ const Hero: React.FC = () => {
     y.set((e.clientY - rect.top) / rect.height - 0.5);
   };
 
+  const navigateToSection = useSectionNavigate();
+
   const handleStartProject = (e: React.MouseEvent) => {
     e.preventDefault();
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-    setTimeout(() => document.getElementById('name')?.focus(), 1000);
+    navigateToSection('/about#contact', { focusId: 'name' });
   };
 
   return (
     <section
       id="hero"
+      ref={sectionRef}
       onMouseMove={handleMouseMove}
       className="relative min-h-screen flex items-center pt-20 overflow-visible bg-slate-50 dark:bg-slate-950 perspective-1000 transition-colors duration-300"
     >
       <HeroBackground mouseX={mouseX} mouseY={mouseY} prefersReducedMotion={prefersReducedMotion} />
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-10 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-12 items-center relative z-10">
+      <motion.div
+        style={prefersReducedMotion ? undefined : { opacity: scrollOpacity, y: scrollY }}
+        className="max-w-7xl mx-auto px-6 sm:px-10 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-12 items-center relative z-10">
         <div className="relative z-20">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -87,7 +100,7 @@ const Hero: React.FC = () => {
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="#contact"
+              href="/about#contact"
               onClick={handleStartProject}
               className="group px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-slate-900 dark:bg-brand-purple text-white rounded-full font-bold text-xs sm:text-sm md:text-base shadow-xl hover:shadow-2xl shadow-brand-purple/20 transition-all flex items-center gap-1.5 sm:gap-2 md:gap-3"
             >
@@ -101,7 +114,11 @@ const Hero: React.FC = () => {
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="#projects"
+              href="/projects"
+              onClick={(e) => {
+                e.preventDefault();
+                navigateToSection('/projects');
+              }}
               className="px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-white dark:bg-transparent text-slate-800 dark:text-white border-2 border-slate-100 dark:border-slate-700 rounded-full font-bold text-xs sm:text-sm md:text-base hover:border-brand-purple/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-1.5 sm:gap-2"
             >
               {t('hero_cta_view')}
@@ -139,7 +156,7 @@ const Hero: React.FC = () => {
           layer2X={layer2X}
           layer2Y={layer2Y}
         />
-      </div>
+      </motion.div>
     </section>
   );
 };

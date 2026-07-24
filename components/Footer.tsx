@@ -4,11 +4,13 @@ import { NAV_LINKS, CONTACT, SERVICE_AREAS } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '../hooks/useFocusTrap';
+import { useSectionNavigate } from '../hooks/useSectionNavigate';
 import { trackEvent } from '../utils';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const { language, t } = useLanguage();
+  const navigateToSection = useSectionNavigate();
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const modalRef = useRef<HTMLDivElement>(null);
@@ -99,6 +101,10 @@ const Footer: React.FC = () => {
                 <li key={link.name}>
                   <a
                     href={link.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigateToSection(link.href);
+                    }}
                     className="hover:text-brand-purple transition-colors flex items-center gap-2 group"
                   >
                     <ArrowRight
@@ -159,7 +165,14 @@ const Footer: React.FC = () => {
             <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
               {[1, 2, 3, 4, 5].map((i) => (
                 <li key={i}>
-                  <a href="#what-i-do" className="hover:text-brand-cyan transition-colors">
+                  <a
+                    href="/#what-i-do"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigateToSection('/#what-i-do');
+                    }}
+                    className="hover:text-brand-cyan transition-colors"
+                  >
                     {t(`service_${i}_title`)}
                   </a>
                 </li>

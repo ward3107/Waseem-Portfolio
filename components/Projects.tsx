@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ExternalLink, Github, Hand } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
@@ -18,6 +18,17 @@ const Projects: React.FC = () => {
   // Reset flipped card whenever the filter changes so users don't see a flipped
   // card after switching categories.
   useEffect(() => setFlippedId(null), [filter]);
+
+  // Scroll-linked parallax: alternating cards drift at slightly different rates
+  // as the grid passes through the viewport, adding depth on top of the one-shot
+  // flip-card interaction (a separate transform, so the two never fight).
+  const gridRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: gridScrollProgress } = useScroll({
+    target: gridRef,
+    offset: ['start end', 'end start'],
+  });
+  const parallaxA = useTransform(gridScrollProgress, [0, 1], [36, -16]);
+  const parallaxB = useTransform(gridScrollProgress, [0, 1], [16, -36]);
 
   const localizedProjects = getLocalizedProjects(t);
 
@@ -100,17 +111,18 @@ const Projects: React.FC = () => {
           </div>
         </div>
 
-        <div id="projects-grid" role="tabpanel" aria-live="polite" aria-label={`${t('projects_title_1')} ${t('projects_title_2')} - ${filter === 'All' ? t('projects_filter_all') : t(`projects_filter_${filter.toLowerCase()}`)}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div ref={gridRef} id="projects-grid" role="tabpanel" aria-live="polite" aria-label={`${t('projects_title_1')} ${t('projects_title_2')} - ${filter === 'All' ? t('projects_filter_all') : t(`projects_filter_${filter.toLowerCase()}`)}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project, index) => {
             const isFlipped = flippedId === project.id;
             const toggleFlip = () => setFlippedId(prev => prev === project.id ? null : project.id);
             return (
             <motion.div
               key={project.id}
-              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 }}
+              style={prefersReducedMotion ? undefined : { y: index % 2 === 0 ? parallaxA : parallaxB }}
               role="button"
               tabIndex={0}
               aria-pressed={isFlipped}

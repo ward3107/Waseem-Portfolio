@@ -2,12 +2,20 @@ import { Certification } from '../types';
 
 export const CERTIFICATIONS: Certification[] = [
   {
-    id: 'ai-performance-ads',
+    id: 'ai-performance-ads-1',
     title: 'AI-Powered Performance Ads Certification',
     issuer: 'Google Skillshop',
     issueDate: '2026-07-16',
     expiryDate: '2027-07-16',
-    credentialUrl: 'https://skillshop.credential.net/8fe73bad-d0b7-4a10-aef1-efca931a3386#acc.Wj0F6ZS4',
+    credentialUrl: 'https://www.credential.net/8fe73bad-d0b7-4a10-aef1-efca931a3386',
+  },
+  {
+    id: 'ai-performance-ads-2',
+    title: 'AI-Powered Performance Ads Certification',
+    issuer: 'Google Skillshop',
+    issueDate: '2026-07-16',
+    expiryDate: '2027-07-16',
+    credentialUrl: 'https://www.credential.net/6185076b-3c05-4916-abfd-3ae205c92cdb',
   },
   {
     id: 'google-ads-search',
@@ -15,7 +23,7 @@ export const CERTIFICATIONS: Certification[] = [
     issuer: 'Google Skillshop',
     issueDate: '2026-07-16',
     expiryDate: '2027-07-16',
-    credentialUrl: 'https://skillshop.credential.net/327a9f94-7605-44fe-8237-f9ae705f7ec8#acc.UCFBVbOj',
+    credentialUrl: 'https://www.credential.net/327a9f94-7605-44fe-8237-f9ae705f7ec8',
   },
   {
     id: 'ai-shopping-ads',
@@ -23,6 +31,6 @@ export const CERTIFICATIONS: Certification[] = [
     issuer: 'Google Skillshop',
     issueDate: '2026-07-17',
     expiryDate: '2027-07-17',
-    credentialUrl: 'https://skillshop.credential.net/df4ab345-1a92-4f1d-9a32-de0ba8032d5a#acc.hsTuM5wS',
+    credentialUrl: 'https://www.credential.net/df4ab345-1a92-4f1d-9a32-de0ba8032d5a',
   },
 ];

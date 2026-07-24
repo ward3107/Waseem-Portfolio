@@ -39,7 +39,7 @@ const DepthWord: React.FC<DepthWordProps> = ({ word, font, color, depthColor, st
   // 10 stacked troika layers produced visible ghosting on high-DPI displays;
   // 6 keeps the depth cue while sharpening the front-face silhouette.
   const LAYERS = 6;
-  const DEPTH = 0.28;
+  const DEPTH = 0.12;
   const FILL = 0.9; // fraction of the canvas width the word should span
 
   const stack = useMemo(() => {
@@ -58,9 +58,10 @@ const DepthWord: React.FC<DepthWordProps> = ({ word, font, color, depthColor, st
     if (!inner.current || still) return;
     const { x, y } = state.pointer;
     const time = state.clock.elapsedTime;
-    // Restrained tilt + slow idle breath so the depth catches light without spinning out of frame.
-    const ry = x * 0.16 + Math.sin(time * 0.5) * 0.03;
-    const rx = -y * 0.1 + Math.cos(time * 0.4) * 0.02;
+    // Tilt follows the pointer only — no idle jitter, so the layered stack stays
+    // sharp (no ghosting) until the user actually interacts.
+    const ry = x * 0.16;
+    const rx = -y * 0.1;
     inner.current.rotation.y += (ry - inner.current.rotation.y) * 0.06;
     inner.current.rotation.x += (rx - inner.current.rotation.x) * 0.06;
   });
@@ -197,7 +198,7 @@ const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
             <directionalLight position={[2, 3, 4]} intensity={1.2} />
             <DepthWord word={word} font={font} color={activeColor} depthColor={activeDepthColor} still={false} />
             <EffectComposer>
-              <Bloom intensity={0.35} luminanceThreshold={0.6} luminanceSmoothing={0.9} mipmapBlur />
+              <Bloom intensity={0.15} luminanceThreshold={0.85} luminanceSmoothing={0.6} mipmapBlur={false} />
             </EffectComposer>
           </Canvas>
         </span>

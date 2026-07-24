@@ -329,7 +329,7 @@ ${head(a.title + ' | וסים', a.desc, url, jsonLd)}
     </div>
   </main>
   <footer class="wrap">
-    © 2026 וסים — בניית אתרים בצפון · <a href="${SITE}/" style="color:var(--purple-2)">לאתר הראשי</a> · <a href="${SITE}/#contact">צור קשר</a>
+    © 2026 וסים — בניית אתרים בצפון · <a href="${SITE}/" style="color:var(--purple-2)">לאתר הראשי</a> · <a href="${SITE}/about#contact">צור קשר</a>
   </footer>
 </body>
 </html>
@@ -397,7 +397,7 @@ ${head('הבלוג של וסים — בניית אתרים, SEO וצמיחה ד�
     </div>
   </main>
   <footer class="wrap">
-    © 2026 וסים — בניית אתרים בצפון · <a href="${SITE}/" style="color:var(--purple-2)">לאתר הראשי</a> · <a href="${SITE}/#contact">צור קשר</a>
+    © 2026 וסים — בניית אתרים בצפון · <a href="${SITE}/" style="color:var(--purple-2)">לאתר הראשי</a> · <a href="${SITE}/about#contact">צור קשר</a>
   </footer>
 </body>
 </html>

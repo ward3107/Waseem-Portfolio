@@ -6,7 +6,7 @@ import { NavLink, TechItem, Language } from './types';
 const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER ?? '972534260632';
 
 export const CONTACT = {
-  email: import.meta.env.VITE_CONTACT_EMAIL ?? 'contact@waseem-dev.com',
+  email: import.meta.env.VITE_CONTACT_EMAIL ?? 'wasya92@gmail.com',
   whatsappNumber: WHATSAPP_NUMBER,
   whatsappUrl: `https://wa.me/${WHATSAPP_NUMBER}`,
   whatsappDisplay: `+${WHATSAPP_NUMBER.slice(0, 3)} ${WHATSAPP_NUMBER.slice(3, 5)} ${WHATSAPP_NUMBER.slice(5, 8)} ${WHATSAPP_NUMBER.slice(8)}`,
@@ -28,25 +28,25 @@ export const SERVICE_AREAS: { he: string; ar: string; en: string; slug: string }
 
 export const NAV_LINKS: Record<Language, NavLink[]> = {
   en: [
-    { name: 'Services', href: '#what-i-do' },
-    { name: 'AI Solutions', href: '#ai-automation' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'About', href: '#about' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Services', href: '/#what-i-do' },
+    { name: 'AI Solutions', href: '/#ai-automation' },
+    { name: 'About', href: '/about' },
+    { name: 'Projects', href: '/projects' },
+    { name: 'Contact', href: '/about#contact' },
   ],
   he: [
-    { name: 'שירותים', href: '#what-i-do' },
-    { name: 'פתרונות AI', href: '#ai-automation' },
-    { name: 'פרויקטים', href: '#projects' },
-    { name: 'אודות', href: '#about' },
-    { name: 'צור קשר', href: '#contact' },
+    { name: 'שירותים', href: '/#what-i-do' },
+    { name: 'פתרונות AI', href: '/#ai-automation' },
+    { name: 'אודות', href: '/about' },
+    { name: 'פרויקטים', href: '/projects' },
+    { name: 'צור קשר', href: '/about#contact' },
   ],
   ar: [
-    { name: 'خدمات', href: '#what-i-do' },
-    { name: 'حلول AI', href: '#ai-automation' },
-    { name: 'مشاريع', href: '#projects' },
-    { name: 'من أنا', href: '#about' },
-    { name: 'اتصل بي', href: '#contact' },
+    { name: 'خدمات', href: '/#what-i-do' },
+    { name: 'حلول AI', href: '/#ai-automation' },
+    { name: 'من أنا', href: '/about' },
+    { name: 'مشاريع', href: '/projects' },
+    { name: 'اتصل بي', href: '/about#contact' },
   ],
 };
 

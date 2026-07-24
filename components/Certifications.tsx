@@ -1,7 +1,8 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Award, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { CERTIFICATIONS } from '../data/certifications';
 
 const formatDate = (iso: string, locale: string) =>
@@ -10,9 +11,26 @@ const formatDate = (iso: string, locale: string) =>
 const Certifications: React.FC = () => {
   const { t, language } = useLanguage();
   const locale = language === 'he' ? 'he-IL' : language === 'ar' ? 'ar' : 'en-US';
+  const prefersReducedMotion = getPrefersReducedMotion();
+
+  // Parallax background blobs — drift as the section scrolls through the viewport.
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const blobAY = useTransform(scrollYProgress, [0, 1], [-50, 50]);
+  const blobBY = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   return (
-    <section id="certifications" className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 transition-colors duration-300">
+    <section id="certifications" ref={sectionRef} className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 relative isolate overflow-hidden transition-colors duration-300">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          style={prefersReducedMotion ? undefined : { y: blobAY }}
+          className="absolute -top-10 -left-10 w-72 h-72 bg-brand-purple/25 rounded-full blur-[50px]"
+        ></motion.div>
+        <motion.div
+          style={prefersReducedMotion ? undefined : { y: blobBY }}
+          className="absolute -bottom-10 -right-10 w-72 h-72 bg-brand-cyan/25 rounded-full blur-[50px]"
+        ></motion.div>
+      </div>
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="text-center mb-12 md:mb-16">
           <motion.div
