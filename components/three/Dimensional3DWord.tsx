@@ -57,7 +57,6 @@ const DepthWord: React.FC<DepthWordProps> = ({ word, font, color, depthColor, st
   useFrame((state) => {
     if (!inner.current || still) return;
     const { x, y } = state.pointer;
-    const time = state.clock.elapsedTime;
     // Tilt follows the pointer only — no idle jitter, so the layered stack stays
     // sharp (no ghosting) until the user actually interacts.
     const ry = x * 0.16;

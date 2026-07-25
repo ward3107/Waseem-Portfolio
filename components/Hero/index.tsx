@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { motion, useMotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
+import React from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getPrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
@@ -25,14 +25,6 @@ const Hero: React.FC = () => {
   const layer2X = useTransform(mouseX, [-0.5, 0.5], [30, -30]);
   const layer2Y = useTransform(mouseY, [-0.5, 0.5], [30, -30]);
 
-  // Scroll handoff: as the hero scrolls past, its content recedes (fades + drifts
-  // up) instead of just being covered, so the transition into About reads as one
-  // continuous motion rather than two independent sections.
-  const sectionRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
-  const scrollOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-  const scrollY = useTransform(scrollYProgress, [0, 1], [0, -80]);
-
   const handleMouseMove = (e: React.MouseEvent) => {
     if (prefersReducedMotion) return;
     const rect = e.currentTarget.getBoundingClientRect();
@@ -50,14 +42,12 @@ const Hero: React.FC = () => {
   return (
     <section
       id="hero"
-      ref={sectionRef}
       onMouseMove={handleMouseMove}
       className="relative min-h-screen flex items-center pt-20 overflow-visible bg-slate-50 dark:bg-slate-950 perspective-1000 transition-colors duration-300"
     >
       <HeroBackground mouseX={mouseX} mouseY={mouseY} prefersReducedMotion={prefersReducedMotion} />
 
-      <motion.div
-        style={prefersReducedMotion ? undefined : { opacity: scrollOpacity, y: scrollY }}
+      <div
         className="max-w-7xl mx-auto px-6 sm:px-10 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-12 items-center relative z-10">
         <div className="relative z-20">
           <motion.div
@@ -156,7 +146,7 @@ const Hero: React.FC = () => {
           layer2X={layer2X}
           layer2Y={layer2Y}
         />
-      </motion.div>
+      </div>
     </section>
   );
 };
