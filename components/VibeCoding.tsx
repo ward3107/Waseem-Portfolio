@@ -35,7 +35,13 @@ const VibeCoding: React.FC = () => {
             initial={{ opacity: 0, scale: 2, filter: 'blur(20px)' }}
             whileInView={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+            transition={{
+              duration: 0.8,
+              type: "spring",
+              bounce: 0.4,
+              // Spring bounce overshoots — blur can't be negative, so tween it.
+              filter: { type: "tween", duration: 0.6, ease: "easeOut" },
+            }}
             className="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 dark:text-white tracking-tighter mb-8 md:mb-12 select-none relative"
           >
             <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-b from-slate-900 to-slate-500 dark:from-white dark:to-slate-500">{t('vibe_title_1')}</span>
