@@ -17,13 +17,25 @@ const ScrollToHashOnRouteChange: React.FC = () => {
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.slice(1);
-      const timer = setTimeout(() => {
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-        if (id === 'contact') {
-          setTimeout(() => document.getElementById('name')?.focus(), 500);
+      // Retry via rAF for up to 2s — lazy-loaded pages may not have mounted
+      // the target section yet on slow networks.
+      const start = performance.now();
+      let raf = 0;
+      const tick = () => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          if (id === 'contact') {
+            setTimeout(() => document.getElementById('name')?.focus(), 500);
+          }
+          return;
         }
-      }, 200);
-      return () => clearTimeout(timer);
+        if (performance.now() - start < 2000) {
+          raf = requestAnimationFrame(tick);
+        }
+      };
+      raf = requestAnimationFrame(tick);
+      return () => cancelAnimationFrame(raf);
     }
     window.scrollTo(0, 0);
   }, [location.pathname, location.hash]);

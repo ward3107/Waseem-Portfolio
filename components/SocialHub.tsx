@@ -3,14 +3,14 @@ import { Video, Heart, UserPlus, ThumbsUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWidgets } from '../contexts/WidgetContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 const SocialHub: React.FC = () => {
     const { t, dir } = useLanguage();
     const { widgets } = useWidgets();
 
     // Check for reduced motion preference
-    const prefersReducedMotion = getPrefersReducedMotion();
+    const prefersReducedMotion = usePrefersReducedMotion();
 
     if (!widgets.facebook && !widgets.instagram && !widgets.tiktok) return null;
 

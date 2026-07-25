@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { getPrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useSectionNavigate } from '../../hooks/useSectionNavigate';
 import HeroBackground from './HeroBackground';
 import AnimatedHeadline from './AnimatedHeadline';
@@ -10,7 +10,7 @@ import ProfileCard from './ProfileCard';
 
 const Hero: React.FC = () => {
   const { t, language } = useLanguage();
-  const prefersReducedMotion = getPrefersReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);

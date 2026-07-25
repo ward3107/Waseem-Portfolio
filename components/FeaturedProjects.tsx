@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { getLocalizedProjects } from '../data/projects';
 
 const FEATURED_COUNT = 3;
@@ -11,7 +11,7 @@ const FEATURED_COUNT = 3;
 const FeaturedProjects: React.FC = () => {
   const { t, language } = useLanguage();
   const isRtl = language === 'he' || language === 'ar';
-  const prefersReducedMotion = getPrefersReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const projects = getLocalizedProjects(t).slice(0, FEATURED_COUNT);
 
   return (

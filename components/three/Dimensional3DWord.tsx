@@ -132,7 +132,7 @@ const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
   const [isWide, setIsWide] = useState(false);
   const [inView, setInView] = useState(false);
   const [isDark, setIsDark] = useState(true);
-  const wrapRef = useRef<HTMLSpanElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setWebglOk(detectWebGL());
@@ -179,14 +179,17 @@ const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
   const activeDepthColor = depthColor;
 
   return (
-    <span ref={wrapRef} className="relative inline-block align-baseline" style={{ lineHeight: 1 }}>
+    // Wrapper is a <div> (not <span>) because R3F's <Canvas> renders a <div>,
+    // and validateDOMNesting warns loudly for div-in-span. inline-block keeps
+    // it flowing as inline text inside headings.
+    <div ref={wrapRef} className="relative inline-block align-baseline" style={{ lineHeight: 1 }}>
       {/* Sizing + fallback. Hidden (but still laid out) when the canvas is active. */}
       <span className={fallbackClassName} style={active ? { opacity: 0 } : undefined} aria-hidden={active}>
         {word}
       </span>
 
       {active && (
-        <span className="absolute inset-0" aria-hidden="true" style={{ pointerEvents: 'none' }}>
+        <div className="absolute inset-0" aria-hidden="true" style={{ pointerEvents: 'none' }}>
           <Canvas
             dpr={[1, 1.5]}
             gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
@@ -200,11 +203,11 @@ const Dimensional3DWord: React.FC<Dimensional3DWordProps> = ({
               <Bloom intensity={0.15} luminanceThreshold={0.85} luminanceSmoothing={0.6} mipmapBlur={false} />
             </EffectComposer>
           </Canvas>
-        </span>
+        </div>
       )}
 
       {active && <span className="sr-only">{word}</span>}
-    </span>
+    </div>
   );
 };
 

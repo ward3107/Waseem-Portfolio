@@ -3,7 +3,7 @@ import { Mail, MessageSquare } from 'lucide-react';
 import ProjectWizard from './ProjectWizard';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { CONTACT } from '../constants';
 import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 
@@ -11,7 +11,7 @@ const Contact: React.FC = () => {
   const { t, language } = useLanguage();
 
   // Check for reduced motion preference
-  const prefersReducedMotion = getPrefersReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   // Background blobs drift slower than the content as the section scrolls
   // through the viewport — classic parallax depth cue.

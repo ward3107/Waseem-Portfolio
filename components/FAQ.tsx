@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus, MessageCircle, Sparkles, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FAQItem } from '../types';
-import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { CONTACT } from '../constants';
 import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 
@@ -13,7 +13,7 @@ const FAQ: React.FC = () => {
     const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
     // Check for reduced motion preference
-    const prefersReducedMotion = getPrefersReducedMotion();
+    const prefersReducedMotion = usePrefersReducedMotion();
 
     const localizedFaqs: FAQItem[] = [
         { question: t('faq_q1'), answer: t('faq_a1') },

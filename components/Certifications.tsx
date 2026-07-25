@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Award, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { CERTIFICATIONS } from '../data/certifications';
 
 const formatDate = (iso: string, locale: string) =>
@@ -11,7 +11,7 @@ const formatDate = (iso: string, locale: string) =>
 const Certifications: React.FC = () => {
   const { t, language } = useLanguage();
   const locale = language === 'he' ? 'he-IL' : language === 'ar' ? 'ar' : 'en-US';
-  const prefersReducedMotion = getPrefersReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   // Parallax background blobs — drift as the section scrolls through the viewport.
   const sectionRef = useRef<HTMLElement>(null);

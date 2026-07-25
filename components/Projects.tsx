@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ExternalLink, Github, Hand } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 import { getLocalizedProjects } from '../data/projects';
 
@@ -13,7 +13,7 @@ const Projects: React.FC = () => {
   const [filter, setFilter] = useState<FilterCategory>('All');
   const [flippedId, setFlippedId] = useState<string | null>(null);
 
-  const prefersReducedMotion = getPrefersReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   // Reset flipped card whenever the filter changes so users don't see a flipped
   // card after switching categories.

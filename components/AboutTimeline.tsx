@@ -3,7 +3,7 @@ import { motion, useInView } from 'framer-motion';
 import { Brain, Cpu, Zap, ShieldCheck, BadgeCheck } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { TimelineItem } from '../types';
-import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 
 // Sub-component for spinning year effect
@@ -55,7 +55,7 @@ const AboutTimeline: React.FC = () => {
     const { t, language } = useLanguage();
 
     // Check for reduced motion preference
-    const prefersReducedMotion = getPrefersReducedMotion();
+    const prefersReducedMotion = usePrefersReducedMotion();
 
     // Lazy-mount the hero video only when the card scrolls into view, so the
     // ~1.5 MB MP4 isn't downloaded on initial page load. With reduced-motion
@@ -218,7 +218,7 @@ const AboutTimeline: React.FC = () => {
                                         </div>
                                         <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <motion.div
-                                                initial={{ width: 0 }}
+                                                initial={{ width: '0%' }}
                                                 whileInView={{ width: '100%' }}
                                                 transition={{ duration: 1, delay: 0.2 }}
                                                 className="h-full bg-brand-purple rounded-full"
@@ -234,7 +234,7 @@ const AboutTimeline: React.FC = () => {
                                         </div>
                                         <div className="h-1.5 md:h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <motion.div
-                                                initial={{ width: 0 }}
+                                                initial={{ width: '0%' }}
                                                 whileInView={{ width: '95%' }}
                                                 transition={{ duration: 1, delay: 0.4 }}
                                                 className="h-full bg-brand-cyan rounded-full"

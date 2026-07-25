@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Sparkles, Code, Globe, Bot, Box, TrendingUp, Search } from 'lucide-react';
 import { Service } from '../../types';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { getPrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
+import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import { useSectionNavigate } from '../../hooks/useSectionNavigate';
 import ServiceCard from './ServiceCard';
 import ServiceModal from './ServiceModal';
@@ -12,7 +12,7 @@ import Dimensional3DWord, { fontForLanguage } from '../three/Dimensional3DWord';
 const Services: React.FC = () => {
   const { t, dir, language } = useLanguage();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const prefersReducedMotion = getPrefersReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const navigateToSection = useSectionNavigate();
 
   const scrollToContact = () => {

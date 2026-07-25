@@ -2,13 +2,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getPrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useSectionNavigate } from '../hooks/useSectionNavigate';
 
 const HomeCTA: React.FC = () => {
   const { t, language } = useLanguage();
   const isRtl = language === 'he' || language === 'ar';
-  const prefersReducedMotion = getPrefersReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
   const navigateToSection = useSectionNavigate();
 
   return (

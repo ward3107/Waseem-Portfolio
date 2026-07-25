@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AccessibilityToolbar from './components/AccessibilityToolbar';
@@ -17,6 +17,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 // pages are only fetched once the user actually navigates there.
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // Skip link component with proper accessibility
 const SkipLink: React.FC = () => {
@@ -43,7 +44,7 @@ const AppContent: React.FC = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </main>

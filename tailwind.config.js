@@ -8,6 +8,9 @@ export default {
     "./contexts/**/*.{js,ts,jsx,tsx}",
     "./hooks/**/*.{js,ts,jsx,tsx}",
     "./utils/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./data/**/*.{js,ts,jsx,tsx}",
+    "./translations/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: 'class',
   theme: {
@@ -24,6 +27,7 @@ export default {
           green: '#10B981',
           orange: '#FF6B35',
           teal: '#14B8A6',
+          pink: '#EC4899',
         }
       },
       fontFamily: {
