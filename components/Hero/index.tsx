@@ -74,8 +74,9 @@ const Hero: React.FC = () => {
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4, duration: 0.5 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.5 }}
             className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-600 dark:text-slate-300 mb-6 md:mb-10 max-w-lg leading-relaxed font-medium break-words"
           >
             {t('hero_subtitle')}
@@ -83,8 +84,9 @@ const Hero: React.FC = () => {
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.6, duration: 0.5 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.5 }}
             className="flex flex-wrap gap-3 md:gap-4"
           >
             <motion.a
@@ -117,8 +119,9 @@ const Hero: React.FC = () => {
 
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.8, duration: 0.5 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.5 }}
             className="mt-4 sm:mt-8 md:mt-12 flex items-center gap-3 sm:gap-4 border-t border-slate-200/60 dark:border-slate-800 pt-3 sm:pt-6 md:pt-8"
           >
             <div>
