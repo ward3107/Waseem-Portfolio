@@ -1,37 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useMediaQuery } from './useMediaQuery';
 
 /**
- * Custom hook to detect if the user prefers reduced motion
- * This helps improve accessibility and performance for users who dislike animations
- *
- * @returns boolean - true if user prefers reduced motion, false otherwise
+ * Reactive hook: `true` if the user has set `prefers-reduced-motion: reduce`.
+ * Recomputes when the OS preference changes.
  */
-export const usePrefersReducedMotion = (): boolean => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    // Listen for changes in preference
-    const handleChange = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => {
-      mediaQuery.removeEventListener('change', handleChange);
-    };
-  }, []);
-
-  return prefersReducedMotion;
-};
+export const usePrefersReducedMotion = (): boolean =>
+  useMediaQuery('(prefers-reduced-motion: reduce)');
 
 /**
- * Simplified version that doesn't listen for changes (for static checks)
- * Use this when you only need to check once on mount
- *
- * @returns boolean - true if user prefers reduced motion, false otherwise
+ * Non-reactive snapshot for use outside React (module-scope guards, etc).
+ * Prefer the hook inside components.
  */
 export const getPrefersReducedMotion = (): boolean => {
   if (typeof window === 'undefined') return false;

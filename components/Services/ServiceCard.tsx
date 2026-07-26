@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { Service } from '../../types';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 import PlatformIcons from './PlatformIcons';
 import { cardGradients, cardBorderColors, cardGlowColors } from './cardStyles';
 
@@ -35,15 +36,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const isRTL = dir === 'rtl';
   // Reactive to resize / device rotation so the 3D tilt turns on/off correctly.
-  const [isDesktop, setIsDesktop] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches
-  );
-  useEffect(() => {
-    const mql = window.matchMedia('(min-width: 1024px)');
-    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
-    mql.addEventListener('change', handler);
-    return () => mql.removeEventListener('change', handler);
-  }, []);
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);

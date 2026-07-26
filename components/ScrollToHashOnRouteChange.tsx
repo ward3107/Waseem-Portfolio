@@ -16,7 +16,12 @@ const ScrollToHashOnRouteChange: React.FC = () => {
 
   useEffect(() => {
     if (location.hash) {
-      const id = location.hash.slice(1);
+      const rawId = location.hash.slice(1);
+      // Whitelist: only accept plain HTML-id characters. Rejects anything a
+      // caller could weaponize through the URL hash before it reaches a DOM
+      // lookup (CSS-escape edge cases, quotes, angle brackets).
+      if (!/^[A-Za-z][\w:-]*$/.test(rawId)) return;
+      const id = rawId;
       // Retry via rAF for up to 2s — lazy-loaded pages may not have mounted
       // the target section yet on slow networks.
       const start = performance.now();
