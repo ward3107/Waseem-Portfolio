@@ -2,9 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
-}
+/* No global smooth scroll: it makes programmatic scroll-resets (top-on-nav)
+   animate, which loses the race against the browser's fragment scroll and
+   leaves pages parked mid-scroll. Intentional smooth scrolling is still done
+   explicitly in JS via scrollIntoView({ behavior: 'smooth' }) for nav clicks
+   and Back-to-Top, so removing this doesn't affect those. */
 
 body {
   margin: 0;

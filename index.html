@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <!-- Set lang+dir before paint to match the user's saved/browser locale. -->
@@ -15,6 +15,22 @@
               })();
           document.documentElement.lang = lang;
           document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+        } catch (e) {}
+      })();
+    </script>
+    <!-- Always open at the top. Runs before React/the router so there's no
+         fragment for the browser to scroll to: strip any leftover section
+         hash (e.g. /#what-i-do from a previous nav click) and take scroll
+         restoration away from the browser so it can't reapply a scrolled-down
+         position across SPA navigation. In-app section navigation is handled
+         client-side by the router after load, so this doesn't affect it. -->
+    <script>
+      (function () {
+        try {
+          if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+          if (window.location.hash) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          }
         } catch (e) {}
       })();
     </script>
