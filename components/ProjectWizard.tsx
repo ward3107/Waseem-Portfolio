@@ -59,7 +59,8 @@ const ProjectWizard: React.FC<ProjectWizardProps> = () => {
     const handleSelect = (key: string, value: string) => {
         setSelections({ ...selections, [key]: value });
         if (step < steps.length) {
-            setTimeout(() => setStep(step + 1), 300); // Auto advance for smoother UX
+            // Functional update avoids advancing from a stale `step` capture.
+            setTimeout(() => setStep((s) => s + 1), 300); // Auto advance for smoother UX
         }
     };
 
@@ -235,7 +236,11 @@ ${selections.details}
                             <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">{t('wizard_final_title')}</h3>
                             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mb-4 sm:mb-6">{t('wizard_final_desc')}</p>
 
-                            <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-3 sm:gap-4">
+                            {/* noValidate: use the component's own translated,
+                                styled validation instead of the browser's native
+                                bubbles (which would otherwise preempt handleSubmit
+                                and show untranslated, off-theme messages). */}
+                            <form onSubmit={handleSubmit} noValidate className="flex-1 flex flex-col gap-3 sm:gap-4">
                                 {/* Honeypot — invisible to humans, bots fill it and get silently rejected. */}
                                 <input
                                     ref={honeypotRef}

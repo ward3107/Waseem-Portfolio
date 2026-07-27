@@ -136,7 +136,7 @@ const Projects: React.FC = () => {
               }}
               className="group h-96 w-full [perspective:1000px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded-3xl"
             >
-              <div className={`relative h-full w-full ${prefersReducedMotion ? '' : 'transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]'} ${isFlipped && !prefersReducedMotion ? '[transform:rotateY(180deg)]' : ''}`}>
+              <div className={`relative h-full w-full [transform-style:preserve-3d] ${prefersReducedMotion ? '' : 'transition-all duration-700 group-hover:[transform:rotateY(180deg)]'} ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
                 {/* Front */}
                 <div className="absolute inset-0 h-full w-full rounded-3xl bg-white dark:bg-slate-900 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden [backface-visibility:hidden]">
 
