@@ -1,7 +1,8 @@
 import React from 'react';
 import { Star } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { REVIEWS, averageRating } from '../data/reviews';
+import { averageRating } from '../data/reviews';
+import { useReviews } from '../hooks/useReviews';
 
 // Section heading per language (no nested ternaries — SonarCloud-friendly).
 const HEADINGS: Record<string, { badge: string; title: string; subtitle: string }> = {
@@ -41,6 +42,7 @@ const Stars: React.FC<{ rating: number }> = ({ rating }) => (
 
 const Reviews: React.FC = () => {
   const { language, dir } = useLanguage();
+  const { reviews: REVIEWS } = useReviews();
 
   // Honest by design: with no real reviews, render nothing and emit no schema.
   if (REVIEWS.length === 0) return null;

@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Award, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
-import { CERTIFICATIONS } from '../data/certifications';
+import { useCertifications } from '../hooks/useCertifications';
 
 const formatDate = (iso: string, locale: string) =>
   new Date(iso).toLocaleDateString(locale, { year: 'numeric', month: 'long' });
@@ -12,6 +12,7 @@ const Certifications: React.FC = () => {
   const { t, language } = useLanguage();
   const locale = language === 'he' ? 'he-IL' : language === 'ar' ? 'ar' : 'en-US';
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { certifications } = useCertifications();
 
   // Parallax background blobs — drift as the section scrolls through the viewport.
   const sectionRef = useRef<HTMLElement>(null);
@@ -66,7 +67,7 @@ const Certifications: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {CERTIFICATIONS.map((cert, index) => (
+          {certifications.map((cert, index) => (
             <motion.a
               key={cert.id}
               href={cert.credentialUrl}

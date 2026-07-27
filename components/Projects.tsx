@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
-import { getLocalizedProjects } from '../data/projects';
+import { useProjects } from '../hooks/useProjects';
 
 type FilterCategory = 'All' | 'Web' | 'AI' | 'Mobile';
 
@@ -30,7 +30,7 @@ const Projects: React.FC = () => {
   const parallaxA = useTransform(gridScrollProgress, [0, 1], [36, -16]);
   const parallaxB = useTransform(gridScrollProgress, [0, 1], [16, -36]);
 
-  const localizedProjects = getLocalizedProjects(t);
+  const { projects: localizedProjects } = useProjects();
 
   const filteredProjects = filter === 'All'
     ? localizedProjects

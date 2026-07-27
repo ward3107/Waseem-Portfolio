@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
-import { getLocalizedProjects } from '../data/projects';
+import { useProjects } from '../hooks/useProjects';
 
 const FEATURED_COUNT = 3;
 
@@ -12,7 +12,8 @@ const FeaturedProjects: React.FC = () => {
   const { t, language } = useLanguage();
   const isRtl = language === 'he' || language === 'ar';
   const prefersReducedMotion = usePrefersReducedMotion();
-  const projects = getLocalizedProjects(t).slice(0, FEATURED_COUNT);
+  const { projects: all } = useProjects();
+  const projects = all.slice(0, FEATURED_COUNT);
 
   return (
     <section className="py-16 sm:py-20 md:py-24 bg-slate-50 dark:bg-slate-950 relative transition-colors duration-300">
