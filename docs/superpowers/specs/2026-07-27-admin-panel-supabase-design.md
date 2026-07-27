@@ -181,9 +181,13 @@ VITE_SUPABASE_ANON_KEY=...
 
 ## Deployment (Vercel)
 
-- Add `vercel.json` (SPA rewrite so client-side routes incl. `/admin` resolve).
-- Configure the two Supabase env vars in the Vercel project.
-- Retire `netlify.toml` (kept until Vercel cutover is verified).
+The site is **already deployed on Vercel**. Remaining work:
+- Ensure `vercel.json` has an SPA rewrite so client-side routes incl. `/admin`
+  resolve on refresh/direct-load.
+- Add the two Supabase env vars to the existing Vercel project.
+- The **Supabase project will be provided by the owner** (URL + anon key);
+  Claude sets up tables, RLS, storage bucket, and the single admin account.
+- Retire `netlify.toml` once verified redundant.
 
 ## Out of scope (v1)
 
