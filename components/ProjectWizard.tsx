@@ -175,7 +175,11 @@ ${selections.details}
     }
 
     return (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden min-h-[400px] sm:min-h-[500px] flex flex-col relative">
+        <div
+            id="project-wizard"
+            tabIndex={-1}
+            className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden min-h-[400px] sm:min-h-[500px] flex flex-col relative focus:outline-none"
+        >
             {/* Progress Bar */}
             <div className="h-2 bg-slate-50 dark:bg-slate-800 w-full flex">
                 <motion.div

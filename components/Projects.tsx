@@ -205,6 +205,10 @@ const Projects: React.FC = () => {
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
+                        // Keep the back-face links out of the tab order until the
+                        // card is actually flipped — otherwise keyboard focus
+                        // lands on links that are rotated out of view.
+                        tabIndex={isFlipped ? 0 : -1}
                         onClick={(e) => e.stopPropagation()}
                         className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-purple rounded-xl hover:bg-brand-purpleLight transition-colors font-bold text-sm shadow-lg shadow-brand-purple/20 transform hover:-translate-y-1"
                       >
@@ -216,6 +220,7 @@ const Projects: React.FC = () => {
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
+                        tabIndex={isFlipped ? 0 : -1}
                         onClick={(e) => e.stopPropagation()}
                         className="flex-1 flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-bold text-sm transform hover:-translate-y-1"
                       >

@@ -38,7 +38,7 @@ const HomeCTA: React.FC = () => {
           transition={{ delay: 0.2 }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => navigateToSection('/about#contact', { focusId: 'name' })}
+          onClick={() => navigateToSection('/about#contact', { focusId: 'project-wizard' })}
           className="group inline-flex items-center gap-2 px-8 py-4 bg-brand-purple text-white rounded-full font-bold text-base shadow-xl hover:shadow-2xl shadow-brand-purple/20 transition-all"
         >
           {t('home_cta_btn')}
