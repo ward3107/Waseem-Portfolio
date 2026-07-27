@@ -71,3 +71,50 @@ export interface Review {
   /** ISO date the review was given, e.g. "2026-07-01" (optional). */
   date?: string;
 }
+
+/** Multilingual text. `en` required; `he`/`ar` optional (fall back to en). */
+export interface LocalizedText {
+  en: string;
+  he?: string;
+  ar?: string;
+}
+
+/** Rows exactly as stored in Supabase. */
+export interface ProjectRow {
+  id: string;
+  slug: string;
+  title: string;
+  category: 'Web' | 'AI' | 'Mobile';
+  description: LocalizedText;
+  image_url: string | null;
+  tech: string[];
+  link: string | null;
+  github: string | null;
+  screenshots: string[];
+  sort_order: number;
+  created_at: string;
+}
+
+export interface CertificationRow {
+  id: string;
+  slug: string;
+  title: LocalizedText;
+  issuer: string;
+  issue_date: string;
+  expiry_date: string | null;
+  credential_url: string;
+  image_url: string | null;
+  sort_order: number;
+  created_at: string;
+}
+
+export interface ReviewRow {
+  id: string;
+  author: string;
+  rating: number;
+  text: LocalizedText;
+  location: string | null;
+  date: string | null;
+  sort_order: number;
+  created_at: string;
+}
