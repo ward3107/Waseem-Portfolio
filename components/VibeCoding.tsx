@@ -74,9 +74,12 @@ const VibeCoding: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
               >
-                {/* Check if text contains Arabic characters */}
-                {/[\u0600-\u06FF]/.test(sentence) ? (
-                  // Arabic: Don't split characters, animate the whole word
+                {/* Check for any RTL script (Hebrew \u0590-\u05FF or Arabic
+                    \u0600-\u06FF). Splitting RTL text per-character and laying
+                    the spans out in a flex row reverses/scrambles the word, so
+                    RTL languages must animate as a whole unsplit block. */}
+                {/[\u0590-\u06FF]/.test(sentence) ? (
+                  // RTL (Hebrew/Arabic): Don't split characters, animate the whole word
                   <motion.div
                     animate={{ y: [0, -15, 0] }}
                     transition={{

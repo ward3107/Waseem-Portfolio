@@ -18,23 +18,29 @@ const Footer: React.FC = () => {
 
   const handleCloseModal = () => setLegalModal(null);
 
+  // Capture the trigger BEFORE opening — useFocusTrap moves focus into the
+  // modal on its own effect, so reading document.activeElement inside the
+  // open-effect would record the modal's first button and restore focus to a
+  // now-unmounted node on close (focus falls to <body>, a WCAG 2.4.3 failure).
+  const openLegal = (type: 'privacy' | 'terms') => {
+    previousActiveElementRef.current = document.activeElement as HTMLElement;
+    setLegalModal(type);
+  };
+
   // Use custom hooks for focus trap and escape key
   useFocusTrap(modalRef, legalModal !== null);
   useEscapeKey(legalModal !== null, handleCloseModal);
 
-  // Handle body scroll when modal is open
+  // Lock body scroll while the modal is open and restore focus on close.
+  // Gated on `legalModal` only (not modalRef.current, which can be null on the
+  // first effect run while AnimatePresence mounts — that would skip the lock).
   useEffect(() => {
-    if (legalModal && modalRef.current) {
-      // Store the previously focused element
-      previousActiveElementRef.current = document.activeElement as HTMLElement;
-
-      // Prevent body scroll when modal is open
+    if (legalModal) {
       document.body.style.overflow = 'hidden';
 
       return () => {
         document.body.style.overflow = '';
-
-        // Return focus to the trigger element when modal closes
+        // Return focus to the element that opened the modal.
         previousActiveElementRef.current?.focus();
       };
     }
@@ -395,13 +401,13 @@ const Footer: React.FC = () => {
           </p>
           <div className="flex gap-8 font-medium">
             <button
-              onClick={() => setLegalModal('privacy')}
+              onClick={() => openLegal('privacy')}
               className="hover:text-brand-purple hover:underline underline-offset-4 transition-all duration-300"
             >
               {t('footer_privacy')}
             </button>
             <button
-              onClick={() => setLegalModal('terms')}
+              onClick={() => openLegal('terms')}
               className="hover:text-brand-cyan hover:underline underline-offset-4 transition-all duration-300"
             >
               {t('footer_terms')}

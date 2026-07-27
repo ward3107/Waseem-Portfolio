@@ -13,6 +13,18 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>(() => {
+    // Highest priority: an explicit ?lang= query param. The hreflang alternates
+    // in index.html and sitemap.xml advertise ?lang=he / ?lang=ar, so a visitor
+    // arriving from a localized search result must actually land in that
+    // language (previously this param was ignored entirely).
+    try {
+      const urlLang = new URLSearchParams(window.location.search).get('lang');
+      if (urlLang === 'en' || urlLang === 'he' || urlLang === 'ar') {
+        return urlLang as Language;
+      }
+    } catch {
+      // window/URLSearchParams unavailable — fall through to the other sources.
+    }
     const saved = localStorage.getItem('vibe_lang') as Language;
     if (saved && (saved === 'en' || saved === 'he' || saved === 'ar')) {
       return saved;

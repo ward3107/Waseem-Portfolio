@@ -10,8 +10,12 @@ import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 const SpinningYear = ({ year }: { year: string }) => {
     const numericYear = parseInt(year);
     const ref = useRef<HTMLSpanElement>(null);
+    const prefersReducedMotion = usePrefersReducedMotion();
     const [hasAnimated, setHasAnimated] = useState(false);
-    const [displayYear, setDisplayYear] = useState(isNaN(numericYear) ? 0 : numericYear);
+    // Start at the low end of the count-up range so the first paint shows the
+    // animation's starting value — initialising to the FINAL year made the
+    // number flash (e.g. 2021 → 1971 → … → 2021) the moment it scrolled in.
+    const [displayYear, setDisplayYear] = useState(isNaN(numericYear) ? 0 : numericYear - 50);
 
     const isInView = useInView(ref, {
         amount: "some", // trigger when any pixel is visible
@@ -19,6 +23,12 @@ const SpinningYear = ({ year }: { year: string }) => {
     });
 
     useEffect(() => {
+        if (isInView && !hasAnimated && !isNaN(numericYear) && prefersReducedMotion) {
+            // Reduced motion: jump straight to the real year, no count-up.
+            setDisplayYear(numericYear);
+            setHasAnimated(true);
+            return;
+        }
         if (isInView && !hasAnimated && !isNaN(numericYear)) {
             const startYear = numericYear - 50;
             let current = startYear;
@@ -40,7 +50,7 @@ const SpinningYear = ({ year }: { year: string }) => {
 
             return () => clearInterval(timer);
         }
-    }, [isInView, hasAnimated, numericYear]);
+    }, [isInView, hasAnimated, numericYear, prefersReducedMotion]);
 
     if (isNaN(numericYear)) return <span>{year}</span>;
 

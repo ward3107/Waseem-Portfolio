@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { TECH_STACK } from '../../constants';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ShieldAlert } from 'lucide-react';
@@ -28,6 +28,12 @@ const TechStack: React.FC = () => {
 
   const comboTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clicksRef = useRef(0);
+
+  // Clear the pending combo-reset timer if the section unmounts (route change)
+  // so it can't fire setState on an unmounted component.
+  useEffect(() => () => {
+    if (comboTimeoutRef.current) clearTimeout(comboTimeoutRef.current);
+  }, []);
 
   // Parallax backdrop grid — drifts vertically as the section scrolls, purely
   // on the background layer so it never touches the marquee/click-to-pop game.
@@ -242,10 +248,7 @@ const TechStack: React.FC = () => {
               key={`r1-${index}`}
               tech={tech}
               stage={stage}
-              onPop={() => {
-                handlePop();
-                if (stage >= 3) triggerShake();
-              }}
+              onPop={handlePop}
               triggerShake={triggerShake}
             />
           ))}
@@ -260,10 +263,7 @@ const TechStack: React.FC = () => {
               key={`r2-${index}`}
               tech={tech}
               stage={stage}
-              onPop={() => {
-                handlePop();
-                if (stage >= 3) triggerShake();
-              }}
+              onPop={handlePop}
               triggerShake={triggerShake}
             />
           ))}

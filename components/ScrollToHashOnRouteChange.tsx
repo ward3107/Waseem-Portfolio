@@ -40,6 +40,15 @@ const ScrollToHashOnRouteChange: React.FC = () => {
     // Re-assert offsets shortly after mount to survive lazy-section reflow.
     const REASSERT_MS = [0, 80, 180, 320, 500, 800];
 
+    // A focus target forwarded by useSectionNavigate across a page change
+    // (e.g. "Start a project" → focus the wizard). Applied after the section
+    // scroll settles. Validated the same way as the hash id before any lookup.
+    const rawFocusId =
+      location.state && typeof (location.state as { focusId?: unknown }).focusId === 'string'
+        ? (location.state as { focusId: string }).focusId
+        : null;
+    const focusId = rawFocusId && /^[A-Za-z][\w:-]*$/.test(rawFocusId) ? rawFocusId : null;
+
     // Cross-page navigation that landed on a hash → scroll to that section once
     // it exists, then re-assert as content above it finishes lazy-loading.
     if (location.hash && changedPage) {
@@ -65,6 +74,11 @@ const ScrollToHashOnRouteChange: React.FC = () => {
             // Offset unchanged for ~3 consecutive frames → layout settled.
             if (stableFor >= 3) {
               el.scrollIntoView({ behavior: 'auto', block: 'start' });
+              // Move focus to the forwarded target (if any) without yanking the
+              // viewport — preventScroll keeps the section-top alignment above.
+              if (focusId) {
+                document.getElementById(focusId)?.focus({ preventScroll: true });
+              }
               return;
             }
           } else {

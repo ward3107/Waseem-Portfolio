@@ -31,8 +31,11 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        heading: ['Space Grotesk', 'sans-serif'],
+        // Inter/Space Grotesk cover Latin; Heebo (Hebrew) and Cairo (Arabic)
+        // are per-glyph fallbacks so RTL text renders in a real webfont instead
+        // of an arbitrary system font. See the @font-face rules in index.css.
+        sans: ['Inter', 'Heebo', 'Cairo', 'sans-serif'],
+        heading: ['Space Grotesk', 'Heebo', 'Cairo', 'sans-serif'],
       },
       animation: {
         'spin-slow': 'spin 8s linear infinite',

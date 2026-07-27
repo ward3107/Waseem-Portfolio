@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { Bug } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { playSound } from './audio';
 
 interface BossProps {
@@ -13,37 +14,39 @@ const BossOverlay: React.FC<BossProps> = ({ onDefeat, health: initialHealth }) =
   const [currentHealth, setCurrentHealth] = useState(initialHealth);
   const controls = useAnimation();
   const { t } = useLanguage();
-  const bossButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
+  // Trap Tab within the dialog so a keyboard user can't tab onto the dimmed
+  // marquee cards behind it (they stay tabbable under pointer-events-none).
+  useFocusTrap(dialogRef, true);
+
+  // Fire defeat exactly once, when health crosses zero — derived from state so
+  // rapid clicks can't miss it via a stale local read.
   useEffect(() => {
-    bossButtonRef.current?.focus();
-  }, []);
-
-  const handleHit = async () => {
-    const newHealth = currentHealth - 1;
-    setCurrentHealth(newHealth);
-    playSound('shatter');
-
-    await controls.start({
-      x: [0, -20, 20, -10, 10, 0],
-      transition: { duration: 0.1 },
-    });
-
-    if (newHealth <= 0) {
+    if (currentHealth <= 0) {
       playSound('bomb');
       onDefeat();
     }
-  };
+    // onDefeat is stable enough for the game's lifetime; health only reaches 0 once.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentHealth]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleHit();
-    }
+  // No custom onKeyDown: the native <button> already synthesizes a click for
+  // Enter/Space. A manual keydown handler double-counted Space (keydown hit +
+  // keyup-synthesized click = -2 health per press). Functional update avoids
+  // collapsing fast successive clicks into one decrement.
+  const handleHit = () => {
+    playSound('shatter');
+    controls.start({
+      x: [0, -20, 20, -10, 10, 0],
+      transition: { duration: 0.1 },
+    });
+    setCurrentHealth((h) => Math.max(0, h - 1));
   };
 
   return (
     <div
+      ref={dialogRef}
       className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
       role="dialog"
       aria-modal="true"
@@ -66,10 +69,8 @@ const BossOverlay: React.FC<BossProps> = ({ onDefeat, health: initialHealth }) =
         </div>
 
         <motion.button
-          ref={bossButtonRef}
           animate={controls}
           onClick={handleHit}
-          onKeyDown={handleKeyDown}
           className="cursor-crosshair active:scale-95 transition-transform inline-block mt-6 relative group bg-transparent border-0 p-0 rounded-full focus:outline-none focus:ring-4 focus:ring-red-500/50"
           aria-label={`Attack boss! ${Math.ceil((currentHealth / initialHealth) * 100)}% health remaining`}
         >

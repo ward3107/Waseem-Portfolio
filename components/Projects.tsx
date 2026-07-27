@@ -136,7 +136,7 @@ const Projects: React.FC = () => {
               }}
               className="group h-96 w-full [perspective:1000px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded-3xl"
             >
-              <div className={`relative h-full w-full ${prefersReducedMotion ? '' : 'transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]'} ${isFlipped && !prefersReducedMotion ? '[transform:rotateY(180deg)]' : ''}`}>
+              <div className={`relative h-full w-full [transform-style:preserve-3d] ${prefersReducedMotion ? '' : 'transition-all duration-700 group-hover:[transform:rotateY(180deg)]'} ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
                 {/* Front */}
                 <div className="absolute inset-0 h-full w-full rounded-3xl bg-white dark:bg-slate-900 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden [backface-visibility:hidden]">
 
@@ -205,6 +205,10 @@ const Projects: React.FC = () => {
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
+                        // Keep the back-face links out of the tab order until the
+                        // card is actually flipped — otherwise keyboard focus
+                        // lands on links that are rotated out of view.
+                        tabIndex={isFlipped ? 0 : -1}
                         onClick={(e) => e.stopPropagation()}
                         className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-purple rounded-xl hover:bg-brand-purpleLight transition-colors font-bold text-sm shadow-lg shadow-brand-purple/20 transform hover:-translate-y-1"
                       >
@@ -216,6 +220,7 @@ const Projects: React.FC = () => {
                         href={project.github}
                         target="_blank"
                         rel="noopener noreferrer"
+                        tabIndex={isFlipped ? 0 : -1}
                         onClick={(e) => e.stopPropagation()}
                         className="flex-1 flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-bold text-sm transform hover:-translate-y-1"
                       >

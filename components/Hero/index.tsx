@@ -36,7 +36,7 @@ const Hero: React.FC = () => {
 
   const handleStartProject = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigateToSection('/about#contact', { focusId: 'name' });
+    navigateToSection('/about#contact', { focusId: 'project-wizard' });
   };
 
   return (

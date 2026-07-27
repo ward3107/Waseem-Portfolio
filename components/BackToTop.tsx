@@ -1,73 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
 
 const BackToTop: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isDarkBackground, setIsDarkBackground] = useState(false);
-  const location = useLocation();
-
-  // Use a ref to keep track of intersecting sections across callbacks
-  const intersectingSections = useRef<Set<string>>(new Set());
+  const { theme } = useTheme();
 
   useEffect(() => {
-    // Reset stale ids from the previous page — its dark sections no longer
-    // exist in the DOM once the route changes.
-    intersectingSections.current = new Set();
-    setIsDarkBackground(false);
-
-    // 1. Scroll Visibility Logic
     const toggleVisibility = () => {
       setIsVisible(window.scrollY > 300);
     };
-
-    window.addEventListener('scroll', toggleVisibility);
-
-    // 2. Background Detection Logic — target ids live on whichever page is
-    // currently mounted (re-run per route change since each page only
-    // renders a subset of these sections).
-    const darkSectionsIds = ['ai-automation', 'process', 'footer'];
-
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          intersectingSections.current.add(entry.target.id);
-        } else {
-          intersectingSections.current.delete(entry.target.id);
-        }
-      });
-      
-      setIsDarkBackground(intersectingSections.current.size > 0);
-    };
-
-    const observerOptions = {
-      root: null,
-      // Adjust rootMargin to create a detection zone around the button's position (bottom-24 left-6)
-      // The button is roughly at 85-90% down the viewport.
-      // -85% top means we ignore the top part.
-      rootMargin: '-85% 0px 0px 0px', 
-      threshold: 0
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    // Lazy-loaded (Suspense) sections on the newly-mounted page may not exist
-    // in the DOM yet at this exact instant — give them a moment, same pattern
-    // used elsewhere in this codebase for post-navigation DOM lookups.
-    const observeTimer = setTimeout(() => {
-      darkSectionsIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) observer.observe(el);
-      });
-    }, 200);
-
-    return () => {
-      window.removeEventListener('scroll', toggleVisibility);
-      clearTimeout(observeTimer);
-      observer.disconnect();
-    };
-  }, [location.pathname]);
+    // Sync immediately in case the page loads already scrolled.
+    toggleVisibility();
+    window.addEventListener('scroll', toggleVisibility, { passive: true });
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -76,10 +24,15 @@ const BackToTop: React.FC = () => {
     });
   };
 
-  // Dynamic Styles
-  const buttonStyle = isDarkBackground 
-    ? "bg-white text-slate-900 border-white hover:bg-slate-200" // Light button on Dark bg
-    : "bg-slate-900 text-white border-slate-900 hover:bg-brand-purple hover:border-brand-purple"; // Dark button on Light bg
+  // Contrast the button against the page background. In dark theme every
+  // section is dark, so use the light button; in light theme use the dark
+  // button. (The previous IntersectionObserver assumed a fixed list of
+  // "dark sections", but those sections are light in light theme — producing
+  // a white button on a white background, i.e. an invisible control.)
+  const buttonStyle =
+    theme === 'dark'
+      ? 'bg-white text-slate-900 border-white hover:bg-slate-200'
+      : 'bg-slate-900 text-white border-slate-900 hover:bg-brand-purple hover:border-brand-purple';
 
   return (
     <AnimatePresence>
