@@ -12,12 +12,16 @@ import HomePage from './pages/HomePage';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { WidgetProvider } from './contexts/WidgetContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { AdminAuthProvider } from './contexts/AdminAuthContext';
+import RequireAuth from './components/admin/RequireAuth';
 
 // Route-level code splitting: Home loads eagerly (it's "/"), the other two
 // pages are only fetched once the user actually navigates there.
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
+const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 
 // Skip link component with proper accessibility
 const SkipLink: React.FC = () => {
@@ -44,6 +48,8 @@ const AppContent: React.FC = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/admin/login" element={<LoginPage />} />
+            <Route path="/admin" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
@@ -62,9 +68,11 @@ const App: React.FC = () => {
     <LanguageProvider>
       <ThemeProvider>
         <WidgetProvider>
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
+          <AdminAuthProvider>
+            <BrowserRouter>
+              <AppContent />
+            </BrowserRouter>
+          </AdminAuthProvider>
         </WidgetProvider>
       </ThemeProvider>
     </LanguageProvider>
