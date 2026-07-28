@@ -54,14 +54,4 @@ export const getLocalizedProjects = (
     link: 'https://www.vocaband.com/',
     github: 'https://github.com/ward3107/Vocaband',
   },
-  {
-    id: 'christmas-sale',
-    title: 'Christmas Sale Landing',
-    category: 'Web',
-    description: t('project_8_desc'),
-    image: '/assets/christmas-sale.png',
-    tech: ['TypeScript', 'React', 'Netlify'],
-    link: 'https://salewebsite.netlify.app/',
-    github: 'https://github.com/ward3107/christmas-sale-landing',
-  },
 ];
