@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+
+const MotionLink = motion(Link);
 import { ArrowRight, ArrowLeft, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
@@ -47,18 +49,18 @@ const FeaturedProjects: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-12">
-          {projects.map((project, index) => (
-            <motion.a
-              key={project.id}
-              href={project.link || project.github || '/projects'}
-              target={project.link || project.github ? '_blank' : undefined}
-              rel={project.link || project.github ? 'noopener noreferrer' : undefined}
-              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 }}
-              className="group flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-brand-purple/30 transition-all duration-300"
-            >
+          {projects.map((project, index) => {
+            const externalUrl = project.link || project.github;
+            const sharedProps = {
+              initial: prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 },
+              whileInView: { opacity: 1, y: 0 },
+              viewport: { once: true },
+              transition: prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 },
+              className:
+                'group flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-brand-purple/30 transition-all duration-300',
+            };
+            const cardBody = (
+              <>
               <div className="relative h-48 overflow-hidden">
                 <img
                   src={project.image}
@@ -90,8 +92,28 @@ const FeaturedProjects: React.FC = () => {
                   {t('projects_details')} <ExternalLink size={14} />
                 </div>
               </div>
-            </motion.a>
-          ))}
+              </>
+            );
+
+            // External project → new-tab anchor. Otherwise fall back to the
+            // internal projects page via the SPA router (a plain <a href="/projects">
+            // would trigger a full-page reload).
+            return externalUrl ? (
+              <motion.a
+                key={project.id}
+                href={externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                {...sharedProps}
+              >
+                {cardBody}
+              </motion.a>
+            ) : (
+              <MotionLink key={project.id} to="/projects" {...sharedProps}>
+                {cardBody}
+              </MotionLink>
+            );
+          })}
         </div>
 
         <div className="flex justify-center">

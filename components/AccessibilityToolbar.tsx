@@ -12,7 +12,6 @@ type ContrastMode = 'normal' | 'high' | 'inverted';
 interface A11yState {
   fontSize: number;
   contrastMode: ContrastMode;
-  isDark: boolean;
   highlightLinks: boolean;
   readableFont: boolean;
   textSpacing: boolean;
@@ -24,7 +23,6 @@ interface A11yState {
 const DEFAULT_STATE: A11yState = {
   fontSize: 100,
   contrastMode: 'normal',
-  isDark: false,
   highlightLinks: false,
   readableFont: false,
   textSpacing: false,
@@ -32,6 +30,10 @@ const DEFAULT_STATE: A11yState = {
   hideImages: false,
   disableAnimations: false,
 };
+
+// Light/dark theme is owned solely by ThemeContext (it toggles the `dark` class
+// on <html>). This toolbar must NOT touch that class, or the two systems fight
+// and changing any a11y setting silently flips the site's theme.
 
 const AccessibilityToolbar: React.FC = () => {
   const { language } = useLanguage();
@@ -49,27 +51,24 @@ const AccessibilityToolbar: React.FC = () => {
     }
   };
 
-  // Load from session storage on mount
+  // Load persisted settings on mount
   useEffect(() => {
-    const saved = sessionStorage.getItem('a11y-settings');
+    const saved = localStorage.getItem('a11y-settings');
     if (saved) {
       try {
-        setState(JSON.parse(saved));
+        // Merge over defaults so older/partial saved payloads (e.g. from before
+        // a field existed, or the removed `isDark` field) can't break state.
+        setState({ ...DEFAULT_STATE, ...JSON.parse(saved) });
       } catch (e) {
         // Failed to parse saved settings - keep default state if data is corrupted
-        // This gracefully handles corrupted sessionStorage without disrupting UX
-      }
-    } else {
-      // Check system preference for dark mode
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setState(prev => ({ ...prev, isDark: true }));
+        // This gracefully handles corrupted storage without disrupting UX
       }
     }
   }, []);
 
-  // Save to session storage and apply styles
+  // Persist and apply styles
   useEffect(() => {
-    sessionStorage.setItem('a11y-settings', JSON.stringify(state));
+    localStorage.setItem('a11y-settings', JSON.stringify(state));
     applyStyles(state);
   }, [state]);
 
@@ -90,16 +89,8 @@ const AccessibilityToolbar: React.FC = () => {
   }, [isOpen]);
 
   const applyStyles = (s: A11yState) => {
-    const doc = document.documentElement;
-
-    // Theme
-    if (s.isDark) {
-      doc.classList.add('dark');
-    } else {
-      doc.classList.remove('dark');
-    }
-
-    // Generate dynamic CSS
+    // Note: theme (dark/light) is intentionally NOT handled here — ThemeContext
+    // owns the `dark` class on <html>. Generate dynamic CSS only.
     let css = '';
 
     // Font Size
@@ -168,11 +159,7 @@ const AccessibilityToolbar: React.FC = () => {
   };
 
   const resetSettings = () => {
-    setState({
-      ...DEFAULT_STATE,
-      // Preserve dark mode preference if system matches, otherwise default
-      isDark: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-    });
+    setState(DEFAULT_STATE);
   };
 
   if (!isVisible) return null;
@@ -289,20 +276,23 @@ const AccessibilityToolbar: React.FC = () => {
               { key: 'hideImages', label: 'Hide Images', icon: ImageIcon },
               { key: 'disableAnimations', label: 'Disable Animations', icon: Zap },
             ].map((feature) => (
-              <label key={feature.key} className="flex items-center justify-between cursor-pointer group p-2 hover:bg-slate-50 rounded-lg">
-                <div className="flex items-center gap-3 text-slate-700">
+              <label key={feature.key} className="flex items-center justify-between cursor-pointer group p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
+                <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
                   <feature.icon size={18} className="text-slate-500 dark:text-slate-400 group-hover:text-brand-purple transition-colors" />
                   <span className="font-medium text-sm">{feature.label}</span>
                 </div>
-                <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-colors ${state[feature.key as keyof A11yState] ? 'bg-brand-purple border-brand-purple' : 'border-slate-300'}`}>
-                  {state[feature.key as keyof A11yState] && <Check size={14} className="text-white" />}
-                </div>
+                {/* sr-only (not `hidden`) keeps the checkbox in the tab order and
+                    operable via Space; the visual box mirrors its checked/focus
+                    state via Tailwind `peer-*` utilities. */}
                 <input
                   type="checkbox"
-                  className="hidden"
+                  className="sr-only peer"
                   checked={state[feature.key as keyof A11yState] as boolean}
                   onChange={(e) => updateState(feature.key as keyof A11yState, e.target.checked)}
                 />
+                <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-brand-purple peer-focus-visible:ring-offset-2 ${state[feature.key as keyof A11yState] ? 'bg-brand-purple border-brand-purple' : 'border-slate-300'}`}>
+                  {state[feature.key as keyof A11yState] && <Check size={14} className="text-white" />}
+                </div>
               </label>
             ))}
           </div>

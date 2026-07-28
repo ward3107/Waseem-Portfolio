@@ -14,7 +14,9 @@
       "Bash(git push:*)",
       "Bash(timeout:*)",
       "Bash(npm run build:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "mcp__Claude_Code_Remote__send_later",
+      "mcp__Claude_Code_Remote__delete_trigger"
     ]
   }
 }

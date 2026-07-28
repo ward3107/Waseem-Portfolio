@@ -12,12 +12,23 @@ export const FONT_AR = '/fonts/cairo.ttf';
 export const fontForLanguage = (language: string): string =>
   language === 'ar' ? FONT_AR : FONT_HE;
 
+// Cached across every Dimensional3DWord instance (hero word + section
+// headings). The probe allocates a real WebGL context; running it per mount
+// could crowd the browser's small live-context budget, so detect once and
+// immediately release the throwaway context.
+let webglSupport: boolean | null = null;
 const detectWebGL = (): boolean => {
+  if (webglSupport !== null) return webglSupport;
   if (typeof window === 'undefined') return false;
   try {
     const c = document.createElement('canvas');
-    return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+    const gl = (window.WebGLRenderingContext &&
+      (c.getContext('webgl') || c.getContext('experimental-webgl'))) as WebGLRenderingContext | null;
+    if (gl) gl.getExtension('WEBGL_lose_context')?.loseContext();
+    webglSupport = !!gl;
+    return webglSupport;
   } catch {
+    webglSupport = false;
     return false;
   }
 };

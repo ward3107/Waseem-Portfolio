@@ -2,19 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- Set lang+dir before paint to match the user's saved/browser locale. -->
+    <!-- Set lang+dir AND theme before paint to match the user's locale/theme.
+         Mirrors LanguageContext (URL ?lang= > saved > browser) and ThemeContext
+         (saved > dark default). Setting the `dark` class here avoids a
+         light-theme flash before React hydrates on a dark-default site. -->
     <script>
       (function () {
         try {
+          var urlLang = new URLSearchParams(window.location.search).get('lang');
           var saved = localStorage.getItem('vibe_lang');
-          var lang = (saved === 'he' || saved === 'ar' || saved === 'en')
-            ? saved
-            : (function () {
-                var b = (navigator.language || 'en').split('-')[0];
-                return (b === 'he' || b === 'ar') ? b : 'en';
-              })();
+          var lang = (urlLang === 'he' || urlLang === 'ar' || urlLang === 'en')
+            ? urlLang
+            : (saved === 'he' || saved === 'ar' || saved === 'en')
+              ? saved
+              : (function () {
+                  var b = (navigator.language || 'en').split('-')[0];
+                  return (b === 'he' || b === 'ar') ? b : 'en';
+                })();
           document.documentElement.lang = lang;
           document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+        } catch (e) {}
+        try {
+          var savedTheme = localStorage.getItem('vibe_theme');
+          var theme = (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'dark';
+          document.documentElement.classList.remove('light', 'dark');
+          document.documentElement.classList.add(theme);
         } catch (e) {}
       })();
     </script>

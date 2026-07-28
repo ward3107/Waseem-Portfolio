@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Share2, Facebook, Linkedin, Twitter, Link as LinkIcon, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 // import { useLanguage } from '../contexts/LanguageContext';
@@ -9,6 +10,9 @@ const ShareWidget: React.FC = () => {
   // const { t } = useLanguage();
   const { widgets } = useWidgets();
 
+  // Subscribe to the router so `url` is recomputed after client-side navigation
+  // — otherwise every share targets whatever page was first loaded.
+  useLocation();
   const url = typeof window !== 'undefined' ? window.location.href : '';
   const text = "Check out Waseem's Portfolio!";
 
@@ -53,9 +57,16 @@ const ShareWidget: React.FC = () => {
         // User cancelled share or share failed - silently handle
         // No action needed as this is expected behavior
       }
+    } else if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(url);
+        alert('Link copied to clipboard!');
+      } catch (err) {
+        // Clipboard write can reject (insecure context / denied permission).
+        alert('Could not copy the link. Please copy it from the address bar.');
+      }
     } else {
-      navigator.clipboard.writeText(url);
-      alert('Link copied to clipboard!');
+      alert('Sharing is not supported on this browser. Please copy the URL from the address bar.');
     }
   };
 

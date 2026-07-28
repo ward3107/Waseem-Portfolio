@@ -27,7 +27,12 @@ export const useSectionNavigate = () => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       } else {
-        navigate(hash ? `${targetPath}#${hash}` : targetPath);
+        // Cross-page: forward the focus intent through the router so the
+        // destination can focus the target once it has mounted (the element
+        // doesn't exist yet on this page). Handled by ScrollToHashOnRouteChange.
+        navigate(hash ? `${targetPath}#${hash}` : targetPath, {
+          state: options?.focusId ? { focusId: options.focusId } : undefined,
+        });
       }
     },
     [navigate, location.pathname]

@@ -27,30 +27,30 @@ const FAQ: React.FC = () => {
 
     // Handle keyboard navigation for accordion
     const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+        // Per the WAI-ARIA accordion pattern, Arrow/Home/End move focus between
+        // headers only — they must NOT expand/collapse panels (that's what
+        // Enter/Space/click do). Mutating openIndex here made reading one answer
+        // and arrowing to the next header silently collapse the first.
         switch (e.key) {
             case 'Home':
                 e.preventDefault();
-                setOpenIndex(0);
                 buttonRefs.current[0]?.focus();
                 break;
             case 'End': {
                 e.preventDefault();
                 const lastIndex = localizedFaqs.length - 1;
-                setOpenIndex(lastIndex);
                 buttonRefs.current[lastIndex]?.focus();
                 break;
             }
             case 'ArrowDown': {
                 e.preventDefault();
                 const nextIndex = Math.min(index + 1, localizedFaqs.length - 1);
-                setOpenIndex(nextIndex);
                 buttonRefs.current[nextIndex]?.focus();
                 break;
             }
             case 'ArrowUp': {
                 e.preventDefault();
                 const prevIndex = Math.max(index - 1, 0);
-                setOpenIndex(prevIndex);
                 buttonRefs.current[prevIndex]?.focus();
                 break;
             }

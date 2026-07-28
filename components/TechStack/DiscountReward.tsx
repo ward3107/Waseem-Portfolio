@@ -1,26 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Gift } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useFocusTrap, useEscapeKey } from '../../hooks/useFocusTrap';
 
 const DiscountReward: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { t } = useLanguage();
+  const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    closeButtonRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
-  }, [onClose]);
+  // Trap Tab within the dialog (focuses the close button on open) and close on
+  // Escape — keeps keyboard focus off the marquee cards behind the modal.
+  useFocusTrap(dialogRef, true);
+  useEscapeKey(true, onClose);
 
   return (
     <div
+      ref={dialogRef}
       className="absolute inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-lg p-4"
       role="dialog"
       aria-modal="true"

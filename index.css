@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Self-hosted Hebrew/Arabic webfonts (assets already ship in /public/fonts and
+   are used by the 3D word). `unicode-range` scopes each file to its script, so
+   an English visitor downloads neither — only Hebrew text pulls Heebo and only
+   Arabic text pulls Cairo. Previously Hebrew/Arabic body copy fell back to
+   whatever system font the OS happened to have, since the Inter/Space Grotesk
+   webfonts cover Latin only. font-display: swap avoids blocking first paint. */
+@font-face {
+  font-family: 'Heebo';
+  src: url('/fonts/heebo.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0590-05FF, U+200F, U+FB1D-FB4F;
+}
+@font-face {
+  font-family: 'Cairo';
+  src: url('/fonts/cairo.ttf') format('truetype');
+  font-weight: 200 1000;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+
 /* No global smooth scroll: it makes programmatic scroll-resets (top-on-nav)
    animate, which loses the race against the browser's fragment scroll and
    leaves pages parked mid-scroll. Intentional smooth scrolling is still done
