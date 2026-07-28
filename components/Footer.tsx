@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, Linkedin, Twitter, ArrowRight, ArrowLeft, Mail, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Github, Linkedin, Twitter, ArrowRight, ArrowLeft, Mail, X, Lock } from 'lucide-react';
 import { NAV_LINKS, CONTACT, SERVICE_AREAS } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -406,6 +407,14 @@ const Footer: React.FC = () => {
             >
               {t('footer_terms')}
             </button>
+            <Link
+              to="/admin"
+              className="flex items-center gap-1 text-slate-400 dark:text-slate-600 hover:text-brand-purple hover:underline underline-offset-4 transition-all duration-300"
+              aria-label="Admin login"
+            >
+              <Lock size={12} aria-hidden="true" />
+              Admin
+            </Link>
           </div>
           <p className="flex items-center gap-1">
             {t('footer_made_with')} {t('footer_tel_aviv')}
