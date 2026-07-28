@@ -12,7 +12,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(__dirname, '..', 'public');
 const blogDir = resolve(publicDir, 'blog');
 
-const SITE = 'https://wwas.netlify.app';
+const SITE = 'https://waseemp.vercel.app';
 const WHATSAPP = '972534260632';
 const PUBLISHED = '2026-07-07';
 const AUTHOR = 'וסים';

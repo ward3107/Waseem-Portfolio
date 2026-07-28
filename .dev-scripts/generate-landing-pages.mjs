@@ -18,7 +18,7 @@ import { dirname, resolve } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(__dirname, '..', 'public');
 
-const SITE = 'https://wwas.netlify.app';
+const SITE = 'https://waseemp.vercel.app';
 const WHATSAPP = '972534260632';
 const LASTMOD = '2026-07-07';
 const LANGS = ['he', 'ar'];

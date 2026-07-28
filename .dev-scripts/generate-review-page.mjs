@@ -16,7 +16,7 @@ import { dirname, resolve } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(__dirname, '..', 'public');
-const SITE = 'https://wwas.netlify.app';
+const SITE = 'https://waseemp.vercel.app';
 
 // 👉 Paste your exact Google "write a review" link here when you have it, e.g.
 //    https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID
