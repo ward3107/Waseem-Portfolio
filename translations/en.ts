@@ -129,7 +129,6 @@ export const en: Record<string, string> = {
     project_5_desc: "Gamified vocabulary learning app for EFL students.",
     project_6_desc: "Aluminum and steel design solutions company website.",
     project_7_desc: "Professional medical website for Dr. Maya Khalil.",
-    project_8_desc: "Festive Christmas sale landing page with countdown and offers.",
 
     // Process
     process_step_1_title: "🧭 Discovery & Strategy",
