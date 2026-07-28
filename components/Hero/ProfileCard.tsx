@@ -71,7 +71,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                 alt={t('hero_profile_alt')}
                 loading="eager"
                 decoding="async"
-                fetchPriority="high"
                 width="512"
                 height="640"
                 className="object-cover w-full h-full opacity-90 group-hover:scale-105 transition-transform duration-700"
