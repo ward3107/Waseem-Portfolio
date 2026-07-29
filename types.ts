@@ -93,6 +93,7 @@ export interface ProjectRow {
   screenshots: string[];
   sort_order: number;
   created_at: string;
+  updated_at: string;
 }
 
 export interface CertificationRow {
@@ -106,6 +107,7 @@ export interface CertificationRow {
   image_url: string | null;
   sort_order: number;
   created_at: string;
+  updated_at: string;
 }
 
 export interface ReviewRow {
@@ -117,4 +119,21 @@ export interface ReviewRow {
   date: string | null;
   sort_order: number;
   created_at: string;
+  updated_at: string;
+}
+
+/** Single-row site_settings table — hero copy + contact + SEO. */
+export interface SiteSettingsRow {
+  id: true;
+  contact_email: string | null;
+  whatsapp: string | null;
+  github_url: string | null;
+  linkedin_url: string | null;
+  twitter_url: string | null;
+  hero_badge: LocalizedText;
+  hero_headline: LocalizedText;
+  hero_subtitle: LocalizedText;
+  seo_title: string | null;
+  seo_description: string | null;
+  updated_at: string;
 }

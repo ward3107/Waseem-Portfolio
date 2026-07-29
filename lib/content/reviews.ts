@@ -1,7 +1,7 @@
 import { supabase } from '../supabaseClient';
 import type { ReviewRow } from '../../types';
 
-export type ReviewInput = Omit<ReviewRow, 'id' | 'created_at'>;
+export type ReviewInput = Omit<ReviewRow, 'id' | 'created_at' | 'updated_at'>;
 
 export async function listReviewRows(): Promise<ReviewRow[]> {
   const { data, error } = await supabase
@@ -25,4 +25,13 @@ export async function updateReview(id: string, input: Partial<ReviewInput>): Pro
 export async function deleteReview(id: string): Promise<void> {
   const { error } = await supabase.from('reviews').delete().eq('id', id);
   if (error) throw error;
+}
+
+export async function reorderReviews(orderedIds: string[]): Promise<void> {
+  const updates = orderedIds.map((id, i) =>
+    supabase.from('reviews').update({ sort_order: i }).eq('id', id)
+  );
+  const results = await Promise.all(updates);
+  const failure = results.find((r) => r.error);
+  if (failure?.error) throw failure.error;
 }
