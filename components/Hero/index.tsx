@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -25,12 +25,46 @@ const Hero: React.FC = () => {
   const layer2X = useTransform(mouseX, [-0.5, 0.5], [30, -30]);
   const layer2Y = useTransform(mouseY, [-0.5, 0.5], [30, -30]);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (prefersReducedMotion) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
-  };
+  // rAF-throttled: mousemove can fire 60–200 Hz. Feeding every event into two
+  // MotionValues that drive six useTransform chains, a spring, and a huge
+  // blurred backdrop pins a CPU core on mid-range laptops. Coalesce to one
+  // update per frame; also cache the section's bounding rect and only invalidate
+  // it on scroll/resize (getBoundingClientRect per event is a layout read).
+  const sectionRef = useRef<HTMLElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const pendingRef = useRef<{ cx: number; cy: number } | null>(null);
+
+  useEffect(() => {
+    const refresh = () => {
+      rectRef.current = sectionRef.current?.getBoundingClientRect() ?? null;
+    };
+    refresh();
+    window.addEventListener('resize', refresh);
+    window.addEventListener('scroll', refresh, { passive: true });
+    return () => {
+      window.removeEventListener('resize', refresh);
+      window.removeEventListener('scroll', refresh);
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (prefersReducedMotion) return;
+      pendingRef.current = { cx: e.clientX, cy: e.clientY };
+      if (rafRef.current !== null) return;
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null;
+        const p = pendingRef.current;
+        const rect = rectRef.current;
+        if (!p || !rect) return;
+        x.set((p.cx - rect.left) / rect.width - 0.5);
+        y.set((p.cy - rect.top) / rect.height - 0.5);
+      });
+    },
+    [prefersReducedMotion, x, y]
+  );
 
   const navigateToSection = useSectionNavigate();
 
@@ -42,6 +76,7 @@ const Hero: React.FC = () => {
   return (
     <section
       id="hero"
+      ref={sectionRef}
       onMouseMove={handleMouseMove}
       className="relative min-h-screen flex items-center pt-20 overflow-visible bg-slate-50 dark:bg-slate-950 perspective-1000 transition-colors duration-300"
     >
