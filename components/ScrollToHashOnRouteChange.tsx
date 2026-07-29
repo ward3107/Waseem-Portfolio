@@ -16,7 +16,39 @@ import { useLocation, useNavigate } from 'react-router-dom';
  * load their sections (React.Suspense), so the document grows for several
  * hundred ms after a route change; a single scroll would be undone by that
  * reflow (the "starts from the bottom" / "doesn't reach the section" symptoms).
+ *
+ * The re-assert window is abandoned the instant the user shows scroll intent
+ * (wheel / touch / arrow keys). Without that escape hatch the timers fight a
+ * user who starts scrolling immediately after a route change, yanking them
+ * back to the top repeatedly — which reads as the page "flashing".
  */
+
+/** Events that mean "the user is driving the scroll now — stop correcting it". */
+const INTENT_EVENTS = ['wheel', 'touchstart', 'touchmove', 'keydown'] as const;
+const SCROLL_KEYS = new Set([
+  'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Spacebar',
+]);
+
+/**
+ * Calls `onIntent` the first time the user tries to scroll themselves, then
+ * detaches. Returns a cleanup that detaches early if the caller finishes first.
+ */
+const onUserScrollIntent = (onIntent: () => void): (() => void) => {
+  const handler = (e: Event) => {
+    // Ignore typing — only keys that actually scroll count as intent.
+    if (e.type === 'keydown' && !SCROLL_KEYS.has((e as KeyboardEvent).key)) return;
+    onIntent();
+    detach();
+  };
+  const detach = () =>
+    INTENT_EVENTS.forEach((type) => window.removeEventListener(type, handler));
+
+  INTENT_EVENTS.forEach((type) =>
+    window.addEventListener(type, handler, { passive: true })
+  );
+  return detach;
+};
+
 const ScrollToHashOnRouteChange: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -64,8 +96,16 @@ const ScrollToHashOnRouteChange: React.FC = () => {
       let raf = 0;
       let stableFor = 0;
       let lastTop = Number.NaN;
+      let aborted = false;
       const start = performance.now();
+      // The user out-ranks us: if they start scrolling while we're still
+      // waiting for layout to settle, stop chasing the section.
+      const detachIntent = onUserScrollIntent(() => {
+        aborted = true;
+        cancelAnimationFrame(raf);
+      });
       const tick = () => {
+        if (aborted) return;
         const el = document.getElementById(id);
         if (el) {
           const top = el.getBoundingClientRect().top + window.scrollY;
@@ -79,6 +119,7 @@ const ScrollToHashOnRouteChange: React.FC = () => {
               if (focusId) {
                 document.getElementById(focusId)?.focus({ preventScroll: true });
               }
+              detachIntent();
               return;
             }
           } else {
@@ -89,7 +130,10 @@ const ScrollToHashOnRouteChange: React.FC = () => {
         if (performance.now() - start < 3500) raf = requestAnimationFrame(tick);
       };
       raf = requestAnimationFrame(tick);
-      return () => cancelAnimationFrame(raf);
+      return () => {
+        cancelAnimationFrame(raf);
+        detachIntent();
+      };
     }
 
     // Initial load, same-page hash lingering, or a plain route change → start
@@ -102,7 +146,14 @@ const ScrollToHashOnRouteChange: React.FC = () => {
     const timers = REASSERT_MS.map((ms) =>
       window.setTimeout(() => window.scrollTo(0, 0), ms)
     );
-    return () => timers.forEach((t) => window.clearTimeout(t));
+    // Stop re-asserting the moment the user scrolls on their own, otherwise the
+    // remaining timers drag them back to the top mid-gesture.
+    const clearTimers = () => timers.forEach((t) => window.clearTimeout(t));
+    const detachIntent = onUserScrollIntent(clearTimers);
+    return () => {
+      clearTimers();
+      detachIntent();
+    };
     // Intentionally keyed on pathname + hash only; `navigate` is stable and we
     // don't want query-string changes to trigger a scroll reset.
     // eslint-disable-next-line react-hooks/exhaustive-deps
