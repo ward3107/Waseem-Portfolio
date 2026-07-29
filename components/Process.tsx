@@ -71,17 +71,22 @@ const Process: React.FC = () => {
   return (
     <section id="process" className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white relative transition-colors duration-300">
 
-      {/* Desktop Sticky Layout */}
+      {/* Desktop Sticky Layout — visual and text now feel like halves of the
+          same idea:
+           • text panel is wider (7/12 vs 5/12) so the description is what the
+             eye lands on, not the decorative circle
+           • text panel shows the SAME step icon prominently at the top, in
+             the same color as the sticky graphic — the parallel is obvious
+           • sticky visual is smaller and lighter so it supports rather than
+             upstages the copy
+           • a small "step N / total" indicator anchors both sides */}
       <div className="hidden lg:flex">
-        {/* Left Sticky Panel (Visuals) */}
-        <div className="w-1/2 h-screen sticky top-0 flex items-center justify-center bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 overflow-hidden relative">
-
-          {/* Background Grid Animation */}
+        {/* Left/right depends on `dir` — semantically "visual". */}
+        <div className="w-5/12 h-screen sticky top-0 flex items-center justify-center bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 overflow-hidden relative">
           <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-slate-900 via-transparent to-slate-900 z-10"></div>
 
-          {/* Active Step Graphic */}
-          <div className="relative z-20 w-[280px] sm:w-[350px] md:w-[400px] h-[280px] sm:h-[350px] md:h-[400px] flex items-center justify-center">
+          <div className="relative z-20 w-[240px] xl:w-[300px] h-[240px] xl:h-[300px] flex items-center justify-center">
             {steps.map((step, index) => (
               <motion.div
                 key={step.id}
@@ -91,45 +96,73 @@ const Process: React.FC = () => {
                   scale: activeStep === index ? 1 : 0.8,
                   rotate: activeStep === index ? 0 : 20,
                 }}
-                transition={{ duration: 0.5, ease: "backOut" }}
-                className="absolute inset-0 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 rounded-full border-3 sm:border-4 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl"
+                transition={{ duration: 0.5, ease: 'backOut' }}
+                className="absolute inset-0 flex flex-col items-center justify-center p-6 rounded-full border-4 border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl"
                 style={{
-                  boxShadow: activeStep === index ? `0 0 50px -10px currentColor` : 'none',
-                  color: activeStep === index ? 'white' : 'transparent'
+                  boxShadow: activeStep === index ? '0 0 50px -10px currentColor' : 'none',
+                  color: activeStep === index ? 'white' : 'transparent',
                 }}
               >
-                {/* Glowing Ring */}
                 <div className={`absolute inset-0 rounded-full opacity-20 animate-pulse ${step.bg.replace('/10', '/30')}`}></div>
 
-                <div className={`p-3 sm:p-4 md:p-6 rounded-2xl sm:rounded-3xl mb-3 sm:mb-4 md:mb-6 ${step.bg} ${step.color}`}>
-                  <step.icon size={32} strokeWidth={1.5} className="sm:w-10 sm:h-10 md:w-12 md:h-12" />
+                <div className={`p-4 rounded-2xl mb-3 ${step.bg} ${step.color}`}>
+                  <step.icon size={36} strokeWidth={1.5} />
                 </div>
-                <h3 className={`text-xl sm:text-2xl md:text-3xl font-heading font-bold text-center mb-1 sm:mb-2 ${step.color}`}>
+                <h3 className={`text-2xl xl:text-3xl font-heading font-bold text-center mb-1 ${step.color}`}>
                   0{step.id}
                 </h3>
-                <h4 className="text-sm sm:text-base md:text-xl font-bold text-slate-600 dark:text-slate-300">
+                <h4 className="text-sm xl:text-base font-bold text-slate-600 dark:text-slate-300 text-center px-2">
                   {step.title}
                 </h4>
               </motion.div>
             ))}
+
+            {/* Step-progress rail: 5 dots stacked centered, current one grows.
+                Reinforces the "these are steps" idea without more text. */}
+            <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 flex items-center gap-2">
+              {steps.map((s, i) => (
+                <span
+                  key={s.id}
+                  aria-hidden="true"
+                  className={`h-1.5 rounded-full transition-all duration-500 ${
+                    activeStep === i
+                      ? `w-8 ${s.color.replace('text-', 'bg-')}`
+                      : 'w-1.5 bg-slate-300 dark:bg-slate-700'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Right Scroll Panel (Text) */}
-        <div className="w-1/2">
+        {/* Text panel — wider, and now visually echoes the sticky graphic. */}
+        <div className="w-7/12">
           {steps.map((step, index) => (
             <div
               key={step.id}
-              className={`process-step-text min-h-screen flex items-center px-8 sm:px-12 lg:px-16 py-16 lg:py-20 border-b border-slate-200/50 dark:border-slate-900/50 ${activeStep === index ? 'opacity-100' : 'opacity-30'} transition-opacity duration-500`}
+              className={`process-step-text min-h-screen flex items-center px-8 sm:px-12 lg:px-16 xl:px-24 py-16 lg:py-20 border-b border-slate-200/50 dark:border-slate-900/50 ${activeStep === index ? 'opacity-100' : 'opacity-40'} transition-opacity duration-500`}
             >
-              <div>
-                <span className={`inline-block px-3 py-1 rounded mb-3 sm:mb-4 text-xs font-bold uppercase tracking-widest ${step.bg} ${step.color}`}>
-                  {t('process_step_prefix')} 0{step.id}
-                </span>
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold mb-4 sm:mb-6 text-slate-900 dark:text-white leading-tight">
+              <div className="max-w-xl">
+                {/* Header row: matching icon + step badge — mirrors the sticky
+                    graphic so the pairing is unmistakable. */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className={`p-3 rounded-xl ${step.bg} ${step.color} shrink-0`}>
+                    <step.icon size={28} strokeWidth={2} aria-hidden="true" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className={`text-[11px] font-bold uppercase tracking-widest ${step.color}`}>
+                      {t('process_step_prefix')} 0{step.id}
+                      <span className="ms-2 text-slate-400 dark:text-slate-600 font-normal normal-case tracking-normal">
+                        · {step.id} / {steps.length}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                <h3 className="text-3xl xl:text-4xl font-heading font-bold mb-5 text-slate-900 dark:text-white leading-tight">
                   {step.title}
                 </h3>
-                <div className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
+                <div className="text-base xl:text-lg text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">
                   {step.desc}
                 </div>
               </div>
