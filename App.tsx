@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AccessibilityToolbar from './components/AccessibilityToolbar';
@@ -36,30 +36,47 @@ const SkipLink: React.FC = () => {
   );
 };
 
+/** The public site layout — nav, footer, floating widgets, cookie banner. */
+const SiteShell: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="relative">
+    <SkipLink />
+    <Navbar />
+    <main id="main-content" tabIndex={-1}>
+      {children}
+    </main>
+    <Footer />
+    <AccessibilityToolbar />
+    <ShareWidget />
+    <BackToTop />
+    <CookieBanner />
+  </div>
+);
+
+/** Admin routes render standalone — no site navbar, no footer, no widgets,
+ *  no cookie banner. Prevents "which nav do I use?" confusion and stops the
+ *  floating widgets from covering the admin UI. */
 const AppContent: React.FC = () => {
+  const { pathname } = useLocation();
+  const isAdmin = pathname === '/admin' || pathname.startsWith('/admin/');
+
+  const routes = (
+    <Suspense fallback={<SectionSkeleton />}>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/admin/login" element={<LoginPage />} />
+        <Route path="/admin" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Suspense>
+  );
+
   return (
-    <div className="relative">
+    <>
       <ScrollToHashOnRouteChange />
-      <SkipLink />
-      <Navbar />
-      <main id="main-content" tabIndex={-1}>
-        <Suspense fallback={<SectionSkeleton />}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/projects" element={<ProjectsPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/admin/login" element={<LoginPage />} />
-            <Route path="/admin" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Suspense>
-      </main>
-      <Footer />
-      <AccessibilityToolbar />
-      <ShareWidget />
-      <BackToTop />
-      <CookieBanner />
-    </div>
+      {isAdmin ? routes : <SiteShell>{routes}</SiteShell>}
+    </>
   );
 };
 
