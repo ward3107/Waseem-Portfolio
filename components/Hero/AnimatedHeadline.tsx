@@ -36,7 +36,7 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
       ))}
       <br />
 
-      <span className="relative inline-block z-50 mr-2">
+      <span className="relative inline-block z-50 me-2">
         <span className="relative z-50 text-brand-purple">
           {splitForAnimation(t('hero_title_2'), language).map((char, index) => (
             <motion.span
@@ -60,7 +60,7 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
           className="absolute -bottom-2 left-0 right-0 h-3 md:h-5 bg-brand-gold/30 -skew-x-12 -z-10 rounded-full blur-sm origin-left"
         ></motion.span>
       </span>
-
+      {' '}
       <br className="hidden md:inline" />
 
       {splitForAnimation(t('hero_title_3'), language).map((char, index) => (
