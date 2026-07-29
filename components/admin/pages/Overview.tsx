@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FolderOpen, GraduationCap, MessageSquareText, Image as ImageIcon, Plus, ExternalLink, type LucideIcon } from 'lucide-react';
+import { Plus, ExternalLink, type LucideIcon } from 'lucide-react';
 import Topbar from '../layout/Topbar';
 import Skeleton from '../primitives/Skeleton';
+import { SECTIONS, ACCENT_CLASSES, type AdminSection } from '../layout/sections';
 import { listProjectRows } from '../../../lib/content/projects';
 import { listCertRows } from '../../../lib/content/certifications';
 import { listReviewRows } from '../../../lib/content/reviews';
@@ -10,7 +11,7 @@ import { toastError } from '../../../lib/adminToast';
 
 type ActivityItem = { kind: 'project' | 'cert' | 'review'; id: string; title: string; ts: string };
 
-/** Human-friendly relative time. Bare-bones; no i18n on the admin. */
+/** Compact "2h ago" formatter. */
 const relativeTime = (iso: string): string => {
   const diffSec = (Date.now() - new Date(iso).getTime()) / 1000;
   if (diffSec < 60) return 'just now';
@@ -22,26 +23,35 @@ const relativeTime = (iso: string): string => {
 };
 
 const StatCard: React.FC<{
-  label: string;
+  section: AdminSection;
   count: number | null;
-  Icon: LucideIcon;
-  to: string;
   hint?: string;
-}> = ({ label, count, Icon, to, hint }) => (
-  <Link
-    to={to}
-    className="block rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 hover:border-brand-purple/40 hover:shadow-sm transition-all"
-  >
-    <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400 text-xs uppercase tracking-wider font-semibold">
-      <span>{label}</span>
-      <Icon size={16} aria-hidden="true" />
-    </div>
-    <div className="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-      {count === null ? <Skeleton className="h-8 w-16" /> : count}
-    </div>
-    {hint && <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">{hint}</p>}
-  </Link>
-);
+}> = ({ section, count, hint }) => {
+  const c = ACCENT_CLASSES[section.accent];
+  const Icon: LucideIcon = section.icon;
+  return (
+    <Link
+      to={section.to}
+      className={`group relative block rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 hover:border-transparent hover:shadow-lg transition-all overflow-hidden`}
+    >
+      {/* Corner glow that intensifies on hover — subtle brand tint per card. */}
+      <span
+        className={`absolute -top-8 -right-8 w-24 h-24 rounded-full ${c.bgSoft} opacity-60 group-hover:opacity-100 blur-xl transition-opacity`}
+        aria-hidden="true"
+      />
+      <div className="relative flex items-center justify-between text-zinc-500 dark:text-zinc-400 text-xs uppercase tracking-wider font-semibold">
+        <span>{section.label}</span>
+        <span className={`w-8 h-8 rounded-lg ${c.bgSoft} ${c.text} flex items-center justify-center`}>
+          <Icon size={16} aria-hidden="true" />
+        </span>
+      </div>
+      <div className="relative mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+        {count === null ? <Skeleton className="h-8 w-16" /> : count}
+      </div>
+      {hint && <p className="relative mt-1 text-xs text-zinc-500 dark:text-zinc-500">{hint}</p>}
+    </Link>
+  );
+};
 
 const Overview: React.FC = () => {
   const [counts, setCounts] = useState<{ p: number; c: number; r: number } | null>(null);
@@ -66,6 +76,11 @@ const Overview: React.FC = () => {
     return () => { active = false; };
   }, []);
 
+  const projectsSection = SECTIONS.find((s) => s.key === 'projects')!;
+  const certsSection = SECTIONS.find((s) => s.key === 'certifications')!;
+  const reviewsSection = SECTIONS.find((s) => s.key === 'reviews')!;
+  const mediaSection = SECTIONS.find((s) => s.key === 'media')!;
+
   return (
     <>
       <Topbar
@@ -86,37 +101,37 @@ const Overview: React.FC = () => {
       <div className="p-4 sm:p-6 space-y-6">
         {/* Stat cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <StatCard label="Projects" count={counts?.p ?? null} Icon={FolderOpen} to="/admin/projects" />
-          <StatCard label="Certificates" count={counts?.c ?? null} Icon={GraduationCap} to="/admin/certifications" />
-          <StatCard label="Reviews" count={counts?.r ?? null} Icon={MessageSquareText} to="/admin/reviews" hint={counts?.r === 0 ? 'Add your first review' : undefined} />
-          <StatCard label="Media" count={null} Icon={ImageIcon} to="/admin/media" hint="Browse storage" />
+          <StatCard section={projectsSection} count={counts?.p ?? null} />
+          <StatCard section={certsSection} count={counts?.c ?? null} />
+          <StatCard section={reviewsSection} count={counts?.r ?? null} hint={counts?.r === 0 ? 'Add your first review' : undefined} />
+          <StatCard section={mediaSection} count={null} hint="Browse storage" />
         </div>
 
-        {/* Quick actions */}
+        {/* Quick actions — primary is filled gradient; secondaries are per-section tinted */}
         <div className="flex flex-wrap gap-2">
           <Link
             to="/admin/projects/new"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-md bg-brand-purple text-white hover:bg-brand-purpleLight"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-brand-purple to-brand-purpleLight hover:shadow-lg hover:shadow-brand-purple/30 transition-shadow"
           >
             <Plus size={14} aria-hidden="true" /> Add project
           </Link>
           <Link
             to="/admin/certifications/new"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+            className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-lg ${ACCENT_CLASSES.gold.bgSoft} ${ACCENT_CLASSES.gold.text} hover:bg-brand-gold hover:text-white transition-colors`}
           >
             <Plus size={14} aria-hidden="true" /> Add certificate
           </Link>
           <Link
             to="/admin/reviews/new"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-100 hover:bg-zinc-200 dark:hover:bg-zinc-700"
+            className={`inline-flex items-center gap-1.5 px-3 py-2 text-sm font-semibold rounded-lg ${ACCENT_CLASSES.pink.bgSoft} ${ACCENT_CLASSES.pink.text} hover:bg-brand-pink hover:text-white transition-colors`}
           >
             <Plus size={14} aria-hidden="true" /> Add review
           </Link>
         </div>
 
         {/* Activity */}
-        <section className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-          <header className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800">
+        <section className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden">
+          <header className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 bg-gradient-to-r from-transparent to-brand-purple/5 dark:to-brand-purple/10">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Recent activity</h2>
           </header>
           <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
@@ -132,17 +147,21 @@ const Overview: React.FC = () => {
                 Nothing yet. Add your first project to see it here.
               </li>
             )}
-            {activity?.map((item) => (
-              <li key={`${item.kind}-${item.id}`} className="px-4 py-3 flex items-center justify-between">
-                <div className="min-w-0">
-                  <span className="text-xs uppercase tracking-wider font-semibold text-zinc-400 dark:text-zinc-600 mr-2">
-                    {item.kind}
-                  </span>
-                  <span className="text-sm text-zinc-900 dark:text-zinc-100 truncate">{item.title}</span>
-                </div>
-                <span className="text-xs text-zinc-500 dark:text-zinc-500 shrink-0">{relativeTime(item.ts)}</span>
-              </li>
-            ))}
+            {activity?.map((item) => {
+              const accentKey = item.kind === 'project' ? 'blue' : item.kind === 'cert' ? 'gold' : 'pink';
+              const c = ACCENT_CLASSES[accentKey];
+              return (
+                <li key={`${item.kind}-${item.id}`} className="px-4 py-3 flex items-center justify-between">
+                  <div className="min-w-0 flex items-center gap-3">
+                    <span className={`text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded ${c.bgSoft} ${c.text}`}>
+                      {item.kind}
+                    </span>
+                    <span className="text-sm text-zinc-900 dark:text-zinc-100 truncate">{item.title}</span>
+                  </div>
+                  <span className="text-xs text-zinc-500 dark:text-zinc-500 shrink-0">{relativeTime(item.ts)}</span>
+                </li>
+              );
+            })}
           </ul>
         </section>
       </div>

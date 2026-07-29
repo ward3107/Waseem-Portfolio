@@ -30,15 +30,22 @@ const AdminShell: React.FC = () => {
 
   return (
     <ConfirmProvider>
-      <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
+      <div className="relative min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
+        {/* Subtle brand-color wash so the dark theme isn't just black. Two
+            large blurred blobs anchored at opposite corners, low opacity —
+            gives the workspace warmth without competing with the content. */}
+        <div className="pointer-events-none fixed inset-0 overflow-hidden -z-0" aria-hidden="true">
+          <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-brand-purple/10 dark:bg-brand-purple/15 blur-[120px]" />
+          <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-brand-cyan/5 dark:bg-brand-cyan/10 blur-[120px]" />
+        </div>
         <Sidebar onSignOut={handleSignOut} email={user?.email ?? null} />
         {/* Content column offsets by the sidebar width on md+, and by the
             bottom-nav height on < md so nothing sits under the fixed bar. */}
-        <div className="md:pl-60 pb-16 md:pb-0">
+        <div className="relative md:pl-60 pb-16 md:pb-0">
           <Outlet />
         </div>
         <MobileNav />
-        <Toaster position="bottom-right" richColors closeButton />
+        <Toaster position="bottom-right" richColors closeButton theme="system" />
       </div>
     </ConfirmProvider>
   );
