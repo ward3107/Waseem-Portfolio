@@ -95,13 +95,13 @@
     <link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/" />
 
     <!-- Preconnect for Performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <!-- Google Fonts removed; Inter + Space Grotesk are now self-hosted via
+         @fontsource. Saves two extra origin connections on the critical path
+         and removes a third-party CDN dependency. -->
 
-    <!-- Fonts - Non-blocking load with display=swap -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"></noscript>
+
+    <!-- Fonts self-hosted; @fontsource CSS is imported from index.css. -->
+
 
     <!-- Structured Data (JSON-LD) for Enhanced SEO -->
     <script type="application/ld+json">

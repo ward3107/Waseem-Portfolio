@@ -24,15 +24,6 @@ export default defineConfig({
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-framer': ['framer-motion'],
           'vendor-lucide': ['lucide-react'],
-          // Split the WebGL stack out of the main bundle. It's only used by
-          // Dimensional3DWord and can be deferred / cached separately.
-          'vendor-three': [
-            'three',
-            '@react-three/fiber',
-            '@react-three/drei',
-            '@react-three/postprocessing',
-            'troika-three-text',
-          ],
         },
       },
     },
