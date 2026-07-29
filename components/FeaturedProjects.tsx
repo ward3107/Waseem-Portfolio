@@ -7,6 +7,7 @@ import { ArrowRight, ArrowLeft, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useProjects } from '../hooks/useProjects';
+import { safeHref } from '../lib/safe';
 
 const FEATURED_COUNT = 3;
 
@@ -50,7 +51,7 @@ const FeaturedProjects: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-12">
           {projects.map((project, index) => {
-            const externalUrl = project.link || project.github;
+            const externalUrl = safeHref(project.link) || safeHref(project.github);
             const sharedProps = {
               initial: prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 },
               whileInView: { opacity: 1, y: 0 },

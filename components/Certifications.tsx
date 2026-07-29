@@ -4,6 +4,7 @@ import { Award, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useCertifications } from '../hooks/useCertifications';
+import { safeHref } from '../lib/safe';
 
 const formatDate = (iso: string, locale: string) =>
   new Date(iso).toLocaleDateString(locale, { year: 'numeric', month: 'long' });
@@ -70,7 +71,7 @@ const Certifications: React.FC = () => {
           {certifications.map((cert, index) => (
             <motion.a
               key={cert.id}
-              href={cert.credentialUrl}
+              href={safeHref(cert.credentialUrl)}
               target="_blank"
               rel="noopener noreferrer"
               initial={{ opacity: 0, y: 20 }}

@@ -5,6 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 import { useProjects } from '../hooks/useProjects';
+import { safeHref } from '../lib/safe';
 
 type FilterCategory = 'All' | 'Web' | 'AI' | 'Mobile';
 
@@ -200,9 +201,9 @@ const Projects: React.FC = () => {
                   </div>
 
                   <div className="flex gap-4 mt-6">
-                    {project.link && (
+                    {safeHref(project.link) && (
                       <a
-                        href={project.link}
+                        href={safeHref(project.link)}
                         target="_blank"
                         rel="noopener noreferrer"
                         // Keep the back-face links out of the tab order until the
@@ -215,9 +216,9 @@ const Projects: React.FC = () => {
                         <ExternalLink size={16} /> {t('projects_demo')}
                       </a>
                     )}
-                    {project.github && (
+                    {safeHref(project.github) && (
                       <a
-                        href={project.github}
+                        href={safeHref(project.github)}
                         target="_blank"
                         rel="noopener noreferrer"
                         tabIndex={isFlipped ? 0 : -1}

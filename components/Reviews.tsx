@@ -3,6 +3,7 @@ import { Star } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { averageRating } from '../data/reviews';
 import { useReviews } from '../hooks/useReviews';
+import { jsonForScriptTag } from '../lib/safe';
 
 // Section heading per language (no nested ternaries — SonarCloud-friendly).
 const HEADINGS: Record<string, { badge: string; title: string; subtitle: string }> = {
@@ -83,7 +84,7 @@ const Reviews: React.FC = () => {
     >
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(aggregateSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonForScriptTag(aggregateSchema) }}
       />
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="text-center mb-12">
