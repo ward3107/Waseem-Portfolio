@@ -348,4 +348,21 @@ export const en: Record<string, string> = {
 
     // Star rating aria template — {n} substituted at render time
     aria_rating: "{n} out of 5 stars",
+
+    // Accessibility toolbar
+    a11y_title: "Accessibility",
+    a11y_font_size: "Font Size",
+    a11y_contrast: "Contrast Mode",
+    a11y_contrast_normal: "Normal",
+    a11y_contrast_high: "High",
+    a11y_contrast_inverted: "Inverted",
+    a11y_highlight_links: "Highlight Links",
+    a11y_readable_font: "Readable Font",
+    a11y_text_spacing: "Text Spacing",
+    a11y_large_cursor: "Large Cursor",
+    a11y_hide_images: "Hide Images",
+    a11y_disable_animations: "Disable Animations",
+    a11y_reset: "Reset",
+    a11y_hide: "Hide",
+    a11y_persist: "Settings persist across sessions",
 };

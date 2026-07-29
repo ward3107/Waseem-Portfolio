@@ -342,4 +342,21 @@ export const ar: Record<string, string> = {
     form_newsletter_label: "عنوان بريد إلكتروني للنشرة الإخبارية",
 
     aria_rating: "{n} من 5 نجوم",
+
+    // Accessibility toolbar
+    a11y_title: "إمكانية الوصول",
+    a11y_font_size: "حجم الخط",
+    a11y_contrast: "وضع التباين",
+    a11y_contrast_normal: "عادي",
+    a11y_contrast_high: "عالي",
+    a11y_contrast_inverted: "معكوس",
+    a11y_highlight_links: "إبراز الروابط",
+    a11y_readable_font: "خط قابل للقراءة",
+    a11y_text_spacing: "تباعد النص",
+    a11y_large_cursor: "مؤشر كبير",
+    a11y_hide_images: "إخفاء الصور",
+    a11y_disable_animations: "تعطيل الرسوم المتحركة",
+    a11y_reset: "إعادة تعيين",
+    a11y_hide: "إخفاء",
+    a11y_persist: "الإعدادات محفوظة عبر الجلسات",
 };

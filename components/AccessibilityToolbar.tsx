@@ -36,20 +36,13 @@ const DEFAULT_STATE: A11yState = {
 // and changing any a11y setting silently flips the site's theme.
 
 const AccessibilityToolbar: React.FC = () => {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [state, setState] = useState<A11yState>(DEFAULT_STATE);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Get accessibility label based on language
-  const getAccessibilityLabel = () => {
-    switch (language) {
-      case 'he': return 'נגישות';
-      case 'ar': return 'إمكانية الوصول';
-      default: return 'Accessibility';
-    }
-  };
+  const getAccessibilityLabel = () => t('a11y_title');
 
   // Load persisted settings on mount
   useEffect(() => {
@@ -189,7 +182,7 @@ const AccessibilityToolbar: React.FC = () => {
         ref={panelRef}
         className="w-full sm:w-[400px] bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[90vh] pointer-events-auto overflow-hidden animate-float"
         role="dialog"
-        aria-label="Accessibility Settings"
+        aria-label={t('a11y_title')}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-brand-purple/10 to-brand-cyan/10">
@@ -201,9 +194,10 @@ const AccessibilityToolbar: React.FC = () => {
           </h2>
           <button
             onClick={() => setIsOpen(false)}
+            aria-label={t('aria_close')}
             className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500 dark:text-slate-400 hover:text-red-500"
           >
-            <X size={20} />
+            <X size={20} aria-hidden="true" />
           </button>
         </div>
 
@@ -213,7 +207,7 @@ const AccessibilityToolbar: React.FC = () => {
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                <Type size={18} /> Font Size
+                <Type size={18} aria-hidden="true" /> {t('a11y_font_size')}
               </label>
               <span className="text-sm font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-600 dark:text-slate-400">{state.fontSize}%</span>
             </div>
@@ -244,13 +238,13 @@ const AccessibilityToolbar: React.FC = () => {
           {/* 2. Contrast Mode */}
           <div className="space-y-3">
             <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-              <Sun size={18} /> Contrast Mode
+              <Sun size={18} aria-hidden="true" /> {t('a11y_contrast')}
             </label>
             <div className="grid grid-cols-3 gap-2">
               {([
-                { id: 'normal', label: 'Normal', bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-900 dark:text-slate-300' },
-                { id: 'high', label: 'High', bg: 'bg-white border-2 border-black', text: 'text-black' },
-                { id: 'inverted', label: 'Inverted', bg: 'bg-black', text: 'text-white' }
+                { id: 'normal', label: t('a11y_contrast_normal'), bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-900 dark:text-slate-300' },
+                { id: 'high', label: t('a11y_contrast_high'), bg: 'bg-white border-2 border-black', text: 'text-black' },
+                { id: 'inverted', label: t('a11y_contrast_inverted'), bg: 'bg-black', text: 'text-white' }
               ] as const).map((mode) => (
                 <button
                   key={mode.id}
@@ -269,12 +263,12 @@ const AccessibilityToolbar: React.FC = () => {
           {/* Grid Features */}
           <div className="grid grid-cols-1 gap-4">
             {[
-              { key: 'highlightLinks', label: 'Highlight Links', icon: LinkIcon },
-              { key: 'readableFont', label: 'Readable Font', icon: Type },
-              { key: 'textSpacing', label: 'Text Spacing', icon: AlignLeft },
-              { key: 'largeCursor', label: 'Large Cursor', icon: MousePointer },
-              { key: 'hideImages', label: 'Hide Images', icon: ImageIcon },
-              { key: 'disableAnimations', label: 'Disable Animations', icon: Zap },
+              { key: 'highlightLinks', label: t('a11y_highlight_links'), icon: LinkIcon },
+              { key: 'readableFont', label: t('a11y_readable_font'), icon: Type },
+              { key: 'textSpacing', label: t('a11y_text_spacing'), icon: AlignLeft },
+              { key: 'largeCursor', label: t('a11y_large_cursor'), icon: MousePointer },
+              { key: 'hideImages', label: t('a11y_hide_images'), icon: ImageIcon },
+              { key: 'disableAnimations', label: t('a11y_disable_animations'), icon: Zap },
             ].map((feature) => (
               <label key={feature.key} className="flex items-center justify-between cursor-pointer group p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
                 <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
@@ -302,20 +296,20 @@ const AccessibilityToolbar: React.FC = () => {
               onClick={resetSettings}
               className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-purple dark:hover:text-brand-purple transition-colors flex items-center justify-center gap-2"
             >
-              <RotateCcw size={16} /> Reset
+              <RotateCcw size={16} aria-hidden="true" /> {t('a11y_reset')}
             </button>
             <button
               onClick={() => setIsVisible(false)}
               className="flex-1 py-3 rounded-xl border border-red-100 dark:border-red-900/30 text-red-500 font-bold text-sm hover:bg-red-50 dark:hover:bg-red-900/10 hover:border-red-200 dark:hover:border-red-800 transition-colors flex items-center justify-center gap-2"
             >
-              <EyeOff size={16} /> Hide
+              <EyeOff size={16} aria-hidden="true" /> {t('a11y_hide')}
             </button>
           </div>
         </div>
 
         {/* Footer */}
         <div className="p-3 bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Settings persist across sessions</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">{t('a11y_persist')}</p>
         </div>
       </div>
     </div>

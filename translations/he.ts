@@ -340,4 +340,21 @@ export const he: Record<string, string> = {
     form_newsletter_label: "כתובת אימייל לניוזלטר",
 
     aria_rating: "{n} מתוך 5 כוכבים",
+
+    // Accessibility toolbar
+    a11y_title: "נגישות",
+    a11y_font_size: "גודל גופן",
+    a11y_contrast: "מצב ניגודיות",
+    a11y_contrast_normal: "רגיל",
+    a11y_contrast_high: "גבוה",
+    a11y_contrast_inverted: "הפוך",
+    a11y_highlight_links: "הדגש קישורים",
+    a11y_readable_font: "גופן קריא",
+    a11y_text_spacing: "מרווח טקסט",
+    a11y_large_cursor: "סמן גדול",
+    a11y_hide_images: "הסתר תמונות",
+    a11y_disable_animations: "בטל אנימציות",
+    a11y_reset: "איפוס",
+    a11y_hide: "הסתר",
+    a11y_persist: "ההגדרות נשמרות בין ביקורים",
 };
