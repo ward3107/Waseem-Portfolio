@@ -103,9 +103,17 @@ const CookieBanner: React.FC = () => {
                           </p>
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('cookie_cat_necessary_desc')}</p>
                         </div>
-                        <div className="relative inline-flex h-6 w-11 items-center rounded-full bg-brand-purple/50 cursor-not-allowed">
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked
+                          aria-disabled
+                          aria-label={t('cookie_cat_necessary')}
+                          disabled
+                          className="relative inline-flex h-6 w-11 items-center rounded-full bg-brand-purple/50 cursor-not-allowed"
+                        >
                           <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${dir === 'rtl' ? '-translate-x-6' : 'translate-x-6'}`} />
-                        </div>
+                        </button>
                       </div>
 
                       {/* Analytics */}
@@ -117,6 +125,10 @@ const CookieBanner: React.FC = () => {
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('cookie_cat_analytics_desc')}</p>
                         </div>
                         <button
+                          type="button"
+                          role="switch"
+                          aria-checked={preferences.analytics}
+                          aria-label={t('cookie_cat_analytics')}
                           onClick={() => togglePreference('analytics')}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 ${preferences.analytics ? 'bg-brand-purple' : 'bg-slate-200 dark:bg-slate-700'}`}
                         >
@@ -136,6 +148,10 @@ const CookieBanner: React.FC = () => {
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('cookie_cat_marketing_desc')}</p>
                         </div>
                         <button
+                          type="button"
+                          role="switch"
+                          aria-checked={preferences.marketing}
+                          aria-label={t('cookie_cat_marketing')}
                           onClick={() => togglePreference('marketing')}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 ${preferences.marketing ? 'bg-brand-purple' : 'bg-slate-200 dark:bg-slate-700'}`}
                         >

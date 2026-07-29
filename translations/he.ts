@@ -313,4 +313,31 @@ export const he: Record<string, string> = {
     home_cta_title: "מוכנים לבנות משהו מעולה?",
     home_cta_desc: "בואו נדבר על הפרויקט שלכם ונהפוך אותו למציאות.",
     home_cta_btn: "צרו קשר",
+
+    // 404
+    nf_title: "העמוד לא נמצא",
+    nf_body: "העמוד שחיפשתם לא קיים או שהועבר למקום אחר.",
+    nf_cta: "חזרה לדף הבית",
+
+    // Aria
+    aria_menu_open: "פתח תפריט ניווט",
+    aria_menu_close: "סגור תפריט ניווט",
+    aria_theme_toggle_dark: "החלף למצב כהה",
+    aria_theme_toggle_light: "החלף למצב בהיר",
+    aria_lang_switch: "החלף שפה",
+    aria_github: "פרופיל GitHub",
+    aria_linkedin: "פרופיל LinkedIn",
+    aria_twitter: "פרופיל Twitter",
+    aria_admin: "התחברות מנהל",
+    aria_back: "חזרה",
+    aria_close: "סגירה",
+
+    hero_flip_hint: "הקש להפיכה",
+
+    form_email_label: "כתובת אימייל",
+    form_name_label: "השם שלך",
+    form_message_label: "ההודעה שלך",
+    form_newsletter_label: "כתובת אימייל לניוזלטר",
+
+    aria_rating: "{n} מתוך 5 כוכבים",
 };

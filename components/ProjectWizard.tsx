@@ -192,8 +192,13 @@ ${selections.details}
             <div className="p-5 sm:p-6 md:p-8 flex-1 flex flex-col">
                 <div className="flex justify-between items-center mb-6 sm:mb-8">
                     {step > 0 ? (
-                        <button onClick={() => setStep(step - 1)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
-                            <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
+                        <button
+                            type="button"
+                            aria-label={t('aria_back')}
+                            onClick={() => setStep(step - 1)}
+                            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                        >
+                            <ArrowLeft size={18} className="sm:w-5 sm:h-5 rtl:rotate-180" aria-hidden="true" />
                         </button>
                     ) : <div></div>}
                     <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
@@ -257,6 +262,7 @@ ${selections.details}
                                 />
                                 <textarea
                                     className="w-full flex-1 p-3 sm:p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/20 focus:border-brand-purple resize-none min-h-[100px] sm:min-h-[120px] text-sm sm:text-base text-slate-900 dark:text-white"
+                                    aria-label={t('form_message_label')}
                                     placeholder={t('wizard_detail_placeholder')}
                                     value={selections.details}
                                     onChange={(e) => setSelections({ ...selections, details: e.target.value })}
@@ -268,6 +274,7 @@ ${selections.details}
                                         <input
                                             type="email"
                                             id="wizard-email"
+                                            aria-label={t('form_email_label')}
                                             placeholder={t('emailLabel')}
                                             value={selections.email}
                                             onChange={(e) => { setSelections({ ...selections, email: e.target.value }); setErrors({ ...errors, email: undefined }); }}
@@ -292,6 +299,7 @@ ${selections.details}
                                         <input
                                             type="text"
                                             id="wizard-name"
+                                            aria-label={t('form_name_label')}
                                             placeholder={t('nameLabel')}
                                             value={selections.name}
                                             onChange={(e) => { setSelections({ ...selections, name: e.target.value }); setErrors({ ...errors, name: undefined }); }}

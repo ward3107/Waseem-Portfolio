@@ -315,4 +315,31 @@ export const ar: Record<string, string> = {
     home_cta_title: "مستعد لبناء شيء رائع؟",
     home_cta_desc: "لنتحدث عن مشروعك ونحوّله إلى واقع.",
     home_cta_btn: "تواصل معي",
+
+    // 404
+    nf_title: "الصفحة غير موجودة",
+    nf_body: "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+    nf_cta: "العودة إلى الصفحة الرئيسية",
+
+    // Aria
+    aria_menu_open: "فتح قائمة التنقل",
+    aria_menu_close: "إغلاق قائمة التنقل",
+    aria_theme_toggle_dark: "التبديل إلى الوضع الداكن",
+    aria_theme_toggle_light: "التبديل إلى الوضع الفاتح",
+    aria_lang_switch: "تغيير اللغة",
+    aria_github: "ملف GitHub",
+    aria_linkedin: "ملف LinkedIn",
+    aria_twitter: "ملف Twitter",
+    aria_admin: "دخول المشرف",
+    aria_back: "رجوع",
+    aria_close: "إغلاق",
+
+    hero_flip_hint: "اضغط للتقليب",
+
+    form_email_label: "عنوان البريد الإلكتروني",
+    form_name_label: "اسمك",
+    form_message_label: "رسالتك",
+    form_newsletter_label: "عنوان بريد إلكتروني للنشرة الإخبارية",
+
+    aria_rating: "{n} من 5 نجوم",
 };

@@ -41,7 +41,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         }}
         tabIndex={0}
         role="button"
-        aria-label={isFlipped ? t('hero_card_front_aria') : t('hero_card_back_aria')}
+        aria-label={isFlipped ? t('hero_card_back_aria') : t('hero_card_front_aria')}
         aria-pressed={isFlipped}
         className="relative w-52 sm:w-60 md:w-64 lg:w-72 h-[280px] sm:h-[340px] md:h-[380px] lg:h-[420px] cursor-pointer group focus:outline-none focus:ring-4 focus:ring-brand-purple/50 rounded-3xl"
         onClick={() => setIsFlipped(!isFlipped)}
@@ -89,8 +89,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     }
                     className="flex items-center gap-1 text-white/70 text-[10px] sm:text-xs whitespace-nowrap"
                   >
-                    <span className="sm:hidden">Tap to flip</span>
-                    <span className="hidden sm:inline">Click to flip</span>
+                    <span>{t('hero_flip_hint')}</span>
                     <MousePointer2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   </motion.div>
                 </div>

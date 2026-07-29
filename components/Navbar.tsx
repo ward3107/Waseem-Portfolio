@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
                   const next = language === 'en' ? 'he' : language === 'he' ? 'ar' : 'en';
                   setLanguage(next);
                 }}
-                aria-label={`Switch language. Current: ${language.toUpperCase()}. Click to change.`}
+                aria-label={t('aria_lang_switch')}
                 className="flex items-center gap-2 text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight transition-colors p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
               >
                 <Globe size={20} aria-hidden="true" />
@@ -76,7 +76,7 @@ const Navbar: React.FC = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              aria-label={`Toggle ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              aria-label={theme === 'dark' ? t('aria_theme_toggle_light') : t('aria_theme_toggle_dark')}
               className="p-2 text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
             >
               {theme === 'dark' ? <Moon size={20} aria-hidden="true" /> : <Sun size={20} aria-hidden="true" />}
@@ -103,7 +103,7 @@ const Navbar: React.FC = () => {
                 const next = language === 'en' ? 'he' : language === 'he' ? 'ar' : 'en';
                 setLanguage(next);
               }}
-              aria-label={`Switch language. Current: ${language.toUpperCase()}`}
+              aria-label={t('aria_lang_switch')}
               className="text-slate-700 dark:text-slate-300 font-bold uppercase text-sm border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
             >
               {language}
@@ -111,7 +111,7 @@ const Navbar: React.FC = () => {
 
             <button
               onClick={toggleTheme}
-              aria-label={`Toggle ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              aria-label={theme === 'dark' ? t('aria_theme_toggle_light') : t('aria_theme_toggle_dark')}
               className="text-slate-700 dark:text-slate-300 hover:text-brand-purple p-1 focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"
             >
               {theme === 'dark' ? <Moon size={20} aria-hidden="true" /> : <Sun size={20} aria-hidden="true" />}
@@ -119,7 +119,7 @@ const Navbar: React.FC = () => {
 
             <button
               onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? 'Close menu' : 'Open menu'}
+              aria-label={isOpen ? t('aria_menu_close') : t('aria_menu_open')}
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
               className="text-slate-700 dark:text-slate-300 hover:text-brand-purple focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"

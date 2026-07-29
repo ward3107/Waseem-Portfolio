@@ -318,4 +318,34 @@ export const en: Record<string, string> = {
     home_cta_title: "Ready to build something great?",
     home_cta_desc: "Let's talk about your project and turn it into reality.",
     home_cta_btn: "Get in Touch",
+
+    // 404 page
+    nf_title: "Page not found",
+    nf_body: "The page you're looking for doesn't exist or has been moved.",
+    nf_cta: "Back to home",
+
+    // Aria labels — icon-only buttons and social links
+    aria_menu_open: "Open navigation menu",
+    aria_menu_close: "Close navigation menu",
+    aria_theme_toggle_dark: "Switch to dark mode",
+    aria_theme_toggle_light: "Switch to light mode",
+    aria_lang_switch: "Change language",
+    aria_github: "GitHub profile",
+    aria_linkedin: "LinkedIn profile",
+    aria_twitter: "Twitter profile",
+    aria_admin: "Admin login",
+    aria_back: "Back",
+    aria_close: "Close",
+
+    // Hero card mobile hint
+    hero_flip_hint: "Tap to flip",
+
+    // Form field labels (screen-reader only where invisible)
+    form_email_label: "Email address",
+    form_name_label: "Your name",
+    form_message_label: "Your message",
+    form_newsletter_label: "Email address for newsletter",
+
+    // Star rating aria template — {n} substituted at render time
+    aria_rating: "{n} out of 5 stars",
 };

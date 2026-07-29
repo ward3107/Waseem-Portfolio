@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
                 href={CONTACT.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Visit Waseem's GitHub profile"
+                aria-label={t('aria_github')}
                 className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-purple dark:hover:text-white hover:border-brand-purple hover:bg-brand-purple/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
               >
                 <Github size={18} aria-hidden="true" />
@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
                 href={CONTACT.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Visit Waseem's LinkedIn profile"
+                aria-label={t('aria_linkedin')}
                 className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-blue dark:hover:text-white hover:border-brand-blue hover:bg-brand-blue/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2"
               >
                 <Linkedin size={18} aria-hidden="true" />
@@ -90,7 +90,7 @@ const Footer: React.FC = () => {
                 href={CONTACT.twitter}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Visit Waseem's Twitter profile"
+                aria-label={t('aria_twitter')}
                 className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-brand-cyan dark:hover:text-white hover:border-brand-cyan hover:bg-brand-cyan/10 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2"
               >
                 <Twitter size={18} aria-hidden="true" />
@@ -336,6 +336,7 @@ const Footer: React.FC = () => {
                   <motion.input
                     type="email"
                     name="email"
+                    aria-label={t('form_newsletter_label')}
                     placeholder={t('footer_email_placeholder')}
                     required
                     animate={{
@@ -416,7 +417,7 @@ const Footer: React.FC = () => {
             <Link
               to="/admin"
               className="flex items-center gap-1 text-slate-400 dark:text-slate-600 hover:text-brand-purple hover:underline underline-offset-4 transition-all duration-300"
-              aria-label="Admin login"
+              aria-label={t('aria_admin')}
             >
               <Lock size={12} aria-hidden="true" />
               Admin
