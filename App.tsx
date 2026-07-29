@@ -9,17 +9,20 @@ import CookieBanner from './components/CookieBanner';
 import ScrollToHashOnRouteChange from './components/ScrollToHashOnRouteChange';
 import SectionSkeleton from './components/SectionSkeleton';
 import HomePage from './pages/HomePage';
+import ProjectsPage from './pages/ProjectsPage';
+import AboutPage from './pages/AboutPage';
+import NotFoundPage from './pages/NotFoundPage';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { WidgetProvider } from './contexts/WidgetContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AdminAuthProvider } from './contexts/AdminAuthContext';
 import RequireAuth from './components/admin/RequireAuth';
 
-// Route-level code splitting: Home loads eagerly (it's "/"), the other two
-// pages are only fetched once the user actually navigates there.
-const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
-const AboutPage = lazy(() => import('./pages/AboutPage'));
-const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+// The three public pages are bundled eagerly. Each is small (a few kB
+// after gzip), and lazy-loading them caused a visible flash of the
+// previous page's paint while React Router waited for the chunk to
+// arrive after a nav click. Admin routes stay lazy — the admin bundle
+// is unrelated to what a visitor loads.
 const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 
