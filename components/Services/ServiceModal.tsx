@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, MessageCircle } from 'lucide-react';
 import { Service } from '../../types';
 import { useFocusTrap, useEscapeKey } from '../../hooks/useFocusTrap';
-import { CONTACT } from '../../constants';
+import { useContact } from '../../hooks/useContact';
 
 interface ServiceModalProps {
   service: Service | null;
@@ -16,6 +16,7 @@ interface ServiceModalProps {
 const ServiceModal: React.FC<ServiceModalProps> = ({ service, onClose, onCTA, t, dir }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
+  const CONTACT = useContact();
 
   useFocusTrap(modalRef, service !== null);
   useEscapeKey(service !== null, onClose);

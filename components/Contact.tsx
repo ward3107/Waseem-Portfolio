@@ -4,11 +4,12 @@ import ProjectWizard from './ProjectWizard';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
-import { CONTACT } from '../constants';
+import { useContact } from '../hooks/useContact';
 import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 
 const Contact: React.FC = () => {
   const { t, language } = useLanguage();
+  const CONTACT = useContact();
 
   // Check for reduced motion preference
   const prefersReducedMotion = usePrefersReducedMotion();

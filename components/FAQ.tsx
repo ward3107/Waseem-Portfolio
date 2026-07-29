@@ -4,11 +4,12 @@ import { Plus, Minus, MessageCircle, Sparkles, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FAQItem } from '../types';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
-import { CONTACT } from '../constants';
+import { useContact } from '../hooks/useContact';
 import Dimensional3DWord, { fontForLanguage } from './three/Dimensional3DWord';
 
 const FAQ: React.FC = () => {
     const { t, dir, language } = useLanguage();
+    const CONTACT = useContact();
     const [openIndex, setOpenIndex] = useState<number | null>(0);
     const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 

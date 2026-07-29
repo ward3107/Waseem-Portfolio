@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Github, Linkedin, Twitter, ArrowRight, ArrowLeft, Mail, X, Lock } from 'lucide-react';
-import { NAV_LINKS, CONTACT, SERVICE_AREAS } from '../constants';
+import { NAV_LINKS, SERVICE_AREAS } from '../constants';
 import { useLanguage } from '../contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '../hooks/useFocusTrap';
 import { useSectionNavigate } from '../hooks/useSectionNavigate';
+import { useContact } from '../hooks/useContact';
 import { trackEvent } from '../utils';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const { language, t } = useLanguage();
   const navigateToSection = useSectionNavigate();
+  const CONTACT = useContact();
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const modalRef = useRef<HTMLDivElement>(null);
