@@ -64,22 +64,24 @@ const CookieBanner: React.FC = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 flex justify-center pointer-events-none"
+          className="fixed bottom-0 left-0 right-0 z-50 p-2 sm:p-4 md:p-6 flex justify-center pointer-events-none"
         >
-          <div className="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 pointer-events-auto overflow-hidden flex flex-col md:flex-row shadow-brand-purple/10 transition-colors duration-300">
+          <div className="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 pointer-events-auto overflow-hidden flex flex-col md:flex-row shadow-brand-purple/10 transition-colors duration-300">
 
-            {/* Left Side: Content */}
-            <div className="p-6 md:p-8 flex-1">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-full bg-brand-purple/10 dark:bg-brand-purple/20 flex items-center justify-center text-brand-purple">
-                  <Cookie size={20} />
+            {/* Left Side: Content — trimmed on mobile so the banner doesn't
+                cover half the viewport. Long body copy is hidden until the
+                user opens "Details" (or automatically visible on md+). */}
+            <div className="p-4 sm:p-6 md:p-8 flex-1">
+              <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-brand-purple/10 dark:bg-brand-purple/20 flex items-center justify-center text-brand-purple shrink-0">
+                  <Cookie size={18} />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                <h3 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white">
                   {t('cookie_title')}
                 </h3>
               </div>
 
-              <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 hidden md:block">
                 {t('cookie_desc')}
               </p>
 
@@ -177,11 +179,11 @@ const CookieBanner: React.FC = () => {
             </div>
 
             {/* Right Side: Actions */}
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-6 md:p-8 flex flex-col justify-center gap-3 min-w-[200px] border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 sm:p-4 md:p-8 flex flex-col sm:flex-row md:flex-col justify-center gap-2 sm:gap-3 min-w-[200px] border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-800">
               {showDetails ? (
                 <button
                   onClick={handleSavePreferences}
-                  className="w-full py-3 rounded-xl bg-brand-purple text-white font-bold text-sm hover:bg-brand-purpleDark transition-all shadow-lg hover:shadow-brand-purple/20"
+                  className="w-full py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-brand-purple text-white font-bold text-sm hover:bg-brand-purpleDark transition-all shadow-lg hover:shadow-brand-purple/20"
                 >
                   {t('cookie_save')}
                 </button>
@@ -189,13 +191,13 @@ const CookieBanner: React.FC = () => {
                 <>
                   <button
                     onClick={handleAcceptAll}
-                    className="w-full py-3 rounded-xl bg-brand-purple text-white font-bold text-sm hover:bg-brand-purpleDark transition-all shadow-lg hover:shadow-brand-purple/20"
+                    className="flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-brand-purple text-white font-bold text-sm hover:bg-brand-purpleDark transition-all shadow-lg hover:shadow-brand-purple/20"
                   >
                     {t('cookie_accept')}
                   </button>
                   <button
                     onClick={handleDeclineAll}
-                    className="w-full py-3 rounded-xl bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                    className="flex-1 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                   >
                     {t('cookie_decline')}
                   </button>

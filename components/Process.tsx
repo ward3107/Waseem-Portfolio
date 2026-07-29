@@ -171,8 +171,11 @@ const Process: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile / Tablet View (Standard Vertical Timeline) */}
-      <div className="lg:hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10">
+      {/* Mobile / Tablet View (Standard Vertical Timeline).
+          overflow-x-clip: the absolute connecting-line + icon-bubble dots
+          were overflowing by ~4px in RTL and causing sideways scroll on
+          Hebrew/Arabic mobile — clip locally so it can't escape. */}
+      <div className="lg:hidden py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10 overflow-x-clip">
         <div className="text-center mb-10 sm:mb-12 md:mb-16">
           <h2 className="text-2xl sm:text-3xl font-heading font-bold mb-3 sm:mb-4 text-slate-900 dark:text-white">{t('process_mobile_title')}</h2>
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400">{t('process_mobile_desc')}</p>

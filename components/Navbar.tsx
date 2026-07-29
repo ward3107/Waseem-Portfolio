@@ -104,7 +104,7 @@ const Navbar: React.FC = () => {
                 setLanguage(next);
               }}
               aria-label={t('aria_lang_switch')}
-              className="text-slate-700 dark:text-slate-300 font-bold uppercase text-sm border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
+              className="text-slate-700 dark:text-slate-300 font-bold uppercase text-sm border border-slate-200 dark:border-slate-700 rounded-md min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
             >
               {language}
             </button>
@@ -112,7 +112,7 @@ const Navbar: React.FC = () => {
             <button
               onClick={toggleTheme}
               aria-label={theme === 'dark' ? t('aria_theme_toggle_light') : t('aria_theme_toggle_dark')}
-              className="text-slate-700 dark:text-slate-300 hover:text-brand-purple p-1 focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"
+              className="text-slate-700 dark:text-slate-300 hover:text-brand-purple min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"
             >
               {theme === 'dark' ? <Moon size={20} aria-hidden="true" /> : <Sun size={20} aria-hidden="true" />}
             </button>
@@ -122,7 +122,7 @@ const Navbar: React.FC = () => {
               aria-label={isOpen ? t('aria_menu_close') : t('aria_menu_open')}
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
-              className="text-slate-700 dark:text-slate-300 hover:text-brand-purple focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"
+              className="text-slate-700 dark:text-slate-300 hover:text-brand-purple min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"
             >
               {isOpen ? <X size={28} aria-hidden="true" /> : <Menu size={28} aria-hidden="true" />}
             </button>
@@ -130,19 +130,32 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu — backdrop covers the rest of the page so a tap outside
+          the menu closes it AND the content underneath is not accidentally
+          clickable (previously the hero card could be flipped through the
+          drawer). Backdrop has its own z-index below the menu itself. */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            id="mobile-menu"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 overflow-hidden relative z-50"
-            role="navigation"
-            aria-label="Main navigation menu"
-          >
-            <div className="px-6 pt-4 pb-8 space-y-4 flex flex-col">
+          <>
+            <motion.button
+              type="button"
+              aria-label={t('aria_menu_close')}
+              onClick={() => setIsOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="md:hidden fixed inset-0 bg-black/50 z-40 cursor-default"
+            />
+            <motion.div
+              id="mobile-menu"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 overflow-hidden relative z-50"
+              role="navigation"
+              aria-label="Main navigation menu"
+            >
+              <div className="px-6 pt-4 pb-8 space-y-4 flex flex-col">
               {NAV_LINKS[language].map((link) => (
                 <a
                   key={link.name}
@@ -168,8 +181,9 @@ const Navbar: React.FC = () => {
               >
                 {t('letsTalk')}
               </a>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 

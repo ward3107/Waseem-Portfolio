@@ -112,7 +112,7 @@ const Footer: React.FC = () => {
                       e.preventDefault();
                       navigateToSection(link.href);
                     }}
-                    className="hover:text-brand-purple transition-colors flex items-center gap-2 group"
+                    className="hover:text-brand-purple transition-colors flex items-center gap-2 group py-1.5"
                   >
                     <ArrowRight
                       size={14}
@@ -145,7 +145,7 @@ const Footer: React.FC = () => {
                 <li key={area.slug}>
                   <a
                     href={language === 'ar' ? `/ar/${area.slug}/` : `/${area.slug}/`}
-                    className="hover:text-brand-cyan transition-colors flex items-center gap-2 group"
+                    className="hover:text-brand-cyan transition-colors flex items-center gap-2 group py-1.5"
                   >
                     <ArrowRight
                       size={14}
@@ -178,7 +178,7 @@ const Footer: React.FC = () => {
                       e.preventDefault();
                       navigateToSection('/#what-i-do');
                     }}
-                    className="hover:text-brand-cyan transition-colors"
+                    className="hover:text-brand-cyan transition-colors block py-1.5"
                   >
                     {t(`service_${i}_title`)}
                   </a>
