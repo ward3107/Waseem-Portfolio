@@ -16,14 +16,23 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Guard: without `active`, a rapid unmount (StrictMode, fast route
+    // change) before getSession() resolves triggers setState on an
+    // unmounted provider.
+    let active = true;
     supabase.auth.getSession().then(({ data }) => {
+      if (!active) return;
       setUser(data.session?.user ?? null);
       setLoading(false);
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (!active) return;
       setUser(session?.user ?? null);
     });
-    return () => sub.subscription.unsubscribe();
+    return () => {
+      active = false;
+      sub.subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {

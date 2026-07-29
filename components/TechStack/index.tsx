@@ -27,13 +27,31 @@ const TechStack: React.FC = () => {
   );
 
   const comboTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const clicksRef = useRef(0);
+  // Shared timer for the flash-message banner. Without this, back-to-back
+  // stage advances / boss defeats leave stale timeouts that blank the newer
+  // banner early. Also cleared on unmount so we don't setState after nav.
+  const flashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Shared timer for the shake effect — same unmount concern.
+  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Clear the pending combo-reset timer if the section unmounts (route change)
-  // so it can't fire setState on an unmounted component.
-  useEffect(() => () => {
-    if (comboTimeoutRef.current) clearTimeout(comboTimeoutRef.current);
-  }, []);
+  const showFlash = (msg: { title: string; sub: string; color: string }, ms: number) => {
+    setFlashMsg(msg);
+    if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    flashTimerRef.current = setTimeout(() => {
+      setFlashMsg(null);
+      flashTimerRef.current = null;
+    }, ms);
+  };
+
+  useEffect(
+    () => () => {
+      if (comboTimeoutRef.current) clearTimeout(comboTimeoutRef.current);
+      if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+      if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+    },
+    []
+  );
+  const clicksRef = useRef(0);
 
   // Parallax backdrop grid — drifts vertically as the section scrolls, purely
   // on the background layer so it never touches the marquee/click-to-pop game.
@@ -43,30 +61,38 @@ const TechStack: React.FC = () => {
 
   const triggerShake = () => {
     setShake(10);
-    setTimeout(() => setShake(0), 200);
+    if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+    shakeTimerRef.current = setTimeout(() => {
+      setShake(0);
+      shakeTimerRef.current = null;
+    }, 200);
   };
 
   const checkEvents = useCallback(
     (currentClicks: number) => {
       if (currentClicks === STAGE_THRESHOLDS.STAGE_2) {
         setStage(2);
-        setFlashMsg({
-          title: 'SYSTEM OVERCLOCK',
-          sub: 'AUTO-FIRE ENABLED',
-          color: 'border-brand-cyan',
-        });
+        showFlash(
+          {
+            title: 'SYSTEM OVERCLOCK',
+            sub: 'AUTO-FIRE ENABLED',
+            color: 'border-brand-cyan',
+          },
+          3000
+        );
         playSound('win');
-        setTimeout(() => setFlashMsg(null), 3000);
       }
       if (currentClicks === STAGE_THRESHOLDS.STAGE_3) {
         setStage(3);
-        setFlashMsg({
-          title: 'WEAPON UPGRADE',
-          sub: 'BOMB MODE ACTIVE',
-          color: 'border-red-500',
-        });
+        showFlash(
+          {
+            title: 'WEAPON UPGRADE',
+            sub: 'BOMB MODE ACTIVE',
+            color: 'border-red-500',
+          },
+          3000
+        );
         playSound('win');
-        setTimeout(() => setFlashMsg(null), 3000);
       }
       if (currentClicks === STAGE_THRESHOLDS.WIN && !hasClaimedDiscount) {
         setShowDiscount(true);
@@ -94,12 +120,14 @@ const TechStack: React.FC = () => {
   const handleBossDefeat = () => {
     setActiveBoss(null);
     setScore((s) => s + 5000);
-    setFlashMsg({
-      title: 'THREAT NEUTRALIZED',
-      sub: '+5000 POINTS',
-      color: 'border-brand-gold',
-    });
-    setTimeout(() => setFlashMsg(null), 2500);
+    showFlash(
+      {
+        title: 'THREAT NEUTRALIZED',
+        sub: '+5000 POINTS',
+        color: 'border-brand-gold',
+      },
+      2500
+    );
   };
 
   const animationDuration = stage === 1 ? '60s' : stage === 2 ? '30s' : '15s';

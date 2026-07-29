@@ -142,6 +142,11 @@ const ScrollToHashOnRouteChange: React.FC = () => {
     // it would re-assert the hash on the next render).
     if (location.hash) {
       navigate(location.pathname + location.search, { replace: true });
+      // The navigate() re-triggers this effect (deps: pathname + hash) with
+      // an empty hash; that second run installs the fallback timers. Bail
+      // now so we don't install a duplicate set that keep running in
+      // parallel with the second run's set.
+      return;
     }
     const timers = REASSERT_MS.map((ms) =>
       window.setTimeout(() => window.scrollTo(0, 0), ms)

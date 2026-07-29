@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
@@ -56,11 +56,26 @@ const ProjectWizard: React.FC<ProjectWizardProps> = () => {
         }
     ];
 
+    // Tracked so the 300ms auto-advance can't fire after unmount (nav
+    // change, language switch that remounts) — otherwise React 18 warns
+    // about setState on an unmounted component.
+    const advanceTimerRef = useRef<number | null>(null);
+    useEffect(
+        () => () => {
+            if (advanceTimerRef.current !== null) window.clearTimeout(advanceTimerRef.current);
+        },
+        []
+    );
+
     const handleSelect = (key: string, value: string) => {
         setSelections({ ...selections, [key]: value });
         if (step < steps.length) {
-            // Functional update avoids advancing from a stale `step` capture.
-            setTimeout(() => setStep((s) => s + 1), 300); // Auto advance for smoother UX
+            if (advanceTimerRef.current !== null) window.clearTimeout(advanceTimerRef.current);
+            advanceTimerRef.current = window.setTimeout(() => {
+                // Functional update avoids advancing from a stale `step` capture.
+                setStep((s) => s + 1);
+                advanceTimerRef.current = null;
+            }, 300);
         }
     };
 

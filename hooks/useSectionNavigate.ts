@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 /**
@@ -11,6 +11,15 @@ import { useNavigate, useLocation } from 'react-router-dom';
 export const useSectionNavigate = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  // Retained so a rapid second nav-click cancels the first pending
+  // focus() — otherwise both fire and the second steals focus back.
+  const focusTimerRef = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (focusTimerRef.current !== null) window.clearTimeout(focusTimerRef.current);
+    },
+    []
+  );
 
   return useCallback(
     (href: string, options?: { focusId?: string }) => {
@@ -21,7 +30,11 @@ export const useSectionNavigate = () => {
         if (hash) {
           document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
           if (options?.focusId) {
-            setTimeout(() => document.getElementById(options.focusId!)?.focus(), 500);
+            if (focusTimerRef.current !== null) window.clearTimeout(focusTimerRef.current);
+            focusTimerRef.current = window.setTimeout(() => {
+              document.getElementById(options.focusId!)?.focus();
+              focusTimerRef.current = null;
+            }, 500);
           }
         } else {
           window.scrollTo({ top: 0, behavior: 'smooth' });

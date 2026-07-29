@@ -6,8 +6,16 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { useCertifications } from '../hooks/useCertifications';
 import { safeHref } from '../lib/safe';
 
-const formatDate = (iso: string, locale: string) =>
-  new Date(iso).toLocaleDateString(locale, { year: 'numeric', month: 'long' });
+/** Format an ISO date. Returns '—' for null/empty/invalid input so a cert
+ *  saved without an expiry (allowed by the schema) never renders as the
+ *  literal string "Invalid Date". */
+const formatDate = (iso: string | null | undefined, locale: string): string => {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime())
+    ? '—'
+    : d.toLocaleDateString(locale, { year: 'numeric', month: 'long' });
+};
 
 const Certifications: React.FC = () => {
   const { t, language } = useLanguage();

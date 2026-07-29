@@ -28,7 +28,10 @@ const AdminLayout: React.FC<{
       // the session ended. RequireAuth would redirect anyway, but doing it
       // explicitly avoids a brief flash of admin content mid-teardown.
       navigate('/admin/login', { replace: true });
-    } finally {
+      // NOTE: intentionally do NOT reset `signingOut` on success —
+      // this component unmounts immediately after the navigate, and
+      // setState-on-unmount throws a React warning.
+    } catch {
       setSigningOut(false);
     }
   };
