@@ -25,6 +25,11 @@ import RequireAuth from './components/admin/RequireAuth';
 // is unrelated to what a visitor loads.
 const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
+// Admin page components live inside the shell via nested routes. Grouped in
+// a single lazy import so they arrive together with the shell chunk.
+const AdminPages = lazy(() =>
+  import('./components/admin/pages/_bundle').then((m) => ({ default: m.default }))
+);
 
 // Skip link component with proper accessibility
 const SkipLink: React.FC = () => {
@@ -69,7 +74,23 @@ const AppContent: React.FC = () => {
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/admin/login" element={<LoginPage />} />
-        <Route path="/admin" element={<RequireAuth><AdminDashboard /></RequireAuth>} />
+        <Route
+          path="/admin"
+          element={<RequireAuth><AdminDashboard /></RequireAuth>}
+        >
+          <Route index element={<AdminPages page="overview" />} />
+          <Route path="projects" element={<AdminPages page="projects-list" />} />
+          <Route path="projects/new" element={<AdminPages page="project-editor" />} />
+          <Route path="projects/:id" element={<AdminPages page="project-editor" />} />
+          <Route path="certifications" element={<AdminPages page="certs-list" />} />
+          <Route path="certifications/new" element={<AdminPages page="cert-editor" />} />
+          <Route path="certifications/:id" element={<AdminPages page="cert-editor" />} />
+          <Route path="reviews" element={<AdminPages page="reviews-list" />} />
+          <Route path="reviews/new" element={<AdminPages page="review-editor" />} />
+          <Route path="reviews/:id" element={<AdminPages page="review-editor" />} />
+          <Route path="media" element={<AdminPages page="media" />} />
+          <Route path="settings" element={<AdminPages page="settings" />} />
+        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
