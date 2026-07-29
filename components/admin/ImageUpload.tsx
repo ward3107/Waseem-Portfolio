@@ -27,7 +27,12 @@ const ImageUpload: React.FC<{
   return (
     <div className="space-y-2">
       {value && <img src={value} alt="" className="h-24 rounded-lg object-cover" />}
-      <input type="file" accept="image/*,application/pdf" onChange={onFile} disabled={busy} />
+      <input
+        type="file"
+        accept="image/png,image/jpeg,image/webp,image/avif,application/pdf"
+        onChange={onFile}
+        disabled={busy}
+      />
       {busy && <p className="text-sm text-gray-400">Uploading…</p>}
       {error && <p className="text-sm text-red-400">{error}</p>}
     </div>

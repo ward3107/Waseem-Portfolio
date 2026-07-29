@@ -8,6 +8,6 @@ Sitemap: https://waseemp.vercel.app/sitemap.xml
 # Crawl-delay (optional, helps with server load)
 Crawl-delay: 1
 
-# Disallow specific paths (if needed in the future)
-# Disallow: /admin/
-# Disallow: /private/
+# Admin area — no reason for it to appear in search results.
+Disallow: /admin
+Disallow: /admin/
