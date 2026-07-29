@@ -284,7 +284,7 @@ const AboutTimeline: React.FC = () => {
                     </div>
 
                     {/* Right Column: Narrative Timeline */}
-                    <div className="lg:col-span-7 pl-0 lg:pl-10 flex flex-col justify-center">
+                    <div className="lg:col-span-7 ps-0 lg:ps-10 flex flex-col justify-center">
                         <div className="prose prose-base md:prose-lg text-slate-600 dark:text-slate-400 mb-8 md:mb-12">
                             <p>
                                 {t('about_narrative_1')}
@@ -297,9 +297,14 @@ const AboutTimeline: React.FC = () => {
                             </p>
                         </div>
 
-                        <div className="relative border-l-2 border-slate-200 dark:border-slate-800 ml-3 space-y-8 md:space-y-12">
+                        {/* Logical-side classes so the rail, dot, and text
+                            padding all live on the reading-start edge in
+                            both LTR and RTL. Was using physical `left-*` /
+                            `ml-*` which stayed on the same physical side in
+                            Hebrew/Arabic and broke the layout. */}
+                        <div className="relative border-s-2 border-slate-200 dark:border-slate-800 ms-3 space-y-8 md:space-y-12">
                             {/* Glowing Line Overlay */}
-                            <div className="absolute left-[-2px] top-0 w-[2px] h-full bg-gradient-to-b from-brand-purple via-brand-cyan to-transparent"></div>
+                            <div className="absolute start-[-2px] top-0 w-[2px] h-full bg-gradient-to-b from-brand-purple via-brand-cyan to-transparent"></div>
 
                             {localizedTimeline.map((item, index) => (
                                 <motion.div
@@ -308,10 +313,10 @@ const AboutTimeline: React.FC = () => {
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: index * 0.2 }}
-                                    className="relative pl-10"
+                                    className="relative ps-10"
                                 >
                                     {/* Timeline Dot */}
-                                    <div className="absolute left-[-9px] top-0 w-[14px] md:w-[18px] h-[14px] md:h-[18px] rounded-full border-4 border-white bg-brand-purple shadow-[0_0_0_4px_rgba(72,58,160,0.2)]"></div>
+                                    <div className="absolute start-[-9px] top-0 w-[14px] md:w-[18px] h-[14px] md:h-[18px] rounded-full border-4 border-white bg-brand-purple shadow-[0_0_0_4px_rgba(72,58,160,0.2)]"></div>
 
                                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
                                         {/* Spinning Year Effect - Updated Color */}

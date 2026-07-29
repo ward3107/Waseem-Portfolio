@@ -178,7 +178,7 @@ const Projects: React.FC = () => {
                       {project.description}
                     </p>
                     <div className="mt-auto pt-4 flex items-center text-brand-blue font-bold text-sm">
-                      {t('projects_details')} <ExternalLink size={14} className="ml-1" />
+                      {t('projects_details')} <ExternalLink size={14} className="ms-1" />
                     </div>
                   </div>
                 </div>

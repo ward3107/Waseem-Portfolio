@@ -236,7 +236,7 @@ ${selections.details}
                                     <button
                                         key={option.id}
                                         onClick={() => handleSelect(steps[step].id, option.id)}
-                                        className={`p-3 sm:p-4 rounded-xl border-2 text-left transition-all duration-200 flex items-center gap-3 sm:gap-4 group
+                                        className={`p-3 sm:p-4 rounded-xl border-2 text-start transition-all duration-200 flex items-center gap-3 sm:gap-4 group
                                             ${selections[steps[step].id as keyof typeof selections] === option.id
                                                 ? 'border-brand-purple bg-brand-purple/5 dark:bg-brand-purple/20 ring-4 ring-brand-purple/10'
                                                 : 'border-slate-100 dark:border-slate-800 hover:border-brand-purple/50 hover:bg-slate-50 dark:hover:bg-slate-800'}`}

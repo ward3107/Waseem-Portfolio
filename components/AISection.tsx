@@ -144,7 +144,7 @@ const AISection: React.FC = () => {
                     <Bot size={20} className="text-white" />
                   </div>
                   <div>
-                    <p className="font-bold text-slate-900">{t('ai_chat_name')}</p>
+                    <p className="font-bold text-slate-900 dark:text-white">{t('ai_chat_name')}</p>
                     <p className="text-xs text-brand-green flex items-center gap-1">
                       <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse"></span> {t('ai_chat_status')}
                     </p>
@@ -192,7 +192,7 @@ const AISection: React.FC = () => {
                         transition: { type: "spring", stiffness: 200, damping: 20 }
                       }
                     }}
-                    className="bg-brand-purple p-4 rounded-tl-xl rounded-bl-xl rounded-br-xl max-w-[85%] ml-auto text-white shadow-lg shadow-brand-purple/20"
+                    className="bg-brand-purple p-4 rounded-tl-xl rounded-bl-xl rounded-br-xl max-w-[85%] ms-auto text-white shadow-lg shadow-brand-purple/20"
                   >
                     <p>{t('ai_chat_msg_2')}</p>
                   </motion.div>
@@ -208,7 +208,7 @@ const AISection: React.FC = () => {
                         transition: { type: "spring", stiffness: 200, damping: 20 }
                       }
                     }}
-                    className="bg-slate-50 p-4 rounded-tr-xl rounded-bl-xl rounded-br-xl max-w-[85%] border border-slate-100 text-slate-700"
+                    className="bg-slate-50 dark:bg-slate-800 p-4 rounded-tr-xl rounded-bl-xl rounded-br-xl max-w-[85%] border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-300"
                   >
                     <motion.div
                       initial={{ opacity: 0 }}
