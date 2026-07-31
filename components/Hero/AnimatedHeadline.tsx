@@ -37,7 +37,7 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
       <br />
 
       <span className="relative inline-block z-50 me-2">
-        <span className="relative z-50 text-brand-purple">
+        <span className="relative z-50 text-brand-purple dark:text-brand-purpleLight drop-shadow-[0_1px_10px_rgba(121,101,193,0.55)]">
           {splitForAnimation(t('hero_title_2'), language).map((char, index) => (
             <motion.span
               key={`p2-${index}`}
@@ -90,7 +90,7 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
         <Dimensional3DWord
           word={t('hero_title_4')}
           font={fontForLanguage(language)}
-          fallbackClassName="inline-block whitespace-pre font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-yellow-500 to-brand-gold bg-[length:200%_auto] relative z-10"
+          fallbackClassName="inline-block whitespace-pre font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-yellow-300 to-brand-gold dark:from-brand-goldLight dark:via-yellow-200 dark:to-brand-goldLight bg-[length:200%_auto] relative z-10 drop-shadow-[0_1px_8px_rgba(227,208,149,0.45)]"
         />
       </span>
     </h1>
