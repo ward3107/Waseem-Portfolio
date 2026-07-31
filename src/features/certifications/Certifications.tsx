@@ -102,7 +102,9 @@ const Certifications: React.FC = () => {
 
               <div className="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
                 <span>{t('cert_issued')}: {formatDate(cert.issueDate, locale)}</span>
-                <span>{t('cert_expires')}: {formatDate(cert.expiryDate, locale)}</span>
+                {cert.expiryDate && (
+                  <span>{t('cert_expires')}: {formatDate(cert.expiryDate, locale)}</span>
+                )}
               </div>
 
               <span className="mt-4 text-sm font-bold text-brand-purple group-hover:underline">

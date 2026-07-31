@@ -33,4 +33,28 @@ export const CERTIFICATIONS: Certification[] = [
     expiryDate: '2027-07-17',
     credentialUrl: 'https://www.credential.net/df4ab345-1a92-4f1d-9a32-de0ba8032d5a',
   },
+  {
+    id: 'meta-intro-frontend',
+    title: 'Introduction to Front-End Development',
+    issuer: 'Meta (via Coursera)',
+    issueDate: '2026-07-26',
+    expiryDate: '',
+    credentialUrl: 'https://coursera.org/verify/1G6ZB303XNAY',
+  },
+  {
+    id: 'scrimba-deploy-ai-cloudflare',
+    title: 'Deploy AI Apps with Cloudflare',
+    issuer: 'Scrimba (via Coursera)',
+    issueDate: '2026-07-31',
+    expiryDate: '',
+    credentialUrl: 'https://coursera.org/verify/XT00EO361JTM',
+  },
+  {
+    id: 'scrimba-intro-ai-engineering',
+    title: 'Intro to AI Engineering',
+    issuer: 'Scrimba (via Coursera)',
+    issueDate: '2026-07-31',
+    expiryDate: '',
+    credentialUrl: 'https://coursera.org/verify/FQY4PSQZ99XN',
+  },
 ];
