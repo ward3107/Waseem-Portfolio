@@ -40,6 +40,7 @@ export const CERTIFICATIONS: Certification[] = [
     issueDate: '2026-07-26',
     expiryDate: '',
     credentialUrl: 'https://coursera.org/verify/1G6ZB303XNAY',
+    image: '/certifications/meta-intro-frontend.png',
   },
   {
     id: 'scrimba-deploy-ai-cloudflare',
@@ -48,6 +49,7 @@ export const CERTIFICATIONS: Certification[] = [
     issueDate: '2026-07-31',
     expiryDate: '',
     credentialUrl: 'https://coursera.org/verify/XT00EO361JTM',
+    image: '/certifications/scrimba-deploy-ai-cloudflare.png',
   },
   {
     id: 'scrimba-intro-ai-engineering',
@@ -56,5 +58,6 @@ export const CERTIFICATIONS: Certification[] = [
     issueDate: '2026-07-31',
     expiryDate: '',
     credentialUrl: 'https://coursera.org/verify/FQY4PSQZ99XN',
+    image: '/certifications/scrimba-intro-ai-engineering.png',
   },
 ];

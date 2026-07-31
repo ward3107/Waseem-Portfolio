@@ -60,7 +60,7 @@ values
     '2026-07-26',
     null,
     'https://coursera.org/verify/1G6ZB303XNAY',
-    '/certifications/meta-intro-frontend.pdf',
+    '/certifications/meta-intro-frontend.png',
     100
   ),
   (
@@ -70,7 +70,7 @@ values
     '2026-07-31',
     null,
     'https://coursera.org/verify/XT00EO361JTM',
-    '/certifications/scrimba-deploy-ai-cloudflare.pdf',
+    '/certifications/scrimba-deploy-ai-cloudflare.png',
     101
   ),
   (
@@ -80,7 +80,7 @@ values
     '2026-07-31',
     null,
     'https://coursera.org/verify/FQY4PSQZ99XN',
-    '/certifications/scrimba-intro-ai-engineering.pdf',
+    '/certifications/scrimba-intro-ai-engineering.png',
     102
   )
 on conflict (slug) do update set
