@@ -57,19 +57,23 @@ export interface AssetUsage {
   certifications: { id: string; slug: string }[];
 }
 export async function getAssetUsage(url: string): Promise<AssetUsage> {
-  const [proj, certs] = await Promise.all([
-    supabase
-      .from('projects')
-      .select('id, title, image_url, screenshots')
-      .or(`image_url.eq.${url},screenshots.cs.{"${url}"}`),
-    supabase
-      .from('certifications')
-      .select('id, slug, image_url')
-      .eq('image_url', url),
+  // Fetch project rows in two typed queries — one for the cover URL (an
+  // eq on a text column) and one for the screenshots array — instead of
+  // .or()-interpolating the URL into a PostgREST filter string. The .or()
+  // form breaks on commas/braces/quotes in the URL and silently returns
+  // 'unused' for anything it can't parse, which would then be deleted.
+  const [projByCover, projByShot, certs] = await Promise.all([
+    supabase.from('projects').select('id, title').eq('image_url', url),
+    supabase.from('projects').select('id, title').contains('screenshots', [url]),
+    supabase.from('certifications').select('id, slug').eq('image_url', url),
   ]);
 
+  const byId = new Map<string, { id: string; title: string }>();
+  for (const p of projByCover.data ?? []) byId.set(p.id, { id: p.id, title: p.title });
+  for (const p of projByShot.data ?? []) byId.set(p.id, { id: p.id, title: p.title });
+
   return {
-    projects: (proj.data ?? []).map((p) => ({ id: p.id, title: p.title })),
+    projects: Array.from(byId.values()),
     certifications: (certs.data ?? []).map((c) => ({ id: c.id, slug: c.slug })),
   };
 }
