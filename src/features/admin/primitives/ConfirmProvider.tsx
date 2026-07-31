@@ -16,6 +16,12 @@ const ConfirmProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const confirm = useCallback(
     (options: ConfirmOptions) =>
       new Promise<boolean>((resolve) => {
+        // If a dialog is still awaiting a decision, resolve it as cancelled
+        // before starting a new one — otherwise the previous await hangs
+        // forever and the caller sits in whatever pre-confirm state it set up.
+        if (resolverRef.current) {
+          resolverRef.current(false);
+        }
         resolverRef.current = resolve;
         setState({ open: true, options });
       }),
