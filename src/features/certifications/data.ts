@@ -17,6 +17,7 @@ export const CERTIFICATIONS: Certification[] = [
     issueDate: '2026-07-16',
     expiryDate: '2027-07-16',
     credentialUrl: 'https://www.credential.net/6185076b-3c05-4916-abfd-3ae205c92cdb',
+    image: '/certifications/ai-performance-ads-2.png',
   },
   {
     id: 'google-ads-search',
@@ -34,6 +35,7 @@ export const CERTIFICATIONS: Certification[] = [
     issueDate: '2026-07-17',
     expiryDate: '2027-07-17',
     credentialUrl: 'https://www.credential.net/df4ab345-1a92-4f1d-9a32-de0ba8032d5a',
+    image: '/certifications/ai-shopping-ads.png',
   },
   {
     id: 'meta-intro-frontend',

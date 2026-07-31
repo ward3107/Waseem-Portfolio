@@ -28,7 +28,7 @@ values
     '2026-07-16',
     '2027-07-16',
     'https://www.credential.net/6185076b-3c05-4916-abfd-3ae205c92cdb',
-    null,
+    '/certifications/ai-performance-ads-2.png',
     11
   ),
   (
@@ -48,7 +48,7 @@ values
     '2026-07-17',
     '2027-07-17',
     'https://www.credential.net/df4ab345-1a92-4f1d-9a32-de0ba8032d5a',
-    null,
+    '/certifications/ai-shopping-ads.png',
     13
   ),
 
