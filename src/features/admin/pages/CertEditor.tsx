@@ -240,6 +240,7 @@ const CertEditor: React.FC = () => {
               value={form.image_url ? [form.image_url] : []}
               folder={`certifications/${form.slug || 'misc'}`}
               onChange={(urls) => patch('image_url', urls[0] ?? null)}
+              multiple={false}
             />
           </fieldset>
         </div>
