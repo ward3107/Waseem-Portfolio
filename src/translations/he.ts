@@ -160,6 +160,16 @@ export const he: Record<string, string> = {
     tech_win_desc: "שלטת בטכנולוגיה.",
     tech_win_code: "קוד בלעדי",
     tech_win_btn: "המשך",
+    tech_discount: "הנחה",
+    tech_redeem: "פדה",
+    tech_locked: "נעול",
+    tech_tier_flash_title: "רמה נפתחה",
+    tech_tier_flash_sub: "אפשר לפדות בכל רגע",
+    tech_milestone_flash_title: "אבן דרך",
+    tech_milestone_flash_sub: "ההנחה עלתה",
+    tech_reward_title: "התגמול מוכן",
+    tech_reward_desc: "השתמש בקוד בקופה — או המשך לשחק לעוד.",
+    tech_reward_btn: "המשך לשחק",
 
     // Contact
     contact_avail: "פנוי לפרויקטים חדשים",

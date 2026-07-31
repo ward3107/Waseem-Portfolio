@@ -161,6 +161,16 @@ export const ar: Record<string, string> = {
     tech_win_desc: "لقد أتقنت التقنيات.",
     tech_win_code: "كود حصري",
     tech_win_btn: "استمرار",
+    tech_discount: "خصم",
+    tech_redeem: "استرداد",
+    tech_locked: "مقفل",
+    tech_tier_flash_title: "تم فتح مستوى",
+    tech_tier_flash_sub: "يمكن الاسترداد في أي وقت",
+    tech_milestone_flash_title: "إنجاز",
+    tech_milestone_flash_sub: "تمت زيادة الخصم",
+    tech_reward_title: "المكافأة جاهزة",
+    tech_reward_desc: "استخدم هذا الكود عند الدفع — أو تابع اللعب للمزيد.",
+    tech_reward_btn: "متابعة اللعب",
 
     // Contact
     contact_avail: "متاح لمشاريع جديدة",
