@@ -26,6 +26,7 @@ export function certRowToModel(row: CertificationRow, lang: Language): Certifica
     issueDate: row.issue_date,
     expiryDate: row.expiry_date ?? '',
     credentialUrl: row.credential_url,
+    image: row.image_url ?? undefined,
   };
 }
 

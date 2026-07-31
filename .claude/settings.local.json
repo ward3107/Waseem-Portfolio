@@ -16,7 +16,11 @@
       "Bash(npm run build:*)",
       "Bash(grep:*)",
       "mcp__Claude_Code_Remote__send_later",
-      "mcp__Claude_Code_Remote__delete_trigger"
+      "mcp__Claude_Code_Remote__delete_trigger",
+      "Bash(mkdir -p public/certifications)",
+      "Bash(cp \"/root/.claude/uploads/a76e9a12-e57d-5da4-a1bd-106fb6d92165/50a8cb64-Coursera_1G6ZB303XNAY.pdf\" public/certifications/meta-intro-frontend.pdf)",
+      "Bash(cp \"/root/.claude/uploads/a76e9a12-e57d-5da4-a1bd-106fb6d92165/6032c544-Coursera___Online_Courses__Credentials_From_Top_Educators.pdf\" public/certifications/scrimba-deploy-ai-cloudflare.pdf)",
+      "Bash(cp \"/root/.claude/uploads/a76e9a12-e57d-5da4-a1bd-106fb6d92165/31c2e4fc-Coursera____Coursera\" public/certifications/scrimba-intro-ai-engineering.pdf)"
     ]
   }
 }

@@ -86,14 +86,32 @@ const Certifications: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group flex flex-col p-6 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-lg hover:border-brand-purple/40 transition-all duration-300"
+              className="group flex flex-col overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-lg hover:border-brand-purple/40 transition-all duration-300"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-11 h-11 rounded-xl bg-brand-purple/10 text-brand-purple flex items-center justify-center">
-                  <Award size={22} />
+              {cert.image ? (
+                <div className="relative aspect-[4/3] bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-hidden">
+                  <img
+                    src={cert.image}
+                    alt={`${cert.title} certificate`}
+                    className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
+                    loading="lazy"
+                  />
+                  <ExternalLink
+                    size={16}
+                    className="absolute top-3 end-3 text-white drop-shadow-lg opacity-80 group-hover:opacity-100 transition-opacity"
+                  />
                 </div>
-                <ExternalLink size={16} className="text-slate-400 group-hover:text-brand-purple transition-colors" />
-              </div>
+              ) : null}
+
+              <div className={cert.image ? 'flex flex-col flex-1 p-6' : 'flex flex-col flex-1 p-6'}>
+                {!cert.image && (
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-11 h-11 rounded-xl bg-brand-purple/10 text-brand-purple flex items-center justify-center">
+                      <Award size={22} />
+                    </div>
+                    <ExternalLink size={16} className="text-slate-400 group-hover:text-brand-purple transition-colors" />
+                  </div>
+                )}
 
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 leading-snug">
                 {cert.title}
@@ -102,12 +120,15 @@ const Certifications: React.FC = () => {
 
               <div className="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
                 <span>{t('cert_issued')}: {formatDate(cert.issueDate, locale)}</span>
-                <span>{t('cert_expires')}: {formatDate(cert.expiryDate, locale)}</span>
+                {cert.expiryDate && (
+                  <span>{t('cert_expires')}: {formatDate(cert.expiryDate, locale)}</span>
+                )}
               </div>
 
               <span className="mt-4 text-sm font-bold text-brand-purple group-hover:underline">
                 {t('cert_verify')} →
               </span>
+              </div>
             </motion.a>
           ))}
         </div>

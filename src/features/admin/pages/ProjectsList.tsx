@@ -42,13 +42,15 @@ const ProjectsList: React.FC = () => {
   const dragDisabled = query.trim() !== '' || filter !== 'All';
 
   const onReorder = async (next: ProjectRow[], ids: string[]) => {
-    const previous = rows;
     setRows(next); // optimistic
     try {
       await reorderProjects(ids);
     } catch (err) {
-      setRows(previous);
-      toastError(err, 'Could not save new order');
+      // The reorder is N parallel UPDATEs; a mid-list failure leaves the DB
+      // half-shuffled. Re-fetch from the source of truth rather than pretend
+      // to roll back to `previous` — some of those updates already committed.
+      await load();
+      toastError(err, 'Could not save new order — refreshed to actual DB state');
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Upload, X, Loader2 } from 'lucide-react';
 import DragList from './DragList';
 import { uploadImage, deleteImageByUrl } from '@/lib/content/storage';
@@ -9,25 +9,39 @@ import { toastError, toastSaved } from '@/lib/adminToast';
  * - First image is the "Cover" (badge shown).
  * - Uploads use the shared storage helper (MIME allow-list + 5 MB cap).
  * - Removing an image also purges it from Supabase Storage.
+ * - Pass `multiple={false}` for single-file fields (e.g. certification image).
+ *   The input, drop handler, and file iteration all clamp to one file so the
+ *   caller can't accidentally orphan uploads by keeping only urls[0].
  */
 const ImageGallery: React.FC<{
   value: string[];
   folder: string;
   onChange: (urls: string[]) => void;
-}> = ({ value, folder, onChange }) => {
+  multiple?: boolean;
+}> = ({ value, folder, onChange, multiple = true }) => {
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  // Track the latest value the parent holds so async uploads / removals
+  // append to (or filter over) the current array — not the snapshot the
+  // event handler closed over when the click/drop fired.
+  const valueRef = useRef(value);
+  useEffect(() => { valueRef.current = value; });
+
   const handleFiles = async (files: FileList | null) => {
     if (!files?.length) return;
+    const picked = multiple ? Array.from(files) : Array.from(files).slice(0, 1);
     setUploading(true);
     try {
       const uploaded: string[] = [];
-      for (const file of Array.from(files)) {
+      for (const file of picked) {
         const url = await uploadImage(file, folder);
         uploaded.push(url);
       }
-      onChange([...value, ...uploaded]);
+      // For single-file mode, replace rather than append — the caller's
+      // `value` is at most one item and appending would create a
+      // transient 2-item state before their `urls[0]` collapse.
+      onChange(multiple ? [...valueRef.current, ...uploaded] : uploaded);
       toastSaved(`${uploaded.length} image${uploaded.length === 1 ? '' : 's'}`);
     } catch (err) {
       toastError(err, 'Upload failed');
@@ -38,8 +52,8 @@ const ImageGallery: React.FC<{
   };
 
   const removeAt = async (idx: number) => {
-    const url = value[idx];
-    onChange(value.filter((_, i) => i !== idx));
+    const url = valueRef.current[idx];
+    onChange(valueRef.current.filter((_, i) => i !== idx));
     // Best-effort storage cleanup — don't block the UI on failure.
     void deleteImageByUrl(url).catch(() => undefined);
   };
@@ -65,7 +79,7 @@ const ImageGallery: React.FC<{
                 }`}
               >
                 <img src={item.url} alt="" className="w-full h-full object-cover" loading="lazy" />
-                {dragItems[0].id === item.id && (
+                {dragItems[0].id === item.id && multiple && (
                   <span className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-brand-purple text-white text-[10px] font-semibold uppercase tracking-wider">
                     Cover
                   </span>
@@ -74,7 +88,7 @@ const ImageGallery: React.FC<{
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeAt(value.indexOf(item.url));
+                    removeAt(valueRef.current.indexOf(item.url));
                   }}
                   aria-label="Remove image"
                   className="absolute top-1 right-1 p-1 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
@@ -110,7 +124,9 @@ const ImageGallery: React.FC<{
           <>
             <Upload size={20} className="text-zinc-400" aria-hidden="true" />
             <span className="text-xs text-zinc-500">
-              Drop images here or click to upload
+              {multiple
+                ? 'Drop images here or click to upload'
+                : 'Drop a file here or click to upload'}
               <br />
               PNG · JPEG · WebP · AVIF · PDF, up to 5 MB
             </span>
@@ -121,7 +137,7 @@ const ImageGallery: React.FC<{
           id="admin-image-upload"
           type="file"
           accept="image/png,image/jpeg,image/webp,image/avif,application/pdf"
-          multiple
+          multiple={multiple}
           onChange={(e) => handleFiles(e.target.files)}
           className="sr-only"
           disabled={uploading}

@@ -16,7 +16,7 @@ export function useProjects(): { projects: Project[]; loading: boolean } {
     let active = true;
     listProjectRows()
       .then((rows) => {
-        if (active && rows.length) setProjects(rows.map((r) => projectRowToModel(r, language)));
+        if (active) setProjects(rows.map((r) => projectRowToModel(r, language)));
       })
       .catch(() => {/* keep fallback */})
       .finally(() => { if (active) setLoading(false); });

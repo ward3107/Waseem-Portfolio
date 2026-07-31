@@ -16,7 +16,7 @@ export function useCertifications(): { certifications: Certification[]; loading:
     let active = true;
     listCertRows()
       .then((rows) => {
-        if (active && rows.length) setCertifications(rows.map((r) => certRowToModel(r, language)));
+        if (active) setCertifications(rows.map((r) => certRowToModel(r, language)));
       })
       .catch(() => {/* keep fallback */})
       .finally(() => { if (active) setLoading(false); });

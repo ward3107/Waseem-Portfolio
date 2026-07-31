@@ -46,6 +46,8 @@ export interface Certification {
   expiryDate: string;
   /** Public credential verification URL. */
   credentialUrl: string;
+  /** Path or URL to a preview image of the certificate itself (optional). */
+  image?: string;
 }
 
 export interface TechItem {

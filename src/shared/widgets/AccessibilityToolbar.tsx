@@ -39,27 +39,26 @@ const AccessibilityToolbar: React.FC = () => {
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [state, setState] = useState<A11yState>(DEFAULT_STATE);
+  // Lazy initializer reads saved settings synchronously on first render, so
+  // the persist effect below never sees DEFAULT_STATE overwriting real data,
+  // and there's no visible flash of non-accessible styles on route changes.
+  const [state, setState] = useState<A11yState>(() => {
+    if (typeof window === 'undefined') return DEFAULT_STATE;
+    const saved = localStorage.getItem('a11y-settings');
+    if (!saved) return DEFAULT_STATE;
+    try {
+      // Merge over defaults so older/partial saved payloads (e.g. from before
+      // a field existed, or the removed `isDark` field) can't break state.
+      return { ...DEFAULT_STATE, ...JSON.parse(saved) };
+    } catch {
+      return DEFAULT_STATE;
+    }
+  });
   const panelRef = useRef<HTMLDivElement>(null);
 
   const getAccessibilityLabel = () => t('a11y_title');
 
-  // Load persisted settings on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('a11y-settings');
-    if (saved) {
-      try {
-        // Merge over defaults so older/partial saved payloads (e.g. from before
-        // a field existed, or the removed `isDark` field) can't break state.
-        setState({ ...DEFAULT_STATE, ...JSON.parse(saved) });
-      } catch (e) {
-        // Failed to parse saved settings - keep default state if data is corrupted
-        // This gracefully handles corrupted storage without disrupting UX
-      }
-    }
-  }, []);
-
-  // Persist and apply styles
+  // Persist and apply styles whenever state changes.
   useEffect(() => {
     localStorage.setItem('a11y-settings', JSON.stringify(state));
     applyStyles(state);
