@@ -7,7 +7,7 @@ const Sidebar: React.FC<{ onSignOut: () => void; email?: string | null }> = ({
   onSignOut,
   email,
 }) => (
-  <aside className="hidden md:flex md:w-60 md:flex-col md:fixed md:inset-y-0 md:left-0 bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-950 border-r border-zinc-200 dark:border-zinc-800">
+  <aside className="hidden md:flex md:w-60 md:flex-col md:fixed md:inset-y-0 md:left-0 md:z-40 bg-gradient-to-b from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-950 border-r border-zinc-200 dark:border-zinc-800">
     {/* Brand header with a soft brand-color accent bar */}
     <div className="relative px-5 py-5 border-b border-zinc-200 dark:border-zinc-800">
       <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-brand-purple via-brand-cyan to-brand-gold" />

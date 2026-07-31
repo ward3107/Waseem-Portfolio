@@ -44,7 +44,7 @@ const AdminShell: React.FC = () => {
         <div className="relative md:pl-60 pb-16 md:pb-0">
           <Outlet />
         </div>
-        <MobileNav />
+        <MobileNav onSignOut={handleSignOut} />
         <Toaster position="bottom-right" richColors closeButton theme="system" />
       </div>
     </ConfirmProvider>
