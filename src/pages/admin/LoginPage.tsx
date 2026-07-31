@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 
 const LoginPage: React.FC = () => {
-  const { signIn } = useAdminAuth();
+  const { user, loading, signIn } = useAdminAuth();
   const navigate = useNavigate();
+
+  // Already signed in? Send them straight to the dashboard so a stale
+  // password attempt can't kill the current session.
+  if (!loading && user) return <Navigate to="/admin" replace />;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
