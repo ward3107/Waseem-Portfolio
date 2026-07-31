@@ -48,7 +48,7 @@ export const en: Record<string, string> = {
     service_marketing_title: 'Performance Marketing',
     service_marketing_desc: 'Data-driven campaigns on Google, Meta, TikTok, & Instagram that target your ideal audience and maximize ROI.',
     service_marketing_modal_title: 'Performance Marketing & PPC',
-    service_marketing_modal_desc: "Maximize your ROI with data-driven campaigns across Google, Meta, TikTok, and Instagram. I offer tailored packages to suit your needs:\n\n**1. Starter (800 ₪/project):** Perfect for beginners. 1 Platform, Campaign Setup, AI Copywriting, Basic Analytics.\n\n**2. Growth (1,500 ₪/project):** Best value. 2 Platforms, A/B Testing, Retargeting, Weekly Reports.\n\n**3. Advanced (2,500 ₪/project):** Complete solution. All Platforms, Advanced Automation, Video Editing assistance, Priority Support.\n\nWhy me? I combine marketing with technical expertise (Pixel API, Event Tracking) to ensure every cent is tracked.",
+    service_marketing_modal_desc: "Maximize your ROI with data-driven campaigns across Google, Meta, TikTok, and Instagram. I offer tailored packages to suit your needs:\n\n**1. Starter:** Perfect for beginners. 1 Platform, Campaign Setup, AI Copywriting, Basic Analytics.\n\n**2. Growth:** Best value. 2 Platforms, A/B Testing, Retargeting, Weekly Reports.\n\n**3. Advanced:** Complete solution. All Platforms, Advanced Automation, Video Editing assistance, Priority Support.\n\nWhy me? I combine marketing with technical expertise (Pixel API, Event Tracking) to ensure every cent is tracked.",
 
     // AI Section
     ai_badge: "Next-Gen Automation",
