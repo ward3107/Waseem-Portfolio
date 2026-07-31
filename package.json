@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node .dev-scripts/optimize-images.mjs && node .dev-scripts/generate-landing-pages.mjs && node .dev-scripts/generate-blog.mjs && node .dev-scripts/generate-review-page.mjs && vite build",
+    "build": "node .dev-scripts/optimize-images.mjs && node .dev-scripts/convert-fonts.mjs && node .dev-scripts/generate-landing-pages.mjs && node .dev-scripts/generate-blog.mjs && node .dev-scripts/generate-review-page.mjs && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
@@ -51,6 +51,7 @@
     "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2",
     "vite": "^7.3.1",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "wawoff2": "^2.0.1"
   }
 }

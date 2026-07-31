@@ -174,7 +174,7 @@ const AccessibilityToolbar: React.FC = () => {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-end sm:pr-6 sm:pb-6 pointer-events-none">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-end sm:pe-6 sm:pb-6 pointer-events-none">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-auto" onClick={() => setIsOpen(false)}></div>
 

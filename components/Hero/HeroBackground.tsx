@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion, MotionValue, useTransform } from 'framer-motion';
+import { useInView } from '../../hooks/useInView';
 
 interface HeroBackgroundProps {
   mouseX: MotionValue<number>;
@@ -7,20 +8,34 @@ interface HeroBackgroundProps {
   prefersReducedMotion: boolean;
 }
 
-const HeroBackground: React.FC<HeroBackgroundProps> = ({ mouseX, mouseY, prefersReducedMotion }) => {
-  const followerLeft = useTransform(mouseX, [-0.5, 0.5], ['40%', '60%']);
-  const followerTop = useTransform(mouseY, [-0.5, 0.5], ['40%', '60%']);
+const HeroBackground: React.FC<HeroBackgroundProps> = ({
+  mouseX,
+  mouseY,
+  prefersReducedMotion,
+}) => {
+  // Follower blob now uses transform (compositor-friendly) instead of left/top
+  // (which forces a layout pass every frame). The mouse-driven MotionValues
+  // are mapped to a translation offset from the section center.
+  const followerX = useTransform(mouseX, [-0.5, 0.5], [-60, 60]);
+  const followerY = useTransform(mouseY, [-0.5, 0.5], [-60, 60]);
+
+  // Gate the always-on infinite animations behind an IntersectionObserver so
+  // the compositor / GPU stops chewing on 700–900 px blurred surfaces the
+  // moment the hero scrolls off-screen. rootMargin buys a little bleed so
+  // the animation is already running when it comes back into view.
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(containerRef, '100px');
 
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+    <div ref={containerRef} className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
       <motion.div
-        style={{ left: followerLeft, top: followerTop, willChange: 'left, top' }}
-        className="absolute w-[800px] h-[800px] bg-brand-purple/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500"
+        style={{ x: followerX, y: followerY, willChange: 'transform' }}
+        className="absolute left-1/2 top-1/2 w-[800px] h-[800px] bg-brand-purple/5 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500"
       />
 
-      {!prefersReducedMotion && (
+      {!prefersReducedMotion && inView && (
         <div className="absolute top-0 right-0 h-full w-[60%] pointer-events-none opacity-80">
           <motion.div
             animate={{ scale: [1, 1.05, 1], rotate: [0, 3, 0], x: [0, 20, 0] }}

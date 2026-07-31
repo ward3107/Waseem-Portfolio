@@ -3,6 +3,7 @@ import { TECH_STACK } from '../../constants';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ShieldAlert } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useInView } from '../../hooks/useInView';
 import { STAGE_THRESHOLDS, BOSS_CLICKS, bossHealthFor } from './config';
 import { playSound } from './audio';
 import BossOverlay from './BossOverlay';
@@ -58,6 +59,11 @@ const TechStack: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
   const gridBackgroundPositionY = useTransform(scrollYProgress, [0, 1], ['0px', '320px']);
+  // Freeze CSS marquees + framer-motion loops when the section leaves the
+  // viewport — the sustained GPU cost of two scrolling rows and a big
+  // pulsing grid is real (~5-10% CPU on mid-range hardware).
+  const inView = useInView(sectionRef, '150px');
+  const marqueePlayState = inView ? 'running' : 'paused';
 
   const triggerShake = () => {
     setShake(10);
@@ -269,7 +275,10 @@ const TechStack: React.FC = () => {
       >
         <div
           className="flex w-max hover:[animation-play-state:paused]"
-          style={{ animation: `scroll-left ${animationDuration} linear infinite` }}
+          style={{
+            animation: `scroll-left ${animationDuration} linear infinite`,
+            animationPlayState: marqueePlayState,
+          }}
         >
           {row.map((tech, index) => (
             <TechCard
@@ -284,7 +293,10 @@ const TechStack: React.FC = () => {
 
         <div
           className="flex w-max hover:[animation-play-state:paused]"
-          style={{ animation: `scroll-right ${animationDuration} linear infinite` }}
+          style={{
+            animation: `scroll-right ${animationDuration} linear infinite`,
+            animationPlayState: marqueePlayState,
+          }}
         >
           {row.map((tech, index) => (
             <TechCard

@@ -118,7 +118,7 @@ const Footer: React.FC = () => {
                   >
                     <ArrowRight
                       size={14}
-                      className="opacity-0 -ml-4 rtl:-mr-4 rtl:ml-0 rtl:rotate-180 group-hover:opacity-100 group-hover:ml-0 rtl:group-hover:mr-0 transition-all duration-300 text-brand-purple"
+                      className="opacity-0 -ms-4 rtl:rotate-180 group-hover:opacity-100 group-hover:ms-0 transition-all duration-300 text-brand-purple"
                     />
                     {link.name}
                   </a>
@@ -131,7 +131,7 @@ const Footer: React.FC = () => {
                 >
                   <ArrowRight
                     size={14}
-                    className="opacity-0 -ml-4 rtl:-mr-4 rtl:ml-0 rtl:rotate-180 group-hover:opacity-100 group-hover:ml-0 rtl:group-hover:mr-0 transition-all duration-300 text-brand-purple"
+                    className="opacity-0 -ms-4 rtl:rotate-180 group-hover:opacity-100 group-hover:ms-0 transition-all duration-300 text-brand-purple"
                   />
                   {{ ar: 'مدونة', en: 'Blog', he: 'בלוג' }[language]}
                 </a>
@@ -151,7 +151,7 @@ const Footer: React.FC = () => {
                   >
                     <ArrowRight
                       size={14}
-                      className="opacity-0 -ml-4 rtl:-mr-4 rtl:ml-0 rtl:rotate-180 group-hover:opacity-100 group-hover:ml-0 rtl:group-hover:mr-0 transition-all duration-300 text-brand-cyan"
+                      className="opacity-0 -ms-4 rtl:rotate-180 group-hover:opacity-100 group-hover:ms-0 transition-all duration-300 text-brand-cyan"
                     />
                     {
                       {
