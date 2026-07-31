@@ -132,9 +132,10 @@ const ProjectEditor: React.FC = () => {
   const save = async () => {
     setSaving(true);
     try {
-      // First image is the cover: mirror the first screenshot into image_url.
-      const cover = form.screenshots[0] ?? null;
-      const payload: ProjectInput = { ...form, image_url: cover ?? form.image_url };
+      // First screenshot is the cover: mirror it into image_url — including
+      // null when all screenshots have been removed, so admins can actually
+      // publish a text-only card.
+      const payload: ProjectInput = { ...form, image_url: form.screenshots[0] ?? null };
       if (isNew) {
         await createProject(payload);
         toastSaved('Project created');
