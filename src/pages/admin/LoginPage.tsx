@@ -6,15 +6,16 @@ import { useAdminAuth } from '@/contexts/AdminAuthContext';
 const LoginPage: React.FC = () => {
   const { user, loading, signIn } = useAdminAuth();
   const navigate = useNavigate();
-
-  // Already signed in? Send them straight to the dashboard so a stale
-  // password attempt can't kill the current session.
-  if (!loading && user) return <Navigate to="/admin" replace />;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+
+  // Already signed in? Send them straight to the dashboard so a stale
+  // password attempt can't kill the current session. Guard must live
+  // AFTER all hooks so hook order stays stable.
+  if (!loading && user) return <Navigate to="/admin" replace />;
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
