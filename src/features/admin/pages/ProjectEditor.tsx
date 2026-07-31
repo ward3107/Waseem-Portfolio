@@ -130,6 +130,7 @@ const ProjectEditor: React.FC = () => {
   };
 
   const save = async () => {
+    if (saving || !dirty || !form.slug || !form.title) return;
     setSaving(true);
     try {
       // First screenshot is the cover: mirror it into image_url — including
@@ -153,17 +154,20 @@ const ProjectEditor: React.FC = () => {
     }
   };
 
-  // Cmd/Ctrl+S saves.
+  // Cmd/Ctrl+S saves. Listener attaches once; the ref keeps `save` fresh
+  // without re-attaching the keydown handler on every render.
+  const saveRef = useRef(save);
+  useEffect(() => { saveRef.current = save; });
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
         e.preventDefault();
-        if (!saving && form.slug && form.title) save();
+        saveRef.current();
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  });
+  }, []);
 
   const onDelete = async () => {
     if (isNew || !id) return;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Save, Trash2, Loader2, Star } from 'lucide-react';
 import Topbar from '@/features/admin/layout/Topbar';
@@ -103,6 +103,7 @@ const ReviewEditor: React.FC = () => {
   };
 
   const save = async () => {
+    if (saving || !dirty || !form.author || !form.text.en) return;
     setSaving(true);
     try {
       if (isNew) {
@@ -122,16 +123,20 @@ const ReviewEditor: React.FC = () => {
     }
   };
 
+  // Cmd/Ctrl+S saves. Listener attaches once; the ref keeps `save` fresh
+  // without re-attaching the keydown handler on every render.
+  const saveRef = useRef(save);
+  useEffect(() => { saveRef.current = save; });
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
         e.preventDefault();
-        if (!saving && form.author && form.text.en) save();
+        saveRef.current();
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  });
+  }, []);
 
   const onDelete = async () => {
     if (isNew || !id) return;
