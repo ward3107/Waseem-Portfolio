@@ -8,12 +8,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': r('.'),
-      '@components': r('./components'),
-      '@contexts': r('./contexts'),
-      '@hooks': r('./hooks'),
-      '@utils': r('./utils'),
-      '@translations': r('./translations'),
+      '@': r('./src'),
     },
   },
   build: {

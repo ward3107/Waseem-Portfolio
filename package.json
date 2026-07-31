@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node .dev-scripts/optimize-images.mjs && node .dev-scripts/convert-fonts.mjs && node .dev-scripts/generate-landing-pages.mjs && node .dev-scripts/generate-blog.mjs && node .dev-scripts/generate-review-page.mjs && vite build",
+    "build": "node scripts/optimize-images.mjs && node scripts/convert-fonts.mjs && node scripts/generate-landing-pages.mjs && node scripts/generate-blog.mjs && node scripts/generate-review-page.mjs && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx",

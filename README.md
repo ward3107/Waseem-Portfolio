@@ -169,25 +169,43 @@ npm run preview
 
 ```
 waseem-portfolio/
-├── components/          # React components
-│   ├── Hero.tsx        # Hero/landing section
-│   ├── Services.tsx    # Services showcase
-│   ├── Projects.tsx    # Projects gallery
-│   ├── Contact.tsx     # Contact section
-│   └── ...
-├── contexts/           # React contexts
-│   ├── LanguageContext.tsx
-│   └── WidgetContext.tsx
-├── public/            # Static assets
-├── App.tsx            # Main app component
-├── index.html         # HTML entry point
-├── index.tsx          # React entry point
-├── constants.ts       # App constants
-├── types.ts           # TypeScript type definitions
-├── tailwind.config.js # Tailwind configuration
-├── vite.config.ts     # Vite configuration
-└── tsconfig.json      # TypeScript configuration
+├── src/
+│   ├── main.tsx            # React entry point
+│   ├── App.tsx             # Router + providers
+│   ├── constants.ts        # App-wide constants
+│   ├── types.ts            # Shared TypeScript types
+│   ├── index.css           # Global styles / Tailwind base
+│   ├── features/           # One folder per feature (component + hook + data)
+│   │   ├── hero/           # Hero section (animated headline, profile card)
+│   │   ├── services/       # Services showcase + modal
+│   │   ├── projects/       # Project gallery + wizard + data
+│   │   ├── reviews/        # Client testimonials
+│   │   ├── certifications/ # Certifications list
+│   │   ├── tech-stack/     # Tech badges (gamified)
+│   │   ├── about/          # About timeline
+│   │   ├── contact/        # Contact form
+│   │   ├── ai/             # AISection + VibeCoding
+│   │   ├── home/           # Home-only sections (HomeCTA, Process, FAQ, SocialHub)
+│   │   └── admin/          # Admin panel (layout, pages, primitives)
+│   ├── shared/             # Cross-cutting UI
+│   │   ├── layout/         # Navbar, Footer
+│   │   ├── widgets/        # Floating widgets (a11y, share, back-to-top, cookie)
+│   │   ├── ui/             # Skeleton, ScrollToHash
+│   │   ├── three/          # 3D word helper
+│   │   └── hooks/          # Cross-cutting React hooks
+│   ├── pages/              # Route entries (stack features)
+│   ├── contexts/           # Language, Theme, AdminAuth, Widget
+│   ├── lib/                # Supabase client, content helpers, browser utils
+│   └── translations/       # en / he / ar
+├── public/                 # Static assets served as-is
+├── scripts/                # Build-time & dev scripts (blog, landing pages, images)
+├── supabase/               # Database schema
+├── docs/                   # Repo docs
+├── index.html              # HTML entry
+├── package.json, vite.config.ts, tailwind.config.js, tsconfig.json, vercel.json
 ```
+
+Imports use the `@/` alias mapped to `src/` — e.g. `import Reviews from '@/features/reviews/Reviews'`.
 
 ---
 
