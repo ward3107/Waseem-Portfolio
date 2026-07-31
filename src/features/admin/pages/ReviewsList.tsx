@@ -14,18 +14,22 @@ const ReviewsList: React.FC = () => {
   const confirm = useConfirm();
   const [rows, setRows] = useState<ReviewRow[] | null>(null);
 
-  useEffect(() => {
+  const load = () =>
     listReviewRows().then(setRows).catch((err) => toastError(err, 'Could not load reviews'));
+
+  useEffect(() => {
+    load();
   }, []);
 
   const onReorder = async (next: ReviewRow[], ids: string[]) => {
-    const previous = rows;
     setRows(next);
     try {
       await reorderReviews(ids);
     } catch (err) {
-      setRows(previous);
-      toastError(err, 'Could not save new order');
+      // Partial-failure safety: re-fetch instead of pretending to roll back —
+      // some UPDATEs may have already committed. See reorderReviews.
+      await load();
+      toastError(err, 'Could not save new order — refreshed to actual DB state');
     }
   };
 

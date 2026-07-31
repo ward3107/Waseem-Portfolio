@@ -18,18 +18,22 @@ const CertsList: React.FC = () => {
   const confirm = useConfirm();
   const [rows, setRows] = useState<CertificationRow[] | null>(null);
 
-  useEffect(() => {
+  const load = () =>
     listCertRows().then(setRows).catch((err) => toastError(err, 'Could not load certificates'));
+
+  useEffect(() => {
+    load();
   }, []);
 
   const onReorder = async (next: CertificationRow[], ids: string[]) => {
-    const previous = rows;
     setRows(next);
     try {
       await reorderCerts(ids);
     } catch (err) {
-      setRows(previous);
-      toastError(err, 'Could not save new order');
+      // Partial-failure safety: re-fetch instead of pretending to roll back —
+      // some UPDATEs may have already committed. See reorderCerts.
+      await load();
+      toastError(err, 'Could not save new order — refreshed to actual DB state');
     }
   };
 
