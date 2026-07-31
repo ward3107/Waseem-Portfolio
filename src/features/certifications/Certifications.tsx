@@ -5,6 +5,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import { useCertifications } from '@/features/certifications/useCertifications';
 import { safeHref } from '@/lib/safe';
+import type { Certification } from '@/types';
 
 /** Format an ISO date. Returns '—' for null/empty/invalid input so a cert
  *  saved without an expiry (allowed by the schema) never renders as the
@@ -15,6 +16,85 @@ const formatDate = (iso: string | null | undefined, locale: string): string => {
   return Number.isNaN(d.getTime())
     ? '—'
     : d.toLocaleDateString(locale, { year: 'numeric', month: 'long' });
+};
+
+// Per-card scroll-linked reveal: opacity is bound directly to the card's own
+// scroll position, so it can never lag behind a fast scroll and pop in. When
+// the card is below the fold it is opacity 0; it fades to 1 as it scrolls
+// from the viewport bottom to the upper third. Reduced-motion users get
+// static opacity 1 with no scroll binding at all.
+type CertificationCardProps = {
+  cert: Certification;
+  prefersReducedMotion: boolean;
+  t: (key: string) => string;
+  locale: string;
+};
+
+const CertificationCard: React.FC<CertificationCardProps> = ({
+  cert,
+  prefersReducedMotion,
+  t,
+  locale,
+}) => {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'start 70%'],
+  });
+  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  return (
+    <motion.a
+      ref={ref}
+      href={safeHref(cert.credentialUrl)}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={prefersReducedMotion ? undefined : { opacity, willChange: 'opacity' }}
+      className="group flex flex-col overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-lg hover:border-brand-purple/40 transition-all duration-300"
+    >
+      {cert.image ? (
+        <div className="relative aspect-[4/3] bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-hidden">
+          <img
+            src={cert.image}
+            alt={`${cert.title} certificate`}
+            className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
+            loading="lazy"
+          />
+          <ExternalLink
+            size={16}
+            className="absolute top-3 end-3 text-white drop-shadow-lg opacity-80 group-hover:opacity-100 transition-opacity"
+          />
+        </div>
+      ) : null}
+
+      <div className="flex flex-col flex-1 p-6">
+        {!cert.image && (
+          <div className="flex items-start justify-between mb-4">
+            <div className="w-11 h-11 rounded-xl bg-brand-purple/10 text-brand-purple flex items-center justify-center">
+              <Award size={22} />
+            </div>
+            <ExternalLink size={16} className="text-slate-400 group-hover:text-brand-purple transition-colors" />
+          </div>
+        )}
+
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 leading-snug">
+          {cert.title}
+        </h3>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{cert.issuer}</p>
+
+        <div className="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
+          <span>{t('cert_issued')}: {formatDate(cert.issueDate, locale)}</span>
+          {cert.expiryDate && (
+            <span>{t('cert_expires')}: {formatDate(cert.expiryDate, locale)}</span>
+          )}
+        </div>
+
+        <span className="mt-4 text-sm font-bold text-brand-purple group-hover:underline">
+          {t('cert_verify')} →
+        </span>
+      </div>
+    </motion.a>
+  );
 };
 
 const Certifications: React.FC = () => {
@@ -76,62 +156,14 @@ const Certifications: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {certifications.map((cert, index) => (
-            <motion.a
+          {certifications.map((cert) => (
+            <CertificationCard
               key={cert.id}
-              href={safeHref(cert.credentialUrl)}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '0px 0px 200px 0px' }}
-              transition={prefersReducedMotion
-                ? { duration: 0 }
-                : { duration: 0.5, delay: Math.min(index, 5) * 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="group flex flex-col overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-lg hover:border-brand-purple/40 transition-all duration-300"
-            >
-              {cert.image ? (
-                <div className="relative aspect-[4/3] bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-hidden">
-                  <img
-                    src={cert.image}
-                    alt={`${cert.title} certificate`}
-                    className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
-                    loading="lazy"
-                  />
-                  <ExternalLink
-                    size={16}
-                    className="absolute top-3 end-3 text-white drop-shadow-lg opacity-80 group-hover:opacity-100 transition-opacity"
-                  />
-                </div>
-              ) : null}
-
-              <div className={cert.image ? 'flex flex-col flex-1 p-6' : 'flex flex-col flex-1 p-6'}>
-                {!cert.image && (
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-11 h-11 rounded-xl bg-brand-purple/10 text-brand-purple flex items-center justify-center">
-                      <Award size={22} />
-                    </div>
-                    <ExternalLink size={16} className="text-slate-400 group-hover:text-brand-purple transition-colors" />
-                  </div>
-                )}
-
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 leading-snug">
-                {cert.title}
-              </h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">{cert.issuer}</p>
-
-              <div className="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-1 text-xs text-slate-500 dark:text-slate-400">
-                <span>{t('cert_issued')}: {formatDate(cert.issueDate, locale)}</span>
-                {cert.expiryDate && (
-                  <span>{t('cert_expires')}: {formatDate(cert.expiryDate, locale)}</span>
-                )}
-              </div>
-
-              <span className="mt-4 text-sm font-bold text-brand-purple group-hover:underline">
-                {t('cert_verify')} →
-              </span>
-              </div>
-            </motion.a>
+              cert={cert}
+              prefersReducedMotion={prefersReducedMotion}
+              t={t}
+              locale={locale}
+            />
           ))}
         </div>
       </div>

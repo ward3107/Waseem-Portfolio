@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const MotionLink = motion(Link);
 import { ArrowRight, ArrowLeft, ExternalLink } from 'lucide-react';
@@ -8,8 +8,99 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import { useProjects } from '@/features/projects/useProjects';
 import { safeHref } from '@/lib/safe';
+import type { Project } from '@/types';
 
 const FEATURED_COUNT = 3;
+
+// Per-card scroll-linked reveal: opacity is bound directly to the card's own
+// scroll position so it can never lag behind a fast scroll and pop in. When
+// the card is below the fold it is opacity 0; it fades to 1 as it scrolls
+// from the viewport bottom to the upper third. Reduced-motion users get
+// static opacity 1 with no scroll binding at all.
+type FeaturedProjectCardProps = {
+  project: Project;
+  prefersReducedMotion: boolean;
+  t: (key: string) => string;
+};
+
+const CARD_CLASSNAME =
+  'group flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-brand-purple/30 transition-all duration-300';
+
+const FeaturedProjectCard: React.FC<FeaturedProjectCardProps> = ({
+  project,
+  prefersReducedMotion,
+  t,
+}) => {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'start 70%'],
+  });
+  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const style = prefersReducedMotion ? undefined : { opacity, willChange: 'opacity' };
+
+  const externalUrl = safeHref(project.link) || safeHref(project.github);
+  const cardBody = (
+    <>
+      <div className="relative h-48 overflow-hidden">
+        <img
+          src={project.image}
+          alt={`${project.title} — ${project.category} project screenshot`}
+          loading="lazy"
+          decoding="async"
+          width="600"
+          height="400"
+          onError={(e) => {
+            const img = e.currentTarget;
+            if (img.src.indexOf('data:') !== 0) {
+              img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%23483AA0'/><text x='50%25' y='50%25' fill='white' font-family='sans-serif' font-size='28' text-anchor='middle' dominant-baseline='middle'>Project image coming soon</text></svg>";
+            }
+          }}
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+        />
+      </div>
+      <div className="p-6 flex flex-col flex-1">
+        <span className="text-xs font-bold text-brand-purple bg-brand-purple/5 border border-brand-purple/10 px-3 py-1 rounded-full uppercase tracking-wide w-fit mb-2">
+          {project.category}
+        </span>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
+          {project.title}
+        </h3>
+        <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 leading-relaxed mb-4">
+          {project.description}
+        </p>
+        <div className="mt-auto flex items-center gap-1 text-brand-blue font-bold text-sm">
+          {t('projects_details')} <ExternalLink size={14} />
+        </div>
+      </div>
+    </>
+  );
+
+  // External project → new-tab anchor. Otherwise fall back to the internal
+  // projects page via the SPA router (a plain <a href="/projects"> would
+  // trigger a full-page reload).
+  return externalUrl ? (
+    <motion.a
+      ref={ref}
+      href={externalUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={style}
+      className={CARD_CLASSNAME}
+    >
+      {cardBody}
+    </motion.a>
+  ) : (
+    <MotionLink
+      ref={ref as React.RefObject<HTMLAnchorElement>}
+      to="/projects"
+      style={style}
+      className={CARD_CLASSNAME}
+    >
+      {cardBody}
+    </MotionLink>
+  );
+};
 
 const FeaturedProjects: React.FC = () => {
   const { t, language } = useLanguage();
@@ -50,73 +141,14 @@ const FeaturedProjects: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-12">
-          {projects.map((project, index) => {
-            const externalUrl = safeHref(project.link) || safeHref(project.github);
-            const sharedProps = {
-              initial: prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 },
-              whileInView: { opacity: 1, y: 0 },
-              viewport: { once: true, margin: '0px 0px 200px 0px' },
-              transition: prefersReducedMotion
-                ? { duration: 0 }
-                : { duration: 0.5, delay: Math.min(index, 5) * 0.05, ease: [0.22, 1, 0.36, 1] as const },
-              className:
-                'group flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-brand-purple/30 transition-all duration-300',
-            };
-            const cardBody = (
-              <>
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={`${project.title} — ${project.category} project screenshot`}
-                  loading="lazy"
-                  decoding="async"
-                  width="600"
-                  height="400"
-                  onError={(e) => {
-                    const img = e.currentTarget;
-                    if (img.src.indexOf('data:') !== 0) {
-                      img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%23483AA0'/><text x='50%25' y='50%25' fill='white' font-family='sans-serif' font-size='28' text-anchor='middle' dominant-baseline='middle'>Project image coming soon</text></svg>";
-                    }
-                  }}
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-              </div>
-              <div className="p-6 flex flex-col flex-1">
-                <span className="text-xs font-bold text-brand-purple bg-brand-purple/5 border border-brand-purple/10 px-3 py-1 rounded-full uppercase tracking-wide w-fit mb-2">
-                  {project.category}
-                </span>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-                  {project.title}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 leading-relaxed mb-4">
-                  {project.description}
-                </p>
-                <div className="mt-auto flex items-center gap-1 text-brand-blue font-bold text-sm">
-                  {t('projects_details')} <ExternalLink size={14} />
-                </div>
-              </div>
-              </>
-            );
-
-            // External project → new-tab anchor. Otherwise fall back to the
-            // internal projects page via the SPA router (a plain <a href="/projects">
-            // would trigger a full-page reload).
-            return externalUrl ? (
-              <motion.a
-                key={project.id}
-                href={externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                {...sharedProps}
-              >
-                {cardBody}
-              </motion.a>
-            ) : (
-              <MotionLink key={project.id} to="/projects" {...sharedProps}>
-                {cardBody}
-              </MotionLink>
-            );
-          })}
+          {projects.map((project) => (
+            <FeaturedProjectCard
+              key={project.id}
+              project={project}
+              prefersReducedMotion={prefersReducedMotion}
+              t={t}
+            />
+          ))}
         </div>
 
         <div className="flex justify-center">
