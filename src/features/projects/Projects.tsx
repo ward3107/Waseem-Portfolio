@@ -1,13 +1,162 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ExternalLink, Github, Hand } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import Dimensional3DWord, { fontForLanguage } from '@/shared/three/Dimensional3DWord';
 import { useProjects } from '@/features/projects/useProjects';
 import { safeHref } from '@/lib/safe';
+import type { Project } from '@/types';
 
 type FilterCategory = 'All' | 'Web' | 'AI' | 'Mobile';
+
+// Per-card scroll-linked reveal: opacity is bound directly to the card's own
+// scroll position so it can never lag behind a fast scroll and pop in. The
+// parallax `y` (driven by the grid's scroll progress) is composed with the
+// reveal on the same style object. Reduced-motion users get static opacity 1
+// with no scroll binding at all.
+type ProjectCardProps = {
+  project: Project;
+  isFlipped: boolean;
+  toggleFlip: () => void;
+  parallaxY: MotionValue<number>;
+  prefersReducedMotion: boolean;
+  t: (key: string) => string;
+};
+
+const ProjectCard: React.FC<ProjectCardProps> = ({
+  project,
+  isFlipped,
+  toggleFlip,
+  parallaxY,
+  prefersReducedMotion,
+  t,
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'start 70%'],
+  });
+  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  const style = prefersReducedMotion
+    ? undefined
+    : { opacity, y: parallaxY, willChange: 'opacity, transform' };
+
+  return (
+    <motion.div
+      ref={ref}
+      style={style}
+      role="button"
+      tabIndex={0}
+      aria-pressed={isFlipped}
+      aria-label={`${project.title}. ${t('projects_hint')}`}
+      onClick={toggleFlip}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleFlip();
+        }
+      }}
+      className="group h-96 w-full [perspective:1000px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded-3xl"
+    >
+      <div className={`relative h-full w-full [transform-style:preserve-3d] ${prefersReducedMotion ? '' : 'transition-all duration-700 group-hover:[transform:rotateY(180deg)]'} ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
+        {/* Front */}
+        <div className="absolute inset-0 h-full w-full rounded-3xl bg-white dark:bg-slate-900 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden [backface-visibility:hidden]">
+
+          {/* Image Container */}
+          <div className="relative h-56 w-full">
+            <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-colors z-10"></div>
+            <img
+              src={project.image}
+              alt={`${project.title} — ${project.category} project screenshot`}
+              loading="lazy"
+              decoding="async"
+              width="600"
+              height="400"
+              onError={(e) => {
+                const img = e.currentTarget;
+                if (img.src.indexOf('data:') !== 0) {
+                  img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%23483AA0'/><text x='50%25' y='50%25' fill='white' font-family='sans-serif' font-size='32' text-anchor='middle' dominant-baseline='middle'>Project image coming soon</text></svg>";
+                }
+              }}
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+
+            {/* Mobile Hint - Visible on Mobile & Tablet (hidden on large desktops) */}
+            <div className="lg:hidden absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 animate-pulse shadow-lg">
+              <Hand size={12} className="text-brand-gold" />
+              <span>{t('projects_hint')}</span>
+            </div>
+          </div>
+
+          <div className="p-6 relative h-full flex flex-col">
+            <div className="flex justify-between items-start mb-2">
+              <span className="text-xs font-bold text-brand-purple bg-brand-purple/5 border border-brand-purple/10 px-3 py-1 rounded-full uppercase tracking-wide">
+                {project.category}
+              </span>
+            </div>
+            <h3 className="text-2xl font-bold mt-2 text-slate-900 dark:text-white">{project.title}</h3>
+            <p className="text-slate-600 dark:text-slate-400 mt-2 text-sm line-clamp-2 leading-relaxed">
+              {project.description}
+            </p>
+            <div className="mt-auto pt-4 flex items-center text-brand-blue font-bold text-sm">
+              {t('projects_details')} <ExternalLink size={14} className="ms-1" />
+            </div>
+          </div>
+        </div>
+
+        {/* Back */}
+        <div className="absolute inset-0 h-full w-full rounded-3xl bg-slate-900 p-8 text-white [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col justify-between shadow-2xl border border-slate-800">
+          <div>
+            <h3 className="text-2xl font-bold mb-4 text-brand-gold">{project.title}</h3>
+            <div className="w-12 h-1 bg-brand-purple mb-6 rounded-full"></div>
+            <p className="text-slate-300 text-sm mb-6 leading-relaxed">
+              {project.description}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {project.tech.map((label) => (
+                <span key={label} className="text-xs border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 bg-slate-800/50">
+                  {label}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-4 mt-6">
+            {safeHref(project.link) && (
+              <a
+                href={safeHref(project.link)}
+                target="_blank"
+                rel="noopener noreferrer"
+                // Keep the back-face links out of the tab order until the
+                // card is actually flipped — otherwise keyboard focus
+                // lands on links that are rotated out of view.
+                tabIndex={isFlipped ? 0 : -1}
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-purple rounded-xl hover:bg-brand-purpleLight transition-colors font-bold text-sm shadow-lg shadow-brand-purple/20 transform hover:-translate-y-1"
+              >
+                <ExternalLink size={16} /> {t('projects_demo')}
+              </a>
+            )}
+            {safeHref(project.github) && (
+              <a
+                href={safeHref(project.github)}
+                target="_blank"
+                rel="noopener noreferrer"
+                tabIndex={isFlipped ? 0 : -1}
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-bold text-sm transform hover:-translate-y-1"
+              >
+                <Github size={16} /> {t('projects_code')}
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 const Projects: React.FC = () => {
   const { t, dir, language } = useLanguage();
@@ -113,127 +262,17 @@ const Projects: React.FC = () => {
         </div>
 
         <div ref={gridRef} id="projects-grid" role="tabpanel" aria-live="polite" aria-label={`${t('projects_title_1')} ${t('projects_title_2')} - ${filter === 'All' ? t('projects_filter_all') : t(`projects_filter_${filter.toLowerCase()}`)}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => {
-            const isFlipped = flippedId === project.id;
-            const toggleFlip = () => setFlippedId(prev => prev === project.id ? null : project.id);
-            return (
-            <motion.div
+          {filteredProjects.map((project, index) => (
+            <ProjectCard
               key={project.id}
-              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: '0px 0px 200px 0px' }}
-              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: Math.min(index, 5) * 0.05, ease: [0.22, 1, 0.36, 1] }}
-              style={prefersReducedMotion ? undefined : { y: index % 2 === 0 ? parallaxA : parallaxB }}
-              role="button"
-              tabIndex={0}
-              aria-pressed={isFlipped}
-              aria-label={`${project.title}. ${t('projects_hint')}`}
-              onClick={toggleFlip}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  toggleFlip();
-                }
-              }}
-              className="group h-96 w-full [perspective:1000px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded-3xl"
-            >
-              <div className={`relative h-full w-full [transform-style:preserve-3d] ${prefersReducedMotion ? '' : 'transition-all duration-700 group-hover:[transform:rotateY(180deg)]'} ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
-                {/* Front */}
-                <div className="absolute inset-0 h-full w-full rounded-3xl bg-white dark:bg-slate-900 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden [backface-visibility:hidden]">
-
-                  {/* Image Container */}
-                  <div className="relative h-56 w-full">
-                    <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-colors z-10"></div>
-                    <img
-                      src={project.image}
-                      alt={`${project.title} — ${project.category} project screenshot`}
-                      loading="lazy"
-                      decoding="async"
-                      width="600"
-                      height="400"
-                      onError={(e) => {
-                        const img = e.currentTarget;
-                        if (img.src.indexOf('data:') !== 0) {
-                          img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'><rect width='600' height='400' fill='%23483AA0'/><text x='50%25' y='50%25' fill='white' font-family='sans-serif' font-size='32' text-anchor='middle' dominant-baseline='middle'>Project image coming soon</text></svg>";
-                        }
-                      }}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-
-                    {/* Mobile Hint - Visible on Mobile & Tablet (hidden on large desktops) */}
-                    <div className="lg:hidden absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 animate-pulse shadow-lg">
-                      <Hand size={12} className="text-brand-gold" />
-                      <span>{t('projects_hint')}</span>
-                    </div>
-                  </div>
-
-                  <div className="p-6 relative h-full flex flex-col">
-                    <div className="flex justify-between items-start mb-2">
-                      <span className="text-xs font-bold text-brand-purple bg-brand-purple/5 border border-brand-purple/10 px-3 py-1 rounded-full uppercase tracking-wide">
-                        {project.category}
-                      </span>
-                    </div>
-                    <h3 className="text-2xl font-bold mt-2 text-slate-900 dark:text-white">{project.title}</h3>
-                    <p className="text-slate-600 dark:text-slate-400 mt-2 text-sm line-clamp-2 leading-relaxed">
-                      {project.description}
-                    </p>
-                    <div className="mt-auto pt-4 flex items-center text-brand-blue font-bold text-sm">
-                      {t('projects_details')} <ExternalLink size={14} className="ms-1" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Back */}
-                <div className="absolute inset-0 h-full w-full rounded-3xl bg-slate-900 p-8 text-white [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col justify-between shadow-2xl border border-slate-800">
-                  <div>
-                    <h3 className="text-2xl font-bold mb-4 text-brand-gold">{project.title}</h3>
-                    <div className="w-12 h-1 bg-brand-purple mb-6 rounded-full"></div>
-                    <p className="text-slate-300 text-sm mb-6 leading-relaxed">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tech.map((t) => (
-                        <span key={t} className="text-xs border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 bg-slate-800/50">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4 mt-6">
-                    {safeHref(project.link) && (
-                      <a
-                        href={safeHref(project.link)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        // Keep the back-face links out of the tab order until the
-                        // card is actually flipped — otherwise keyboard focus
-                        // lands on links that are rotated out of view.
-                        tabIndex={isFlipped ? 0 : -1}
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-brand-purple rounded-xl hover:bg-brand-purpleLight transition-colors font-bold text-sm shadow-lg shadow-brand-purple/20 transform hover:-translate-y-1"
-                      >
-                        <ExternalLink size={16} /> {t('projects_demo')}
-                      </a>
-                    )}
-                    {safeHref(project.github) && (
-                      <a
-                        href={safeHref(project.github)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        tabIndex={isFlipped ? 0 : -1}
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors font-bold text-sm transform hover:-translate-y-1"
-                      >
-                        <Github size={16} /> {t('projects_code')}
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-            );
-          })}
+              project={project}
+              isFlipped={flippedId === project.id}
+              toggleFlip={() => setFlippedId(prev => prev === project.id ? null : project.id)}
+              parallaxY={index % 2 === 0 ? parallaxA : parallaxB}
+              prefersReducedMotion={prefersReducedMotion}
+              t={t}
+            />
+          ))}
         </div>
       </div>
     </section>
