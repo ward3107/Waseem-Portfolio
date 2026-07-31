@@ -82,6 +82,16 @@ values
     'https://coursera.org/verify/FQY4PSQZ99XN',
     '/certifications/scrimba-intro-ai-engineering.png',
     102
+  ),
+  (
+    'scrimba-open-source-ai-models',
+    jsonb_build_object('en', 'Open-source AI Models'),
+    'Scrimba (via Coursera)',
+    '2026-07-31',
+    null,
+    'https://coursera.org/verify/7FJ2NTYCCAS1',
+    '/certifications/scrimba-open-source-ai-models.png',
+    103
   )
 on conflict (slug) do update set
   title          = excluded.title,

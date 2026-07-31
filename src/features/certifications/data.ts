@@ -60,4 +60,13 @@ export const CERTIFICATIONS: Certification[] = [
     credentialUrl: 'https://coursera.org/verify/FQY4PSQZ99XN',
     image: '/certifications/scrimba-intro-ai-engineering.png',
   },
+  {
+    id: 'scrimba-open-source-ai-models',
+    title: 'Open-source AI Models',
+    issuer: 'Scrimba (via Coursera)',
+    issueDate: '2026-07-31',
+    expiryDate: '',
+    credentialUrl: 'https://coursera.org/verify/7FJ2NTYCCAS1',
+    image: '/certifications/scrimba-open-source-ai-models.png',
+  },
 ];
