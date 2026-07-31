@@ -161,6 +161,16 @@ export const en: Record<string, string> = {
     tech_win_desc: "You've mastered the stack.",
     tech_win_code: "Exclusive Code",
     tech_win_btn: "Continue",
+    tech_discount: "Discount",
+    tech_redeem: "Redeem",
+    tech_locked: "Locked",
+    tech_tier_flash_title: "TIER UNLOCKED",
+    tech_tier_flash_sub: "REDEEM ANYTIME",
+    tech_milestone_flash_title: "MILESTONE",
+    tech_milestone_flash_sub: "DISCOUNT BOOSTED",
+    tech_reward_title: "REWARD READY",
+    tech_reward_desc: "Use this code on checkout — or keep playing for more.",
+    tech_reward_btn: "Keep Playing",
 
     // Contact
     contact_avail: "Available for new projects",

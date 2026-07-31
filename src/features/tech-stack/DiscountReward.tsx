@@ -1,18 +1,32 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Gift } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useFocusTrap, useEscapeKey } from '@/shared/hooks/useFocusTrap';
+import { playSound } from './audio';
 
-const DiscountReward: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+interface DiscountRewardProps {
+  onClose: () => void;
+  percent: number;
+  code: string;
+  isFinal: boolean;
+}
+
+const formatPercent = (p: number): string => (Number.isInteger(p) ? `${p}%` : `${p}%`);
+
+const DiscountReward: React.FC<DiscountRewardProps> = ({ onClose, percent, code, isFinal }) => {
   const { t } = useLanguage();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
-  // Trap Tab within the dialog (focuses the close button on open) and close on
-  // Escape — keeps keyboard focus off the marquee cards behind the modal.
   useFocusTrap(dialogRef, true);
   useEscapeKey(true, onClose);
+
+  // Ka-ching on open — sound distinct from the milestone chime so the reward
+  // moment reads as its own event, not a repeat of the tier-unlock cue.
+  useEffect(() => {
+    playSound(isFinal ? 'finale' : 'redeem');
+  }, [isFinal]);
 
   return (
     <div
@@ -52,18 +66,22 @@ const DiscountReward: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             id="win-title"
             className="text-3xl sm:text-4xl font-black text-white mb-2 font-heading tracking-tight relative z-10"
           >
-            {t('tech_win_title')}
+            {isFinal ? t('tech_win_title') : t('tech_reward_title')}
           </h2>
-          <p className="text-slate-300 mb-6 sm:mb-8 font-mono text-sm relative z-10">
-            {t('tech_win_desc')}
+          <p className="text-slate-300 mb-4 sm:mb-6 font-mono text-sm relative z-10">
+            {isFinal ? t('tech_win_desc') : t('tech_reward_desc')}
           </p>
+
+          <div className="text-5xl sm:text-6xl font-black text-brand-gold mb-6 relative z-10 drop-shadow-[0_0_20px_rgba(212,175,55,0.6)]">
+            {formatPercent(percent)}
+          </div>
 
           <div className="bg-slate-950 border border-slate-700 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 relative z-10">
             <p className="text-[10px] text-slate-500 uppercase tracking-[0.2em] mb-2">
               {t('tech_win_code')}
             </p>
             <div className="text-2xl sm:text-3xl font-mono font-bold text-brand-cyan tracking-widest select-all drop-shadow-[0_0_10px_rgba(6,182,212,0.5)]">
-              VIBE10
+              {code}
             </div>
           </div>
 
@@ -72,7 +90,7 @@ const DiscountReward: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             onClick={onClose}
             className="w-full py-3 sm:py-4 bg-brand-gold hover:bg-yellow-400 text-slate-900 font-bold uppercase tracking-wider rounded-lg shadow-lg relative z-10 focus:outline-none focus:ring-4 focus:ring-brand-gold/50 transition-all"
           >
-            {t('tech_win_btn')}
+            {isFinal ? t('tech_win_btn') : t('tech_reward_btn')}
           </button>
         </div>
       </motion.div>

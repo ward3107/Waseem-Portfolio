@@ -1,15 +1,47 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { TECH_STACK } from '@/constants';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { ShieldAlert } from 'lucide-react';
+import { Gift, ShieldAlert } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useInView } from '@/shared/hooks/useInView';
-import { STAGE_THRESHOLDS, BOSS_CLICKS, bossHealthFor } from './config';
+import { TIERS, WIN_CLICKS, tierForClicks, bossForClicks, type Tier } from './config';
 import { playSound } from './audio';
 import BossOverlay from './BossOverlay';
 import DiscountReward from './DiscountReward';
 import TechCard from './TechCard';
 import FlashMessage from './FlashMessage';
+
+const BURST_COLORS = ['#f5c518', '#22d3ee', '#a78bfa', '#f472b6', '#ffffff'];
+
+const formatPercent = (p: number): string => `${p}%`;
+
+const MilestoneBurst: React.FC = () => (
+  <div className="absolute inset-0 z-40 pointer-events-none flex items-center justify-center">
+    {Array.from({ length: 28 }).map((_, i) => {
+      const angle = (i / 28) * Math.PI * 2;
+      const dist = 180 + Math.random() * 120;
+      return (
+        <motion.span
+          key={i}
+          initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          animate={{
+            x: Math.cos(angle) * dist,
+            y: Math.sin(angle) * dist,
+            opacity: 0,
+            scale: 0.4,
+            rotate: Math.random() * 360,
+          }}
+          transition={{ duration: 1.1, ease: 'easeOut' }}
+          className="absolute w-2 h-3 rounded-sm"
+          style={{
+            backgroundColor: BURST_COLORS[i % BURST_COLORS.length],
+            willChange: 'transform, opacity',
+          }}
+        />
+      );
+    })}
+  </div>
+);
 
 const TechStack: React.FC = () => {
   const { t } = useLanguage();
@@ -17,23 +49,23 @@ const TechStack: React.FC = () => {
 
   const [score, setScore] = useState(0);
   const [combo, setCombo] = useState(0);
-  const [stage, setStage] = useState(1);
   const [shake, setShake] = useState(0);
+  const [currentTier, setCurrentTier] = useState<Tier | null>(null);
 
   const [activeBoss, setActiveBoss] = useState<{ health: number } | null>(null);
   const [showDiscount, setShowDiscount] = useState(false);
-  const [hasClaimedDiscount, setHasClaimedDiscount] = useState(false);
+  const [autoOpenedFinal, setAutoOpenedFinal] = useState(false);
+  const [burstKey, setBurstKey] = useState(0);
+  const [redeemPulseKey, setRedeemPulseKey] = useState(0);
   const [flashMsg, setFlashMsg] = useState<{ title: string; sub: string; color: string } | null>(
     null
   );
 
   const comboTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Shared timer for the flash-message banner. Without this, back-to-back
-  // stage advances / boss defeats leave stale timeouts that blank the newer
-  // banner early. Also cleared on unmount so we don't setState after nav.
   const flashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Shared timer for the shake effect — same unmount concern.
   const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const burstTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clicksRef = useRef(0);
 
   const showFlash = (msg: { title: string; sub: string; color: string }, ms: number) => {
     setFlashMsg(msg);
@@ -44,26 +76,32 @@ const TechStack: React.FC = () => {
     }, ms);
   };
 
+  const fireBurst = () => {
+    setBurstKey((k) => k + 1);
+    if (burstTimerRef.current) clearTimeout(burstTimerRef.current);
+    burstTimerRef.current = setTimeout(() => {
+      burstTimerRef.current = null;
+    }, 1200);
+  };
+
   useEffect(
     () => () => {
       if (comboTimeoutRef.current) clearTimeout(comboTimeoutRef.current);
       if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
       if (shakeTimerRef.current) clearTimeout(shakeTimerRef.current);
+      if (burstTimerRef.current) clearTimeout(burstTimerRef.current);
     },
     []
   );
-  const clicksRef = useRef(0);
 
-  // Parallax backdrop grid — drifts vertically as the section scrolls, purely
-  // on the background layer so it never touches the marquee/click-to-pop game.
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
   const gridBackgroundPositionY = useTransform(scrollYProgress, [0, 1], ['0px', '320px']);
-  // Freeze CSS marquees + framer-motion loops when the section leaves the
-  // viewport — the sustained GPU cost of two scrolling rows and a big
-  // pulsing grid is real (~5-10% CPU on mid-range hardware).
   const inView = useInView(sectionRef, '150px');
   const marqueePlayState = inView ? 'running' : 'paused';
+
+  const stage = currentTier?.stage ?? 1;
+  const marqueeDuration = currentTier?.marqueeSpeed ?? '60s';
 
   const triggerShake = () => {
     setShake(10);
@@ -76,41 +114,57 @@ const TechStack: React.FC = () => {
 
   const checkEvents = useCallback(
     (currentClicks: number) => {
-      if (currentClicks === STAGE_THRESHOLDS.STAGE_2) {
-        setStage(2);
-        showFlash(
-          {
-            title: 'SYSTEM OVERCLOCK',
-            sub: 'AUTO-FIRE ENABLED',
-            color: 'border-brand-cyan',
-          },
-          3000
-        );
-        playSound('win');
-      }
-      if (currentClicks === STAGE_THRESHOLDS.STAGE_3) {
-        setStage(3);
-        showFlash(
-          {
-            title: 'WEAPON UPGRADE',
-            sub: 'BOMB MODE ACTIVE',
-            color: 'border-red-500',
-          },
-          3000
-        );
-        playSound('win');
-      }
-      if (currentClicks === STAGE_THRESHOLDS.WIN && !hasClaimedDiscount) {
-        setShowDiscount(true);
-        setHasClaimedDiscount(true);
-        playSound('win');
+      const newTier = TIERS.find((tier) => tier.clicks === currentClicks);
+      if (newTier) {
+        setCurrentTier(newTier);
+        setRedeemPulseKey((k) => k + 1);
+
+        const isFinal = currentClicks === WIN_CLICKS;
+        if (isFinal) {
+          if (!autoOpenedFinal) {
+            setShowDiscount(true);
+            setAutoOpenedFinal(true);
+          }
+          playSound('finale');
+          fireBurst();
+          showFlash(
+            {
+              title: t('tech_win_title'),
+              sub: formatPercent(newTier.percent),
+              color: 'border-brand-gold',
+            },
+            3200
+          );
+        } else if (newTier.isMajor) {
+          playSound('milestone');
+          fireBurst();
+          showFlash(
+            {
+              title: t('tech_milestone_flash_title'),
+              sub: `${t('tech_milestone_flash_sub')} · ${formatPercent(newTier.percent)}`,
+              color: 'border-brand-gold',
+            },
+            2600
+          );
+        } else {
+          playSound('tier');
+          showFlash(
+            {
+              title: `${t('tech_tier_flash_title')} · ${formatPercent(newTier.percent)}`,
+              sub: t('tech_tier_flash_sub'),
+              color: 'border-brand-cyan',
+            },
+            1500
+          );
+        }
       }
 
-      if ((BOSS_CLICKS as readonly number[]).includes(currentClicks)) {
-        setActiveBoss({ health: bossHealthFor(currentClicks) });
+      const boss = bossForClicks(currentClicks);
+      if (boss) {
+        setActiveBoss({ health: boss.health });
       }
     },
-    [hasClaimedDiscount]
+    [autoOpenedFinal, t]
   );
 
   const handlePop = useCallback(() => {
@@ -136,8 +190,16 @@ const TechStack: React.FC = () => {
     );
   };
 
-  const animationDuration = stage === 1 ? '60s' : stage === 2 ? '30s' : '15s';
+  const openRedeem = () => {
+    if (!currentTier) return;
+    setShowDiscount(true);
+  };
+
   const chaosStyle = stage >= 2 ? { transform: 'perspective(1000px) rotateX(10deg)' } : {};
+
+  const displayedTier = useMemo(() => currentTier ?? tierForClicks(clicksRef.current), [
+    currentTier,
+  ]);
 
   return (
     <section ref={sectionRef} className="py-16 sm:py-20 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col justify-center border-t border-slate-200 dark:border-slate-900 min-h-[500px] sm:min-h-[600px] transition-colors duration-300">
@@ -154,13 +216,21 @@ const TechStack: React.FC = () => {
         {activeBoss && <BossOverlay health={activeBoss.health} onDefeat={handleBossDefeat} />}
       </AnimatePresence>
       <AnimatePresence>
-        {showDiscount && <DiscountReward onClose={() => setShowDiscount(false)} />}
+        {showDiscount && displayedTier && (
+          <DiscountReward
+            onClose={() => setShowDiscount(false)}
+            percent={displayedTier.percent}
+            code={displayedTier.code}
+            isFinal={displayedTier.clicks === WIN_CLICKS}
+          />
+        )}
       </AnimatePresence>
       <AnimatePresence>
         {flashMsg && (
           <FlashMessage text={flashMsg.title} subtext={flashMsg.sub} color={flashMsg.color} />
         )}
       </AnimatePresence>
+      {burstKey > 0 && <MilestoneBurst key={burstKey} />}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 text-center mb-8 sm:mb-10 md:mb-12 relative z-20">
         <motion.h2
@@ -264,6 +334,39 @@ const TechStack: React.FC = () => {
                 x{combo}
               </motion.span>
             </div>
+
+            <div className="flex flex-col items-center min-w-[70px] sm:min-w-[100px] md:min-w-[120px] border-l border-slate-200 dark:border-slate-800 pl-3 sm:pl-4 md:pl-8">
+              <span className="text-[8px] sm:text-[10px] text-brand-gold uppercase tracking-widest font-bold">
+                {t('tech_discount')}
+              </span>
+              <motion.span
+                key={redeemPulseKey}
+                initial={{ scale: 0.8 }}
+                animate={{ scale: [0.8, 1.25, 1] }}
+                transition={{ duration: 0.5 }}
+                className={`text-xl sm:text-2xl md:text-3xl font-mono font-bold ${currentTier ? 'text-brand-gold drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]' : 'text-slate-400 dark:text-slate-600'}`}
+              >
+                {currentTier ? formatPercent(currentTier.percent) : '—'}
+              </motion.span>
+              <button
+                type="button"
+                onClick={openRedeem}
+                disabled={!currentTier}
+                aria-label={
+                  currentTier
+                    ? `${t('tech_redeem')} ${formatPercent(currentTier.percent)}`
+                    : t('tech_locked')
+                }
+                className={`mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold uppercase tracking-widest transition-all focus:outline-none focus:ring-2 focus:ring-brand-gold/70 ${
+                  currentTier
+                    ? 'bg-brand-gold text-slate-900 hover:bg-yellow-400 shadow-[0_0_12px_rgba(212,175,55,0.5)] animate-pulse'
+                    : 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed'
+                }`}
+              >
+                <Gift size={9} />
+                {currentTier ? t('tech_redeem') : t('tech_locked')}
+              </button>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -276,7 +379,7 @@ const TechStack: React.FC = () => {
         <div
           className="flex w-max hover:[animation-play-state:paused]"
           style={{
-            animation: `scroll-left ${animationDuration} linear infinite`,
+            animation: `scroll-left ${marqueeDuration} linear infinite`,
             animationPlayState: marqueePlayState,
           }}
         >
@@ -294,7 +397,7 @@ const TechStack: React.FC = () => {
         <div
           className="flex w-max hover:[animation-play-state:paused]"
           style={{
-            animation: `scroll-right ${animationDuration} linear infinite`,
+            animation: `scroll-right ${marqueeDuration} linear infinite`,
             animationPlayState: marqueePlayState,
           }}
         >
