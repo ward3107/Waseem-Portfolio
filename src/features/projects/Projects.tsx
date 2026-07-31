@@ -121,8 +121,8 @@ const Projects: React.FC = () => {
               key={project.id}
               initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 }}
+              viewport={{ once: true, margin: '0px 0px 200px 0px' }}
+              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: Math.min(index, 5) * 0.05, ease: [0.22, 1, 0.36, 1] }}
               style={prefersReducedMotion ? undefined : { y: index % 2 === 0 ? parallaxA : parallaxB }}
               role="button"
               tabIndex={0}

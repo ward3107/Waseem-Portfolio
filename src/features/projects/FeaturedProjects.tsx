@@ -55,8 +55,10 @@ const FeaturedProjects: React.FC = () => {
             const sharedProps = {
               initial: prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 },
               whileInView: { opacity: 1, y: 0 },
-              viewport: { once: true },
-              transition: prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 },
+              viewport: { once: true, margin: '0px 0px 200px 0px' },
+              transition: prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.5, delay: Math.min(index, 5) * 0.05, ease: [0.22, 1, 0.36, 1] as const },
               className:
                 'group flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-brand-purple/30 transition-all duration-300',
             };

@@ -82,10 +82,12 @@ const Certifications: React.FC = () => {
               href={safeHref(cert.credentialUrl)}
               target="_blank"
               rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
+              viewport={{ once: true, margin: '0px 0px 200px 0px' }}
+              transition={prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 0.5, delay: Math.min(index, 5) * 0.05, ease: [0.22, 1, 0.36, 1] }}
               className="group flex flex-col overflow-hidden bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-lg hover:border-brand-purple/40 transition-all duration-300"
             >
               {cert.image ? (
