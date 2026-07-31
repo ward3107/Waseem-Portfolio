@@ -150,7 +150,7 @@ const Media: React.FC = () => {
 
         {assets && assets.length === 0 && (
           <p className="text-sm text-zinc-500 dark:text-zinc-500 text-center py-8">
-            No files yet. Upload above or from a project's editor.
+            No files yet. Upload above or from a project&apos;s editor.
           </p>
         )}
 
