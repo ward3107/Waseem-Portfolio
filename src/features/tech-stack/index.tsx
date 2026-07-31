@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Gift, ShieldAlert } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useInView } from '@/shared/hooks/useInView';
-import { TIERS, WIN_CLICKS, tierForClicks, bossForClicks, type Tier } from './config';
+import { TIERS, WIN_CLICKS, ROW_SPECS, rowsForStage, tierForClicks, bossForClicks, type Tier } from './config';
 import { playSound } from './audio';
 import BossOverlay from './BossOverlay';
 import DiscountReward from './DiscountReward';
@@ -310,13 +310,15 @@ const TechStack: React.FC = () => {
               <span className="text-[8px] sm:text-[10px] text-brand-gold uppercase tracking-widest font-bold flex items-center gap-1 justify-center">
                 <ShieldAlert size={8} /> {t('tech_weapon')}
               </span>
-              <div className="text-sm sm:text-base md:text-lg font-bold font-mono mt-1 text-slate-900 dark:text-white">
-                {stage === 1 ? (
-                  'STD'
+              <div className="text-sm sm:text-base md:text-lg font-bold font-mono mt-1 text-slate-900 dark:text-white whitespace-nowrap">
+                {!currentTier ? (
+                  <span className="text-slate-400 dark:text-slate-500">idle</span>
+                ) : stage === 1 ? (
+                  <span>{currentTier.weaponEmoji} {currentTier.weaponName}</span>
                 ) : stage === 2 ? (
-                  <span className="text-brand-cyan animate-pulse">RAPID</span>
+                  <span className="text-brand-cyan animate-pulse">{currentTier.weaponEmoji} {currentTier.weaponName}</span>
                 ) : (
-                  <span className="text-red-500 animate-pulse">BOMB</span>
+                  <span className="text-red-500 animate-pulse">{currentTier.weaponEmoji} {currentTier.weaponName}</span>
                 )}
               </div>
             </div>
@@ -376,41 +378,34 @@ const TechStack: React.FC = () => {
         style={chaosStyle}
         dir="ltr"
       >
-        <div
-          className="flex w-max hover:[animation-play-state:paused]"
-          style={{
-            animation: `scroll-left ${marqueeDuration} linear infinite`,
-            animationPlayState: marqueePlayState,
-          }}
-        >
-          {row.map((tech, index) => (
-            <TechCard
-              key={`r1-${index}`}
-              tech={tech}
-              stage={stage}
-              onPop={handlePop}
-              triggerShake={triggerShake}
-            />
-          ))}
-        </div>
-
-        <div
-          className="flex w-max hover:[animation-play-state:paused]"
-          style={{
-            animation: `scroll-right ${marqueeDuration} linear infinite`,
-            animationPlayState: marqueePlayState,
-          }}
-        >
-          {row.map((tech, index) => (
-            <TechCard
-              key={`r2-${index}`}
-              tech={tech}
-              stage={stage}
-              onPop={handlePop}
-              triggerShake={triggerShake}
-            />
-          ))}
-        </div>
+        {Array.from({ length: rowsForStage(stage) }).map((_, rowIndex) => {
+          const spec = ROW_SPECS[rowIndex % ROW_SPECS.length];
+          // marqueeDuration is a CSS duration like "45s" — scale it per row so
+          // extra rows scroll at distinctly different speeds and the field
+          // stops feeling like two parallel clones.
+          const baseSeconds = parseFloat(marqueeDuration);
+          const rowSeconds = (baseSeconds / spec.speedMultiplier).toFixed(1);
+          return (
+            <div
+              key={`row-${rowIndex}`}
+              className="flex w-max hover:[animation-play-state:paused]"
+              style={{
+                animation: `scroll-${spec.direction} ${rowSeconds}s linear infinite`,
+                animationPlayState: marqueePlayState,
+              }}
+            >
+              {row.map((tech, index) => (
+                <TechCard
+                  key={`r${rowIndex}-${index}`}
+                  tech={tech}
+                  stage={stage}
+                  onPop={handlePop}
+                  triggerShake={triggerShake}
+                />
+              ))}
+            </div>
+          );
+        })}
       </div>
     </section>
   );

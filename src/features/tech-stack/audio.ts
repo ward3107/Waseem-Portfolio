@@ -1,12 +1,34 @@
 import { getAudioContext } from '@/lib/browser';
 import type { SoundType } from './config';
 
+// Single shared AudioContext for the whole game session. Chrome caps live
+// AudioContexts at 6 per tab; the old "one per playSound() call" pattern
+// silently killed audio after a handful of clicks. Lazy-create once, then
+// resume on every play in case the browser autoplay policy has parked it
+// in the 'suspended' state before the first user gesture.
+let sharedCtx: AudioContext | null = null;
+
+const getSharedCtx = (): AudioContext | null => {
+  const AudioContextConstructor = getAudioContext();
+  if (!AudioContextConstructor) return null;
+  if (!sharedCtx) {
+    try {
+      sharedCtx = new AudioContextConstructor();
+    } catch {
+      return null;
+    }
+  }
+  if (sharedCtx.state === 'suspended') {
+    sharedCtx.resume().catch(() => {});
+  }
+  return sharedCtx;
+};
+
 export const playSound = (type: SoundType) => {
   try {
-    const AudioContextConstructor = getAudioContext();
-    if (!AudioContextConstructor) return;
+    const ctx = getSharedCtx();
+    if (!ctx) return;
 
-    const ctx = new AudioContextConstructor();
     const now = ctx.currentTime;
     const gainNode = ctx.createGain();
 
