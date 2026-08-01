@@ -4,6 +4,7 @@ import {
   Send,
   Loader2,
   Check,
+  ChevronDown,
   Globe,
   Bot,
   Search,
@@ -17,6 +18,7 @@ import { submitPublicReview } from '@/lib/content/reviews';
 import { isSupabaseConfigured } from '@/lib/supabaseClient';
 import { trackEvent } from '@/lib/browser';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
+import { useContact } from '@/features/contact/useContact';
 
 // Standalone "share your experience" page. Shared with customers after a
 // project so they can leave a moderated testimonial that lands in the
@@ -71,39 +73,52 @@ const PAL = {
   coralDim: 'rgba(217,121,82,0.22)',
 } as const;
 
+const STAR_LABEL_KEYS = [
+  'share_star_1',
+  'share_star_2',
+  'share_star_3',
+  'share_star_4',
+  'share_star_5',
+] as const;
+
 const Stars: React.FC<{
   value: number;
   onChange: (v: number) => void;
   label: string;
-}> = ({ value, onChange, label }) => {
+  starLabel: (n: number) => string;
+}> = ({ value, onChange, label, starLabel }) => {
   const [hover, setHover] = useState<number | null>(null);
+  const shown = hover ?? value;
   return (
-    <div
-      className="inline-flex items-center gap-1.5"
-      role="radiogroup"
-      aria-label={label}
-      onMouseLeave={() => setHover(null)}
-    >
-      {[1, 2, 3, 4, 5].map((n) => {
-        const active = (hover ?? value) >= n;
-        return (
-          <motion.button
-            key={n}
-            type="button"
-            role="radio"
-            aria-checked={value === n}
-            aria-label={`${n}`}
-            onClick={() => onChange(n)}
-            onMouseEnter={() => setHover(n)}
-            whileHover={{ scale: 1.12 }}
-            whileTap={{ scale: 0.9 }}
-            className="p-0.5 focus:outline-none focus-visible:ring-2 rounded"
-            style={{
-              // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-              ['--tw-ring-color' as string]: PAL.accentSoft,
-            }}
-          >
-            <svg
+    <div>
+      <div
+        className="inline-flex items-center gap-1.5"
+        role="radiogroup"
+        aria-label={label}
+        onMouseLeave={() => setHover(null)}
+      >
+        {[1, 2, 3, 4, 5].map((n) => {
+          const active = (hover ?? value) >= n;
+          const singleLabel = starLabel(n);
+          return (
+            <motion.button
+              key={n}
+              type="button"
+              role="radio"
+              aria-checked={value === n}
+              aria-label={`${n} — ${singleLabel}`}
+              title={singleLabel}
+              onClick={() => onChange(n)}
+              onMouseEnter={() => setHover(n)}
+              whileHover={{ scale: 1.12 }}
+              whileTap={{ scale: 0.9 }}
+              className="p-0.5 focus:outline-none focus-visible:ring-2 rounded"
+              style={{
+                // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+                ['--tw-ring-color' as string]: PAL.accentSoft,
+              }}
+            >
+              <svg
               width="30"
               height="30"
               viewBox="0 0 24 24"
@@ -118,9 +133,17 @@ const Stars: React.FC<{
                 fill="currentColor"
               />
             </svg>
-          </motion.button>
-        );
-      })}
+            </motion.button>
+          );
+        })}
+      </div>
+      <p
+        className="mt-2 text-[13px] font-medium"
+        style={{ color: PAL.soft, minHeight: '1.2em' }}
+        aria-live="polite"
+      >
+        {starLabel(shown)}
+      </p>
     </div>
   );
 };
@@ -128,6 +151,7 @@ const Stars: React.FC<{
 const ShareTestimonialPage: React.FC = () => {
   const { t, language, dir } = useLanguage();
   const prefersReducedMotion = usePrefersReducedMotion();
+  const { whatsappNumber } = useContact();
 
   const [author, setAuthor] = useState('');
   const [categoryKey, setCategoryKey] = useState<string>('');
@@ -137,6 +161,11 @@ const ShareTestimonialPage: React.FC = () => {
   const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  // When the customer is actively writing, the page ground deepens
+  // slightly — a "you're in writing mode" ambience without moving the
+  // form. Reset on blur.
+  const [writingFocus, setWritingFocus] = useState(false);
   const [done, setDone] = useState(false);
   const quoteRef = useRef<HTMLTextAreaElement>(null);
 
@@ -201,19 +230,36 @@ const ShareTestimonialPage: React.FC = () => {
 
   // Multi-radial ground: base warm cream → honey glow top-right → soft
   // honey top-left → sage undertone at the bottom. Layered so the
-  // sage form belongs to the same world as its ground.
-  const groundBackground = [
-    'radial-gradient(70% 50% at 50% 110%, rgba(58,90,68,0.11), transparent 62%)',
-    'radial-gradient(55% 40% at 90% -10%, rgba(234,180,102,0.30), transparent 65%)',
-    'radial-gradient(65% 45% at 8% 0%, rgba(240,200,140,0.22), transparent 60%)',
-    'linear-gradient(180deg, #fbf3dd 0%, #f6eed3 55%, #f0e7c6 100%)',
-  ].join(', ');
+  // sage form belongs to the same world as its ground. When the quote
+  // textarea has focus (writingFocus), each radial gets a bit stronger
+  // and the base tilts a shade warmer — creates a "you're writing"
+  // ambience without moving the form.
+  const groundBackground = writingFocus
+    ? [
+        'radial-gradient(70% 50% at 50% 110%, rgba(58,90,68,0.16), transparent 62%)',
+        'radial-gradient(55% 40% at 90% -10%, rgba(234,180,102,0.42), transparent 65%)',
+        'radial-gradient(65% 45% at 8% 0%, rgba(240,200,140,0.30), transparent 60%)',
+        'linear-gradient(180deg, #f8ecc6 0%, #f2e5bd 55%, #ebdbaa 100%)',
+      ].join(', ')
+    : [
+        'radial-gradient(70% 50% at 50% 110%, rgba(58,90,68,0.11), transparent 62%)',
+        'radial-gradient(55% 40% at 90% -10%, rgba(234,180,102,0.30), transparent 65%)',
+        'radial-gradient(65% 45% at 8% 0%, rgba(240,200,140,0.22), transparent 60%)',
+        'linear-gradient(180deg, #fbf3dd 0%, #f6eed3 55%, #f0e7c6 100%)',
+      ].join(', ');
+
+  const reminderHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t('share_reminder_wa_prefill'))}`;
 
   return (
     <section
       dir={dir}
       className="relative min-h-screen py-14 sm:py-20 md:py-24 overflow-hidden"
-      style={{ background: groundBackground, colorScheme: 'light', color: PAL.ink }}
+      style={{
+        background: groundBackground,
+        colorScheme: 'light',
+        color: PAL.ink,
+        transition: 'background 500ms ease',
+      }}
     >
       <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
         <AnimatePresence mode="wait">
@@ -321,6 +367,43 @@ const ShareTestimonialPage: React.FC = () => {
                   ))}
                 </div>
               </div>
+
+              {/* "Waseem is asking" — small personal attribution card */}
+              <div
+                className="rounded-2xl p-4 mb-5 flex items-start gap-3"
+                style={{
+                  background: 'rgba(255,255,255,0.55)',
+                  backdropFilter: 'blur(6px)',
+                  border: '1px solid rgba(31,42,36,0.06)',
+                }}
+              >
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold text-white text-sm"
+                  style={{ background: PAL.accent, letterSpacing: '0.02em' }}
+                  aria-hidden="true"
+                >
+                  W
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p
+                    className="text-[13.5px] font-semibold leading-snug"
+                    style={{ color: PAL.ink }}
+                  >
+                    {t('share_from_waseem_title')}
+                  </p>
+                  <p
+                    className="text-[12.5px] leading-snug mt-0.5"
+                    style={{ color: PAL.soft }}
+                  >
+                    {t('share_from_waseem_body')}
+                  </p>
+                </div>
+              </div>
+
+              {/* Example testimonial — collapsed by default, expands on
+                  click. Uses a real seeded review so the customer sees the
+                  actual tone/length that reads well on the site. */}
+              <ExampleTestimonial />
 
               {/* Card */}
               <form
@@ -434,6 +517,8 @@ const ShareTestimonialPage: React.FC = () => {
                     maxLength={600}
                     value={quote}
                     onChange={(e) => setQuote(e.target.value)}
+                    onFocus={() => setWritingFocus(true)}
+                    onBlur={() => setWritingFocus(false)}
                     placeholder={t('share_field_quote_placeholder')}
                   />
                   <div className="mt-2 flex items-center gap-3">
@@ -460,7 +545,12 @@ const ShareTestimonialPage: React.FC = () => {
                 {/* Rating */}
                 <div>
                   <FieldLabel>{t('share_field_rating')}</FieldLabel>
-                  <Stars value={rating} onChange={setRating} label={t('share_field_rating')} />
+                  <Stars
+                    value={rating}
+                    onChange={setRating}
+                    label={t('share_field_rating')}
+                    starLabel={(n) => (n >= 1 && n <= 5 ? t(STAR_LABEL_KEYS[n - 1]) : '')}
+                  />
                 </div>
 
                 {/* Consent */}
@@ -505,6 +595,19 @@ const ShareTestimonialPage: React.FC = () => {
                   </motion.p>
                 )}
 
+                {/* Preview toggle — opens an inline card that renders the
+                    testimonial in the same style the Reviews section uses.
+                    Requires name + quote to be present, otherwise the
+                    toggle is disabled with a hint. */}
+                <PreviewSection
+                  author={author}
+                  quote={quote}
+                  rating={rating}
+                  category={helpedWithValue}
+                  open={showPreview}
+                  onToggle={() => setShowPreview((v) => !v)}
+                />
+
                 {/* Submit */}
                 <button
                   type="submit"
@@ -534,6 +637,25 @@ const ShareTestimonialPage: React.FC = () => {
                   )}
                   {submitting ? t('share_submitting') : t('share_submit')}
                 </button>
+
+                {/* Reminder escape hatch — for visitors who want to come
+                    back later. One tap opens WhatsApp with a pre-filled
+                    "please remind me" message to Waseem. Zero backend. */}
+                <p className="text-center text-[12.5px]" style={{ color: PAL.soft }}>
+                  {t('share_reminder_hint')}{' '}
+                  <a
+                    href={reminderHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold underline underline-offset-2"
+                    style={{ color: PAL.accent }}
+                    onClick={() =>
+                      trackEvent('testimonial_reminder_click', { language })
+                    }
+                  >
+                    {t('share_reminder_action')}
+                  </a>
+                </p>
               </form>
             </motion.div>
           )}
@@ -628,5 +750,193 @@ const Textarea = React.forwardRef<
   />
 ));
 Textarea.displayName = 'Textarea';
+
+// Inline "how it will look" preview. Toggle button + collapsible card
+// that renders the visitor's own inputs in the exact style the Reviews
+// section uses on the homepage.
+const PreviewSection: React.FC<{
+  author: string;
+  quote: string;
+  rating: number;
+  category: string;
+  open: boolean;
+  onToggle: () => void;
+}> = ({ author, quote, rating, category, open, onToggle }) => {
+  const { t } = useLanguage();
+  const ready = author.trim().length > 0 && quote.trim().length > 0;
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={onToggle}
+        disabled={!ready}
+        aria-expanded={open}
+        className="w-full inline-flex items-center justify-between gap-2 rounded-2xl px-4 py-3 text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        style={{
+          background: 'rgba(255,255,255,0.55)',
+          backdropFilter: 'blur(6px)',
+          border: `1px solid ${PAL.line}`,
+          color: PAL.ink,
+        }}
+      >
+        <span className="text-start">
+          {ready ? t('share_preview_toggle') : t('share_preview_missing')}
+        </span>
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          aria-hidden="true"
+          style={{ color: PAL.accent, display: 'inline-flex' }}
+        >
+          <ChevronDown size={16} />
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && ready && (
+          <motion.div
+            key="preview-body"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.22 }}
+            className="overflow-hidden"
+          >
+            <div
+              className="mt-2 rounded-2xl p-5"
+              style={{
+                background: PAL.card,
+                border: `1px solid ${PAL.line}`,
+                boxShadow: '0 12px 24px -14px rgba(58,90,68,0.18)',
+              }}
+            >
+              <div className="flex items-center gap-1 mb-2">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <svg
+                    key={n}
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    style={{ color: n <= rating ? PAL.coral : PAL.coralDim }}
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442a.563.563 0 01.32.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.32-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                ))}
+              </div>
+              <p
+                className="text-[15px] leading-relaxed italic"
+                style={{ color: PAL.ink, fontFamily: 'Georgia, "Iowan Old Style", serif' }}
+                dir="auto"
+              >
+                &ldquo;{quote}&rdquo;
+              </p>
+              <p className="text-[12px] mt-3" style={{ color: PAL.soft }}>
+                <span style={{ color: PAL.ink, fontWeight: 600 }}>{author}</span>
+                {category && (
+                  <>
+                    {' · '}
+                    <span>{category}</span>
+                  </>
+                )}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+// Collapsed by default; expanding shows a real seeded testimonial so the
+// visitor can see the tone / length that reads well on the site. The
+// content lives in the component (not the reviews table) so this stays
+// fast — no extra fetch — and shows the exact same reference even when
+// the reviews list is still loading in.
+const ExampleTestimonial: React.FC = () => {
+  const { t } = useLanguage();
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mb-5">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="w-full inline-flex items-center justify-between gap-2 rounded-2xl px-4 py-3 text-sm font-medium transition-all"
+        style={{
+          background: 'rgba(255,255,255,0.55)',
+          backdropFilter: 'blur(6px)',
+          border: '1px solid rgba(31,42,36,0.06)',
+          color: PAL.ink,
+        }}
+      >
+        <span className="text-start">{t('share_example_toggle')}</span>
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          aria-hidden="true"
+          style={{ color: PAL.accent, display: 'inline-flex' }}
+        >
+          <ChevronDown size={16} />
+        </motion.span>
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="example-body"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.22 }}
+            className="overflow-hidden"
+          >
+            <div
+              className="mt-2 rounded-2xl p-5"
+              style={{
+                background: PAL.card,
+                border: '1px solid rgba(31,42,36,0.06)',
+                boxShadow: '0 12px 24px -14px rgba(58,90,68,0.18)',
+              }}
+            >
+              <div className="flex items-center gap-1 mb-2">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <svg
+                    key={n}
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    style={{ color: PAL.coral }}
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442a.563.563 0 01.32.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.32-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                ))}
+              </div>
+              <p
+                className="text-[15px] leading-relaxed italic"
+                style={{ color: PAL.ink, fontFamily: 'Georgia, "Iowan Old Style", serif' }}
+              >
+                &ldquo;עזרה מהירה ומדויקת, בדיוק מה שהייתי צריך.&rdquo;
+              </p>
+              <p
+                className="text-[12px] mt-2"
+                style={{ color: PAL.soft }}
+              >
+                {t('share_example_by')} <span style={{ color: PAL.ink, fontWeight: 600 }}>אופק</span>
+                {' · '}
+                <span>{t('share_cat_website')}</span>
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 export default ShareTestimonialPage;

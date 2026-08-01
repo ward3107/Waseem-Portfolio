@@ -39,6 +39,31 @@ const AccessibilityToolbar: React.FC = () => {
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+
+  // First-visit intro banner. On a fresh session, the accessibility button
+  // is shown at full opacity with a small tooltip next to it, offering
+  // "Dismiss" (hide for the session) or "Continue" (keep it visible but
+  // fade to ~35% opacity so it doesn't obstruct the eye). Choice lives in
+  // sessionStorage so returning-later visits get the button back at full
+  // opacity in case they want to change it.
+  const INTRO_KEY = 'a11y-intro-choice';
+  type IntroChoice = 'pending' | 'faded' | 'dismissed';
+  const [introChoice, setIntroChoice] = useState<IntroChoice>('pending');
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const stored = sessionStorage.getItem(INTRO_KEY);
+    if (stored === 'faded' || stored === 'dismissed') {
+      setIntroChoice(stored);
+    }
+  }, []);
+  const chooseIntro = (next: 'faded' | 'dismissed') => {
+    setIntroChoice(next);
+    try {
+      sessionStorage.setItem(INTRO_KEY, next);
+    } catch {
+      // Private-mode Safari — noop, banner re-appears next visit.
+    }
+  };
   // Lazy initializer reads saved settings synchronously on first render, so
   // the persist effect below never sees DEFAULT_STATE overwriting real data,
   // and there's no visible flash of non-accessible styles on route changes.
@@ -155,20 +180,67 @@ const AccessibilityToolbar: React.FC = () => {
   };
 
   if (!isVisible) return null;
+  // Session-dismissed users get nothing at all.
+  if (introChoice === 'dismissed') return null;
 
   if (!isOpen) {
+    const faded = introChoice === 'faded';
+    const pending = introChoice === 'pending';
     return (
-      <motion.button
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-gradient-to-br from-brand-purple to-brand-purpleLight text-white p-2.5 md:p-4 rounded-full shadow-2xl hover:shadow-brand-purple/50 transition-all focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group border-2 border-white/20"
-        aria-label={getAccessibilityLabel() + ' Options'}
-      >
-        <Accessibility className="w-6 h-6 md:w-7 md:h-7 group-hover:rotate-12 transition-transform duration-500 drop-shadow-lg" />
-      </motion.button>
+      <div className="fixed bottom-6 right-6 z-50 flex items-end gap-3">
+        {/* First-visit tooltip. Sits to the LEFT of the button so it
+            doesn't push it off-screen on narrow mobiles. Dismissible with
+            the X or "Continue"; either choice persists for the session. */}
+        {pending && (
+          <motion.div
+            initial={{ opacity: 0, x: 20, scale: 0.94 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 20, scale: 0.94 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 24, delay: 0.6 }}
+            role="dialog"
+            aria-label={t('a11y_intro_title')}
+            className="max-w-[220px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-br-sm shadow-xl px-4 py-3"
+          >
+            <p dir="auto" className="text-sm font-semibold text-slate-900 dark:text-white leading-tight">
+              {t('a11y_intro_title')}
+            </p>
+            <p dir="auto" className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-snug">
+              {t('a11y_intro_body')}
+            </p>
+            <div className="mt-3 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => chooseIntro('faded')}
+                className="flex-1 px-3 py-1.5 rounded-full bg-brand-purple text-white text-xs font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple/50"
+              >
+                {t('a11y_intro_continue')}
+              </button>
+              <button
+                type="button"
+                onClick={() => chooseIntro('dismissed')}
+                aria-label={t('a11y_intro_dismiss')}
+                className="px-2.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple/40"
+              >
+                {t('a11y_intro_dismiss')}
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1, opacity: faded ? 0.35 : 1 }}
+          whileHover={{ scale: 1.1, opacity: 1 }}
+          whileFocus={{ opacity: 1 }}
+          whileTap={{ scale: 0.95, opacity: 1 }}
+          onClick={() => setIsOpen(true)}
+          className="bg-gradient-to-br from-brand-purple to-brand-purpleLight text-white p-2.5 md:p-4 rounded-full shadow-2xl hover:shadow-brand-purple/50 transition-shadow focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group border-2 border-white/20"
+          aria-label={getAccessibilityLabel() + ' Options'}
+          style={{ transition: 'opacity 200ms ease' }}
+        >
+          <Accessibility className="w-6 h-6 md:w-7 md:h-7 group-hover:rotate-12 transition-transform duration-500 drop-shadow-lg" />
+        </motion.button>
+      </div>
     );
   }
 
