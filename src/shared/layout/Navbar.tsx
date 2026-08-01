@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
+import NavShareButton from '@/shared/widgets/NavShareButton';
 
 
 const Navbar: React.FC = () => {
@@ -73,6 +74,9 @@ const Navbar: React.FC = () => {
               </button>
             </div>
 
+            {/* Share (replaces the floating ShareWidget on mobile+desktop) */}
+            <NavShareButton />
+
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
@@ -96,7 +100,10 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile Toggle */}
-          <div className="md:hidden flex items-center gap-4">
+          <div className="md:hidden flex items-center gap-2">
+            {/* Mobile Share (replaces the floating ShareWidget) */}
+            <NavShareButton />
+
             {/* Mobile Language Switcher (Simple Toggle) */}
             <button
               onClick={() => {

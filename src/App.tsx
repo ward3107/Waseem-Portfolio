@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from '@/shared/layout/Navbar';
 import Footer from '@/shared/layout/Footer';
 import AccessibilityToolbar from '@/shared/widgets/AccessibilityToolbar';
-import ShareWidget from '@/shared/widgets/ShareWidget';
 import BackToTop from '@/shared/widgets/BackToTop';
 import CookieBanner from '@/shared/widgets/CookieBanner';
 import WhatsAppFloat from '@/shared/widgets/WhatsAppFloat';
@@ -65,9 +64,11 @@ const SiteShell: React.FC<{ children: React.ReactNode; focusMode?: boolean }> = 
     {/* Widgets that would distract a visitor performing a focused task
         (e.g. filling out /share-testimonial) are hidden in focus mode. The
         essentials — accessibility, back-to-top, cookies — stay. */}
+    {/* Share moved into Navbar as NavShareButton (frees the bottom-left
+        corner on mobile). WhatsApp and Exit-Intent are still floating
+        widgets, hidden in focus mode so /share-testimonial stays quiet. */}
     {!focusMode && (
       <>
-        <ShareWidget />
         <WhatsAppFloat />
         <ExitIntent />
       </>

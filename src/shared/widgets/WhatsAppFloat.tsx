@@ -47,12 +47,12 @@ const WhatsAppFloat: React.FC = () => {
   };
 
   return (
-    // Force the whole widget to the bottom-right in every locale (avoids
-    // the ShareWidget stack that sits bottom-left in every locale), then
-    // lift it one row up (`bottom-24` = 96 px) so it stacks above the
-    // AccessibilityToolbar button which permanently occupies bottom-right.
-    // `dir="ltr"` keeps flex `items-end` predictable inside an RTL page.
-    <div dir="ltr" className="fixed bottom-24 right-5 z-[60] flex flex-col items-end gap-2 print:hidden">
+    // Pinned to the bottom-LEFT in every locale — the AccessibilityToolbar
+    // button owns the bottom-right, and moving Share into the Navbar
+    // vacates the left corner. Lifted one row up (`bottom-24`) so it
+    // stacks above the BackToTop button on mobile without a collision.
+    // `dir="ltr"` keeps flex `items-start` predictable inside an RTL page.
+    <div dir="ltr" className="fixed bottom-24 left-5 z-[60] flex flex-col items-start gap-2 print:hidden">
       <AnimatePresence>
         {showTeaser && (
           <motion.div
@@ -60,13 +60,13 @@ const WhatsAppFloat: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
             transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-            className="relative max-w-[240px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-br-sm shadow-xl px-4 py-3 text-sm"
+            className="relative max-w-[240px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-bl-sm shadow-xl px-4 py-3 text-sm"
           >
             <button
               type="button"
               onClick={dismissTeaser}
               aria-label={t('wa_float_close')}
-              className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center shadow"
+              className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center shadow"
             >
               <X size={12} />
             </button>
