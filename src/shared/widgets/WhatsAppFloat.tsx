@@ -47,13 +47,12 @@ const WhatsAppFloat: React.FC = () => {
   };
 
   return (
-    // Force the whole widget to the bottom-right in every locale. In RTL
-    // the ShareWidget + BackToTop stack lives on the LEFT (unflipped by
-    // design), so any RTL flip on this widget would land it on top of
-    // theirs. Global convention for WhatsApp CTAs is bottom-right anyway
-    // (Intercom / Crisp / Tawk.to all do the same regardless of locale).
+    // Force the whole widget to the bottom-right in every locale (avoids
+    // the ShareWidget stack that sits bottom-left in every locale), then
+    // lift it one row up (`bottom-24` = 96 px) so it stacks above the
+    // AccessibilityToolbar button which permanently occupies bottom-right.
     // `dir="ltr"` keeps flex `items-end` predictable inside an RTL page.
-    <div dir="ltr" className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-2 print:hidden">
+    <div dir="ltr" className="fixed bottom-24 right-5 z-[60] flex flex-col items-end gap-2 print:hidden">
       <AnimatePresence>
         {showTeaser && (
           <motion.div

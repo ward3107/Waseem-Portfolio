@@ -227,6 +227,15 @@ export const en: Record<string, string> = {
     share_error_generic: "Couldn't send right now — please try again in a moment.",
     share_thanks_title: "Thank you 🙏",
     share_thanks_body: "Your testimonial is with me now. Once I approve it, it'll appear on the site.",
+    share_chip_time: "Takes 30 seconds",
+    share_chip_manual: "Reviewed manually",
+    share_chip_private: "Only what you consent to is public",
+    share_cat_website: "Website & full-stack",
+    share_cat_ai: "AI & automation",
+    share_cat_seo: "SEO / GEO / AEO",
+    share_cat_marketing: "Marketing / PPC",
+    share_cat_custom: "Custom development",
+    share_cat_other: "Other",
 
     // Contact
     contact_avail: "Available for new projects",
