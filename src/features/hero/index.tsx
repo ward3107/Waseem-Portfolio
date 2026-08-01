@@ -7,6 +7,7 @@ import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import HeroBackground from './HeroBackground';
 import AnimatedHeadline from './AnimatedHeadline';
 import ProfileCard from './ProfileCard';
+import TrustBadges from '@/shared/ui/TrustBadges';
 
 const Hero: React.FC = () => {
   const { t, language } = useLanguage();
@@ -151,6 +152,8 @@ const Hero: React.FC = () => {
               {t('hero_cta_view')}
             </motion.a>
           </motion.div>
+
+          <TrustBadges className="mt-3 sm:mt-4 justify-start rtl:justify-end" variant="hero" />
 
           <motion.div
             initial={{ opacity: 0 }}

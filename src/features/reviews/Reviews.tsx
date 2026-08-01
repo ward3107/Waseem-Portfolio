@@ -4,6 +4,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { averageRating } from '@/features/reviews/data';
 import { useReviews } from '@/features/reviews/useReviews';
 import { jsonForScriptTag } from '@/lib/safe';
+import TestimonialVideo from '@/features/reviews/TestimonialVideo';
 
 // Section heading per language (no nested ternaries — SonarCloud-friendly).
 const HEADINGS: Record<string, { badge: string; title: string; subtitle: string }> = {
@@ -45,8 +46,11 @@ const Reviews: React.FC = () => {
   const { language, dir } = useLanguage();
   const { reviews: REVIEWS } = useReviews();
 
-  // Honest by design: with no real reviews, render nothing and emit no schema.
-  if (REVIEWS.length === 0) return null;
+  // Honest by design: with no real reviews AND no testimonial video, render
+  // nothing and emit no schema. The video env-gate still gives an "empty
+  // testimonials" state a way to look meaningful when a video is provided.
+  const hasVideo = Boolean(import.meta.env.VITE_TESTIMONIAL_VIDEO_URL);
+  if (REVIEWS.length === 0 && !hasVideo) return null;
 
   const avg = averageRating(REVIEWS);
   const copy = HEADINGS[language] ?? HEADINGS.en;
@@ -82,10 +86,12 @@ const Reviews: React.FC = () => {
       dir={dir}
       className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-950 transition-colors duration-300"
     >
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonForScriptTag(aggregateSchema) }}
-      />
+      {REVIEWS.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonForScriptTag(aggregateSchema) }}
+        />
+      )}
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="text-center mb-12">
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-brand-purple text-xs font-bold uppercase tracking-wider mb-4">
@@ -94,14 +100,18 @@ const Reviews: React.FC = () => {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold text-slate-900 dark:text-white mb-3">
             {copy.title}
           </h2>
-          <div className="flex items-center justify-center gap-3">
-            <Stars rating={avg} />
-            <span className="text-slate-600 dark:text-slate-400 text-sm font-medium">
-              {avg} / 5 · {REVIEWS.length}
-            </span>
-          </div>
+          {REVIEWS.length > 0 && (
+            <div className="flex items-center justify-center gap-3">
+              <Stars rating={avg} />
+              <span className="text-slate-600 dark:text-slate-400 text-sm font-medium">
+                {avg} / 5 · {REVIEWS.length}
+              </span>
+            </div>
+          )}
           <p className="text-slate-600 dark:text-slate-400 mt-2">{copy.subtitle}</p>
         </div>
+
+        <TestimonialVideo className="mb-12" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {REVIEWS.map((r, i) => (

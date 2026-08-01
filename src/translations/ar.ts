@@ -171,6 +171,42 @@ export const ar: Record<string, string> = {
     tech_reward_title: "المكافأة جاهزة",
     tech_reward_desc: "استخدم هذا الكود عند الدفع — أو تابع اللعب للمزيد.",
     tech_reward_btn: "متابعة اللعب",
+    tech_lead_title: "قبل عرض الكود",
+    tech_lead_desc: "اترك بياناتك وسنرسل لك أيضاً تحديثات عن مشاريع جديدة. سيظهر الكود مباشرة بعد ذلك.",
+    tech_lead_name: "الاسم",
+    tech_lead_contact: "واتساب أو بريد إلكتروني",
+    tech_lead_name_placeholder: "اسمك",
+    tech_lead_contact_placeholder: "مثال: +972501234567 أو you@example.com",
+    tech_lead_submit: "اعرض الكود",
+    tech_lead_invalid: "الرجاء إدخال رقم واتساب أو بريد إلكتروني صحيح.",
+    tech_lead_error: "تعذّر الحفظ الآن — سيظهر الكود على أي حال.",
+
+    // WhatsApp float
+    wa_float_aria: "افتح محادثة واتساب مع وسيم",
+    wa_float_teaser_title: "لديك مشروع؟ لنتحدث.",
+    wa_float_teaser_body: "نقرة واحدة إلى واتساب. محادثة مجانية 15 دقيقة.",
+    wa_float_close: "إغلاق",
+    wa_float_prefill: "مرحباً وسيم، زرت موقعك وأود التحدث عن مشروع.",
+
+    // Exit-intent modal
+    exit_intent_title: "انتظر — محادثة مجانية 15 دقيقة؟",
+    exit_intent_body: "تبادل الأفكار مع مطور شامل على واتساب. بدون بيع، بدون التزام.",
+    exit_intent_cta: "احجز محادثتي المجانية",
+    exit_intent_skip: "لا شكراً",
+    exit_intent_close: "إغلاق",
+    exit_intent_wa_prefill: "مرحباً وسيم، رأيت نافذتك — أريد المحادثة المجانية.",
+
+    // Trust badges (near CTAs)
+    trust_available: "متاح هذا الشهر",
+    trust_response: "الرد خلال ساعتين",
+    trust_free: "استشارة أولى مجاناً",
+
+    // Booking (Cal.com)
+    booking_title: "أو احجز مكالمة 15 دقيقة",
+    booking_subtitle: "اختر وقتاً مناسباً — سأؤكده لك على واتساب.",
+
+    // Testimonial video
+    testimonial_video_title: "شاهد رأي عميل",
 
     // Contact
     contact_avail: "متاح لمشاريع جديدة",

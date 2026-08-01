@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useInView } from '@/shared/hooks/useInView';
 import { TIERS, WIN_CLICKS, ROW_SPECS, rowsForStage, tierForClicks, bossForClicks, type Tier } from './config';
 import { playSound } from './audio';
+import { trackEvent } from '@/lib/browser';
 import BossOverlay from './BossOverlay';
 import DiscountReward from './DiscountReward';
 import TechCard from './TechCard';
@@ -119,6 +120,13 @@ const TechStack: React.FC = () => {
         setCurrentTier(newTier);
         setRedeemPulseKey((k) => k + 1);
 
+        trackEvent('game_tier_unlocked', {
+          percent: newTier.percent,
+          code: newTier.code,
+          is_major: newTier.isMajor,
+          clicks: currentClicks,
+        });
+
         const isFinal = currentClicks === WIN_CLICKS;
         if (isFinal) {
           if (!autoOpenedFinal) {
@@ -162,6 +170,10 @@ const TechStack: React.FC = () => {
       const boss = bossForClicks(currentClicks);
       if (boss) {
         setActiveBoss({ health: boss.health });
+        trackEvent('game_boss_encountered', {
+          clicks: currentClicks,
+          health: boss.health,
+        });
       }
     },
     [autoOpenedFinal, t]
@@ -180,6 +192,7 @@ const TechStack: React.FC = () => {
   const handleBossDefeat = () => {
     setActiveBoss(null);
     setScore((s) => s + 5000);
+    trackEvent('game_boss_defeated', {});
     showFlash(
       {
         title: 'THREAT NEUTRALIZED',
@@ -192,6 +205,10 @@ const TechStack: React.FC = () => {
 
   const openRedeem = () => {
     if (!currentTier) return;
+    trackEvent('game_redeem_clicked', {
+      percent: currentTier.percent,
+      code: currentTier.code,
+    });
     setShowDiscount(true);
   };
 
