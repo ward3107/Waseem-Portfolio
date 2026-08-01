@@ -94,6 +94,7 @@ const AppContent: React.FC = () => {
           <Route path="reviews" element={<AdminPages page="reviews-list" />} />
           <Route path="reviews/new" element={<AdminPages page="review-editor" />} />
           <Route path="reviews/:id" element={<AdminPages page="review-editor" />} />
+          <Route path="collect-testimonials" element={<AdminPages page="collect-testimonials" />} />
           <Route path="media" element={<AdminPages page="media" />} />
           <Route path="settings" element={<AdminPages page="settings" />} />
         </Route>

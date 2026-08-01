@@ -6,6 +6,7 @@ import CertsList from './CertsList';
 import CertEditor from './CertEditor';
 import ReviewsList from './ReviewsList';
 import ReviewEditor from './ReviewEditor';
+import CollectTestimonials from './CollectTestimonials';
 import Media from './Media';
 import Settings from './Settings';
 
@@ -21,6 +22,7 @@ export type AdminPageKey =
   | 'cert-editor'
   | 'reviews-list'
   | 'review-editor'
+  | 'collect-testimonials'
   | 'media'
   | 'settings';
 
@@ -32,6 +34,7 @@ const PAGES: Record<AdminPageKey, React.ComponentType> = {
   'cert-editor': CertEditor,
   'reviews-list': ReviewsList,
   'review-editor': ReviewEditor,
+  'collect-testimonials': CollectTestimonials,
   media: Media,
   settings: Settings,
 };
