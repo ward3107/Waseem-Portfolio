@@ -48,7 +48,10 @@ const SkipLink: React.FC = () => {
 };
 
 /** The public site layout — nav, footer, floating widgets, cookie banner. */
-const SiteShell: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+const SiteShell: React.FC<{ children: React.ReactNode; focusMode?: boolean }> = ({
+  children,
+  focusMode = false,
+}) => (
   <div className="relative">
     <SkipLink />
     <Navbar />
@@ -57,10 +60,17 @@ const SiteShell: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     </main>
     <Footer />
     <AccessibilityToolbar />
-    <ShareWidget />
     <BackToTop />
-    <WhatsAppFloat />
-    <ExitIntent />
+    {/* Widgets that would distract a visitor performing a focused task
+        (e.g. filling out /share-testimonial) are hidden in focus mode. The
+        essentials — accessibility, back-to-top, cookies — stay. */}
+    {!focusMode && (
+      <>
+        <ShareWidget />
+        <WhatsAppFloat />
+        <ExitIntent />
+      </>
+    )}
     <CookieBanner />
   </div>
 );
@@ -71,6 +81,8 @@ const SiteShell: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 const AppContent: React.FC = () => {
   const { pathname } = useLocation();
   const isAdmin = pathname === '/admin' || pathname.startsWith('/admin/');
+  // Customer-facing focused-task routes hide non-essential floating widgets.
+  const isFocusMode = pathname === '/share-testimonial';
 
   const routes = (
     <Suspense fallback={<SectionSkeleton />}>
@@ -106,7 +118,7 @@ const AppContent: React.FC = () => {
   return (
     <>
       <ScrollToHashOnRouteChange />
-      {isAdmin ? routes : <SiteShell>{routes}</SiteShell>}
+      {isAdmin ? routes : <SiteShell focusMode={isFocusMode}>{routes}</SiteShell>}
     </>
   );
 };

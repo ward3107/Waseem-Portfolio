@@ -162,7 +162,7 @@ const Settings: React.FC = () => {
           <Skeleton className="h-32 w-full" />
         </div>
       ) : (
-        <div className="p-4 sm:p-6 max-w-2xl space-y-8">
+        <div className="p-4 sm:p-6 max-w-2xl mx-auto space-y-8">
           <fieldset className="space-y-3">
             <legend className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">Contact</legend>
             <label className="block">

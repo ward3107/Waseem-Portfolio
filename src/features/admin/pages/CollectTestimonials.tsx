@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { Copy, ExternalLink, MessageCircle, Send, RefreshCw } from 'lucide-react';
+import { Copy, ExternalLink, MessageCircle, Send, RefreshCw, Share2 } from 'lucide-react';
 import Topbar from '@/features/admin/layout/Topbar';
 
 // Where does a client actually land? Prefer VITE_SITE_URL when set (custom
@@ -65,6 +65,36 @@ const normalizePhone = (raw: string): string => {
   return digits;
 };
 
+// One-tap share via the OS share sheet — WhatsApp / Gmail / Telegram / any
+// installed app. `navigator.share` is available on all modern mobile
+// browsers and on Chrome/Edge on desktop; where it isn't, we hide the
+// button so the copy/send buttons remain the only affordance.
+const NativeShareButton: React.FC<{ url: string; text?: string; label?: string }> = ({
+  url,
+  text,
+  label,
+}) => {
+  const supported = typeof navigator !== 'undefined' && 'share' in navigator;
+  if (!supported) return null;
+  const onClick = async () => {
+    try {
+      await navigator.share({ url, text, title: 'Share your experience with Waseem' });
+    } catch {
+      // User dismissed the share sheet — nothing to do.
+    }
+  };
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md bg-brand-cyan text-white hover:bg-cyan-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/40"
+    >
+      <Share2 size={12} aria-hidden="true" />
+      {label ?? 'Share'}
+    </button>
+  );
+};
+
 const CopyButton: React.FC<{ text: string; label?: string }> = ({ text, label }) => {
   const [copied, setCopied] = useState(false);
   const onClick = async () => {
@@ -112,7 +142,7 @@ const CollectTestimonials: React.FC = () => {
   return (
     <>
       <Topbar title="Collect Testimonials" />
-      <div className="p-4 sm:p-6 space-y-6 max-w-5xl">
+      <div className="p-4 sm:p-6 space-y-6 max-w-5xl mx-auto">
         <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
           Send this link to a client after each project. They fill a 30-second form; the
           submission lands in <span className="font-semibold">Reviews</span> as{' '}
@@ -141,6 +171,7 @@ const CollectTestimonials: React.FC = () => {
             <code className="flex-1 min-w-0 truncate rounded-md bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 px-3 py-2 text-sm font-mono text-zinc-900 dark:text-zinc-100">
               {shareUrl}
             </code>
+            <NativeShareButton url={shareUrl} />
             <CopyButton text={shareUrl} label="Copy link" />
           </div>
         </div>
@@ -207,7 +238,8 @@ const CollectTestimonials: React.FC = () => {
                 >
                   {msg.text}
                 </pre>
-                <div className="flex items-center justify-end gap-2 px-4 py-3 border-t border-zinc-100 dark:border-zinc-800">
+                <div className="flex items-center justify-end gap-2 px-4 py-3 border-t border-zinc-100 dark:border-zinc-800 flex-wrap">
+                  <NativeShareButton url={shareUrl} text={msg.text} label="Share" />
                   <CopyButton text={msg.text} label="Copy" />
                   <button
                     type="button"
@@ -215,7 +247,7 @@ const CollectTestimonials: React.FC = () => {
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md bg-[#25D366] text-white hover:bg-[#20c05a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366]/40"
                   >
                     <Send size={12} aria-hidden="true" />
-                    Send
+                    WhatsApp
                   </button>
                 </div>
               </div>
