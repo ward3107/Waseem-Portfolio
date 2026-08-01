@@ -227,6 +227,15 @@ export const ar: Record<string, string> = {
     share_error_generic: "تعذّر الإرسال الآن — حاول مرة أخرى بعد لحظة.",
     share_thanks_title: "شكراً 🙏",
     share_thanks_body: "توصيتك لدي الآن. بمجرد الموافقة عليها ستظهر على الموقع.",
+    share_chip_time: "يستغرق 30 ثانية",
+    share_chip_manual: "مراجعة يدوية",
+    share_chip_private: "يُنشر فقط ما وافقت عليه",
+    share_cat_website: "موقع / تطوير شامل",
+    share_cat_ai: "الذكاء الاصطناعي والأتمتة",
+    share_cat_seo: "SEO / GEO / AEO",
+    share_cat_marketing: "تسويق / PPC",
+    share_cat_custom: "تطوير مخصص",
+    share_cat_other: "أخرى",
 
     // Contact
     contact_avail: "متاح لمشاريع جديدة",

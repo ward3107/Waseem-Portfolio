@@ -226,6 +226,15 @@ export const he: Record<string, string> = {
     share_error_generic: "לא הצלחנו לשלוח כרגע — נסו שוב בעוד רגע.",
     share_thanks_title: "תודה 🙏",
     share_thanks_body: "ההמלצה שלכם אצלי. ברגע שאאשר אותה, היא תופיע באתר.",
+    share_chip_time: "לוקח 30 שניות",
+    share_chip_manual: "עובר בדיקה ידנית",
+    share_chip_private: "רק מה שאושר יתפרסם",
+    share_cat_website: "אתר / פול-סטאק",
+    share_cat_ai: "AI ואוטומציה",
+    share_cat_seo: "SEO / GEO / AEO",
+    share_cat_marketing: "שיווק / PPC",
+    share_cat_custom: "פיתוח מותאם",
+    share_cat_other: "אחר",
 
     // Contact
     contact_avail: "פנוי לפרויקטים חדשים",
