@@ -47,7 +47,13 @@ const WhatsAppFloat: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 rtl:right-auto rtl:left-5 z-[60] flex flex-col items-end rtl:items-start gap-2 print:hidden">
+    // Force the whole widget to the bottom-right in every locale. In RTL
+    // the ShareWidget + BackToTop stack lives on the LEFT (unflipped by
+    // design), so any RTL flip on this widget would land it on top of
+    // theirs. Global convention for WhatsApp CTAs is bottom-right anyway
+    // (Intercom / Crisp / Tawk.to all do the same regardless of locale).
+    // `dir="ltr"` keeps flex `items-end` predictable inside an RTL page.
+    <div dir="ltr" className="fixed bottom-5 right-5 z-[60] flex flex-col items-end gap-2 print:hidden">
       <AnimatePresence>
         {showTeaser && (
           <motion.div
@@ -55,20 +61,24 @@ const WhatsAppFloat: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
             transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-            className="relative max-w-[240px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-br-sm rtl:rounded-br-2xl rtl:rounded-bl-sm shadow-xl px-4 py-3 text-sm"
+            className="relative max-w-[240px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-br-sm shadow-xl px-4 py-3 text-sm"
           >
             <button
               type="button"
               onClick={dismissTeaser}
               aria-label={t('wa_float_close')}
-              className="absolute -top-2 -right-2 rtl:-right-auto rtl:-left-2 w-6 h-6 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center shadow"
+              className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center shadow"
             >
               <X size={12} />
             </button>
-            <p className="font-semibold text-slate-900 dark:text-white leading-tight">
+            {/* dir="auto" lets the browser pick per-paragraph direction from
+                the first strong character — Hebrew/Arabic bubbles read RTL,
+                English bubbles read LTR, without the outer dir="ltr" (which
+                is there purely for absolute positioning) leaking into text. */}
+            <p dir="auto" className="font-semibold text-slate-900 dark:text-white leading-tight">
               {t('wa_float_teaser_title')}
             </p>
-            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-snug">
+            <p dir="auto" className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-snug">
               {t('wa_float_teaser_body')}
             </p>
           </motion.div>
