@@ -208,6 +208,26 @@ export const ar: Record<string, string> = {
     // Testimonial video
     testimonial_video_title: "شاهد رأي عميل",
 
+    // Share testimonial page (/share-testimonial)
+    share_badge: "شارك تجربتك",
+    share_title: "أخبر الآخرين عمّا بنيناه معاً",
+    share_subtitle: "اقتباس قصير منك يساعد العمل التالي على اتخاذ القرار. يستغرق 30 ثانية.",
+    share_field_name: "اسمك",
+    share_field_name_placeholder: "كيف نشير إليك؟",
+    share_field_helped: "على ماذا عملنا؟",
+    share_field_helped_placeholder: "مثلاً: إعادة تصميم موقع، أتمتة، إعداد تسويق",
+    share_field_quote: "توصيتك",
+    share_field_quote_placeholder: "جملتان أو ثلاث عن التجربة والنتيجة.",
+    share_field_rating: "التقييم العام",
+    share_consent: "أوافق على نشر اسمي واقتباسي على الموقع.",
+    share_submit: "أرسل التوصية",
+    share_submitting: "جاري الإرسال…",
+    share_error_required: "يرجى تعبئة الاسم والتوصية وتحديد مربع الموافقة.",
+    share_error_config: "الإرسال غير مُهيَّأ بعد — يرجى مراسلتي عبر البريد أو الواتساب.",
+    share_error_generic: "تعذّر الإرسال الآن — حاول مرة أخرى بعد لحظة.",
+    share_thanks_title: "شكراً 🙏",
+    share_thanks_body: "توصيتك لدي الآن. بمجرد الموافقة عليها ستظهر على الموقع.",
+
     // Contact
     contact_avail: "متاح لمشاريع جديدة",
     contact_title_1: "لنبدأ بناء شيء ",

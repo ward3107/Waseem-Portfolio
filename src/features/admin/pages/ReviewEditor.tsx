@@ -19,8 +19,10 @@ const EMPTY: ReviewInput = {
   author: '',
   rating: 5,
   text: { en: '', he: '', ar: '' },
+  helped_with: null,
   location: null,
   date: null,
+  status: 'approved',
   sort_order: 0,
 };
 

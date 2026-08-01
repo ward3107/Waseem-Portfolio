@@ -207,6 +207,26 @@ export const he: Record<string, string> = {
     // Testimonial video
     testimonial_video_title: "שמעו את זה מלקוח",
 
+    // Share testimonial page (/share-testimonial)
+    share_badge: "שתפו את החוויה שלכם",
+    share_title: "ספרו על מה בנינו יחד",
+    share_subtitle: "ציטוט קצר ממכם עוזר לעסק הבא להחליט. לוקח 30 שניות.",
+    share_field_name: "השם שלכם",
+    share_field_name_placeholder: "איך לזקק לכם קרדיט?",
+    share_field_helped: "על מה עבדנו?",
+    share_field_helped_placeholder: "לדוגמה: עיצוב אתר מחדש, אוטומציה, הקמת שיווק",
+    share_field_quote: "ההמלצה שלכם",
+    share_field_quote_placeholder: "שני-שלושה משפטים על החוויה ועל התוצאה.",
+    share_field_rating: "דירוג כללי",
+    share_consent: "אני מאשר/ת פרסום השם והציטוט באתר.",
+    share_submit: "שלח המלצה",
+    share_submitting: "שולח…",
+    share_error_required: "אנא מלאו שם, המלצה וסמנו את תיבת האישור.",
+    share_error_config: "השליחה עדיין לא מוגדרת — שלחו לי מייל או וואטסאפ.",
+    share_error_generic: "לא הצלחנו לשלוח כרגע — נסו שוב בעוד רגע.",
+    share_thanks_title: "תודה 🙏",
+    share_thanks_body: "ההמלצה שלכם אצלי. ברגע שאאשר אותה, היא תופיע באתר.",
+
     // Contact
     contact_avail: "פנוי לפרויקטים חדשים",
     contact_title_1: "בוא נבנה משהו ",

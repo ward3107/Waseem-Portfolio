@@ -14,6 +14,7 @@ import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ShareTestimonialPage from './pages/ShareTestimonialPage';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { WidgetProvider } from './contexts/WidgetContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -77,6 +78,7 @@ const AppContent: React.FC = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/share-testimonial" element={<ShareTestimonialPage />} />
         <Route path="/admin/login" element={<LoginPage />} />
         <Route
           path="/admin"
