@@ -3,6 +3,7 @@ import {
   FolderOpen,
   GraduationCap,
   MessageSquareText,
+  Share2,
   Image as ImageIcon,
   Settings2,
   type LucideIcon,
@@ -13,7 +14,7 @@ import {
  * accent color it uses across the sidebar, mobile nav, overview cards, and
  * page-specific highlights. Adding a new section = one entry here + one page.
  */
-export type SectionKey = 'overview' | 'projects' | 'certifications' | 'reviews' | 'media' | 'settings';
+export type SectionKey = 'overview' | 'projects' | 'certifications' | 'reviews' | 'collect-testimonials' | 'media' | 'settings';
 
 export interface AdminSection {
   key: SectionKey;
@@ -32,8 +33,9 @@ export const SECTIONS: AdminSection[] = [
   { key: 'overview',       to: '/admin',                label: 'Overview',     labelShort: 'Home',     icon: LayoutDashboard,   end: true, accent: 'purple' },
   { key: 'projects',       to: '/admin/projects',       label: 'Projects',     labelShort: 'Projects', icon: FolderOpen,                    accent: 'blue' },
   { key: 'certifications', to: '/admin/certifications', label: 'Certificates', labelShort: 'Certs',    icon: GraduationCap,                 accent: 'gold' },
-  { key: 'reviews',        to: '/admin/reviews',        label: 'Reviews',      labelShort: 'Reviews',  icon: MessageSquareText,             accent: 'pink' },
-  { key: 'media',          to: '/admin/media',          label: 'Media',        labelShort: 'Media',    icon: ImageIcon,                     accent: 'cyan' },
+  { key: 'reviews',              to: '/admin/reviews',              label: 'Reviews',      labelShort: 'Reviews',  icon: MessageSquareText,             accent: 'pink' },
+  { key: 'collect-testimonials', to: '/admin/collect-testimonials', label: 'Collect',      labelShort: 'Collect',  icon: Share2,                        accent: 'green' },
+  { key: 'media',                to: '/admin/media',                label: 'Media',        labelShort: 'Media',    icon: ImageIcon,                     accent: 'cyan' },
   { key: 'settings',       to: '/admin/settings',       label: 'Settings',     labelShort: 'Settings', icon: Settings2,                     accent: 'green' },
 ];
 
