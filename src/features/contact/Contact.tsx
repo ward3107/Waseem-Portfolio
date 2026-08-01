@@ -6,6 +6,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import { useContact } from '@/features/contact/useContact';
 import Dimensional3DWord, { fontForLanguage } from '@/shared/three/Dimensional3DWord';
+import TrustBadges from '@/shared/ui/TrustBadges';
+import CalendarEmbed from '@/features/contact/CalendarEmbed';
 
 const Contact: React.FC = () => {
   const { t, language } = useLanguage();
@@ -105,6 +107,10 @@ const Contact: React.FC = () => {
                 <p className="font-bold text-slate-900 dark:text-white text-sm sm:text-base md:text-lg group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors" dir="ltr">{CONTACT.whatsappDisplay}</p>
               </a>
             </motion.div>
+
+            <TrustBadges className="mt-6 justify-start rtl:justify-end" variant="contact" />
+
+            <CalendarEmbed className="mt-8" />
           </div>
 
           {/* Right Column: Contact Form */}

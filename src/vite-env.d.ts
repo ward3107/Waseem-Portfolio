@@ -12,6 +12,9 @@ interface ImportMetaEnv {
   readonly VITE_NEWSLETTER_ENDPOINT?: string;
   readonly VITE_SUPABASE_URL?: string;
   readonly VITE_SUPABASE_ANON_KEY?: string;
+  readonly VITE_CAL_URL?: string;
+  readonly VITE_TESTIMONIAL_VIDEO_URL?: string;
+  readonly VITE_TESTIMONIAL_VIDEO_POSTER?: string;
 }
 
 interface ImportMeta {

@@ -170,6 +170,42 @@ export const he: Record<string, string> = {
     tech_reward_title: "התגמול מוכן",
     tech_reward_desc: "השתמש בקוד בקופה — או המשך לשחק לעוד.",
     tech_reward_btn: "המשך לשחק",
+    tech_lead_title: "לפני שנציג את הקוד",
+    tech_lead_desc: "השאר פרטים ונשלח לך גם עדכונים על פרויקטים חדשים. הקוד יופיע מיד אחרי.",
+    tech_lead_name: "שם",
+    tech_lead_contact: "וואטסאפ או אימייל",
+    tech_lead_name_placeholder: "השם שלך",
+    tech_lead_contact_placeholder: "למשל +972501234567 או you@example.com",
+    tech_lead_submit: "הצג את הקוד שלי",
+    tech_lead_invalid: "יש להזין מספר וואטסאפ תקין או אימייל.",
+    tech_lead_error: "לא הצלחנו לשמור כרגע — הקוד יוצג בכל זאת.",
+
+    // WhatsApp float
+    wa_float_aria: "פתח שיחת וואטסאפ עם וסים",
+    wa_float_teaser_title: "יש לך פרויקט? בוא נדבר.",
+    wa_float_teaser_body: "לחיצה אחת ואתה בוואטסאפ. שיחה של 15 דק' חינם.",
+    wa_float_close: "סגור",
+    wa_float_prefill: "היי וסים, ראיתי את הפורטפוליו שלך ואשמח לדבר על פרויקט.",
+
+    // Exit-intent modal
+    exit_intent_title: "רגע — שיחה של 15 דק' חינם?",
+    exit_intent_body: "בוא תזרוק רעיונות על פול־סטאק דב בוואטסאפ. בלי שיווק, בלי התחייבות.",
+    exit_intent_cta: "קח את השיחה חינם",
+    exit_intent_skip: "לא תודה",
+    exit_intent_close: "סגור",
+    exit_intent_wa_prefill: "היי וסים, ראיתי את הפופאפ שלך — אשמח לשיחה של 15 דקות.",
+
+    // Trust badges (near CTAs)
+    trust_available: "פנוי החודש",
+    trust_response: "מענה תוך שעתיים",
+    trust_free: "ייעוץ ראשוני חינם",
+
+    // Booking (Cal.com)
+    booking_title: "או קבע שיחה של 15 דק'",
+    booking_subtitle: "בחר זמן שנוח לך — אני אאשר לך בוואטסאפ.",
+
+    // Testimonial video
+    testimonial_video_title: "שמעו את זה מלקוח",
 
     // Contact
     contact_avail: "פנוי לפרויקטים חדשים",

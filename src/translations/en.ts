@@ -171,6 +171,42 @@ export const en: Record<string, string> = {
     tech_reward_title: "REWARD READY",
     tech_reward_desc: "Use this code on checkout — or keep playing for more.",
     tech_reward_btn: "Keep Playing",
+    tech_lead_title: "Claim your code",
+    tech_lead_desc: "Tell us where to send project updates. Your code appears right after.",
+    tech_lead_name: "Name",
+    tech_lead_contact: "WhatsApp or Email",
+    tech_lead_name_placeholder: "Your name",
+    tech_lead_contact_placeholder: "e.g. +972501234567 or you@example.com",
+    tech_lead_submit: "Reveal my code",
+    tech_lead_invalid: "Please enter a valid WhatsApp number or email.",
+    tech_lead_error: "Couldn't save right now — showing your code anyway.",
+
+    // WhatsApp float
+    wa_float_aria: "Open WhatsApp chat with Waseem",
+    wa_float_teaser_title: "Got a project? Let's talk.",
+    wa_float_teaser_body: "One tap, straight to WhatsApp. Free 15-min chat.",
+    wa_float_close: "Dismiss",
+    wa_float_prefill: "Hi Waseem, I visited your portfolio and would love to talk about a project.",
+
+    // Exit-intent modal
+    exit_intent_title: "Wait — free 15-min chat?",
+    exit_intent_body: "Bounce ideas off a full-stack dev on WhatsApp. No sales pitch, no obligation.",
+    exit_intent_cta: "Grab my free 15-min call",
+    exit_intent_skip: "No thanks",
+    exit_intent_close: "Close",
+    exit_intent_wa_prefill: "Hi Waseem, I saw your exit popup — I'd like the free 15-min chat.",
+
+    // Trust badges (near CTAs)
+    trust_available: "Available this month",
+    trust_response: "Reply within 2h",
+    trust_free: "Free first consult",
+
+    // Booking (Cal.com)
+    booking_title: "Or book a 15-min call",
+    booking_subtitle: "Pick a time that works — I'll ping you on WhatsApp to confirm.",
+
+    // Testimonial video
+    testimonial_video_title: "Hear it from a client",
 
     // Contact
     contact_avail: "Available for new projects",

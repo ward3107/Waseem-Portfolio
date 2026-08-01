@@ -6,6 +6,8 @@ import AccessibilityToolbar from '@/shared/widgets/AccessibilityToolbar';
 import ShareWidget from '@/shared/widgets/ShareWidget';
 import BackToTop from '@/shared/widgets/BackToTop';
 import CookieBanner from '@/shared/widgets/CookieBanner';
+import WhatsAppFloat from '@/shared/widgets/WhatsAppFloat';
+import ExitIntent from '@/shared/widgets/ExitIntent';
 import ScrollToHashOnRouteChange from '@/shared/ui/ScrollToHashOnRouteChange';
 import SectionSkeleton from '@/shared/ui/SectionSkeleton';
 import HomePage from './pages/HomePage';
@@ -56,6 +58,8 @@ const SiteShell: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <AccessibilityToolbar />
     <ShareWidget />
     <BackToTop />
+    <WhatsAppFloat />
+    <ExitIntent />
     <CookieBanner />
   </div>
 );
