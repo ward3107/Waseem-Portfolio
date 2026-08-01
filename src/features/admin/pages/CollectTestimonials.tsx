@@ -264,8 +264,8 @@ const CollectTestimonials: React.FC = () => {
           </div>
           <ul className="list-disc ms-6 space-y-1 text-[13px] leading-relaxed">
             <li>Send the link within 24 hours of finishing a project — while the feeling is fresh.</li>
-            <li>A gentle nudge 2–3 days later ("Any chance for that quick 30-second review?") doubles response rate.</li>
-            <li>Personalize with the client's name — the templates auto-inject it above.</li>
+            <li>A gentle nudge 2–3 days later (&ldquo;Any chance for that quick 30-second review?&rdquo;) doubles response rate.</li>
+            <li>Personalize with the client&rsquo;s name — the templates auto-inject it above.</li>
             <li>For in-person meetings, generate a QR from the shareable link with any QR service and print it on a business card.</li>
           </ul>
         </div>
