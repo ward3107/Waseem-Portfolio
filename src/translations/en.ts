@@ -208,6 +208,26 @@ export const en: Record<string, string> = {
     // Testimonial video
     testimonial_video_title: "Hear it from a client",
 
+    // Share testimonial page (/share-testimonial)
+    share_badge: "Share your experience",
+    share_title: "Tell people what we built together",
+    share_subtitle: "A short quote from you helps the next business decide. Takes 30 seconds.",
+    share_field_name: "Your name",
+    share_field_name_placeholder: "How should we credit you?",
+    share_field_helped: "What did we work on?",
+    share_field_helped_placeholder: "e.g. Website redesign, AI automation, marketing setup",
+    share_field_quote: "Your testimonial",
+    share_field_quote_placeholder: "Two or three sentences about the experience and the result.",
+    share_field_rating: "Overall rating",
+    share_consent: "I consent to my name and quote being published on the site.",
+    share_submit: "Send testimonial",
+    share_submitting: "Sending…",
+    share_error_required: "Please fill in your name, testimonial, and check the consent box.",
+    share_error_config: "Submissions aren't configured yet — please email or WhatsApp me instead.",
+    share_error_generic: "Couldn't send right now — please try again in a moment.",
+    share_thanks_title: "Thank you 🙏",
+    share_thanks_body: "Your testimonial is with me now. Once I approve it, it'll appear on the site.",
+
     // Contact
     contact_avail: "Available for new projects",
     contact_title_1: "Let’s build something ",

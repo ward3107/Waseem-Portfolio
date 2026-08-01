@@ -112,13 +112,17 @@ export interface CertificationRow {
   updated_at: string;
 }
 
+export type ReviewStatus = 'pending' | 'approved' | 'rejected';
+
 export interface ReviewRow {
   id: string;
   author: string;
   rating: number;
   text: LocalizedText;
+  helped_with?: LocalizedText | null;
   location: string | null;
   date: string | null;
+  status: ReviewStatus;
   sort_order: number;
   created_at: string;
   updated_at: string;

@@ -32,7 +32,7 @@ describe('mappers', () => {
   it('maps a review row with localized text', () => {
     const row: ReviewRow = {
       id: '3', author: 'Dana', rating: 5, text: { en: 'Great', he: 'מעולה' },
-      location: 'עכו', date: '2026-07-01', sort_order: 0,
+      location: 'עכו', date: '2026-07-01', status: 'approved', sort_order: 0,
       created_at: '2026-01-01', updated_at: '2026-01-01',
     };
     expect(reviewRowToModel(row, 'he')).toMatchObject({

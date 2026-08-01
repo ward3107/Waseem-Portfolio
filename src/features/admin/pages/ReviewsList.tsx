@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GripVertical, Plus, Pencil, Trash2, Star } from 'lucide-react';
+import { GripVertical, Plus, Pencil, Trash2, Star, Check, X as XIcon } from 'lucide-react';
 import Topbar from '@/features/admin/layout/Topbar';
 import Skeleton from '@/features/admin/primitives/Skeleton';
 import DragList from '@/features/admin/primitives/DragList';
-import { listReviewRows, reorderReviews, deleteReview } from '@/lib/content/reviews';
-import type { ReviewRow } from '@/types';
+import { listAllReviewRows, reorderReviews, deleteReview, updateReview } from '@/lib/content/reviews';
+import type { ReviewRow, ReviewStatus } from '@/types';
 import { useConfirm } from '@/shared/hooks/useConfirm';
-import { toastDeleted, toastError } from '@/lib/adminToast';
+import { toastDeleted, toastError, toastSaved } from '@/lib/adminToast';
 
 const ReviewsList: React.FC = () => {
   const navigate = useNavigate();
@@ -15,7 +15,30 @@ const ReviewsList: React.FC = () => {
   const [rows, setRows] = useState<ReviewRow[] | null>(null);
 
   const load = () =>
-    listReviewRows().then(setRows).catch((err) => toastError(err, 'Could not load reviews'));
+    listAllReviewRows().then(setRows).catch((err) => toastError(err, 'Could not load reviews'));
+
+  const setStatus = async (row: ReviewRow, status: ReviewStatus) => {
+    try {
+      await updateReview(row.id, { status });
+      setRows((prev) => prev?.map((r) => (r.id === row.id ? { ...r, status } : r)) ?? null);
+      toastSaved(`Review by ${row.author} → ${status}`);
+    } catch (err) {
+      toastError(err, 'Could not update status');
+    }
+  };
+
+  const statusPill = (status: ReviewStatus) => {
+    const styles: Record<ReviewStatus, string> = {
+      pending: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+      approved: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300',
+      rejected: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+    };
+    return (
+      <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${styles[status]}`}>
+        {status}
+      </span>
+    );
+  };
 
   useEffect(() => {
     load();
@@ -94,11 +117,15 @@ const ReviewsList: React.FC = () => {
                     <GripVertical size={16} aria-hidden="true" />
                   </button>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
-                      {row.author}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                        {row.author}
+                      </p>
+                      {statusPill(row.status)}
+                    </div>
                     <p className="text-xs text-zinc-500 dark:text-zinc-500 truncate">
-                      {row.text.en?.slice(0, 80)}{row.text.en && row.text.en.length > 80 ? '…' : ''}
+                      {(row.text.he || row.text.en || row.text.ar || '').slice(0, 80)}
+                      {(row.text.he || row.text.en || row.text.ar || '').length > 80 ? '…' : ''}
                     </p>
                   </div>
                   <div className="flex items-center gap-0.5 text-brand-gold shrink-0" aria-label={`${row.rating} of 5 stars`}>
@@ -106,6 +133,28 @@ const ReviewsList: React.FC = () => {
                       <Star key={i} size={12} className={i < row.rating ? 'fill-current' : 'opacity-30'} aria-hidden="true" />
                     ))}
                   </div>
+                  {row.status === 'pending' && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setStatus(row, 'approved')}
+                        className="p-1.5 text-emerald-600 hover:text-emerald-700"
+                        aria-label={`Approve review by ${row.author}`}
+                        title="Approve"
+                      >
+                        <Check size={14} aria-hidden="true" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setStatus(row, 'rejected')}
+                        className="p-1.5 text-red-500 hover:text-red-600"
+                        aria-label={`Reject review by ${row.author}`}
+                        title="Reject"
+                      >
+                        <XIcon size={14} aria-hidden="true" />
+                      </button>
+                    </>
+                  )}
                   <Link
                     to={`/admin/reviews/${row.id}`}
                     className="p-1.5 text-zinc-400 hover:text-brand-purple"
