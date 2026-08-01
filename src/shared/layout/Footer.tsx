@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-bold mb-6 text-slate-900 dark:text-white">
               {t('footer_links')}
             </h4>
-            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+            <ul className="space-y-0.5 text-sm text-slate-600 dark:text-slate-400">
               {NAV_LINKS[language].map((link) => (
                 <li key={link.name}>
                   <a
@@ -127,7 +127,7 @@ const Footer: React.FC = () => {
               <li>
                 <a
                   href="/blog/"
-                  className="hover:text-brand-purple transition-colors flex items-center gap-2 group"
+                  className="hover:text-brand-purple transition-colors flex items-center gap-2 group py-1.5"
                 >
                   <ArrowRight
                     size={14}
@@ -142,7 +142,7 @@ const Footer: React.FC = () => {
             <h4 className="text-sm font-bold mt-8 mb-4 text-slate-900 dark:text-white">
               {{ ar: 'مناطق الخدمة', en: 'Service Areas', he: 'אזורי שירות' }[language]}
             </h4>
-            <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-400">
+            <ul className="space-y-0.5 text-sm text-slate-600 dark:text-slate-400">
               {SERVICE_AREAS.map((area) => (
                 <li key={area.slug}>
                   <a
@@ -171,7 +171,7 @@ const Footer: React.FC = () => {
             <h4 className="text-lg font-bold mb-6 text-slate-900 dark:text-white">
               {t('footer_services')}
             </h4>
-            <ul className="space-y-4 text-sm text-slate-600 dark:text-slate-400">
+            <ul className="space-y-0.5 text-sm text-slate-600 dark:text-slate-400">
               {[1, 2, 3, 4, 5].map((i) => (
                 <li key={i}>
                   <a
