@@ -1,10 +1,22 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
+
+type AAL = 'aal1' | 'aal2' | null;
 
 interface AdminAuthContextType {
   user: User | null;
   loading: boolean;
+  // Authenticator Assurance Level (Supabase MFA). `current` is what the
+  // session is at now; `next` is what it *could* be at, after solving any
+  // pending factors. If they differ and next === 'aal2', an MFA challenge
+  // is required to fully authenticate.
+  aalCurrent: AAL;
+  aalNext: AAL;
+  // Id of the first verified TOTP factor on the user, or null. Present ⇒
+  // MFA is enabled on the account.
+  verifiedTotpFactorId: string | null;
+  refreshMfa: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
@@ -14,26 +26,58 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefin
 export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [aalCurrent, setAalCurrent] = useState<AAL>(null);
+  const [aalNext, setAalNext] = useState<AAL>(null);
+  const [verifiedTotpFactorId, setVerifiedTotpFactorId] = useState<string | null>(null);
+
+  const refreshMfa = useCallback(async () => {
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (aal) {
+      setAalCurrent((aal.currentLevel ?? null) as AAL);
+      setAalNext((aal.nextLevel ?? null) as AAL);
+    }
+    const { data: factors } = await supabase.auth.mfa.listFactors();
+    // `totp` on this response is verified factors only, per Supabase docs.
+    const first = factors?.totp?.[0];
+    setVerifiedTotpFactorId(first?.id ?? null);
+  }, []);
 
   useEffect(() => {
-    // Guard: without `active`, a rapid unmount (StrictMode, fast route
-    // change) before getSession() resolves triggers setState on an
-    // unmounted provider.
     let active = true;
-    supabase.auth.getSession().then(({ data }) => {
+
+    const loadMfaFor = async (sessionUser: User | null) => {
+      if (!sessionUser) {
+        if (active) {
+          setAalCurrent(null);
+          setAalNext(null);
+          setVerifiedTotpFactorId(null);
+        }
+        return;
+      }
+      await refreshMfa();
+    };
+
+    supabase.auth.getSession().then(async ({ data }) => {
       if (!active) return;
-      setUser(data.session?.user ?? null);
+      const u = data.session?.user ?? null;
+      setUser(u);
+      await loadMfaFor(u);
+      if (!active) return;
       setLoading(false);
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+
+    const { data: sub } = supabase.auth.onAuthStateChange(async (_e, session) => {
       if (!active) return;
-      setUser(session?.user ?? null);
+      const u = session?.user ?? null;
+      setUser(u);
+      await loadMfaFor(u);
     });
+
     return () => {
       active = false;
       sub.subscription.unsubscribe();
     };
-  }, []);
+  }, [refreshMfa]);
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -45,7 +89,18 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   return (
-    <AdminAuthContext.Provider value={{ user, loading, signIn, signOut }}>
+    <AdminAuthContext.Provider
+      value={{
+        user,
+        loading,
+        aalCurrent,
+        aalNext,
+        verifiedTotpFactorId,
+        refreshMfa,
+        signIn,
+        signOut,
+      }}
+    >
       {children}
     </AdminAuthContext.Provider>
   );

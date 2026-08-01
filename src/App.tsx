@@ -27,6 +27,7 @@ import RequireAuth from '@/features/admin/RequireAuth';
 // arrive after a nav click. Admin routes stay lazy — the admin bundle
 // is unrelated to what a visitor loads.
 const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
+const MfaPage = lazy(() => import('./pages/admin/MfaPage'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 // Admin page components live inside the shell via nested routes. Grouped in
 // a single lazy import so they arrive together with the shell chunk.
@@ -92,6 +93,10 @@ const AppContent: React.FC = () => {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/share-testimonial" element={<ShareTestimonialPage />} />
         <Route path="/admin/login" element={<LoginPage />} />
+        {/* /admin/mfa sits outside RequireAuth so it can host both the
+            login-time challenge (aal1 → aal2) and the enrollment flow
+            without a redirect loop. It gates itself on `user` inside. */}
+        <Route path="/admin/mfa" element={<MfaPage />} />
         <Route
           path="/admin"
           element={<RequireAuth><AdminDashboard /></RequireAuth>}
