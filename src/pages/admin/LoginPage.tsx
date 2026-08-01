@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
+import { supabase } from '@/lib/supabaseClient';
 
 const LoginPage: React.FC = () => {
   const { user, loading, signIn } = useAdminAuth();
@@ -22,9 +23,25 @@ const LoginPage: React.FC = () => {
     setBusy(true);
     setError('');
     const res = await signIn(email, password);
-    setBusy(false);
-    if (res.error) setError(res.error);
-    else navigate('/admin');
+    if (res.error) {
+      setBusy(false);
+      setError(res.error);
+      return;
+    }
+    // Password check passed. If MFA is enrolled on this user the session
+    // is currently at aal1 while nextLevel is aal2 — we must finish the
+    // TOTP challenge before the admin surface will let them in. Query
+    // Supabase directly instead of waiting for the context to refresh so
+    // we don't hit a race between navigate() and setState.
+    try {
+      const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      const needsChallenge = aal?.nextLevel === 'aal2' && aal.currentLevel !== 'aal2';
+      setBusy(false);
+      navigate(needsChallenge ? '/admin/mfa' : '/admin');
+    } catch {
+      setBusy(false);
+      navigate('/admin');
+    }
   };
 
   return (
