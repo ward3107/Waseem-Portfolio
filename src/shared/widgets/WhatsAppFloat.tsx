@@ -47,12 +47,14 @@ const WhatsAppFloat: React.FC = () => {
   };
 
   return (
-    // Pinned to the bottom-LEFT in every locale — the AccessibilityToolbar
-    // button owns the bottom-right, and moving Share into the Navbar
-    // vacates the left corner. Lifted one row up (`bottom-24`) so it
-    // stacks above the BackToTop button on mobile without a collision.
+    // Pinned to the bottom-LEFT in every locale. AccessibilityToolbar owns
+    // the bottom-right; BackToTop lives on the LEFT too — bottom-6 on
+    // mobile, bottom-24 on desktop. We stack WhatsApp above BackToTop in
+    // both viewports:
+    //   mobile → bottom-24 (BackToTop is at bottom-6)
+    //   desktop → bottom-40 (BackToTop rises to bottom-24)
     // `dir="ltr"` keeps flex `items-start` predictable inside an RTL page.
-    <div dir="ltr" className="fixed bottom-24 left-5 z-[60] flex flex-col items-start gap-2 print:hidden">
+    <div dir="ltr" className="fixed bottom-24 md:bottom-40 left-5 z-[60] flex flex-col items-start gap-2 print:hidden">
       <AnimatePresence>
         {showTeaser && (
           <motion.div
