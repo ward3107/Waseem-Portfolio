@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { Service } from '@/types';
 import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
+import { useInView } from '@/shared/hooks/useInView';
 import PlatformIcons from './PlatformIcons';
 import { cardGradients, cardBorderColors, cardGlowColors } from './cardStyles';
 
@@ -37,6 +38,14 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const isRTL = dir === 'rtl';
   // Reactive to resize / device rotation so the 3D tilt turns on/off correctly.
   const isDesktop = useMediaQuery('(min-width: 1024px)');
+  // Gate the always-on decorative animations behind visibility. Each card
+  // mounts ~7 infinite Framer animations (shine sweeps, floating dots, ping
+  // rings, arrow bounce); with 6 cards that's 40+ perpetual rAF loops. When
+  // the section scrolls off-screen we hard-remove them from the tree so the
+  // compositor and JS thread stop churning during scroll.
+  const cardRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(cardRef, '200px');
+  const animate = inView && !prefersReducedMotion;
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -70,6 +79,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
   return (
     <motion.div
+      ref={cardRef}
       variants={cardVariants}
       whileHover={{ y: -12, scale: 1.03 }}
       onHoverStart={() => setIsHovered(true)}
@@ -92,7 +102,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         transition={prefersReducedMotion ? { duration: 0 } : { duration: 2, repeat: Infinity }}
         className={`absolute inset-0 bg-gradient-to-br ${gradientClass} transition-opacity duration-500`}
       />
-      {!prefersReducedMotion && (
+      {animate && (
         <>
           <motion.div
             animate={{ x: ['-100%', '250%'] }}
@@ -145,7 +155,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           transition={{ duration: 0.6 }}
           className={`w-8 h-8 sm:w-9 md:w-10 sm:h-9 md:h-10 rounded-lg bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center mb-1.5 sm:mb-2 transition-all duration-300 ${service.color} shadow-lg group-hover:shadow-2xl relative overflow-hidden`}
         >
-          {!prefersReducedMotion && (
+          {animate && (
             <>
               <motion.div
                 animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0, 0.6] }}
@@ -179,8 +189,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         >
           <span className={isRTL ? 'ml-2' : 'mr-2'}>{t('projects_details')}</span>
           <motion.div
-            animate={prefersReducedMotion ? {} : { x: [0, isRTL ? -8 : 8, 0] }}
-            transition={prefersReducedMotion ? { duration: 0 } : { duration: 1.2, repeat: Infinity, repeatDelay: 0.5 }}
+            animate={animate ? { x: [0, isRTL ? -8 : 8, 0] } : {}}
+            transition={animate ? { duration: 1.2, repeat: Infinity, repeatDelay: 0.5 } : { duration: 0 }}
           >
             {isRTL ? <ArrowLeft size={12} /> : <ArrowRight size={12} />}
           </motion.div>

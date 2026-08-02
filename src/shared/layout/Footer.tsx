@@ -6,6 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '@/shared/hooks/useFocusTrap';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
+import { useInView } from '@/shared/hooks/useInView';
 import { useContact } from '@/features/contact/useContact';
 import { trackEvent } from '@/lib/browser';
 
@@ -18,6 +19,11 @@ const Footer: React.FC = () => {
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
+  // Newsletter card runs 6 infinite Framer animations (glow, badge pulse, gift
+  // emoji, input ring, border shimmer, button shine). Gate them on visibility
+  // so they don't chew CPU while the user is anywhere above the footer.
+  const newsletterRef = useRef<HTMLDivElement>(null);
+  const newsletterInView = useInView(newsletterRef, '150px');
 
   const handleCloseModal = () => setLegalModal(null);
 
@@ -191,6 +197,7 @@ const Footer: React.FC = () => {
 
           {/* Newsletter / Contact - Enhanced with highlighting */}
           <motion.div
+            ref={newsletterRef}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -198,13 +205,13 @@ const Footer: React.FC = () => {
           >
             {/* Glowing background effect */}
             <motion.div
-              animate={{
+              animate={newsletterInView ? {
                 boxShadow: [
                   '0 0 20px rgba(147, 51, 234, 0.1)',
                   '0 0 40px rgba(147, 51, 234, 0.2)',
                   '0 0 20px rgba(147, 51, 234, 0.1)',
                 ],
-              }}
+              } : undefined}
               transition={{ duration: 3, repeat: Infinity }}
               className="absolute -inset-1 bg-gradient-to-r from-brand-purple via-brand-cyan to-brand-gold rounded-2xl opacity-30 blur-sm"
             />
@@ -212,7 +219,7 @@ const Footer: React.FC = () => {
             <div className="relative bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 rounded-xl p-5 border-2 border-brand-purple/20 shadow-lg">
               {/* Animated badge */}
               <motion.div
-                animate={{ scale: [1, 1.05, 1] }}
+                animate={newsletterInView ? { scale: [1, 1.05, 1] } : undefined}
                 transition={{ duration: 2, repeat: Infinity }}
                 className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-brand-gold to-amber-400 rounded-full flex items-center justify-center shadow-lg"
               >
@@ -236,7 +243,7 @@ const Footer: React.FC = () => {
                 <div className="absolute top-0 right-0 w-20 h-20 bg-brand-gold/20 rounded-full blur-2xl group-hover:bg-brand-gold/30 transition-colors"></div>
                 <div className="relative flex items-start gap-3">
                   <motion.span
-                    animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+                    animate={newsletterInView ? { scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] } : undefined}
                     transition={{ duration: 2, repeat: Infinity }}
                     className="text-2xl flex-shrink-0"
                   >
@@ -321,14 +328,14 @@ const Footer: React.FC = () => {
                 />
                 <motion.div
                   className="relative"
-                  animate={{
+                  animate={newsletterInView ? {
                     boxShadow: [
                       '0 0 0 0 rgba(147, 51, 234, 0)',
                       '0 0 0 8px rgba(147, 51, 234, 0.1)',
                       '0 0 0 16px rgba(147, 51, 234, 0.05)',
                       '0 0 0 0 rgba(147, 51, 234, 0)',
                     ],
-                  }}
+                  } : undefined}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
                   <Mail
@@ -341,13 +348,13 @@ const Footer: React.FC = () => {
                     aria-label={t('form_newsletter_label')}
                     placeholder={t('footer_email_placeholder')}
                     required
-                    animate={{
+                    animate={newsletterInView ? {
                       borderColor: [
                         'rgb(226, 232, 240)',
                         'rgb(168, 85, 247)',
                         'rgb(226, 232, 240)',
                       ],
-                    }}
+                    } : undefined}
                     transition={{ duration: 2, repeat: Infinity }}
                     disabled={newsletterStatus === 'success'}
                     className="w-full bg-white dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-700 rounded-lg pl-10 rtl:pr-10 rtl:pl-4 pr-4 py-3 text-sm focus:outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 transition-all text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -385,7 +392,7 @@ const Footer: React.FC = () => {
                       </>
                     )}
                   </span>
-                  {newsletterStatus !== 'success' && (
+                  {newsletterStatus !== 'success' && newsletterInView && (
                     <motion.div
                       animate={{ x: ['-100%', '200%'] }}
                       transition={{ duration: 2, repeat: Infinity, repeatDelay: 2, ease: 'linear' }}

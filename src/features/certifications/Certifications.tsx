@@ -113,11 +113,11 @@ const Certifications: React.FC = () => {
     <section id="certifications" ref={sectionRef} className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 relative isolate overflow-hidden transition-colors duration-300">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          style={prefersReducedMotion ? undefined : { y: blobAY }}
+          style={prefersReducedMotion ? undefined : { y: blobAY, willChange: 'transform' }}
           className="absolute -top-10 -left-10 w-72 h-72 bg-brand-purple/25 rounded-full blur-[50px]"
         ></motion.div>
         <motion.div
-          style={prefersReducedMotion ? undefined : { y: blobBY }}
+          style={prefersReducedMotion ? undefined : { y: blobBY, willChange: 'transform' }}
           className="absolute -bottom-10 -right-10 w-72 h-72 bg-brand-cyan/25 rounded-full blur-[50px]"
         ></motion.div>
       </div>
