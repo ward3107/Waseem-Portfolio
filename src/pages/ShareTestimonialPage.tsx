@@ -51,10 +51,23 @@ const CATEGORIES: readonly Category[] = [
   { key: 'other', icon: MoreHorizontal, labelKey: 'share_cat_other' },
 ] as const;
 
-const STARTER_KEYS: readonly string[] = [
-  'share_starter_worked_on',
-  'share_starter_loved',
-  'share_starter_result',
+// Eight full example testimonials that visitors can tap to insert into
+// the quote textarea. Earlier versions used three sentence-starters
+// ("I worked with Waseem on…") — visitors clicked and submitted them
+// verbatim without finishing the sentence, so the pool of reviews filled
+// with fragments. Full examples give the same "help me start" boost,
+// look natural on the site if sent as-is, and each hits a different
+// angle (speed, AI, design, SEO, reliability, …) so eight sitting side
+// by side don't all read the same.
+const EXAMPLES: readonly { label: string; text: string }[] = [
+  { label: 'share_ex_speed_label', text: 'share_ex_speed_text' },
+  { label: 'share_ex_ai_label', text: 'share_ex_ai_text' },
+  { label: 'share_ex_clarity_label', text: 'share_ex_clarity_text' },
+  { label: 'share_ex_seo_label', text: 'share_ex_seo_text' },
+  { label: 'share_ex_design_label', text: 'share_ex_design_text' },
+  { label: 'share_ex_ontime_label', text: 'share_ex_ontime_text' },
+  { label: 'share_ex_tech_label', text: 'share_ex_tech_text' },
+  { label: 'share_ex_partner_label', text: 'share_ex_partner_text' },
 ] as const;
 
 // Palette lifted verbatim from the approved mockup — hard-coded so it
@@ -178,12 +191,12 @@ const ShareTestimonialPage: React.FC = () => {
   const quoteChars = quote.length;
   const quotePct = Math.min((quoteChars / 600) * 100, 100);
 
-  const applyStarter = (starterKey: string) => {
+  const applyExample = (textKey: string) => {
     if (quote.trim().length > 0) {
       quoteRef.current?.focus();
       return;
     }
-    const phrase = t(starterKey);
+    const phrase = t(textKey);
     setQuote(phrase);
     requestAnimationFrame(() => {
       const el = quoteRef.current;
@@ -491,21 +504,27 @@ const ShareTestimonialPage: React.FC = () => {
                   <FieldLabel htmlFor="tst-quote" required>
                     {t('share_field_quote')}
                   </FieldLabel>
+                  <p
+                    className="text-[11.5px] leading-snug mb-2"
+                    style={{ color: PAL.soft }}
+                  >
+                    {t('share_ex_hint')}
+                  </p>
                   <div className="flex flex-wrap gap-1.5 mb-2.5">
-                    {STARTER_KEYS.map((k) => (
+                    {EXAMPLES.map((ex) => (
                       <button
-                        key={k}
+                        key={ex.label}
                         type="button"
-                        onClick={() => applyStarter(k)}
-                        className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-medium transition-all"
+                        onClick={() => applyExample(ex.text)}
+                        title={t(ex.text)}
+                        className="inline-flex items-center rounded-full px-2.5 py-1 text-[11.5px] font-medium transition-all"
                         style={{
                           background: PAL.accentSoft,
                           color: PAL.accent,
                           border: 'none',
                         }}
                       >
-                        <span aria-hidden="true" style={{ opacity: 0.7 }}>+</span>
-                        {t(k)}
+                        {t(ex.label)}
                       </button>
                     ))}
                   </div>
