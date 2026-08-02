@@ -39,7 +39,7 @@ const Navbar: React.FC = () => {
 
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-sm border-b border-brand-gold/20 dark:border-slate-800' : 'bg-transparent'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-sm border-b border-brand-gold/20 dark:border-slate-800' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="flex items-center justify-between h-20">
           {/* Logo/Name — single instance, scales with viewport */}

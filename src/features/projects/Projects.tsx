@@ -195,8 +195,8 @@ const Projects: React.FC = () => {
 
   return (
     <section id="projects" dir={dir} className="py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-purple/5 rounded-full blur-[100px] -z-10"></div>
+      {/* Background decoration — blur radius reduced from 100 px to blur-3xl. */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-purple/5 rounded-full blur-3xl -z-10"></div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="flex flex-col md:flex-row justify-between items-end rtl:items-start mb-16 gap-6">

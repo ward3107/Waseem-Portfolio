@@ -9,10 +9,12 @@ const VibeCoding: React.FC = () => {
 
   return (
     <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center min-h-[60vh] md:min-h-[80vh] transition-colors duration-300">
-      {/* Background Ambience */}
+      {/* Background Ambience — huge 100-120px blur radii reduced to blur-3xl
+          (~64px); visually indistinguishable at these opacities and much
+          cheaper for the compositor to hold. */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-purple/20 rounded-full blur-[120px] opacity-60"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-cyan/10 rounded-full blur-[100px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-purple/20 rounded-full blur-3xl opacity-60"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-cyan/10 rounded-full blur-3xl"></div>
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px] opacity-20"></div>
       </div>
 

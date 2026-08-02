@@ -104,8 +104,11 @@ const AboutTimeline: React.FC = () => {
                 overflow-hidden on the section itself would make it the sticky
                 containing block and the card would never appear to move. */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-                <div className={`absolute top-20 left-0 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl ${!prefersReducedMotion && 'animate-float'}`}></div>
-                <div className={`absolute bottom-20 right-0 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl ${!prefersReducedMotion && 'animate-float'}`} style={prefersReducedMotion ? {} : { animationDelay: '2s' }}></div>
+                {/* Continuous animate-float on two 384px blur-3xl surfaces was repainting
+                    a huge layer every frame while the section was on screen. Kept the
+                    static blobs — they're pure decoration — but dropped the animation. */}
+                <div className="absolute top-20 left-0 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-20 right-0 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl"></div>
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] opacity-30"></div>
             </div>
 
@@ -277,8 +280,10 @@ const AboutTimeline: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Floating Elements behind */}
-                            <div className="absolute -top-4 -right-4 w-24 h-24 bg-brand-purple/20 rounded-full blur-xl -z-10 animate-pulse"></div>
+                            {/* Floating Elements behind — animate-pulse dropped on the
+                                blur-xl surface (continuous opacity repaint on a blurred
+                                layer is a top scroll-perf offender). */}
+                            <div className="absolute -top-4 -right-4 w-24 h-24 bg-brand-purple/20 rounded-full blur-xl -z-10"></div>
                             <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-brand-cyan/20 rounded-full blur-xl -z-10"></div>
                         </motion.div>
                     </div>
