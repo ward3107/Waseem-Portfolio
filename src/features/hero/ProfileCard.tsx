@@ -176,11 +176,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             </motion.div>
 
             <motion.div
-              style={{ x: layer2X, y: layer1Y, z: -20 }}
-              className="hidden md:block absolute top-1/2 -right-20 w-16 h-16 bg-brand-gold rounded-full blur-2xl opacity-40 animate-pulse"
+              style={{ x: layer2X, y: layer1Y, z: -20, willChange: 'transform' }}
+              className="hidden md:block absolute top-1/2 -right-20 w-16 h-16 bg-brand-gold rounded-full blur-2xl opacity-40"
             />
             <motion.div
-              style={{ x: layer1X, y: layer2Y, z: -20 }}
+              style={{ x: layer1X, y: layer2Y, z: -20, willChange: 'transform' }}
               className="hidden md:block absolute -top-10 -left-10 w-32 h-32 bg-brand-purple rounded-full blur-3xl opacity-30"
             />
           </>

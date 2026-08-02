@@ -40,9 +40,11 @@ const AISection: React.FC = () => {
 
   return (
     <section id="ai-automation" className="py-24 bg-white dark:bg-slate-950 overflow-hidden relative transition-colors duration-300">
-      {/* Background Gradients (Lighter) */}
-      <div className={`absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/5 rounded-full blur-[100px] -z-10 ${!prefersReducedMotion && 'animate-pulse'}`}></div>
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-brand-cyan/5 rounded-full blur-[100px] -z-10"></div>
+      {/* Background Gradients (Lighter) — reduced blur radius and dropped
+          animate-pulse; the pulsing was forcing a continuous repaint on a
+          600×600 blurred layer. */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/5 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-brand-cyan/5 rounded-full blur-3xl -z-10"></div>
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
@@ -232,9 +234,11 @@ const AISection: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Background decorative elements for the graphic */}
-            <div className="absolute -top-10 -right-10 w-24 h-24 bg-brand-gold/10 rounded-full blur-xl animate-float"></div>
-            <div className="absolute -bottom-5 -left-5 w-32 h-32 bg-brand-purple/10 rounded-full blur-xl animate-float" style={{ animationDelay: '2s' }}></div>
+            {/* Background decorative elements for the graphic — animate-float
+                dropped from these blurred layers (continuous transform on
+                blur = perpetual repaint). */}
+            <div className="absolute -top-10 -right-10 w-24 h-24 bg-brand-gold/10 rounded-full blur-xl"></div>
+            <div className="absolute -bottom-5 -left-5 w-32 h-32 bg-brand-purple/10 rounded-full blur-xl"></div>
           </div>
         </div>
       </div>

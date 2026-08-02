@@ -49,8 +49,12 @@ const Services: React.FC = () => {
       id="what-i-do"
       className="py-8 sm:py-10 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center transition-colors duration-300"
     >
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/10 rounded-full blur-[120px] -z-10 animate-pulse"></div>
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-cyan/10 rounded-full blur-[100px] -z-10"></div>
+      {/* Big decorative blobs: 120px blur radius forces the compositor to
+          re-blur a huge surface. Halved to blur-3xl (~64px) and dropped the
+          animate-pulse on the top-right one — the continuous opacity change
+          was repainting the whole blurred layer every frame. */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/10 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-cyan/10 rounded-full blur-3xl -z-10"></div>
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f0a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f0a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10 w-full">
