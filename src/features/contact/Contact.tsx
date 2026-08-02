@@ -25,14 +25,16 @@ const Contact: React.FC = () => {
 
   return (
     <section id="contact" ref={sectionRef} className="py-16 sm:py-20 md:py-24 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
-      {/* Background Gradients — parallax layer */}
+      {/* Background Gradients — parallax layer. willChange promotes each blob
+          to its own compositor layer up-front, so the scroll-linked y-translate
+          is a texture move rather than a per-frame re-blur of a 500px surface. */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <motion.div
-          style={prefersReducedMotion ? undefined : { y: blobAY }}
+          style={prefersReducedMotion ? undefined : { y: blobAY, willChange: 'transform' }}
           className="absolute top-[-10%] left-[-10%] w-[300px] sm:w-[400px] md:w-[500px] h-[300px] sm:h-[400px] md:h-[500px] bg-brand-purple/25 rounded-full blur-[40px]"
         ></motion.div>
         <motion.div
-          style={prefersReducedMotion ? undefined : { y: blobBY }}
+          style={prefersReducedMotion ? undefined : { y: blobBY, willChange: 'transform' }}
           className="absolute bottom-[-10%] right-[-10%] w-[300px] sm:w-[400px] md:w-[500px] h-[300px] sm:h-[400px] md:h-[500px] bg-brand-cyan/25 rounded-full blur-[40px]"
         ></motion.div>
       </div>

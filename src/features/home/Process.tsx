@@ -51,21 +51,29 @@ const Process: React.FC = () => {
     },
   ];
 
-  // We'll use IntersectionObservers on the text blocks to trigger the sticky graphic updates
+  // IntersectionObserver over the text blocks — replaces a per-scroll-event
+  // querySelectorAll + getBoundingClientRect loop that forced a layout pass on
+  // every scroll tick and was a top contributor to mid-page scroll jank.
+  // rootMargin narrows the trigger band to the top half of the viewport so
+  // the sticky graphic switches exactly where the old logic used to.
   useEffect(() => {
-    const handleScroll = () => {
-      const stepElements = document.querySelectorAll('.process-step-text');
-      stepElements.forEach((el, index) => {
-        const rect = el.getBoundingClientRect();
-        // If the element is near the center of the viewport
-        if (rect.top >= 0 && rect.top <= window.innerHeight / 2) {
-          setActiveStep(index);
-        }
-      });
-    };
+    const stepElements = document.querySelectorAll('.process-step-text');
+    if (!stepElements.length || typeof IntersectionObserver === 'undefined') return;
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Array.from(stepElements).indexOf(entry.target);
+            if (index !== -1) setActiveStep(index);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -50% 0px', threshold: 0 }
+    );
+
+    stepElements.forEach((el) => io.observe(el));
+    return () => io.disconnect();
   }, []);
 
   return (
