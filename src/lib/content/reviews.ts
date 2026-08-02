@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient';
-import type { Language, LocalizedText, ReviewRow } from '@/types';
+import { translateToAll } from '@/lib/content/translate';
+import type { Language, ReviewRow } from '@/types';
 
 export type ReviewInput = Omit<ReviewRow, 'id' | 'created_at' | 'updated_at'>;
 
@@ -28,8 +29,11 @@ export async function listAllReviewRows(): Promise<ReviewRow[]> {
 }
 
 // Public form submission — always inserts as `pending` per RLS policy.
-// Duplicates the same text into every language so the review renders for
-// visitors browsing in any language until the admin edits per-language.
+// Fires the Gemini-backed `translate-review` Edge Function in parallel for
+// the quote and the "helped with" label so the row lands with all three
+// languages populated up-front. Both translations fall back to the source
+// text on any failure (see translateToAll), so a submission is never
+// blocked by an API issue.
 export interface PublicReviewSubmission {
   author: string;
   rating: number;
@@ -39,8 +43,10 @@ export interface PublicReviewSubmission {
 }
 
 export async function submitPublicReview(input: PublicReviewSubmission): Promise<void> {
-  const text: LocalizedText = { en: input.quote, he: input.quote, ar: input.quote };
-  const helped: LocalizedText = { en: input.helpedWith, he: input.helpedWith, ar: input.helpedWith };
+  const [text, helped] = await Promise.all([
+    translateToAll(input.quote, input.language),
+    translateToAll(input.helpedWith, input.language),
+  ]);
   const { error } = await supabase.from('reviews').insert({
     author: input.author,
     rating: input.rating,
