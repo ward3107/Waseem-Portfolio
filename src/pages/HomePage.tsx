@@ -9,6 +9,7 @@ const Services = lazy(() => import('@/features/services'));
 const AISection = lazy(() => import('@/features/ai/AISection'));
 const VibeCoding = lazy(() => import('@/features/ai/VibeCoding'));
 const FeaturedProjects = lazy(() => import('@/features/projects/FeaturedProjects'));
+const Reviews = lazy(() => import('@/features/reviews/Reviews'));
 const HomeCTA = lazy(() => import('@/features/home/HomeCTA'));
 
 const HomePage: React.FC = () => (
@@ -25,6 +26,9 @@ const HomePage: React.FC = () => (
     </Suspense>
     <Suspense fallback={<SectionSkeleton />}>
       <FeaturedProjects />
+    </Suspense>
+    <Suspense fallback={<SectionSkeleton />}>
+      <Reviews />
     </Suspense>
     <Suspense fallback={null}>
       <HomeCTA />
