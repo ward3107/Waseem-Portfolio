@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Zap } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useInView } from '@/shared/hooks/useInView';
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
+import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 
 const VibeCoding: React.FC = () => {
   const { t } = useLanguage();
   const sentence = t('vibe_text_2');
 
+  // The "soulful" line floats every character forever. In English that's dozens
+  // of perpetual loops, each also carrying a text-shadow glow — and it never
+  // stopped, on-screen or off, phone or desktop. Gate the perpetual float on:
+  //   • visibility  — stop the loops when the section is scrolled away
+  //   • a hover/fine-pointer device — phones skip the per-character churn
+  //   • motion preference
+  // When it's off, the text renders identically but static (no wave).
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, '150px');
+  const canHover = useMediaQuery('(hover: hover) and (pointer: fine)');
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const animateWave = inView && canHover && !prefersReducedMotion;
+
   return (
-    <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center min-h-[60vh] md:min-h-[80vh] transition-colors duration-300">
+    <section ref={sectionRef} className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center min-h-[60vh] md:min-h-[80vh] transition-colors duration-300">
       {/* Background Ambience — huge 100-120px blur radii reduced to blur-3xl
           (~64px); visually indistinguishable at these opacities and much
           cheaper for the compositor to hold. */}
@@ -83,12 +99,12 @@ const VibeCoding: React.FC = () => {
                 {/[\u0590-\u06FF]/.test(sentence) ? (
                   // RTL (Hebrew/Arabic): Don't split characters, animate the whole word
                   <motion.div
-                    animate={{ y: [0, -15, 0] }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
+                    animate={animateWave ? { y: [0, -15, 0] } : { y: 0 }}
+                    transition={
+                      animateWave
+                        ? { duration: 2, repeat: Infinity, ease: 'easeInOut' }
+                        : { duration: 0 }
+                    }
                     className="text-2xl sm:text-3xl md:text-5xl font-serif italic text-brand-cyan"
                     style={{
                       textShadow: "0 0 20px rgba(6,182,212,0.5)",
@@ -102,13 +118,12 @@ const VibeCoding: React.FC = () => {
                     {sentence.split("").map((char, index) => (
                       <motion.span
                         key={index}
-                        animate={{ y: [0, -15, 0] }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                          delay: index * 0.1,
-                        }}
+                        animate={animateWave ? { y: [0, -15, 0] } : { y: 0 }}
+                        transition={
+                          animateWave
+                            ? { duration: 2, repeat: Infinity, ease: 'easeInOut', delay: index * 0.1 }
+                            : { duration: 0 }
+                        }
                         className="inline-block"
                         style={{
                           textShadow: "0 0 20px rgba(6,182,212,0.5)",

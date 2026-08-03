@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '@/shared/hooks/useFocusTrap';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { useInView } from '@/shared/hooks/useInView';
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useContact } from '@/features/contact/useContact';
 import { trackEvent } from '@/lib/browser';
 
@@ -24,6 +25,12 @@ const Footer: React.FC = () => {
   // so they don't chew CPU while the user is anywhere above the footer.
   const newsletterRef = useRef<HTMLDivElement>(null);
   const newsletterInView = useInView(newsletterRef, '150px');
+  // Three of those loops tween box-shadow / border-color — paint properties
+  // that repaint the layer every frame (unlike the composited scale/translate
+  // ones). On touch devices, where the hover polish is irrelevant anyway, we
+  // drop the paint-heavy loops entirely. `paintAnimate` gates those three.
+  const canHover = useMediaQuery('(hover: hover) and (pointer: fine)');
+  const paintAnimate = newsletterInView && canHover;
 
   const handleCloseModal = () => setLegalModal(null);
 
@@ -205,7 +212,7 @@ const Footer: React.FC = () => {
           >
             {/* Glowing background effect */}
             <motion.div
-              animate={newsletterInView ? {
+              animate={paintAnimate ? {
                 boxShadow: [
                   '0 0 20px rgba(147, 51, 234, 0.1)',
                   '0 0 40px rgba(147, 51, 234, 0.2)',
@@ -328,7 +335,7 @@ const Footer: React.FC = () => {
                 />
                 <motion.div
                   className="relative"
-                  animate={newsletterInView ? {
+                  animate={paintAnimate ? {
                     boxShadow: [
                       '0 0 0 0 rgba(147, 51, 234, 0)',
                       '0 0 0 8px rgba(147, 51, 234, 0.1)',
@@ -348,7 +355,7 @@ const Footer: React.FC = () => {
                     aria-label={t('form_newsletter_label')}
                     placeholder={t('footer_email_placeholder')}
                     required
-                    animate={newsletterInView ? {
+                    animate={paintAnimate ? {
                       borderColor: [
                         'rgb(226, 232, 240)',
                         'rgb(168, 85, 247)',

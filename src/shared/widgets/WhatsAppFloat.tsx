@@ -86,23 +86,23 @@ const WhatsAppFloat: React.FC = () => {
         )}
       </AnimatePresence>
 
+      {/* This button is fixed and visible on every page, so any perpetual
+          animation here runs for the entire session and competes with scroll.
+          The old loop tween'd box-shadow — a paint property, so it repainted
+          the layer every frame site-wide. Dropped it: the attention pulse now
+          rides on a compositor-only transform (scale) plus the existing ping
+          ring, and the glow is a static drop-shadow. Same look, no per-frame
+          repaint. */}
       <motion.a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
         aria-label={t('wa_float_aria')}
-        animate={{
-          scale: [1, 1.06, 1],
-          boxShadow: [
-            '0 6px 20px rgba(37, 211, 102, 0.35)',
-            '0 12px 32px rgba(37, 211, 102, 0.55)',
-            '0 6px 20px rgba(37, 211, 102, 0.35)',
-          ],
-        }}
+        animate={{ scale: [1, 1.06, 1] }}
         transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#25D366] text-white flex items-center justify-center focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/40"
-        style={{ willChange: 'transform, box-shadow' }}
+        className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-[0_8px_24px_rgba(37,211,102,0.45)] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/40"
+        style={{ willChange: 'transform' }}
       >
         <MessageCircle size={26} className="drop-shadow" />
         <span className="absolute inset-0 rounded-full border-2 border-white/40 animate-ping pointer-events-none" aria-hidden="true" />
