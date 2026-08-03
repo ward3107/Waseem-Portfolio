@@ -270,18 +270,14 @@ const TechStack: React.FC = () => {
           transition={{ delay: 0.2 }}
           className="flex justify-center mb-4 sm:mb-6"
         >
+          {/* Was tweening box-shadow every frame (a repaint) alongside scale.
+              Kept the scale pulse (compositor-only) and moved the glow to a
+              static shadow — same badge, no per-frame repaint. */}
           <motion.div
-            animate={{
-              scale: [1, 1.05, 1],
-              boxShadow: [
-                '0 0 0 0 rgba(234, 179, 8, 0.7)',
-                '0 0 20px 5px rgba(234, 179, 8, 0.4)',
-                '0 0 0 0 rgba(234, 179, 8, 0)',
-              ],
-            }}
+            animate={{ scale: [1, 1.05, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="inline-flex items-center gap-2 px-4 sm:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-brand-gold via-amber-400 to-brand-gold rounded-full border-2 border-amber-300/50 shadow-lg"
-            style={{ willChange: 'transform, box-shadow' }}
+            className="inline-flex items-center gap-2 px-4 sm:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-brand-gold via-amber-400 to-brand-gold rounded-full border-2 border-amber-300/50 shadow-lg shadow-amber-500/40"
+            style={{ willChange: 'transform' }}
           >
             <motion.span
               animate={{ rotate: [0, 360] }}
