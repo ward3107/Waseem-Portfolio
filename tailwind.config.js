@@ -11,6 +11,11 @@ export default {
         brand: {
           purple: '#483AA0',
           purpleLight: '#7965C1',
+          // Dark-mode text shade. purpleLight (#7965C1) only reaches ~3.8:1 on
+          // the dark hero background — the emphasized headline word read as
+          // invisible at night. This lighter tint clears AA for large text
+          // (~6.5:1) while staying unmistakably purple.
+          purpleLighter: '#A78BFA',
           purpleDark: '#2e246b',
           gold: '#d4af37',
           goldLight: '#E3D095',

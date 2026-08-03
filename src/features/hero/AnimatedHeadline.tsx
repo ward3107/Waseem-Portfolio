@@ -37,7 +37,7 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
       <br />
 
       <span className="relative inline-block z-50 me-2">
-        <span className="relative z-50 text-brand-purple dark:text-brand-purpleLight drop-shadow-[0_1px_10px_rgba(121,101,193,0.55)]">
+        <span className="relative z-50 text-brand-purple dark:text-brand-purpleLighter drop-shadow-[0_1px_10px_rgba(121,101,193,0.55)]">
           {splitForAnimation(t('hero_title_2'), language).map((char, index) => (
             <motion.span
               key={`p2-${index}`}
