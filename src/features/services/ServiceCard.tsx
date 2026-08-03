@@ -38,14 +38,21 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const isRTL = dir === 'rtl';
   // Reactive to resize / device rotation so the 3D tilt turns on/off correctly.
   const isDesktop = useMediaQuery('(min-width: 1024px)');
-  // Gate the always-on decorative animations behind visibility. Each card
-  // mounts ~7 infinite Framer animations (shine sweeps, floating dots, ping
-  // rings, arrow bounce); with 6 cards that's 40+ perpetual rAF loops. When
-  // the section scrolls off-screen we hard-remove them from the tree so the
-  // compositor and JS thread stop churning during scroll.
+  // Touch devices report no true hover / a coarse pointer. They also can't
+  // trigger any of the hover-based effects, so the always-on decorative loops
+  // are the only thing running there — and they run *while scrolling*, which
+  // is exactly when the section is in view. That's the mobile scroll jank.
+  const canHover = useMediaQuery('(hover: hover) and (pointer: fine)');
+  // Gate the always-on decorative animations behind visibility AND a hover
+  // capable device. Each card mounts ~7 infinite Framer animations (shine
+  // sweeps, blurred floating dots, ping rings, arrow bounce); with 6 cards
+  // that's 40+ perpetual rAF loops — animating blurred layers is especially
+  // costly on a mobile GPU. On touch we drop them entirely (no perceptible
+  // loss on a phone) and on desktop we still hard-remove them when the section
+  // scrolls off-screen so the compositor/JS thread stop churning.
   const cardRef = useRef<HTMLDivElement>(null);
   const inView = useInView(cardRef, '200px');
-  const animate = inView && !prefersReducedMotion;
+  const animate = inView && !prefersReducedMotion && canHover;
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);

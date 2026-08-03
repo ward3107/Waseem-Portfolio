@@ -4,6 +4,7 @@ import { Sparkles, Code, Globe, Bot, Box, TrendingUp, Search } from 'lucide-reac
 import { Service } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import ServiceCard from './ServiceCard';
 import ServiceModal from './ServiceModal';
@@ -13,6 +14,12 @@ const Services: React.FC = () => {
   const { t, dir, language } = useLanguage();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const canHover = useMediaQuery('(hover: hover) and (pointer: fine)');
+  // The CTA card carries its own perpetual loops (rotating blurred blobs,
+  // floating sparkles, pulsing ring, shimmer). On touch there's no hover to
+  // reveal them meaningfully and they add to the mobile scroll cost, so we
+  // only run the decorative loops on hover-capable, motion-OK devices.
+  const decorAnimate = !prefersReducedMotion && canHover;
   const navigateToSection = useSectionNavigate();
 
   const scrollToContact = () => {
@@ -133,7 +140,7 @@ const Services: React.FC = () => {
             className="cursor-pointer group relative bg-gradient-to-br from-brand-purple via-brand-purpleLight to-brand-purpleDark rounded-lg sm:rounded-xl p-2.5 sm:p-3 overflow-hidden flex flex-col items-center justify-center text-center h-full border border-brand-purpleLight/40 hover:border-brand-gold/50 transition-all duration-500 shadow-2xl shadow-brand-purple/20 hover:shadow-brand-gold/30"
           >
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-            {!prefersReducedMotion && (
+            {decorAnimate && (
               <>
                 <motion.div
                   animate={{ rotate: 360 }}
@@ -175,7 +182,7 @@ const Services: React.FC = () => {
                 transition={{ duration: 0.6 }}
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-white/15 flex items-center justify-center mx-auto mb-1.5 sm:mb-2 backdrop-blur-md border border-white/30 shadow-2xl relative overflow-hidden"
               >
-                {!prefersReducedMotion && (
+                {decorAnimate && (
                   <motion.div
                     animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] }}
                     transition={{ duration: 2, repeat: Infinity }}
@@ -198,7 +205,7 @@ const Services: React.FC = () => {
                 className="px-3 sm:px-4 py-1 sm:py-1.5 bg-gradient-to-r from-white to-slate-100 text-brand-purple font-bold rounded-lg shadow-lg hover:shadow-2xl transition-all inline-block text-[11px] relative overflow-hidden group"
               >
                 <span className="relative z-10">{t('services_cta_btn')}</span>
-                {!prefersReducedMotion && (
+                {decorAnimate && (
                   <motion.div
                     animate={{ x: ['-100%', '200%'] }}
                     transition={{ duration: 2, repeat: Infinity, repeatDelay: 2, ease: 'linear' }}
