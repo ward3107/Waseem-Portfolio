@@ -37,22 +37,29 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const isRTL = dir === 'rtl';
   // Reactive to resize / device rotation so the 3D tilt turns on/off correctly.
+  // We also use this as the gate for all decorative motion. It was previously
+  // gated on `(hover: hover) and (pointer: fine)`, but Samsung devices with an
+  // S-Pen (and other stylus phones) report themselves as hover+fine-pointer,
+  // so the perpetual loops still ran on those phones — the slow-pulsing border
+  // and floating dots the user saw, plus the scroll jank. A viewport-width
+  // check can't be fooled by a stylus: phones/tablets never light these up.
   const isDesktop = useMediaQuery('(min-width: 1024px)');
-  // Touch devices report no true hover / a coarse pointer. They also can't
-  // trigger any of the hover-based effects, so the always-on decorative loops
-  // are the only thing running there — and they run *while scrolling*, which
-  // is exactly when the section is in view. That's the mobile scroll jank.
-  const canHover = useMediaQuery('(hover: hover) and (pointer: fine)');
-  // Gate the always-on decorative animations behind visibility AND a hover
-  // capable device. Each card mounts ~7 infinite Framer animations (shine
+  // Gate the always-on decorative animations behind visibility AND a real
+  // desktop viewport. Each card mounts ~7 infinite Framer animations (shine
   // sweeps, blurred floating dots, ping rings, arrow bounce); with 6 cards
   // that's 40+ perpetual rAF loops — animating blurred layers is especially
-  // costly on a mobile GPU. On touch we drop them entirely (no perceptible
-  // loss on a phone) and on desktop we still hard-remove them when the section
-  // scrolls off-screen so the compositor/JS thread stop churning.
+  // costly on a mobile GPU. On phones/tablets we drop them entirely (no
+  // perceptible loss on a small screen); on desktop we still hard-remove them
+  // when the section scrolls off-screen so the compositor/JS thread stop
+  // churning.
   const cardRef = useRef<HTMLDivElement>(null);
   const inView = useInView(cardRef, '200px');
-  const animate = inView && !prefersReducedMotion && canHover;
+  const animate = inView && !prefersReducedMotion && isDesktop;
+  // The hover-driven pulses (gradient wash + border glow) loop forever for as
+  // long as `isHovered` is true. A stylus hovering over a card while the user
+  // scrolls can flip that on, starting the slow blink around each card on a
+  // phone. Require a desktop viewport so only a real mouse hover triggers them.
+  const hoverPulse = isHovered && isDesktop && !prefersReducedMotion;
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -103,8 +110,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     >
       <motion.div
         animate={{
-          opacity: isHovered ? [0.5, 1, 0.5] : 0,
-          scale: isHovered ? [1, 1.1, 1] : 1,
+          opacity: hoverPulse ? [0.5, 1, 0.5] : 0,
+          scale: hoverPulse ? [1, 1.1, 1] : 1,
         }}
         transition={prefersReducedMotion ? { duration: 0 } : { duration: 2, repeat: Infinity }}
         className={`absolute inset-0 bg-gradient-to-br ${gradientClass} transition-opacity duration-500`}
@@ -151,7 +158,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       />
 
       <motion.div
-        animate={{ opacity: isHovered ? [0.3, 0.6, 0.3] : 0 }}
+        animate={{ opacity: hoverPulse ? [0.3, 0.6, 0.3] : 0 }}
         transition={prefersReducedMotion ? { duration: 0 } : { duration: 2, repeat: Infinity }}
         className={`absolute inset-0 rounded-2xl sm:rounded-3xl border-2 ${borderBase}/30 pointer-events-none`}
       />

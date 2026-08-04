@@ -27,10 +27,11 @@ const Footer: React.FC = () => {
   const newsletterInView = useInView(newsletterRef, '150px');
   // Three of those loops tween box-shadow / border-color — paint properties
   // that repaint the layer every frame (unlike the composited scale/translate
-  // ones). On touch devices, where the hover polish is irrelevant anyway, we
-  // drop the paint-heavy loops entirely. `paintAnimate` gates those three.
-  const canHover = useMediaQuery('(hover: hover) and (pointer: fine)');
-  const paintAnimate = newsletterInView && canHover;
+  // ones). Drop the paint-heavy loops on phones/tablets. We gate on viewport
+  // width rather than `(hover)`: Samsung S-Pen phones report hover+fine-pointer
+  // and would otherwise keep repainting. `paintAnimate` gates those three.
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const paintAnimate = newsletterInView && isDesktop;
 
   const handleCloseModal = () => setLegalModal(null);
 

@@ -13,15 +13,17 @@ const VibeCoding: React.FC = () => {
   // The "soulful" line floats every character forever. In English that's dozens
   // of perpetual loops, each also carrying a text-shadow glow — and it never
   // stopped, on-screen or off, phone or desktop. Gate the perpetual float on:
-  //   • visibility  — stop the loops when the section is scrolled away
-  //   • a hover/fine-pointer device — phones skip the per-character churn
+  //   • visibility     — stop the loops when the section is scrolled away
+  //   • desktop width  — phones/tablets skip the per-character churn. (A
+  //     `(hover)` check misfires on Samsung S-Pen phones, which report
+  //     hover+fine-pointer; a viewport-width check can't be fooled.)
   //   • motion preference
   // When it's off, the text renders identically but static (no wave).
   const sectionRef = useRef<HTMLElement>(null);
   const inView = useInView(sectionRef, '150px');
-  const canHover = useMediaQuery('(hover: hover) and (pointer: fine)');
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   const prefersReducedMotion = usePrefersReducedMotion();
-  const animateWave = inView && canHover && !prefersReducedMotion;
+  const animateWave = inView && isDesktop && !prefersReducedMotion;
 
   return (
     <section ref={sectionRef} className="py-16 md:py-24 bg-slate-50 dark:bg-slate-950 relative overflow-hidden flex flex-col items-center justify-center min-h-[60vh] md:min-h-[80vh] transition-colors duration-300">
