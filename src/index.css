@@ -67,3 +67,19 @@ body {
 }
 .glitch-text { text-shadow: 2px 0 #fff, -2px 0 #ff00c1; }
 .blink { animation: blink 1s step-end infinite; }
+
+/* Global reduced-motion honor. Many decorative CSS animations (animate-pulse
+   on status dots/avatars, animate-ping, animate-bounce, the tech-stack marquee,
+   spin-slow) were applied unconditionally. Rather than gate each one in JSX,
+   neutralize all CSS animations/transitions at the source for users who asked
+   for reduced motion. framer-motion loops are gated separately in JS. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

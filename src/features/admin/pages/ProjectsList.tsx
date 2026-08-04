@@ -180,13 +180,13 @@ const ProjectsList: React.FC = () => {
                 <li
                   ref={h.ref}
                   style={h.style}
-                  {...h.attributes}
                   className={`flex items-center gap-3 px-3 py-2.5 ${h.isDragging ? 'bg-zinc-100 dark:bg-zinc-800' : ''}`}
                 >
                   <button
                     type="button"
                     aria-label="Drag to reorder"
                     disabled={dragDisabled}
+                    {...h.attributes}
                     {...h.listeners}
                     className="p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 cursor-grab active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-30"
                   >

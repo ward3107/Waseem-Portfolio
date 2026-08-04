@@ -53,7 +53,23 @@ const MfaPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code]);
 
-  if (authLoading) {
+  // Ensure MFA/AAL state is freshly loaded before deciding which screen to show.
+  // After login, authLoading is already false while the context's refreshMfa is
+  // still in flight, so verifiedTotpFactorId can momentarily read null — which
+  // flashed the "enroll" screen to a user who already has TOTP. Wait for our own
+  // refresh to resolve first.
+  const [mfaChecked, setMfaChecked] = useState(false);
+  useEffect(() => {
+    let active = true;
+    refreshMfa().finally(() => {
+      if (active) setMfaChecked(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, [refreshMfa]);
+
+  if (authLoading || !mfaChecked) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-950 text-white">
         <Loader2 className="animate-spin" size={24} />

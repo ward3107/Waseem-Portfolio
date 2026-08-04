@@ -88,7 +88,10 @@ const ImageGallery: React.FC<{
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeAt(valueRef.current.indexOf(item.url));
+                    // Use the tile's real index (encoded in its id as `${i}::url`)
+                    // rather than indexOf(url), which returns the first match and
+                    // would remove the wrong tile when the same URL appears twice.
+                    removeAt(Number(item.id.split('::')[0]));
                   }}
                   aria-label="Remove image"
                   className="absolute top-1 right-1 p-1 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"

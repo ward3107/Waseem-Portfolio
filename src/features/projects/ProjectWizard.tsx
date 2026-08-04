@@ -132,7 +132,9 @@ const ProjectWizard: React.FC<ProjectWizardProps> = () => {
                     access_key: accessKey,
                     subject: 'New Project Request from Portfolio Wizard',
                     from_name: selections.name,
-                    reply_to: selections.email,
+                    // web3forms' reply-address key is `replyto` (no underscore);
+                    // `reply_to` was ignored, so replies had nowhere to go.
+                    replyto: selections.email,
                     project_type: selections.type,
                     vibe: selections.vibe,
                     budget: selections.budget,
@@ -290,7 +292,6 @@ ${selections.details}
                                     placeholder={t('wizard_detail_placeholder')}
                                     value={selections.details}
                                     onChange={(e) => setSelections({ ...selections, details: e.target.value })}
-                                    required
                                 ></textarea>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">

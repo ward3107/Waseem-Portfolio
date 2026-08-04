@@ -101,13 +101,35 @@ const Stars: React.FC<{
   starLabel: (n: number) => string;
 }> = ({ value, onChange, label, starLabel }) => {
   const [hover, setHover] = useState<number | null>(null);
+  const groupRef = useRef<HTMLDivElement>(null);
   const shown = hover ?? value;
+
+  // Roving-tabindex + arrow-key selection so the group behaves as one radio
+  // group (a single tab stop; arrows move and select) instead of five tab stops.
+  const move = (next: number) => {
+    const clamped = Math.min(5, Math.max(1, next));
+    onChange(clamped);
+    const btn = groupRef.current?.querySelectorAll<HTMLButtonElement>('[role="radio"]')[clamped - 1];
+    btn?.focus();
+  };
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      move(value + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      move(value - 1);
+    }
+  };
+
   return (
     <div>
       <div
+        ref={groupRef}
         className="inline-flex items-center gap-1.5"
         role="radiogroup"
         aria-label={label}
+        onKeyDown={onKeyDown}
         onMouseLeave={() => setHover(null)}
       >
         {[1, 2, 3, 4, 5].map((n) => {
@@ -119,6 +141,7 @@ const Stars: React.FC<{
               type="button"
               role="radio"
               aria-checked={value === n}
+              tabIndex={value === n ? 0 : -1}
               aria-label={`${n} — ${singleLabel}`}
               title={singleLabel}
               onClick={() => onChange(n)}
@@ -450,9 +473,24 @@ const ShareTestimonialPage: React.FC = () => {
                     className="flex flex-wrap gap-2"
                     role="radiogroup"
                     aria-label={t('share_field_helped')}
+                    onKeyDown={(e) => {
+                      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+                      e.preventDefault();
+                      const radios = Array.from(
+                        e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]')
+                      );
+                      const currentIdx = Math.max(0, CATEGORIES.findIndex((c) => c.key === categoryKey));
+                      const delta = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
+                      const nextIdx = (currentIdx + delta + CATEGORIES.length) % CATEGORIES.length;
+                      setCategoryKey(CATEGORIES[nextIdx].key);
+                      radios[nextIdx]?.focus();
+                    }}
                   >
-                    {CATEGORIES.map((cat) => {
+                    {CATEGORIES.map((cat, idx) => {
                       const active = categoryKey === cat.key;
+                      // Roving tabindex: the selected pill is the single tab stop
+                      // (or the first pill when nothing is selected yet).
+                      const isTabStop = categoryKey === '' ? idx === 0 : active;
                       const Icon = cat.icon;
                       return (
                         <motion.button
@@ -460,6 +498,7 @@ const ShareTestimonialPage: React.FC = () => {
                           type="button"
                           role="radio"
                           aria-checked={active}
+                          tabIndex={isTabStop ? 0 : -1}
                           onClick={() => setCategoryKey(active ? '' : cat.key)}
                           whileTap={{ scale: 0.96 }}
                           className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all"

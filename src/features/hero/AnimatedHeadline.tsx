@@ -45,7 +45,7 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
               variants={emphasized}
               initial="hidden"
               animate="visible"
-              className="inline-block"
+              className="inline-block whitespace-pre"
               style={{ transformOrigin: 'center bottom' }}
             >
               {char}
@@ -54,10 +54,10 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
         </span>
         <motion.span
           style={{ x: underlineX }}
-          initial={{ scaleX: 0, opacity: 0 }}
+          initial={prefersReducedMotion ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.5, ease: 'easeOut' }}
-          className="absolute -bottom-2 left-0 right-0 h-3 md:h-5 bg-brand-gold/30 -skew-x-12 -z-10 rounded-full blur-sm origin-left"
+          transition={prefersReducedMotion ? { duration: 0 } : { delay: 1.2, duration: 0.5, ease: 'easeOut' }}
+          className="absolute -bottom-2 left-0 right-0 h-3 md:h-5 bg-brand-gold/30 -skew-x-12 -z-10 rounded-full blur-sm origin-left rtl:origin-right"
         ></motion.span>
       </span>
       {' '}

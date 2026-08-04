@@ -1,4 +1,5 @@
 import React, { lazy, Suspense } from 'react';
+import { MotionConfig } from 'framer-motion';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from '@/shared/layout/Navbar';
 import Footer from '@/shared/layout/Footer';
@@ -138,7 +139,12 @@ const App: React.FC = () => {
           <WidgetProvider>
             <AdminAuthProvider>
               <BrowserRouter>
-                <AppContent />
+                {/* reducedMotion="user" makes every framer-motion animation on
+                    the site honor the OS prefers-reduced-motion setting,
+                    including components that don't check it manually. */}
+                <MotionConfig reducedMotion="user">
+                  <AppContent />
+                </MotionConfig>
               </BrowserRouter>
             </AdminAuthProvider>
           </WidgetProvider>

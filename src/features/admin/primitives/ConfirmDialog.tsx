@@ -22,13 +22,34 @@ interface Props {
  */
 const ConfirmDialog: React.FC<Props> = ({ open, options, onConfirm, onCancel }) => {
   const confirmRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
     confirmRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onCancel();
+      if (e.key === 'Escape') {
+        onCancel();
+        return;
+      }
+      // Actually trap Tab within the dialog (it previously only set initial
+      // focus, so Tab could escape into the page behind the modal).
+      if (e.key === 'Tab' && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     document.addEventListener('keydown', onKey);
     return () => {
@@ -48,6 +69,7 @@ const ConfirmDialog: React.FC<Props> = ({ open, options, onConfirm, onCancel }) 
       onClick={onCancel}
     >
       <div
+        ref={dialogRef}
         className="w-full max-w-sm bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-zinc-200 dark:border-zinc-800 p-5"
         onClick={(e) => e.stopPropagation()}
       >
