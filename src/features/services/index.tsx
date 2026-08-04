@@ -14,12 +14,14 @@ const Services: React.FC = () => {
   const { t, dir, language } = useLanguage();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const canHover = useMediaQuery('(hover: hover) and (pointer: fine)');
+  // Gate on real viewport width, not hover capability: Samsung S-Pen (and other
+  // stylus) phones report themselves as hover+fine-pointer, so a `(hover)` gate
+  // still ran these loops on those phones. A width check can't be fooled.
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
   // The CTA card carries its own perpetual loops (rotating blurred blobs,
-  // floating sparkles, pulsing ring, shimmer). On touch there's no hover to
-  // reveal them meaningfully and they add to the mobile scroll cost, so we
-  // only run the decorative loops on hover-capable, motion-OK devices.
-  const decorAnimate = !prefersReducedMotion && canHover;
+  // floating sparkles, pulsing ring, shimmer). They add to the mobile scroll
+  // cost for no real benefit on a small screen, so only run them on desktop.
+  const decorAnimate = !prefersReducedMotion && isDesktop;
   const navigateToSection = useSectionNavigate();
 
   const scrollToContact = () => {
