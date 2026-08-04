@@ -76,6 +76,12 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
         </motion.span>
       ))}
 
+      {/* Arabic splits by word and drops the trailing space of title_3, so the
+          last word would butt directly against title_4 ("...بأنهاحية."). Other
+          languages keep their trailing space via `whitespace-pre`, so only
+          Arabic needs an explicit separator here. */}
+      {language === 'ar' ? ' ' : ''}
+
       <span className="inline-block relative">
         {!prefersReducedMotion && (
           <motion.span

@@ -158,7 +158,7 @@ const VibeCoding: React.FC = () => {
                 transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
                 className="mt-6 md:mt-8 px-6 py-3 md:px-8 md:py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl"
               >
-                <p className="text-brand-purpleLight font-mono text-base md:text-lg flex items-center gap-3">
+                <p className="text-brand-purpleLight dark:text-brand-purpleLighter font-mono text-base md:text-lg flex items-center gap-3">
                   <Zap size={20} className="fill-brand-purpleLight" />
                   {t('vibe_text_4')}
                 </p>

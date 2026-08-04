@@ -7,6 +7,7 @@ import { SECTIONS, ACCENT_CLASSES, type AdminSection } from '@/features/admin/la
 import { listProjectRows } from '@/lib/content/projects';
 import { listCertRows } from '@/lib/content/certifications';
 import { listReviewRows } from '@/lib/content/reviews';
+import { listAssets } from '@/lib/content/media';
 import { toastError } from '@/lib/adminToast';
 
 type ActivityItem = { kind: 'project' | 'cert' | 'review'; id: string; title: string; ts: string };
@@ -54,15 +55,15 @@ const StatCard: React.FC<{
 };
 
 const Overview: React.FC = () => {
-  const [counts, setCounts] = useState<{ p: number; c: number; r: number } | null>(null);
+  const [counts, setCounts] = useState<{ p: number; c: number; r: number; m: number } | null>(null);
   const [activity, setActivity] = useState<ActivityItem[] | null>(null);
 
   useEffect(() => {
     let active = true;
-    Promise.all([listProjectRows(), listCertRows(), listReviewRows()])
-      .then(([projects, certs, reviews]) => {
+    Promise.all([listProjectRows(), listCertRows(), listReviewRows(), listAssets()])
+      .then(([projects, certs, reviews, assets]) => {
         if (!active) return;
-        setCounts({ p: projects.length, c: certs.length, r: reviews.length });
+        setCounts({ p: projects.length, c: certs.length, r: reviews.length, m: assets.length });
         const items: ActivityItem[] = [
           ...projects.map((p) => ({ kind: 'project' as const, id: p.id, title: p.title, ts: p.updated_at })),
           ...certs.map((c) => ({ kind: 'cert' as const, id: c.id, title: c.title.en, ts: c.updated_at })),
@@ -104,7 +105,7 @@ const Overview: React.FC = () => {
           <StatCard section={projectsSection} count={counts?.p ?? null} />
           <StatCard section={certsSection} count={counts?.c ?? null} />
           <StatCard section={reviewsSection} count={counts?.r ?? null} hint={counts?.r === 0 ? 'Add your first review' : undefined} />
-          <StatCard section={mediaSection} count={null} hint="Browse storage" />
+          <StatCard section={mediaSection} count={counts?.m ?? null} hint="Browse storage" />
         </div>
 
         {/* Quick actions — primary is filled gradient; secondaries are per-section tinted */}

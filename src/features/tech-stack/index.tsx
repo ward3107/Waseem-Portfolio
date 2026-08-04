@@ -99,7 +99,11 @@ const TechStack: React.FC = () => {
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
   const gridBackgroundPositionY = useTransform(scrollYProgress, [0, 1], ['0px', '320px']);
   const inView = useInView(sectionRef, '150px');
-  const marqueePlayState = inView ? 'running' : 'paused';
+  // Track which row the pointer is over so we can pause just that row. The old
+  // `hover:[animation-play-state:paused]` class never worked: the inline
+  // `animation` shorthand resets animation-play-state to `running` inline, which
+  // beats the class. Driving play-state from JS state avoids that conflict.
+  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
 
   const stage = currentTier?.stage ?? 1;
   const marqueeDuration = currentTier?.marqueeSpeed ?? '60s';
@@ -401,10 +405,14 @@ const TechStack: React.FC = () => {
           return (
             <div
               key={`row-${rowIndex}`}
-              className="flex w-max hover:[animation-play-state:paused]"
+              className="flex w-max"
+              onMouseEnter={() => setHoveredRow(rowIndex)}
+              onMouseLeave={() => setHoveredRow(null)}
               style={{
                 animation: `scroll-${spec.direction} ${rowSeconds}s linear infinite`,
-                animationPlayState: marqueePlayState,
+                // Pause when the section is off-screen (perf) or when the pointer
+                // is over this row (so cards are easy to click).
+                animationPlayState: !inView || hoveredRow === rowIndex ? 'paused' : 'running',
               }}
             >
               {row.map((tech, index) => (

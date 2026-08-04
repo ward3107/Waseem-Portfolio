@@ -6,6 +6,7 @@ import { useFocusTrap, useEscapeKey } from '@/shared/hooks/useFocusTrap';
 import { playSound } from './audio';
 import { submitDiscountLead } from '@/lib/content/discountLeads';
 import { trackEvent } from '@/lib/browser';
+import { safeGetItem, safeSetItem } from '@/lib/safeStorage';
 
 interface DiscountRewardProps {
   onClose: () => void;
@@ -39,8 +40,7 @@ const DiscountReward: React.FC<DiscountRewardProps> = ({ onClose, percent, code,
   // Repeat visitors that already gave contact info skip the form and see the
   // code straight away — otherwise the gate turns into friction, not a
   // conversion moment.
-  const alreadySubmitted =
-    typeof window !== 'undefined' && Boolean(window.localStorage.getItem(LEAD_STORAGE_KEY));
+  const alreadySubmitted = Boolean(safeGetItem(LEAD_STORAGE_KEY));
 
   const [revealed, setRevealed] = useState(alreadySubmitted);
   const [name, setName] = useState('');
@@ -88,11 +88,7 @@ const DiscountReward: React.FC<DiscountRewardProps> = ({ onClose, percent, code,
       language,
     });
 
-    try {
-      window.localStorage.setItem(LEAD_STORAGE_KEY, '1');
-    } catch {
-      // Storage blocked (private mode / cookie-less) — visitor still sees the code.
-    }
+    safeSetItem(LEAD_STORAGE_KEY, '1');
 
     setSubmitting(false);
     setRevealed(true);

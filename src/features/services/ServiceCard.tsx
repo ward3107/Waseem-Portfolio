@@ -99,6 +99,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      aria-label={`${service.title} — ${t('projects_details')}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={transformStyle}

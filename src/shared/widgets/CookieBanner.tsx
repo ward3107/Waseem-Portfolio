@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, ChevronDown, ChevronUp, Cookie } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { safeGetItem, safeSetItem } from '@/lib/safeStorage';
 
 interface CookiePreferences {
   necessary: boolean;
@@ -21,7 +22,7 @@ const CookieBanner: React.FC = () => {
 
   useEffect(() => {
     // Check if user has already consented
-    const savedConsent = localStorage.getItem('cookie-consent');
+    const savedConsent = safeGetItem('cookie-consent');
     if (!savedConsent) {
       // Delay slightly for better UX on load
       const timer = setTimeout(() => setIsVisible(true), 1000);
@@ -30,7 +31,10 @@ const CookieBanner: React.FC = () => {
   }, []);
 
   const savePreferences = (prefs: CookiePreferences) => {
-    localStorage.setItem('cookie-consent', JSON.stringify(prefs));
+    // Persist is best-effort; the banner must dismiss even if storage is blocked
+    // (Safari private mode), otherwise Accept/Decline throws and the banner
+    // re-appears on every load and never records consent.
+    safeSetItem('cookie-consent', JSON.stringify(prefs));
     // Apply logic here (e.g., enable Google Analytics if prefs.analytics is true)
     setIsVisible(false);
   };
