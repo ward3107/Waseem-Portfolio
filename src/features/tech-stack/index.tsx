@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { Gift, ShieldAlert } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useInView } from '@/shared/hooks/useInView';
+import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import { TIERS, WIN_CLICKS, ROW_SPECS, rowsForStage, tierForClicks, bossForClicks, type Tier } from './config';
 import { playSound } from './audio';
 import { trackEvent } from '@/lib/browser';
@@ -104,6 +105,7 @@ const TechStack: React.FC = () => {
   // `animation` shorthand resets animation-play-state to `running` inline, which
   // beats the class. Driving play-state from JS state avoids that conflict.
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   const stage = currentTier?.stage ?? 1;
   const marqueeDuration = currentTier?.marqueeSpeed ?? '60s';
@@ -278,13 +280,13 @@ const TechStack: React.FC = () => {
               Kept the scale pulse (compositor-only) and moved the glow to a
               static shadow — same badge, no per-frame repaint. */}
           <motion.div
-            animate={{ scale: [1, 1.05, 1] }}
+            animate={prefersReducedMotion ? undefined : { scale: [1, 1.05, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
             className="inline-flex items-center gap-2 px-4 sm:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-brand-gold via-amber-400 to-brand-gold rounded-full border-2 border-amber-300/50 shadow-lg shadow-amber-500/40"
             style={{ willChange: 'transform' }}
           >
             <motion.span
-              animate={{ rotate: [0, 360] }}
+              animate={prefersReducedMotion ? undefined : { rotate: [0, 360] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
               className="text-lg sm:text-xl"
             >
@@ -294,7 +296,7 @@ const TechStack: React.FC = () => {
               {t('tech_discount_badge')}
             </span>
             <motion.span
-              animate={{ rotate: [360, 0] }}
+              animate={prefersReducedMotion ? undefined : { rotate: [360, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
               className="text-lg sm:text-xl"
             >

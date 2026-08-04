@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Copy, Trash2, Upload, Loader2, Check } from 'lucide-react';
 import Topbar from '@/features/admin/layout/Topbar';
 import Skeleton from '@/features/admin/primitives/Skeleton';
@@ -20,6 +20,7 @@ const Media: React.FC = () => {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [uploading, setUploading] = useState(false);
   const [copiedPath, setCopiedPath] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const load = () => listAssets().then(setAssets).catch((err) => toastError(err, 'Could not load assets'));
 
@@ -72,17 +73,30 @@ const Media: React.FC = () => {
 
   const handleFiles = async (files: FileList | null) => {
     if (!files?.length) return;
+    const picked = Array.from(files);
     setUploading(true);
-    try {
-      for (const file of Array.from(files)) {
+    let succeeded = 0;
+    let failure: unknown = null;
+    // Upload each independently so one bad file doesn't discard the successes
+    // that already landed (the old loop threw out of the whole batch).
+    for (const file of picked) {
+      try {
         await uploadImage(file, 'media');
+        succeeded += 1;
+      } catch (err) {
+        failure = err;
       }
-      toastSaved(`${files.length} file${files.length === 1 ? '' : 's'}`);
-      await load();
-    } catch (err) {
-      toastError(err, 'Upload failed');
+    }
+    try {
+      if (succeeded > 0) {
+        toastSaved(`${succeeded} file${succeeded === 1 ? '' : 's'}`);
+        await load();
+      }
+      if (failure) toastError(failure, 'Some files failed to upload');
     } finally {
       setUploading(false);
+      // Reset so re-selecting the same file fires onChange again.
+      if (fileRef.current) fileRef.current.value = '';
     }
   };
 
@@ -132,6 +146,7 @@ const Media: React.FC = () => {
             </>
           )}
           <input
+            ref={fileRef}
             id="media-upload"
             type="file"
             accept="image/png,image/jpeg,image/webp,image/avif,application/pdf"

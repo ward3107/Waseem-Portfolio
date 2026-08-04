@@ -36,6 +36,22 @@ const Navbar: React.FC = () => {
     };
   }, []);
 
+  // While the mobile menu is open: lock body scroll (so the page behind doesn't
+  // scroll under the drawer) and close on Escape.
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [isOpen]);
+
 
 
   return (

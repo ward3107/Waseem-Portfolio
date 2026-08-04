@@ -6,7 +6,13 @@ const NotFoundPage: React.FC = () => {
   const { t } = useLanguage();
 
   useEffect(() => {
+    const previousTitle = document.title;
     document.title = '404 — Page not found';
+    // Restore on unmount so the 404 title doesn't stick after navigating away
+    // (there's no global title manager to overwrite it on the next route).
+    return () => {
+      document.title = previousTitle;
+    };
   }, []);
 
   return (

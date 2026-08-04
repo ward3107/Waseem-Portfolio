@@ -43,10 +43,15 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
   });
   const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
+  // An empty/invalid credential URL yields no href — the anchor is then a dead,
+  // non-focusable card that still says "Verify →". Only show the verify
+  // affordance when there's a real link to follow.
+  const href = safeHref(cert.credentialUrl);
+
   return (
     <motion.a
       ref={ref}
-      href={safeHref(cert.credentialUrl)}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       style={prefersReducedMotion ? undefined : { opacity, willChange: 'opacity' }}
@@ -89,9 +94,11 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
           )}
         </div>
 
-        <span className="mt-4 text-sm font-bold text-brand-purple group-hover:underline">
-          {t('cert_verify')} →
-        </span>
+        {href && (
+          <span className="mt-4 text-sm font-bold text-brand-purple group-hover:underline">
+            {t('cert_verify')} →
+          </span>
+        )}
       </div>
     </motion.a>
   );
