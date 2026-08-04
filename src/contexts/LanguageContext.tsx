@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Language } from '@/types';
 import { translations } from '@/translations';
+import { safeGetItem, safeSetItem } from '@/lib/safeStorage';
 
 interface LanguageContextType {
   language: Language;
@@ -25,7 +26,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     } catch {
       // window/URLSearchParams unavailable — fall through to the other sources.
     }
-    const saved = localStorage.getItem('vibe_lang') as Language;
+    const saved = safeGetItem('vibe_lang') as Language | null;
     if (saved && (saved === 'en' || saved === 'he' || saved === 'ar')) {
       return saved;
     }
@@ -36,7 +37,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
   const dir = language === 'en' ? 'ltr' : 'rtl';
 
   useEffect(() => {
-    localStorage.setItem('vibe_lang', language);
+    safeSetItem('vibe_lang', language);
     document.documentElement.lang = language;
     document.documentElement.dir = dir;
   }, [language, dir]);

@@ -138,6 +138,15 @@ const Services: React.FC = () => {
               },
             }}
             onClick={handleStartProject}
+            role="button"
+            tabIndex={0}
+            aria-label={t('services_cta_title')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                scrollToContact();
+              }
+            }}
             whileHover={{ scale: 1.03, y: -5 }}
             className="cursor-pointer group relative bg-gradient-to-br from-brand-purple via-brand-purpleLight to-brand-purpleDark rounded-lg sm:rounded-xl p-2.5 sm:p-3 overflow-hidden flex flex-col items-center justify-center text-center h-full border border-brand-purpleLight/40 hover:border-brand-gold/50 transition-all duration-500 shadow-2xl shadow-brand-purple/20 hover:shadow-brand-gold/30"
           >

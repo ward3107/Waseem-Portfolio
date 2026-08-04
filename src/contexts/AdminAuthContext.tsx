@@ -57,14 +57,24 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({ children 
       await refreshMfa();
     };
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!active) return;
-      const u = data.session?.user ?? null;
-      setUser(u);
-      await loadMfaFor(u);
-      if (!active) return;
-      setLoading(false);
-    });
+    supabase.auth
+      .getSession()
+      .then(async ({ data }) => {
+        if (!active) return;
+        const u = data.session?.user ?? null;
+        setUser(u);
+        await loadMfaFor(u);
+        if (!active) return;
+        setLoading(false);
+      })
+      .catch(() => {
+        // getSession can reject (e.g. a token-refresh network failure). Without
+        // this, `loading` stays true forever and RequireAuth is stuck on the
+        // loading screen. Fail closed: no user, stop loading.
+        if (!active) return;
+        setUser(null);
+        setLoading(false);
+      });
 
     const { data: sub } = supabase.auth.onAuthStateChange(async (_e, session) => {
       if (!active) return;

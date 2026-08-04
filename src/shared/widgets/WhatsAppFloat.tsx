@@ -54,7 +54,7 @@ const WhatsAppFloat: React.FC = () => {
     //   mobile → bottom-24 (BackToTop is at bottom-6)
     //   desktop → bottom-40 (BackToTop rises to bottom-24)
     // `dir="ltr"` keeps flex `items-start` predictable inside an RTL page.
-    <div dir="ltr" className="fixed bottom-24 md:bottom-40 left-5 z-[60] flex flex-col items-start gap-2 print:hidden">
+    <div dir="ltr" className="fixed bottom-24 md:bottom-40 left-5 z-40 flex flex-col items-start gap-2 print:hidden">
       <AnimatePresence>
         {showTeaser && (
           <motion.div

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { safeGetItem, safeSetItem } from '@/lib/safeStorage';
 
 type Theme = 'light' | 'dark';
 
@@ -13,11 +14,9 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [theme, setTheme] = useState<Theme>(() => {
         // Default to dark mode, but respect saved preference
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('vibe_theme') as Theme;
-            if (saved === 'light' || saved === 'dark') {
-                return saved;
-            }
+        const saved = safeGetItem('vibe_theme') as Theme | null;
+        if (saved === 'light' || saved === 'dark') {
+            return saved;
         }
         return 'dark';
     });
@@ -27,7 +26,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         // Remove both to prevent conflicts if we ever add more themes
         root.classList.remove('light', 'dark');
         root.classList.add(theme);
-        localStorage.setItem('vibe_theme', theme);
+        safeSetItem('vibe_theme', theme);
     }, [theme]);
 
     // Listen for system changes if no manual override is set? 

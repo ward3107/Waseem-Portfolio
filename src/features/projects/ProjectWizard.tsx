@@ -210,7 +210,16 @@ ${selections.details}
                         <button
                             type="button"
                             aria-label={t('aria_back')}
-                            onClick={() => setStep(step - 1)}
+                            onClick={() => {
+                                // Cancel a pending auto-advance, otherwise tapping
+                                // Back within 300ms of selecting an option gets
+                                // overridden by the timer and bounces forward.
+                                if (advanceTimerRef.current !== null) {
+                                    window.clearTimeout(advanceTimerRef.current);
+                                    advanceTimerRef.current = null;
+                                }
+                                setStep(step - 1);
+                            }}
                             className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
                         >
                             <ArrowLeft size={18} className="sm:w-5 sm:h-5 rtl:rotate-180" aria-hidden="true" />

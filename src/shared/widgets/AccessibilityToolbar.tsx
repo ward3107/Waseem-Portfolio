@@ -6,6 +6,8 @@ import {
   AlignLeft, Check, EyeOff
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { safeGetItem, safeSetItem } from '@/lib/safeStorage';
+import { useFocusTrap, useEscapeKey } from '@/shared/hooks/useFocusTrap';
 
 type ContrastMode = 'normal' | 'high' | 'inverted';
 
@@ -68,8 +70,7 @@ const AccessibilityToolbar: React.FC = () => {
   // the persist effect below never sees DEFAULT_STATE overwriting real data,
   // and there's no visible flash of non-accessible styles on route changes.
   const [state, setState] = useState<A11yState>(() => {
-    if (typeof window === 'undefined') return DEFAULT_STATE;
-    const saved = localStorage.getItem('a11y-settings');
+    const saved = safeGetItem('a11y-settings');
     if (!saved) return DEFAULT_STATE;
     try {
       // Merge over defaults so older/partial saved payloads (e.g. from before
@@ -81,11 +82,16 @@ const AccessibilityToolbar: React.FC = () => {
   });
   const panelRef = useRef<HTMLDivElement>(null);
 
+  // The accessibility panel is a dialog — it must trap focus and close on
+  // Escape like every other modal in the app (ironic to omit on this widget).
+  useFocusTrap(panelRef, isOpen);
+  useEscapeKey(isOpen, () => setIsOpen(false));
+
   const getAccessibilityLabel = () => t('a11y_title');
 
   // Persist and apply styles whenever state changes.
   useEffect(() => {
-    localStorage.setItem('a11y-settings', JSON.stringify(state));
+    safeSetItem('a11y-settings', JSON.stringify(state));
     applyStyles(state);
   }, [state]);
 

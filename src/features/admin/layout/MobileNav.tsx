@@ -8,7 +8,7 @@ import { SECTIONS, ACCENT_CLASSES } from './sections';
  *  desktop sidebar is hidden. */
 const MobileNav: React.FC<{ onSignOut: () => void }> = ({ onSignOut }) => (
   <nav
-    className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-zinc-950/95 backdrop-blur border-t border-zinc-200 dark:border-zinc-800 grid grid-cols-7"
+    className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-zinc-950/95 backdrop-blur border-t border-zinc-200 dark:border-zinc-800 grid grid-cols-8"
     aria-label="Admin sections"
   >
     {SECTIONS.map(({ to, labelShort, icon: Icon, end, accent }) => {

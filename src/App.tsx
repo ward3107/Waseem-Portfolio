@@ -9,6 +9,7 @@ import WhatsAppFloat from '@/shared/widgets/WhatsAppFloat';
 import ExitIntent from '@/shared/widgets/ExitIntent';
 import ScrollToHashOnRouteChange from '@/shared/ui/ScrollToHashOnRouteChange';
 import SectionSkeleton from '@/shared/ui/SectionSkeleton';
+import ErrorBoundary from '@/shared/ui/ErrorBoundary';
 import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
 import AboutPage from './pages/AboutPage';
@@ -131,17 +132,19 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <LanguageProvider>
-      <ThemeProvider>
-        <WidgetProvider>
-          <AdminAuthProvider>
-            <BrowserRouter>
-              <AppContent />
-            </BrowserRouter>
-          </AdminAuthProvider>
-        </WidgetProvider>
-      </ThemeProvider>
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <ThemeProvider>
+          <WidgetProvider>
+            <AdminAuthProvider>
+              <BrowserRouter>
+                <AppContent />
+              </BrowserRouter>
+            </AdminAuthProvider>
+          </WidgetProvider>
+        </ThemeProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   );
 };
 
