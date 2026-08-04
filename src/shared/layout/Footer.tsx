@@ -76,7 +76,7 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand Column */}
           <div className="space-y-6">
-            <h3 className="font-heading font-bold text-xl sm:text-2xl text-brand-purple dark:text-brand-purpleLight">
+            <h3 className="font-heading font-bold text-xl sm:text-2xl text-brand-purple dark:text-brand-purpleLighter">
               Waseem
             </h3>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
