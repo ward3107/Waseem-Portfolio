@@ -3,8 +3,6 @@ import { motion } from 'framer-motion';
 import { Sparkles, Code, Globe, Bot, Box, TrendingUp, Search } from 'lucide-react';
 import { Service } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
-import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import ServiceCard from './ServiceCard';
 import ServiceModal from './ServiceModal';
@@ -13,15 +11,6 @@ import Dimensional3DWord, { fontForLanguage } from '@/shared/three/Dimensional3D
 const Services: React.FC = () => {
   const { t, dir, language } = useLanguage();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const prefersReducedMotion = usePrefersReducedMotion();
-  // Gate on real viewport width, not hover capability: Samsung S-Pen (and other
-  // stylus) phones report themselves as hover+fine-pointer, so a `(hover)` gate
-  // still ran these loops on those phones. A width check can't be fooled.
-  const isDesktop = useMediaQuery('(min-width: 1024px)');
-  // The CTA card carries its own perpetual loops (rotating blurred blobs,
-  // floating sparkles, pulsing ring, shimmer). They add to the mobile scroll
-  // cost for no real benefit on a small screen, so only run them on desktop.
-  const decorAnimate = !prefersReducedMotion && isDesktop;
   const navigateToSection = useSectionNavigate();
 
   const scrollToContact = () => {
@@ -124,7 +113,6 @@ const Services: React.FC = () => {
               onClick={() => setSelectedService(service)}
               t={t}
               dir={dir}
-              prefersReducedMotion={prefersReducedMotion}
             />
           ))}
 
@@ -147,61 +135,16 @@ const Services: React.FC = () => {
                 scrollToContact();
               }
             }}
-            whileHover={isDesktop ? { scale: 1.03, y: -5 } : undefined}
-            className="cursor-pointer group relative bg-gradient-to-br from-brand-purple via-brand-purpleLight to-brand-purpleDark rounded-lg sm:rounded-xl p-2.5 sm:p-3 overflow-hidden flex flex-col items-center justify-center text-center h-full border border-brand-purpleLight/40 hover:border-brand-gold/50 transition-all duration-500 shadow-2xl shadow-brand-purple/20 hover:shadow-brand-gold/30"
+            className="cursor-pointer group relative bg-gradient-to-br from-brand-purple via-brand-purpleLight to-brand-purpleDark rounded-lg sm:rounded-xl p-2.5 sm:p-3 overflow-hidden flex flex-col items-center justify-center text-center h-full border border-brand-purpleLight/40 shadow-2xl shadow-brand-purple/20 hover:shadow-brand-gold/30 transition-shadow duration-300"
           >
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-            {decorAnimate && (
-              <>
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                  className="absolute -top-6 -right-6 sm:-top-10 sm:-right-10 w-20 h-20 sm:w-32 sm:h-32 bg-gradient-to-br from-brand-gold/30 to-transparent rounded-full blur-xl sm:blur-2xl"
-                />
-                <motion.div
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-                  className="absolute -bottom-6 -left-6 sm:-bottom-10 sm:-left-10 w-24 h-24 sm:w-40 sm:h-40 bg-gradient-to-tr from-brand-cyan/30 to-transparent rounded-full blur-xl sm:blur-2xl"
-                />
-                <motion.div
-                  animate={{ y: [0, -20, 0], opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  className="absolute top-4 left-4 sm:top-8 sm:left-8 text-brand-gold"
-                >
-                  <Sparkles size={8} />
-                </motion.div>
-                <motion.div
-                  animate={{ y: [0, 20, 0], opacity: [0.3, 0.7, 0.3] }}
-                  transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
-                  className="absolute bottom-6 right-6 sm:bottom-12 sm:right-12 text-brand-cyan"
-                >
-                  <Sparkles size={8} />
-                </motion.div>
-                <motion.div
-                  animate={{ x: [0, 15, 0], opacity: [0.4, 0.8, 0.4] }}
-                  transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-                  className="absolute top-1/2 right-4 sm:right-6 text-white/40"
-                >
-                  <Sparkles size={6} />
-                </motion.div>
-              </>
-            )}
-
+            {/* All CTA decorations removed at the user's request (rotating
+                blurred blobs, floating sparkles, icon rotate, ping ring,
+                button shimmer, hover-lift). Kept only the entrance animation
+                inherited from the parent variants and static styling. */}
             <div className="relative z-10">
-              <motion.div
-                whileHover={isDesktop ? { rotate: [0, 15, -15, 0], scale: 1.1 } : undefined}
-                transition={{ duration: 0.6 }}
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-white/15 flex items-center justify-center mx-auto mb-1.5 sm:mb-2 backdrop-blur-md border border-white/30 shadow-2xl relative overflow-hidden"
-              >
-                {decorAnimate && (
-                  <motion.div
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.6, 0, 0.6] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute inset-0 bg-brand-gold/30 rounded-xl sm:rounded-2xl"
-                  />
-                )}
-                <Sparkles size={16} className="text-brand-gold relative z-10" />
-              </motion.div>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-white/15 flex items-center justify-center mx-auto mb-1.5 sm:mb-2 backdrop-blur-md border border-white/30 shadow-2xl">
+                <Sparkles size={16} className="text-brand-gold" />
+              </div>
 
               <h3 className="text-sm sm:text-base md:text-lg font-bold text-white mb-1 drop-shadow-lg">
                 {t('services_cta_title')}
@@ -210,20 +153,9 @@ const Services: React.FC = () => {
                 {t('services_cta_desc')}
               </p>
 
-              <motion.span
-                whileHover={isDesktop ? { scale: 1.05 } : undefined}
-                whileTap={{ scale: 0.95 }}
-                className="px-3 sm:px-4 py-1 sm:py-1.5 bg-gradient-to-r from-white to-slate-100 text-brand-purple font-bold rounded-lg shadow-lg hover:shadow-2xl transition-all inline-block text-[11px] relative overflow-hidden group"
-              >
-                <span className="relative z-10">{t('services_cta_btn')}</span>
-                {decorAnimate && (
-                  <motion.div
-                    animate={{ x: ['-100%', '200%'] }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 2, ease: 'linear' }}
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-gold/30 to-transparent skew-x-12"
-                  />
-                )}
-              </motion.span>
+              <span className="px-3 sm:px-4 py-1 sm:py-1.5 bg-gradient-to-r from-white to-slate-100 text-brand-purple font-bold rounded-lg shadow-lg inline-block text-[11px]">
+                {t('services_cta_btn')}
+              </span>
             </div>
           </motion.div>
         </motion.div>
