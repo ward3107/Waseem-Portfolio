@@ -19,11 +19,15 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
  * to three-core only. Still code-split out of the main bundle via Logo3D's
  * dynamic import, so nothing here touches LCP.
  *
- * Motion policy: static. A gentle sway follows the pointer on hover; there is
- * NO auto-rotate loop, and the render loop parks itself (stops requesting
- * frames) once the letter has eased back to rest, so an idle logo costs zero
- * CPU/GPU — matching the "nothing that feels like a bug / no perpetual motion"
- * direction from the rest of the site.
+ * Motion policy: a slow, smooth Y-axis auto-rotate — the deliberate, premium
+ * kind of motion (unlike the flashing borders removed elsewhere, which read as
+ * bugs). Pointer hover adds a gentle tilt on top. Guarded so it stays cheap and
+ * respectful:
+ *   - transform-only (rotation), so it's GPU-cheap for one small mesh;
+ *   - paused via IntersectionObserver whenever the hero is scrolled off-screen
+ *     (no frames requested while it's not visible);
+ *   - not rendered at all under prefers-reduced-motion (Logo3D shows the static
+ *     CSS fallback there instead).
  */
 const Logo3DScene: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -91,43 +95,63 @@ const Logo3DScene: React.FC = () => {
     group.add(mesh);
     scene.add(group);
 
-    // Pointer-driven target rotation; the loop eases toward it and stops once
-    // it's settled and the pointer has left.
-    const targetRot = { x: 0, y: 0 };
+    // Base auto-spin around Y, plus a pointer-driven tilt offset the mesh eases
+    // toward. The spin runs continuously WHILE VISIBLE; an IntersectionObserver
+    // stops the loop when the hero scrolls away so it costs nothing off-screen.
+    const SPIN_SPEED = 0.35; // radians/sec — one full turn every ~18s (calm).
+    let spin = 0;
+    const tiltTarget = { x: 0, y: 0 };
+    const tilt = { x: 0, y: 0 };
     let rafId = 0;
     let running = false;
+    let lastTime = 0;
 
-    const renderFrame = () => {
-      group.rotation.y += (targetRot.y - group.rotation.y) * 0.08;
-      group.rotation.x += (targetRot.x - group.rotation.x) * 0.08;
+    const renderFrame = (time: number) => {
+      const dt = lastTime ? Math.min((time - lastTime) / 1000, 0.05) : 0;
+      lastTime = time;
+      spin += SPIN_SPEED * dt;
+      tilt.x += (tiltTarget.x - tilt.x) * 0.08;
+      tilt.y += (tiltTarget.y - tilt.y) * 0.08;
+      group.rotation.y = spin + tilt.y;
+      group.rotation.x = tilt.x;
       renderer.render(scene, camera);
-      const dy = Math.abs(targetRot.y - group.rotation.y);
-      const dx = Math.abs(targetRot.x - group.rotation.x);
-      // Keep animating until settled (within ~0.001 rad), then park the loop.
-      if (dx > 0.001 || dy > 0.001) {
-        rafId = requestAnimationFrame(renderFrame);
-      } else {
-        running = false;
-      }
+      if (running) rafId = requestAnimationFrame(renderFrame);
     };
-    const kick = () => {
+    const start = () => {
       if (running) return;
       running = true;
+      lastTime = 0;
       rafId = requestAnimationFrame(renderFrame);
     };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(rafId);
+    };
+
+    // Only spin while the logo is actually on screen.
+    const io =
+      typeof IntersectionObserver !== 'undefined'
+        ? new IntersectionObserver(
+            (entries) => {
+              if (entries[0]?.isIntersecting) start();
+              else stop();
+            },
+            { rootMargin: '100px' }
+          )
+        : null;
+    if (io) io.observe(mount);
+    else start(); // Fallback: no IO support → just run.
 
     const onPointerMove = (e: PointerEvent) => {
       const rect = renderer.domElement.getBoundingClientRect();
       const nx = (e.clientX - rect.left) / rect.width - 0.5;
       const ny = (e.clientY - rect.top) / rect.height - 0.5;
-      targetRot.y = nx * 0.6;
-      targetRot.x = -ny * 0.4;
-      kick();
+      tiltTarget.y = nx * 0.6;
+      tiltTarget.x = -ny * 0.4;
     };
     const onPointerLeave = () => {
-      targetRot.x = 0;
-      targetRot.y = 0;
-      kick();
+      tiltTarget.x = 0;
+      tiltTarget.y = 0;
     };
 
     const el = renderer.domElement;
@@ -144,11 +168,13 @@ const Logo3DScene: React.FC = () => {
     };
     window.addEventListener('resize', onResize);
 
-    // Initial paint (single frame — no loop while idle).
+    // Initial paint so the letter shows before the first rAF (IO may start the
+    // loop a tick later).
     renderer.render(scene, camera);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      stop();
+      if (io) io.disconnect();
       window.removeEventListener('resize', onResize);
       el.removeEventListener('pointermove', onPointerMove);
       el.removeEventListener('pointerleave', onPointerLeave);
