@@ -8,6 +8,7 @@ import HeroBackground from './HeroBackground';
 import AnimatedHeadline from './AnimatedHeadline';
 import ProfileCard from './ProfileCard';
 import TrustBadges from '@/shared/ui/TrustBadges';
+import Logo3D from '@/shared/three/Logo3D';
 
 const Hero: React.FC = () => {
   const { t, language } = useLanguage();
@@ -177,16 +178,31 @@ const Hero: React.FC = () => {
           </motion.div>
         </div>
 
-        <ProfileCard
-          t={t}
-          prefersReducedMotion={prefersReducedMotion}
-          rotateX={rotateX}
-          rotateY={rotateY}
-          layer1X={layer1X}
-          layer1Y={layer1Y}
-          layer2X={layer2X}
-          layer2Y={layer2Y}
-        />
+        <div className="relative">
+          {/* 3D brand logo, sitting to the outer side of the profile card.
+              Desktop/large-tablet only — on phones the hero stacks and there's
+              no room beside the card, so it's hidden there (the CSS-gradient
+              "W" fallback inside Logo3D also never shows on mobile). It's
+              absolutely positioned so it doesn't disturb the card's grid cell,
+              and pointer-events-none on the wrapper keeps it from stealing
+              clicks meant for the card (the canvas re-enables events itself). */}
+          <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 -left-40 xl:-left-52 w-40 h-40 xl:w-52 xl:h-52 z-0 pointer-events-none">
+            <div className="w-full h-full pointer-events-auto">
+              <Logo3D className="w-full h-full" enable3D={!prefersReducedMotion} />
+            </div>
+          </div>
+
+          <ProfileCard
+            t={t}
+            prefersReducedMotion={prefersReducedMotion}
+            rotateX={rotateX}
+            rotateY={rotateY}
+            layer1X={layer1X}
+            layer1Y={layer1Y}
+            layer2X={layer2X}
+            layer2Y={layer2Y}
+          />
+        </div>
       </div>
     </section>
   );
