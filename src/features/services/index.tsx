@@ -147,7 +147,7 @@ const Services: React.FC = () => {
                 scrollToContact();
               }
             }}
-            whileHover={{ scale: 1.03, y: -5 }}
+            whileHover={isDesktop ? { scale: 1.03, y: -5 } : undefined}
             className="cursor-pointer group relative bg-gradient-to-br from-brand-purple via-brand-purpleLight to-brand-purpleDark rounded-lg sm:rounded-xl p-2.5 sm:p-3 overflow-hidden flex flex-col items-center justify-center text-center h-full border border-brand-purpleLight/40 hover:border-brand-gold/50 transition-all duration-500 shadow-2xl shadow-brand-purple/20 hover:shadow-brand-gold/30"
           >
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
@@ -189,7 +189,7 @@ const Services: React.FC = () => {
 
             <div className="relative z-10">
               <motion.div
-                whileHover={{ rotate: [0, 15, -15, 0], scale: 1.1 }}
+                whileHover={isDesktop ? { rotate: [0, 15, -15, 0], scale: 1.1 } : undefined}
                 transition={{ duration: 0.6 }}
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-white/15 flex items-center justify-center mx-auto mb-1.5 sm:mb-2 backdrop-blur-md border border-white/30 shadow-2xl relative overflow-hidden"
               >
@@ -211,7 +211,7 @@ const Services: React.FC = () => {
               </p>
 
               <motion.span
-                whileHover={{ scale: 1.05 }}
+                whileHover={isDesktop ? { scale: 1.05 } : undefined}
                 whileTap={{ scale: 0.95 }}
                 className="px-3 sm:px-4 py-1 sm:py-1.5 bg-gradient-to-r from-white to-slate-100 text-brand-purple font-bold rounded-lg shadow-lg hover:shadow-2xl transition-all inline-block text-[11px] relative overflow-hidden group"
               >
