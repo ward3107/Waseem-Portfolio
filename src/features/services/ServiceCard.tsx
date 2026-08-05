@@ -95,8 +95,16 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     <motion.div
       ref={cardRef}
       variants={cardVariants}
-      whileHover={{ y: -12, scale: 1.03 }}
-      onHoverStart={() => setIsHovered(true)}
+      // Only react to hover on a real desktop viewport. Samsung S-Pen (and other
+      // stylus) phones fire hover events, which flipped `isHovered` on and lit
+      // the corner brackets / icon and lifted the card on mobile — the "lit
+      // border around each rectangle" the user kept seeing. Gating here makes
+      // the mobile card fully static; the decorative overlays (gradient wash,
+      // border ring, shine, dots, ping) are already desktop-gated.
+      whileHover={isDesktop ? { y: -12, scale: 1.03 } : undefined}
+      onHoverStart={() => {
+        if (isDesktop) setIsHovered(true);
+      }}
       onHoverEnd={() => setIsHovered(false)}
       onClick={onClick}
       role="button"
