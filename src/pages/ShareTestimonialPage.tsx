@@ -11,6 +11,9 @@ import {
   TrendingUp,
   Code,
   MoreHorizontal,
+  MapPin,
+  Briefcase,
+  ThumbsUp,
   type LucideIcon,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -49,6 +52,46 @@ const CATEGORIES: readonly Category[] = [
   { key: 'marketing', icon: TrendingUp, labelKey: 'share_cat_marketing' },
   { key: 'custom', icon: Code, labelKey: 'share_cat_custom' },
   { key: 'other', icon: MoreHorizontal, labelKey: 'share_cat_other' },
+] as const;
+
+// Categories are multi-select now (a project often spans a few), capped so the
+// answer stays focused.
+const MAX_CATEGORIES = 3;
+
+// Major Israeli cities for the optional location field. Stored as the English
+// `value` for clean, consistent data; displayed localized (Hebrew, or English
+// on the English site — Arabic falls back to the Hebrew label, which local
+// Arabic speakers read fluently for place names).
+interface City {
+  value: string;
+  he: string;
+  en: string;
+}
+const CITIES: readonly City[] = [
+  { value: 'Tel Aviv', he: 'תל אביב', en: 'Tel Aviv' },
+  { value: 'Jerusalem', he: 'ירושלים', en: 'Jerusalem' },
+  { value: 'Haifa', he: 'חיפה', en: 'Haifa' },
+  { value: 'Rishon LeZion', he: 'ראשון לציון', en: 'Rishon LeZion' },
+  { value: 'Petah Tikva', he: 'פתח תקווה', en: 'Petah Tikva' },
+  { value: 'Ashdod', he: 'אשדוד', en: 'Ashdod' },
+  { value: 'Netanya', he: 'נתניה', en: 'Netanya' },
+  { value: 'Beer Sheva', he: 'באר שבע', en: 'Beer Sheva' },
+  { value: 'Holon', he: 'חולון', en: 'Holon' },
+  { value: 'Bnei Brak', he: 'בני ברק', en: 'Bnei Brak' },
+  { value: 'Ramat Gan', he: 'רמת גן', en: 'Ramat Gan' },
+  { value: 'Rehovot', he: 'רחובות', en: 'Rehovot' },
+  { value: 'Herzliya', he: 'הרצליה', en: 'Herzliya' },
+  { value: 'Kfar Saba', he: 'כפר סבא', en: 'Kfar Saba' },
+  { value: 'Modiin', he: 'מודיעין', en: 'Modiin' },
+  { value: 'Nazareth', he: 'נצרת', en: 'Nazareth' },
+  { value: 'Ashkelon', he: 'אשקלון', en: 'Ashkelon' },
+  { value: 'Beit Shemesh', he: 'בית שמש', en: 'Beit Shemesh' },
+  { value: 'Raanana', he: 'רעננה', en: 'Raanana' },
+  { value: 'Hadera', he: 'חדרה', en: 'Hadera' },
+  { value: 'Nahariya', he: 'נהריה', en: 'Nahariya' },
+  { value: 'Eilat', he: 'אילת', en: 'Eilat' },
+  { value: 'Tiberias', he: 'טבריה', en: 'Tiberias' },
+  { value: 'Acre', he: 'עכו', en: 'Acre' },
 ] as const;
 
 // Eight full example testimonials that visitors can tap to insert into
@@ -190,10 +233,13 @@ const ShareTestimonialPage: React.FC = () => {
   const { whatsappNumber } = useContact();
 
   const [author, setAuthor] = useState('');
-  const [categoryKey, setCategoryKey] = useState<string>('');
+  const [roleCompany, setRoleCompany] = useState('');
+  const [location, setLocation] = useState('');
+  const [categoryKeys, setCategoryKeys] = useState<string[]>([]);
   const [helpedWithOther, setHelpedWithOther] = useState('');
   const [quote, setQuote] = useState('');
   const [rating, setRating] = useState(5);
+  const [wouldRecommend, setWouldRecommend] = useState(true);
   const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -205,11 +251,22 @@ const ShareTestimonialPage: React.FC = () => {
   const [done, setDone] = useState(false);
   const quoteRef = useRef<HTMLTextAreaElement>(null);
 
+  // Compose the free-text "helped with" from every selected category (in the
+  // canonical CATEGORIES order), swapping the free-text value in for "other".
   const helpedWithValue = useMemo(() => {
-    if (categoryKey === 'other') return helpedWithOther.trim();
-    const cat = CATEGORIES.find((c) => c.key === categoryKey);
-    return cat ? t(cat.labelKey) : '';
-  }, [categoryKey, helpedWithOther, t]);
+    const parts = CATEGORIES.filter((c) => categoryKeys.includes(c.key)).map((c) =>
+      c.key === 'other' ? helpedWithOther.trim() : t(c.labelKey)
+    );
+    return parts.filter(Boolean).join(', ');
+  }, [categoryKeys, helpedWithOther, t]);
+
+  const toggleCategory = (key: string) => {
+    setCategoryKeys((prev) => {
+      if (prev.includes(key)) return prev.filter((k) => k !== key);
+      if (prev.length >= MAX_CATEGORIES) return prev; // cap reached
+      return [...prev, key];
+    });
+  };
 
   const quoteChars = quote.length;
   const quotePct = Math.min((quoteChars / 600) * 100, 100);
@@ -249,11 +306,16 @@ const ShareTestimonialPage: React.FC = () => {
         quote: quote.trim(),
         helpedWith: helpedWithValue,
         language,
+        location: location || undefined,
+        roleCompany: roleCompany.trim() || undefined,
+        wouldRecommend,
       });
       trackEvent('testimonial_submitted', {
         rating,
         language,
-        category: categoryKey || 'unspecified',
+        category: categoryKeys.join(',') || 'unspecified',
+        location: location || 'unspecified',
+        would_recommend: wouldRecommend,
       });
       setDone(true);
     } catch (err) {
@@ -298,6 +360,19 @@ const ShareTestimonialPage: React.FC = () => {
       }}
     >
       <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6">
+        {/* Minimal in-theme branding — this page renders standalone (no site
+            navbar), so a small wordmark gives the customer context. */}
+        <div className="mb-8 sm:mb-10 flex justify-center">
+          <a
+            href="/"
+            className="font-heading font-black text-2xl tracking-tight"
+            style={{ color: PAL.accent }}
+            aria-label="Waseem"
+          >
+            Waseem
+          </a>
+        </div>
+
         <AnimatePresence mode="wait">
           {done ? (
             <motion.div
@@ -466,42 +541,85 @@ const ShareTestimonialPage: React.FC = () => {
                   placeholder={t('share_field_name_placeholder')}
                 />
 
-                {/* Category pills */}
+                {/* Role / company (optional) */}
                 <div>
-                  <FieldLabel>{t('share_field_helped')}</FieldLabel>
-                  <div
-                    className="flex flex-wrap gap-2"
-                    role="radiogroup"
-                    aria-label={t('share_field_helped')}
-                    onKeyDown={(e) => {
-                      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
-                      e.preventDefault();
-                      const radios = Array.from(
-                        e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]')
-                      );
-                      const currentIdx = Math.max(0, CATEGORIES.findIndex((c) => c.key === categoryKey));
-                      const delta = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
-                      const nextIdx = (currentIdx + delta + CATEGORIES.length) % CATEGORIES.length;
-                      setCategoryKey(CATEGORIES[nextIdx].key);
-                      radios[nextIdx]?.focus();
-                    }}
-                  >
-                    {CATEGORIES.map((cat, idx) => {
-                      const active = categoryKey === cat.key;
-                      // Roving tabindex: the selected pill is the single tab stop
-                      // (or the first pill when nothing is selected yet).
-                      const isTabStop = categoryKey === '' ? idx === 0 : active;
+                  <FieldLabel htmlFor="tst-role">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Briefcase size={13} aria-hidden="true" />
+                      {t('share_field_role')}
+                    </span>
+                  </FieldLabel>
+                  <Input
+                    id="tst-role"
+                    type="text"
+                    autoComplete="organization-title"
+                    maxLength={120}
+                    value={roleCompany}
+                    onChange={(e) => setRoleCompany(e.target.value)}
+                    placeholder={t('share_field_role_placeholder')}
+                  />
+                </div>
+
+                {/* Location (optional) — major Israeli cities */}
+                <div>
+                  <FieldLabel htmlFor="tst-location">
+                    <span className="inline-flex items-center gap-1.5">
+                      <MapPin size={13} aria-hidden="true" />
+                      {t('share_field_location')}
+                    </span>
+                  </FieldLabel>
+                  <div className="relative">
+                    <select
+                      id="tst-location"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      className="w-full rounded-2xl px-4 py-3 text-[14.5px] appearance-none outline-none transition-all"
+                      style={{
+                        background: PAL.cardTint,
+                        border: `1.5px solid ${PAL.line}`,
+                        color: location ? PAL.ink : PAL.soft,
+                      }}
+                    >
+                      <option value="">{t('share_field_location_placeholder')}</option>
+                      {CITIES.map((c) => (
+                        <option key={c.value} value={c.value}>
+                          {language === 'en' ? c.en : c.he}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      size={16}
+                      aria-hidden="true"
+                      className="pointer-events-none absolute top-1/2 -translate-y-1/2 end-4"
+                      style={{ color: PAL.soft }}
+                    />
+                  </div>
+                </div>
+
+                {/* Category pills — multi-select (up to MAX_CATEGORIES). Each
+                    pill is an independent toggle (aria-pressed), so a project
+                    spanning e.g. website + SEO + AI can be captured. */}
+                <div>
+                  <FieldLabel>
+                    {t('share_field_helped')}{' '}
+                    <span className="font-normal" style={{ color: PAL.soft }}>
+                      {t('share_field_helped_multi')}
+                    </span>
+                  </FieldLabel>
+                  <div className="flex flex-wrap gap-2" role="group" aria-label={t('share_field_helped')}>
+                    {CATEGORIES.map((cat) => {
+                      const active = categoryKeys.includes(cat.key);
+                      const capped = !active && categoryKeys.length >= MAX_CATEGORIES;
                       const Icon = cat.icon;
                       return (
                         <motion.button
                           key={cat.key}
                           type="button"
-                          role="radio"
-                          aria-checked={active}
-                          tabIndex={isTabStop ? 0 : -1}
-                          onClick={() => setCategoryKey(active ? '' : cat.key)}
-                          whileTap={{ scale: 0.96 }}
-                          className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all"
+                          aria-pressed={active}
+                          disabled={capped}
+                          onClick={() => toggleCategory(cat.key)}
+                          whileTap={{ scale: capped ? 1 : 0.96 }}
+                          className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                           style={{
                             background: active ? PAL.accent : PAL.cardTint,
                             border: active ? `1.5px solid ${PAL.accent}` : `1.5px solid ${PAL.line}`,
@@ -509,7 +627,7 @@ const ShareTestimonialPage: React.FC = () => {
                             boxShadow: active ? '0 4px 10px -4px rgba(58,90,68,0.4)' : 'none',
                           }}
                         >
-                          <Icon size={13} aria-hidden="true" />
+                          {active ? <Check size={13} aria-hidden="true" /> : <Icon size={13} aria-hidden="true" />}
                           {t(cat.labelKey)}
                         </motion.button>
                       );
@@ -517,7 +635,7 @@ const ShareTestimonialPage: React.FC = () => {
                   </div>
 
                   <AnimatePresence>
-                    {categoryKey === 'other' && (
+                    {categoryKeys.includes('other') && (
                       <motion.div
                         key="other-wrap"
                         initial={{ opacity: 0, height: 0 }}
@@ -609,6 +727,41 @@ const ShareTestimonialPage: React.FC = () => {
                     label={t('share_field_rating')}
                     starLabel={(n) => (n >= 1 && n <= 5 ? t(STAR_LABEL_KEYS[n - 1]) : '')}
                   />
+                </div>
+
+                {/* Would-recommend — a quick yes/no NPS-style signal. */}
+                <div>
+                  <FieldLabel>
+                    <span className="inline-flex items-center gap-1.5">
+                      <ThumbsUp size={13} aria-hidden="true" />
+                      {t('share_field_recommend')}
+                    </span>
+                  </FieldLabel>
+                  <div className="flex gap-2" role="radiogroup" aria-label={t('share_field_recommend')}>
+                    {[
+                      { val: true, label: t('share_recommend_yes') },
+                      { val: false, label: t('share_recommend_no') },
+                    ].map((opt) => {
+                      const active = wouldRecommend === opt.val;
+                      return (
+                        <button
+                          key={String(opt.val)}
+                          type="button"
+                          role="radio"
+                          aria-checked={active}
+                          onClick={() => setWouldRecommend(opt.val)}
+                          className="flex-1 rounded-2xl px-4 py-2.5 text-sm font-semibold transition-all"
+                          style={{
+                            background: active ? PAL.accent : PAL.cardTint,
+                            border: active ? `1.5px solid ${PAL.accent}` : `1.5px solid ${PAL.line}`,
+                            color: active ? '#fff' : PAL.soft,
+                          }}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {/* Consent */}

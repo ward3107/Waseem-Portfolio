@@ -125,10 +125,10 @@ const Reviews: React.FC = () => {
               </blockquote>
               <figcaption className="text-sm font-bold text-slate-900 dark:text-white">
                 {r.author}
-                {r.location ? (
+                {r.roleCompany || r.location ? (
                   <span className="font-normal text-slate-500 dark:text-slate-400">
                     {' '}
-                    · {r.location}
+                    · {[r.roleCompany, r.location].filter(Boolean).join(' · ')}
                   </span>
                 ) : null}
               </figcaption>
