@@ -40,22 +40,52 @@ export interface PublicReviewSubmission {
   quote: string;
   helpedWith: string;
   language: Language;
+  /** Optional extras — persisted only if the matching columns exist (see the
+   *  migration in supabase/reviews-extra-fields.sql). The insert degrades
+   *  gracefully if they don't, so deploying this code before running the
+   *  migration never breaks the form. */
+  location?: string;
+  roleCompany?: string;
+  wouldRecommend?: boolean;
 }
+
+// Postgres / PostgREST error codes for "column doesn't exist in the schema
+// cache" — thrown when the optional columns haven't been migrated yet.
+const MISSING_COLUMN_CODES = new Set(['PGRST204', '42703']);
 
 export async function submitPublicReview(input: PublicReviewSubmission): Promise<void> {
   const [text, helped] = await Promise.all([
     translateToAll(input.quote, input.language),
     translateToAll(input.helpedWith, input.language),
   ]);
-  const { error } = await supabase.from('reviews').insert({
+
+  const base = {
     author: input.author,
     rating: input.rating,
     text,
     helped_with: helped,
     status: 'pending',
     sort_order: 0,
-  });
-  if (error) throw error;
+  };
+  const extras: Record<string, unknown> = {};
+  if (input.location) extras.location = input.location;
+  if (input.roleCompany) extras.role_company = input.roleCompany;
+  if (typeof input.wouldRecommend === 'boolean') extras.would_recommend = input.wouldRecommend;
+
+  // Try with the extra columns; if the DB doesn't have them yet, retry with
+  // just the base columns so the submission still succeeds.
+  const { error } = await supabase.from('reviews').insert({ ...base, ...extras });
+  if (!error) return;
+
+  const isMissingColumn =
+    MISSING_COLUMN_CODES.has(error.code ?? '') ||
+    /column .* does not exist|could not find/i.test(error.message ?? '');
+  if (isMissingColumn && Object.keys(extras).length > 0) {
+    const retry = await supabase.from('reviews').insert(base);
+    if (retry.error) throw retry.error;
+    return;
+  }
+  throw error;
 }
 
 export async function createReview(input: ReviewInput): Promise<void> {

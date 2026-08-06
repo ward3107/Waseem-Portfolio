@@ -70,6 +70,8 @@ export interface Review {
   text: string;
   /** City / context, e.g. "עכו" (optional). */
   location?: string;
+  /** Reviewer's role / company, e.g. "מנכ״לית, סטודיו לוגו" (optional). */
+  roleCompany?: string;
   /** ISO date the review was given, e.g. "2026-07-01" (optional). */
   date?: string;
 }
@@ -121,6 +123,8 @@ export interface ReviewRow {
   text: LocalizedText;
   helped_with?: LocalizedText | null;
   location: string | null;
+  role_company?: string | null;
+  would_recommend?: boolean | null;
   date: string | null;
   status: ReviewStatus;
   sort_order: number;

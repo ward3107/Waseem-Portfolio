@@ -85,8 +85,11 @@ const SiteShell: React.FC<{ children: React.ReactNode; focusMode?: boolean }> = 
 const AppContent: React.FC = () => {
   const { pathname } = useLocation();
   const isAdmin = pathname === '/admin' || pathname.startsWith('/admin/');
-  // Customer-facing focused-task routes hide non-essential floating widgets.
-  const isFocusMode = pathname === '/share-testimonial';
+  // Fully standalone routes render WITHOUT the site chrome (navbar/footer/
+  // widgets). Admin, and the customer feedback page — the latter has its own
+  // full-bleed cream/sage design, and the site's transparent navbar (light
+  // text meant for the hero) rendered washed-out and out of place on top of it.
+  const isStandalone = isAdmin || pathname === '/share-testimonial';
 
   const routes = (
     <Suspense fallback={<SectionSkeleton />}>
@@ -126,7 +129,7 @@ const AppContent: React.FC = () => {
   return (
     <>
       <ScrollToHashOnRouteChange />
-      {isAdmin ? routes : <SiteShell focusMode={isFocusMode}>{routes}</SiteShell>}
+      {isStandalone ? routes : <SiteShell>{routes}</SiteShell>}
     </>
   );
 };

@@ -36,6 +36,7 @@ export function reviewRowToModel(row: ReviewRow, lang: Language): Review {
     rating: row.rating,
     text: localized(row.text, lang),
     location: row.location ?? undefined,
+    roleCompany: row.role_company ?? undefined,
     date: row.date ?? undefined,
   };
 }
