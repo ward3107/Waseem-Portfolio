@@ -116,10 +116,10 @@ const Navbar: React.FC = () => {
 
             {/* CTA Button */}
             <a
-              href="/about#contact"
+              href="/contact"
               onClick={(e) => {
                 e.preventDefault();
-                navigateToSection('/about#contact', { focusId: 'project-wizard' });
+                navigateToSection('/contact', { focusId: 'project-wizard' });
               }}
               className="px-4 py-2 bg-brand-purple text-white rounded-full font-bold text-sm shadow-md hover:shadow-lg hover:bg-brand-purpleLight transition-all"
             >
@@ -206,11 +206,11 @@ const Navbar: React.FC = () => {
                 </a>
               ))}
               <a
-                href="/about#contact"
+                href="/contact"
                 onClick={(e) => {
                   e.preventDefault();
                   setIsOpen(false);
-                  setTimeout(() => navigateToSection('/about#contact', { focusId: 'project-wizard' }), 100);
+                  setTimeout(() => navigateToSection('/contact', { focusId: 'project-wizard' }), 100);
                 }}
                 className="w-full text-center py-3 rounded-xl bg-brand-purple text-white font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 cursor-pointer"
               >

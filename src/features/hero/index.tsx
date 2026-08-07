@@ -72,7 +72,7 @@ const Hero: React.FC = () => {
 
   const handleStartProject = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigateToSection('/about#contact', { focusId: 'project-wizard' });
+    navigateToSection('/contact', { focusId: 'project-wizard' });
   };
 
   return (
@@ -129,7 +129,7 @@ const Hero: React.FC = () => {
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="/about#contact"
+              href="/contact"
               onClick={handleStartProject}
               className="group px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-slate-900 dark:bg-brand-purple text-white rounded-full font-bold text-xs sm:text-sm md:text-base shadow-xl hover:shadow-2xl shadow-brand-purple/20 transition-all flex items-center gap-1.5 sm:gap-2 md:gap-3"
             >
