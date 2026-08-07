@@ -36,10 +36,10 @@ async function fillMissingLanguages(text: LocalizedText | null | undefined): Pro
   };
 }
 
-const chooseText = (existing: string | undefined, translation: string, sourceText: string): string => {
+const chooseText = (existing: string | undefined, translation: string | undefined, sourceText: string): string => {
   const trimmed = (existing ?? '').trim();
-  if (!trimmed) return translation;
-  if (trimmed === sourceText) return translation;
+  if (!trimmed) return translation ?? sourceText;
+  if (trimmed === sourceText) return translation ?? sourceText;
   return existing ?? '';
 };
 
