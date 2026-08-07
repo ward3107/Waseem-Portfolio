@@ -1,0 +1,7 @@
+# Supabase project config. Deploy edge functions with:
+#   supabase functions deploy translate-review
+# The function is invoked from the public /share-testimonial form (no auth),
+# so JWT verification must be OFF — otherwise the preflight fails and the
+# client falls back to duplicating the source text in every language.
+[functions.translate-review]
+verify_jwt = false
