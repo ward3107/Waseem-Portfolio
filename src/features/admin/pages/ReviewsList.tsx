@@ -8,48 +8,75 @@ import { listAllReviewRows, reorderReviews, deleteReview, updateReview } from '@
 import type { Language, LocalizedText, ReviewRow, ReviewStatus } from '@/types';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { toastDeleted, toastError, toastSaved } from '@/lib/adminToast';
-import { translateToAll } from '@/lib/content/translate';
+import { translateToAll, detectLanguage } from '@/lib/content/translate';
 
 const LANGS: Language[] = ['en', 'he', 'ar'];
 
-// Backfill languages for a review's localized text. Handles both:
+// Pick the source-language text for a row. If any slot contains text whose
+// detected script matches its slot (correct language), that wins. Otherwise
+// fall back to the first non-empty slot regardless of script. This way, a
+// row with Hebrew text in the EN slot still gets its Hebrew treated as the
+// source, and we translate FROM Hebrew instead of falsely FROM English.
+function pickSource(text: LocalizedText): { source: Language; sourceText: string } | null {
+  for (const l of LANGS) {
+    const v = (text[l] ?? '').trim();
+    if (v && detectLanguage(v) === l) return { source: l, sourceText: v };
+  }
+  for (const l of LANGS) {
+    const v = (text[l] ?? '').trim();
+    if (v) return { source: detectLanguage(v), sourceText: v };
+  }
+  return null;
+}
+
+// Backfill languages for a review's localized text. Handles:
 // - Empty language fields (row saved before translation was set up)
 // - All fields containing the same text (fallback fill from a failed
-//   translate call — the site then shows source-language text on every
-//   locale). In the second case we overwrite the duplicates so the site
-//   actually renders the visitor's chosen language.
+//   translate call — site then shows source-lang text on every locale)
+// - Wrong-language text in a slot (Hebrew sitting in EN, etc.) — overwrite
+//   with the correct translation for that slot's language.
 async function fillMissingLanguages(text: LocalizedText | null | undefined): Promise<LocalizedText | null> {
   if (!text) return null;
-  const source = LANGS.find((l) => (text[l] ?? '').trim());
-  if (!source) return text;
-  const sourceText = (text[source] ?? '').trim();
-  const allDuplicated = LANGS.every((l) => (text[l] ?? '').trim() === sourceText);
-  const anyMissing = LANGS.some((l) => !(text[l] ?? '').trim());
-  if (!anyMissing && !allDuplicated) return text;
-  const translated = await translateToAll(sourceText, source);
+  const picked = pickSource(text);
+  if (!picked) return text;
+  const { sourceText } = picked;
+  if (!needsBackfill(text)) return text;
+  const translated = await translateToAll(sourceText, detectLanguage(sourceText));
   return {
-    // For each target: keep existing content only if it's non-empty AND
-    // distinct from the source. Otherwise use the fresh translation.
-    en: source === 'en' ? sourceText : chooseText(text.en, translated.en, sourceText),
-    he: source === 'he' ? sourceText : chooseText(text.he, translated.he, sourceText),
-    ar: source === 'ar' ? sourceText : chooseText(text.ar, translated.ar, sourceText),
+    en: chooseText(text.en, translated.en, sourceText, 'en'),
+    he: chooseText(text.he, translated.he, sourceText, 'he'),
+    ar: chooseText(text.ar, translated.ar, sourceText, 'ar'),
   };
 }
 
-const chooseText = (existing: string | undefined, translation: string | undefined, sourceText: string): string => {
+// Keep existing content only if it's non-empty, distinct from the source
+// text, AND its detected script matches this slot's target language.
+// Otherwise use the fresh translation (falling back to source text if
+// translation is unavailable).
+const chooseText = (
+  existing: string | undefined,
+  translation: string | undefined,
+  sourceText: string,
+  targetLang: Language,
+): string => {
   const trimmed = (existing ?? '').trim();
-  if (!trimmed) return translation ?? sourceText;
-  if (trimmed === sourceText) return translation ?? sourceText;
+  const fallback = translation ?? sourceText;
+  if (!trimmed) return fallback;
+  if (trimmed === sourceText) return fallback;
+  if (detectLanguage(trimmed) !== targetLang) return fallback;
   return existing ?? '';
 };
 
+// A row needs backfill when any slot is empty, all slots hold identical
+// text, or any slot's script doesn't match its language label.
 const needsBackfill = (text: LocalizedText | null | undefined): boolean => {
   if (!text) return false;
   const values = LANGS.map((l) => (text[l] ?? '').trim());
   const filled = values.filter(Boolean);
   if (filled.length === 0) return false;
   if (filled.length < LANGS.length) return true;
-  return values.every((v) => v === values[0]);
+  if (values.every((v) => v === values[0])) return true;
+  return LANGS.some((l, i) => detectLanguage(values[i]) !== l);
 };
 
 const ReviewsList: React.FC = () => {

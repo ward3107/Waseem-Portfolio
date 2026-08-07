@@ -13,23 +13,44 @@ import {
 } from '@/lib/content/reviews';
 import { toastSaved, toastDeleted, toastError } from '@/lib/adminToast';
 import { useConfirm } from '@/shared/hooks/useConfirm';
-import { translateToAll } from '@/lib/content/translate';
+import { translateToAll, detectLanguage } from '@/lib/content/translate';
 import type { Language, LocalizedText } from '@/types';
 
-// Fill empty language fields via Gemini while preserving anything the admin
-// typed explicitly. Source = first non-empty language in en/he/ar order.
+// Fill empty language fields via Gemini and correct slots that hold the
+// wrong-language text (Hebrew in the EN tab, etc.). Preserves anything the
+// admin typed whose script matches its slot.
+const LANGS: Language[] = ['en', 'he', 'ar'];
+
 async function fillMissingLanguages(text: LocalizedText): Promise<LocalizedText> {
-  const order: Language[] = ['en', 'he', 'ar'];
-  const source = order.find((l) => (text[l] ?? '').trim());
-  if (!source) return text;
-  const missing = order.some((l) => !(text[l] ?? '').trim());
-  if (!missing) return text;
-  const translated = await translateToAll(text[source] ?? '', source);
-  return {
-    en: (text.en ?? '').trim() ? text.en : translated.en,
-    he: (text.he ?? '').trim() ? text.he : translated.he,
-    ar: (text.ar ?? '').trim() ? text.ar : translated.ar,
+  // Prefer a slot whose text matches its declared language; otherwise fall
+  // back to the first non-empty slot regardless of script.
+  let sourceText = '';
+  for (const l of LANGS) {
+    const v = (text[l] ?? '').trim();
+    if (v && detectLanguage(v) === l) { sourceText = v; break; }
+  }
+  if (!sourceText) {
+    for (const l of LANGS) {
+      const v = (text[l] ?? '').trim();
+      if (v) { sourceText = v; break; }
+    }
+  }
+  if (!sourceText) return text;
+
+  const anyMissing = LANGS.some((l) => !(text[l] ?? '').trim());
+  const anyWrongLang = LANGS.some((l) => {
+    const v = (text[l] ?? '').trim();
+    return v && detectLanguage(v) !== l;
+  });
+  if (!anyMissing && !anyWrongLang) return text;
+
+  const translated = await translateToAll(sourceText, detectLanguage(sourceText));
+  const pick = (existing: string | undefined, target: Language): string => {
+    const trimmed = (existing ?? '').trim();
+    if (trimmed && detectLanguage(trimmed) === target) return existing ?? '';
+    return translated[target] ?? sourceText;
   };
+  return { en: pick(text.en, 'en'), he: pick(text.he, 'he'), ar: pick(text.ar, 'ar') };
 }
 
 const EMPTY: ReviewInput = {
