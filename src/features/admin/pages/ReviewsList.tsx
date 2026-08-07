@@ -12,24 +12,44 @@ import { translateToAll } from '@/lib/content/translate';
 
 const LANGS: Language[] = ['en', 'he', 'ar'];
 
-// Same rule as ReviewEditor: source = first non-empty, only fill empties.
+// Backfill languages for a review's localized text. Handles both:
+// - Empty language fields (row saved before translation was set up)
+// - All fields containing the same text (fallback fill from a failed
+//   translate call — the site then shows source-language text on every
+//   locale). In the second case we overwrite the duplicates so the site
+//   actually renders the visitor's chosen language.
 async function fillMissingLanguages(text: LocalizedText | null | undefined): Promise<LocalizedText | null> {
   if (!text) return null;
   const source = LANGS.find((l) => (text[l] ?? '').trim());
   if (!source) return text;
-  if (!LANGS.some((l) => !(text[l] ?? '').trim())) return text;
-  const translated = await translateToAll(text[source] ?? '', source);
+  const sourceText = (text[source] ?? '').trim();
+  const allDuplicated = LANGS.every((l) => (text[l] ?? '').trim() === sourceText);
+  const anyMissing = LANGS.some((l) => !(text[l] ?? '').trim());
+  if (!anyMissing && !allDuplicated) return text;
+  const translated = await translateToAll(sourceText, source);
   return {
-    en: (text.en ?? '').trim() ? text.en : translated.en,
-    he: (text.he ?? '').trim() ? text.he : translated.he,
-    ar: (text.ar ?? '').trim() ? text.ar : translated.ar,
+    // For each target: keep existing content only if it's non-empty AND
+    // distinct from the source. Otherwise use the fresh translation.
+    en: source === 'en' ? sourceText : chooseText(text.en, translated.en, sourceText),
+    he: source === 'he' ? sourceText : chooseText(text.he, translated.he, sourceText),
+    ar: source === 'ar' ? sourceText : chooseText(text.ar, translated.ar, sourceText),
   };
 }
 
-const isIncomplete = (text: LocalizedText | null | undefined): boolean => {
+const chooseText = (existing: string | undefined, translation: string, sourceText: string): string => {
+  const trimmed = (existing ?? '').trim();
+  if (!trimmed) return translation;
+  if (trimmed === sourceText) return translation;
+  return existing ?? '';
+};
+
+const needsBackfill = (text: LocalizedText | null | undefined): boolean => {
   if (!text) return false;
-  const filled = LANGS.filter((l) => (text[l] ?? '').trim());
-  return filled.length > 0 && filled.length < LANGS.length;
+  const values = LANGS.map((l) => (text[l] ?? '').trim());
+  const filled = values.filter(Boolean);
+  if (filled.length === 0) return false;
+  if (filled.length < LANGS.length) return true;
+  return values.every((v) => v === values[0]);
 };
 
 const ReviewsList: React.FC = () => {
@@ -87,7 +107,7 @@ const ReviewsList: React.FC = () => {
     let failed = 0;
     try {
       for (const row of rows) {
-        if (!isIncomplete(row.text) && !isIncomplete(row.helped_with)) continue;
+        if (!needsBackfill(row.text) && !needsBackfill(row.helped_with)) continue;
         try {
           const [text, helped_with] = await Promise.all([
             fillMissingLanguages(row.text),
@@ -130,16 +150,16 @@ const ReviewsList: React.FC = () => {
         title="Reviews"
         actions={
           <>
-            {rows && rows.some((r) => isIncomplete(r.text) || isIncomplete(r.helped_with)) && (
+            {rows && rows.length > 0 && (
               <button
                 type="button"
                 onClick={backfillMissing}
                 disabled={backfilling}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-50"
-                title="Fill missing language translations via AI for all reviews"
+                title="Fill or refresh language translations via AI for every review"
               >
                 {backfilling ? <Loader2 size={14} className="animate-spin" /> : <Languages size={14} />}
-                {backfilling ? 'Translating…' : 'Translate missing'}
+                {backfilling ? 'Translating…' : 'Translate all'}
               </button>
             )}
             <button
