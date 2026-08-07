@@ -7,9 +7,10 @@ import type { Language, LocalizedText } from '@/types';
 // — otherwise Gemini gets "translate English: [Hebrew text]" and either
 // mistranslates or passes the wrong-language text through as-is.
 // Ranges: Hebrew U+0590-U+05FF, Arabic U+0600-U+06FF plus presentation forms
-// U+FB50-U+FDFF and U+FE70-U+FEFF. Anything else counts as en.
+// U+FB50-U+FDFF and U+FE70-U+FEFE (stop short of U+FEFF, which is the
+// zero-width no-break space and ESLint's no-irregular-whitespace flags it).
 const HEBREW_RE = /[֐-׿]/;
-const ARABIC_RE = /[؀-ۿﭐ-﷿ﹰ-﻿]/;
+const ARABIC_RE = /[؀-ۿﭐ-﷿ﹰ-﻾]/;
 
 export function detectLanguage(text: string): Language {
   if (HEBREW_RE.test(text)) return 'he';
