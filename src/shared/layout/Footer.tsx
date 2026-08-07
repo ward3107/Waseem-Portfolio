@@ -211,19 +211,6 @@ const Footer: React.FC = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            {/* Glowing background effect */}
-            <motion.div
-              animate={paintAnimate ? {
-                boxShadow: [
-                  '0 0 20px rgba(147, 51, 234, 0.1)',
-                  '0 0 40px rgba(147, 51, 234, 0.2)',
-                  '0 0 20px rgba(147, 51, 234, 0.1)',
-                ],
-              } : undefined}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="absolute -inset-1 bg-gradient-to-r from-brand-purple via-brand-cyan to-brand-gold rounded-2xl opacity-30 blur-sm"
-            />
-
             <div className="relative bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 rounded-xl p-5 border-2 border-brand-purple/20 shadow-lg">
               {/* Animated badge */}
               <motion.div
