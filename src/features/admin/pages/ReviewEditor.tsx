@@ -13,7 +13,24 @@ import {
 } from '@/lib/content/reviews';
 import { toastSaved, toastDeleted, toastError } from '@/lib/adminToast';
 import { useConfirm } from '@/shared/hooks/useConfirm';
-import type { Language } from '@/types';
+import { translateToAll } from '@/lib/content/translate';
+import type { Language, LocalizedText } from '@/types';
+
+// Fill empty language fields via Gemini while preserving anything the admin
+// typed explicitly. Source = first non-empty language in en/he/ar order.
+async function fillMissingLanguages(text: LocalizedText): Promise<LocalizedText> {
+  const order: Language[] = ['en', 'he', 'ar'];
+  const source = order.find((l) => (text[l] ?? '').trim());
+  if (!source) return text;
+  const missing = order.some((l) => !(text[l] ?? '').trim());
+  if (!missing) return text;
+  const translated = await translateToAll(text[source] ?? '', source);
+  return {
+    en: (text.en ?? '').trim() ? text.en : translated.en,
+    he: (text.he ?? '').trim() ? text.he : translated.he,
+    ar: (text.ar ?? '').trim() ? text.ar : translated.ar,
+  };
+}
 
 const EMPTY: ReviewInput = {
   author: '',
@@ -108,13 +125,19 @@ const ReviewEditor: React.FC = () => {
     if (saving || !dirty || !form.author || !form.text.en) return;
     setSaving(true);
     try {
+      const [text, helped_with] = await Promise.all([
+        fillMissingLanguages(form.text),
+        fillMissingLanguages(form.helped_with ?? { en: '', he: '', ar: '' }),
+      ]);
+      const payload: ReviewInput = { ...form, text, helped_with };
       if (isNew) {
-        await createReview(form);
+        await createReview(payload);
         toastSaved('Review created');
         setDirty(false);
         navigate('/admin/reviews');
       } else if (id) {
-        await updateReview(id, form);
+        await updateReview(id, payload);
+        setForm(payload);
         toastSaved('Review');
         setDirty(false);
       }
