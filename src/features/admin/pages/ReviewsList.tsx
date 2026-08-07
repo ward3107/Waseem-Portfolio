@@ -1,18 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GripVertical, Plus, Pencil, Trash2, Star, Check, X as XIcon } from 'lucide-react';
+import { GripVertical, Plus, Pencil, Trash2, Star, Check, X as XIcon, Languages, Loader2 } from 'lucide-react';
 import Topbar from '@/features/admin/layout/Topbar';
 import Skeleton from '@/features/admin/primitives/Skeleton';
 import DragList from '@/features/admin/primitives/DragList';
 import { listAllReviewRows, reorderReviews, deleteReview, updateReview } from '@/lib/content/reviews';
-import type { ReviewRow, ReviewStatus } from '@/types';
+import type { Language, LocalizedText, ReviewRow, ReviewStatus } from '@/types';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import { toastDeleted, toastError, toastSaved } from '@/lib/adminToast';
+import { translateToAll } from '@/lib/content/translate';
+
+const LANGS: Language[] = ['en', 'he', 'ar'];
+
+// Same rule as ReviewEditor: source = first non-empty, only fill empties.
+async function fillMissingLanguages(text: LocalizedText | null | undefined): Promise<LocalizedText | null> {
+  if (!text) return null;
+  const source = LANGS.find((l) => (text[l] ?? '').trim());
+  if (!source) return text;
+  if (!LANGS.some((l) => !(text[l] ?? '').trim())) return text;
+  const translated = await translateToAll(text[source] ?? '', source);
+  return {
+    en: (text.en ?? '').trim() ? text.en : translated.en,
+    he: (text.he ?? '').trim() ? text.he : translated.he,
+    ar: (text.ar ?? '').trim() ? text.ar : translated.ar,
+  };
+}
+
+const isIncomplete = (text: LocalizedText | null | undefined): boolean => {
+  if (!text) return false;
+  const filled = LANGS.filter((l) => (text[l] ?? '').trim());
+  return filled.length > 0 && filled.length < LANGS.length;
+};
 
 const ReviewsList: React.FC = () => {
   const navigate = useNavigate();
   const confirm = useConfirm();
   const [rows, setRows] = useState<ReviewRow[] | null>(null);
+  const [backfilling, setBackfilling] = useState(false);
 
   const load = () =>
     listAllReviewRows().then(setRows).catch((err) => toastError(err, 'Could not load reviews'));
@@ -56,6 +80,38 @@ const ReviewsList: React.FC = () => {
     }
   };
 
+  const backfillMissing = async () => {
+    if (!rows || backfilling) return;
+    setBackfilling(true);
+    let updated = 0;
+    let failed = 0;
+    try {
+      for (const row of rows) {
+        if (!isIncomplete(row.text) && !isIncomplete(row.helped_with)) continue;
+        try {
+          const [text, helped_with] = await Promise.all([
+            fillMissingLanguages(row.text),
+            fillMissingLanguages(row.helped_with),
+          ]);
+          const patch: { text?: LocalizedText; helped_with?: LocalizedText | null } = {};
+          if (text && text !== row.text) patch.text = text;
+          if (helped_with !== row.helped_with) patch.helped_with = helped_with;
+          if (Object.keys(patch).length === 0) continue;
+          await updateReview(row.id, patch);
+          updated += 1;
+        } catch {
+          failed += 1;
+        }
+      }
+      await load();
+      if (updated > 0) toastSaved(`Backfilled ${updated} review${updated === 1 ? '' : 's'}`);
+      if (failed > 0) toastError(new Error(`${failed} row(s) failed`), 'Some rows failed');
+      if (updated === 0 && failed === 0) toastSaved('Nothing to backfill');
+    } finally {
+      setBackfilling(false);
+    }
+  };
+
   const onDelete = async (row: ReviewRow) => {
     const ok = await confirm({ title: `Delete review by "${row.author}"?`, danger: true });
     if (!ok) return;
@@ -73,14 +129,28 @@ const ReviewsList: React.FC = () => {
       <Topbar
         title="Reviews"
         actions={
-          <button
-            type="button"
-            onClick={() => navigate('/admin/reviews/new')}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-md bg-brand-purple text-white hover:bg-brand-purpleLight"
-          >
-            <Plus size={14} aria-hidden="true" />
-            Add review
-          </button>
+          <>
+            {rows && rows.some((r) => isIncomplete(r.text) || isIncomplete(r.helped_with)) && (
+              <button
+                type="button"
+                onClick={backfillMissing}
+                disabled={backfilling}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border border-zinc-300 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800 disabled:opacity-50"
+                title="Fill missing language translations via AI for all reviews"
+              >
+                {backfilling ? <Loader2 size={14} className="animate-spin" /> : <Languages size={14} />}
+                {backfilling ? 'Translating…' : 'Translate missing'}
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => navigate('/admin/reviews/new')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-md bg-brand-purple text-white hover:bg-brand-purpleLight"
+            >
+              <Plus size={14} aria-hidden="true" />
+              Add review
+            </button>
+          </>
         }
       />
       <div className="p-4 sm:p-6">
