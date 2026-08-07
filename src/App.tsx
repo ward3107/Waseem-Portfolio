@@ -14,6 +14,7 @@ import ErrorBoundary from '@/shared/ui/ErrorBoundary';
 import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
 import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ShareTestimonialPage from './pages/ShareTestimonialPage';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
@@ -97,6 +98,7 @@ const AppContent: React.FC = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/share-testimonial" element={<ShareTestimonialPage />} />
         <Route path="/admin/login" element={<LoginPage />} />
         {/* /admin/mfa sits outside RequireAuth so it can host both the

@@ -151,9 +151,23 @@ const ScrollToHashOnRouteChange: React.FC = () => {
     const timers = REASSERT_MS.map((ms) =>
       window.setTimeout(() => window.scrollTo(0, 0), ms)
     );
+    // Focus a forwarded target once the page has mounted (e.g. cross-page
+    // "Start a project" landing on /contact should focus the wizard). Delayed
+    // past the scroll re-assert window so preventScroll wins vs the layout
+    // still resolving. Skipped when a hash is present — that branch handles
+    // its own focus above.
+    let focusTimer: number | undefined;
+    if (focusId && changedPage) {
+      focusTimer = window.setTimeout(() => {
+        document.getElementById(focusId)?.focus({ preventScroll: true });
+      }, 400);
+    }
     // Stop re-asserting the moment the user scrolls on their own, otherwise the
     // remaining timers drag them back to the top mid-gesture.
-    const clearTimers = () => timers.forEach((t) => window.clearTimeout(t));
+    const clearTimers = () => {
+      timers.forEach((t) => window.clearTimeout(t));
+      if (focusTimer !== undefined) window.clearTimeout(focusTimer);
+    };
     const detachIntent = onUserScrollIntent(clearTimers);
     return () => {
       clearTimers();

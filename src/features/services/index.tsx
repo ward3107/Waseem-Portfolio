@@ -14,7 +14,7 @@ const Services: React.FC = () => {
   const navigateToSection = useSectionNavigate();
 
   const scrollToContact = () => {
-    navigateToSection('/about#contact', { focusId: 'project-wizard' });
+    navigateToSection('/contact', { focusId: 'project-wizard' });
   };
 
   const localizedServices: Service[] = [

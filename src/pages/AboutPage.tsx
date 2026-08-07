@@ -5,7 +5,6 @@ import SectionSkeleton from '@/shared/ui/SectionSkeleton';
 const Reviews = lazy(() => import('@/features/reviews/Reviews'));
 const Process = lazy(() => import('@/features/home/Process'));
 const FAQ = lazy(() => import('@/features/home/FAQ'));
-const Contact = lazy(() => import('@/features/contact/Contact'));
 
 const AboutPage: React.FC = () => (
   <>
@@ -18,9 +17,6 @@ const AboutPage: React.FC = () => (
     </Suspense>
     <Suspense fallback={<SectionSkeleton />}>
       <FAQ />
-    </Suspense>
-    <Suspense fallback={<SectionSkeleton />}>
-      <Contact />
     </Suspense>
   </>
 );

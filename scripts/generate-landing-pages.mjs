@@ -563,6 +563,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 
 ${simpleEntry(`${SITE}/projects`, '0.9')}
 ${simpleEntry(`${SITE}/about`, '0.9')}
+${simpleEntry(`${SITE}/contact`, '0.9')}
 
 ${cityEntries}
 

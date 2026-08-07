@@ -32,21 +32,21 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'AI Solutions', href: '/#ai-automation' },
     { name: 'About', href: '/about' },
     { name: 'Projects', href: '/projects' },
-    { name: 'Contact', href: '/about#contact' },
+    { name: 'Contact', href: '/contact' },
   ],
   he: [
     { name: 'שירותים', href: '/#what-i-do' },
     { name: 'פתרונות AI', href: '/#ai-automation' },
     { name: 'אודות', href: '/about' },
     { name: 'פרויקטים', href: '/projects' },
-    { name: 'צור קשר', href: '/about#contact' },
+    { name: 'צור קשר', href: '/contact' },
   ],
   ar: [
     { name: 'خدمات', href: '/#what-i-do' },
     { name: 'حلول AI', href: '/#ai-automation' },
     { name: 'من أنا', href: '/about' },
     { name: 'مشاريع', href: '/projects' },
-    { name: 'اتصل بي', href: '/about#contact' },
+    { name: 'اتصل بي', href: '/contact' },
   ],
 };
 
