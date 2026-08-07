@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Linkedin, Twitter, ArrowRight, ArrowLeft, Mail, X, Lock } from 'lucide-react';
+import { Github, Linkedin, Twitter, ArrowRight, X, Lock } from 'lucide-react';
 import { NAV_LINKS, SERVICE_AREAS } from '@/constants';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '@/shared/hooks/useFocusTrap';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
-import { useInView } from '@/shared/hooks/useInView';
-import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useContact } from '@/features/contact/useContact';
-import { trackEvent } from '@/lib/browser';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -17,21 +14,8 @@ const Footer: React.FC = () => {
   const navigateToSection = useSectionNavigate();
   const CONTACT = useContact();
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
-  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
-  // Newsletter card runs 6 infinite Framer animations (glow, badge pulse, gift
-  // emoji, input ring, border shimmer, button shine). Gate them on visibility
-  // so they don't chew CPU while the user is anywhere above the footer.
-  const newsletterRef = useRef<HTMLDivElement>(null);
-  const newsletterInView = useInView(newsletterRef, '150px');
-  // Three of those loops tween box-shadow / border-color — paint properties
-  // that repaint the layer every frame (unlike the composited scale/translate
-  // ones). Drop the paint-heavy loops on phones/tablets. We gate on viewport
-  // width rather than `(hover)`: Samsung S-Pen phones report hover+fine-pointer
-  // and would otherwise keep repainting. `paintAnimate` gates those three.
-  const isDesktop = useMediaQuery('(min-width: 1024px)');
-  const paintAnimate = newsletterInView && isDesktop;
 
   const handleCloseModal = () => setLegalModal(null);
 
@@ -74,7 +58,7 @@ const Footer: React.FC = () => {
       <div className="absolute bottom-0 left-0 w-full h-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-20"></div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 pt-20 pb-10 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
           {/* Brand Column */}
           <div className="space-y-6">
             <h3 className="font-heading font-bold text-xl sm:text-2xl text-brand-purple dark:text-brand-purpleLighter">
@@ -203,201 +187,6 @@ const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Newsletter / Contact - Enhanced with highlighting */}
-          <motion.div
-            ref={newsletterRef}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="relative bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 rounded-xl p-5 border-2 border-brand-purple/20 shadow-lg">
-              {/* Animated badge */}
-              <motion.div
-                animate={newsletterInView ? { scale: [1, 1.05, 1] } : undefined}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-brand-gold to-amber-400 rounded-full flex items-center justify-center shadow-lg"
-              >
-                <span className="text-xs">✨</span>
-              </motion.div>
-
-              <h4 className="text-lg font-bold mb-2 bg-gradient-to-r from-brand-purple to-brand-cyan bg-clip-text text-transparent">
-                {t('footer_stay_updated')}
-              </h4>
-              <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">
-                {t('footer_sub_text')}
-              </p>
-
-              {/* Lead Magnet Incentive */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="mb-4 p-3 bg-gradient-to-r from-brand-purple/10 to-brand-cyan/10 border border-brand-purple/30 rounded-lg relative overflow-hidden group"
-              >
-                <div className="absolute top-0 right-0 w-20 h-20 bg-brand-gold/20 rounded-full blur-2xl group-hover:bg-brand-gold/30 transition-colors"></div>
-                <div className="relative flex items-start gap-3">
-                  <motion.span
-                    animate={newsletterInView ? { scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] } : undefined}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="text-2xl flex-shrink-0"
-                  >
-                    🎁
-                  </motion.span>
-                  <div className="text-sm">
-                    <p className="font-bold text-slate-900 dark:text-white mb-1">
-                      {t('footer_lead_magnet_title')}
-                    </p>
-                    <p className="text-slate-600 dark:text-slate-400">
-                      {t('footer_lead_magnet_desc')}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Success / Error Message */}
-              <AnimatePresence>
-                {newsletterStatus === 'success' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="mb-4 p-3 bg-green-100 dark:bg-green-900/20 border border-green-400 rounded-lg flex items-center gap-2"
-                  >
-                    <span className="text-green-600 dark:text-green-400">✓</span>
-                    <span className="text-sm text-green-700 dark:text-green-300 font-medium">
-                      {language === 'he'
-                        ? 'נרשמת בהצלחה!'
-                        : language === 'ar'
-                          ? 'تم الاشتراك بنجاح!'
-                          : 'Successfully subscribed!'}
-                    </span>
-                  </motion.div>
-                )}
-                {newsletterStatus === 'error' && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="mb-4 p-3 bg-red-100 dark:bg-red-900/20 border border-red-400 rounded-lg text-sm text-red-700 dark:text-red-300"
-                  >
-                    {language === 'he'
-                      ? 'ההרשמה נכשלה. נסה שוב מאוחר יותר.'
-                      : language === 'ar'
-                        ? 'فشل الاشتراك. يرجى المحاولة لاحقاً.'
-                        : 'Subscription failed. Please try again.'}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <form
-                className="flex flex-col gap-3"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const endpoint = import.meta.env.VITE_NEWSLETTER_ENDPOINT;
-                  if (!endpoint) {
-                    setNewsletterStatus('error');
-                    return;
-                  }
-                  const formData = new FormData(e.currentTarget);
-                  fetch(endpoint, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { Accept: 'application/json' },
-                  })
-                    .then((response) => {
-                      if (response.ok) {
-                        setNewsletterStatus('success');
-                        trackEvent('sign_up', { form_type: 'newsletter' });
-                      } else {
-                        setNewsletterStatus('error');
-                      }
-                    })
-                    .catch(() => setNewsletterStatus('error'));
-                }}
-              >
-                <input
-                  type="hidden"
-                  name="subject"
-                  value="Newsletter Subscription from Portfolio"
-                />
-                <motion.div
-                  className="relative"
-                  animate={paintAnimate ? {
-                    boxShadow: [
-                      '0 0 0 0 rgba(147, 51, 234, 0)',
-                      '0 0 0 8px rgba(147, 51, 234, 0.1)',
-                      '0 0 0 16px rgba(147, 51, 234, 0.05)',
-                      '0 0 0 0 rgba(147, 51, 234, 0)',
-                    ],
-                  } : undefined}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <Mail
-                    size={16}
-                    className="absolute left-3 rtl:right-3 rtl:left-auto top-1/2 -translate-y-1/2 text-slate-600 dark:text-slate-400 z-10"
-                  />
-                  <motion.input
-                    type="email"
-                    name="email"
-                    aria-label={t('form_newsletter_label')}
-                    placeholder={t('footer_email_placeholder')}
-                    required
-                    animate={paintAnimate ? {
-                      borderColor: [
-                        'rgb(226, 232, 240)',
-                        'rgb(168, 85, 247)',
-                        'rgb(226, 232, 240)',
-                      ],
-                    } : undefined}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    disabled={newsletterStatus === 'success'}
-                    className="w-full bg-white dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-700 rounded-lg pl-10 rtl:pr-10 rtl:pl-4 pr-4 py-3 text-sm focus:outline-none focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 transition-all text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                  />
-                </motion.div>
-                <motion.button
-                  whileHover={{ scale: newsletterStatus === 'success' ? 1 : 1.02 }}
-                  whileTap={{ scale: newsletterStatus === 'success' ? 1 : 0.98 }}
-                  disabled={newsletterStatus === 'success'}
-                  className="w-full bg-gradient-to-r from-brand-purple to-brand-cyan text-white font-bold py-3 rounded-lg hover:shadow-lg hover:shadow-brand-purple/30 transition-all duration-300 text-sm relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    {newsletterStatus === 'success' ? (
-                      language === 'he' ? (
-                        'נרשמת!'
-                      ) : language === 'ar' ? (
-                        'مشترك!'
-                      ) : (
-                        'Subscribed!'
-                      )
-                    ) : (
-                      <>
-                        {t('footer_sub_btn')}
-                        {language === 'he' || language === 'ar' ? (
-                          <ArrowLeft
-                            size={16}
-                            className="group-hover:-translate-x-1 transition-transform"
-                          />
-                        ) : (
-                          <ArrowRight
-                            size={16}
-                            className="group-hover:translate-x-1 transition-transform"
-                          />
-                        )}
-                      </>
-                    )}
-                  </span>
-                  {newsletterStatus !== 'success' && newsletterInView && (
-                    <motion.div
-                      animate={{ x: ['-100%', '200%'] }}
-                      transition={{ duration: 2, repeat: Infinity, repeatDelay: 2, ease: 'linear' }}
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"
-                    />
-                  )}
-                </motion.button>
-              </form>
-            </div>
-          </motion.div>
         </div>
 
         {/* Bottom Bar */}
