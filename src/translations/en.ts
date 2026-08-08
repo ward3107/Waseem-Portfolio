@@ -487,4 +487,15 @@ export const en: Record<string, string> = {
     a11y_reset: "Reset",
     a11y_hide: "Hide",
     a11y_persist: "Settings persist across sessions",
+
+    // Per-page document titles
+    page_title_home: "Waseem — Full-Stack Developer & AI Specialist",
+    page_title_about: "About & Process — Waseem",
+    page_title_projects: "Projects & Skills — Waseem",
+    page_title_contact: "Contact — Waseem",
+    page_title_404: "Page not found — Waseem",
+
+    // Share widget toasts
+    share_copy_failed: "Could not copy the link. Please copy it from the address bar.",
+    share_unsupported: "Sharing isn't supported on this browser.",
 };

@@ -1,6 +1,8 @@
 import React, { lazy, Suspense } from 'react';
 import Hero from '@/features/hero';
 import SectionSkeleton from '@/shared/ui/SectionSkeleton';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 
 // Hero is eager — it's the LCP. Everything below the fold is lazy so the
 // main chunk stays lean and mobile visitors on the hero don't pay for
@@ -12,7 +14,10 @@ const FeaturedProjects = lazy(() => import('@/features/projects/FeaturedProjects
 const Reviews = lazy(() => import('@/features/reviews/Reviews'));
 const HomeCTA = lazy(() => import('@/features/home/HomeCTA'));
 
-const HomePage: React.FC = () => (
+const HomePage: React.FC = () => {
+  const { t } = useLanguage();
+  useDocumentTitle(t('page_title_home'));
+  return (
   <>
     <Hero />
     <Suspense fallback={<SectionSkeleton />}>
@@ -34,6 +39,7 @@ const HomePage: React.FC = () => (
       <HomeCTA />
     </Suspense>
   </>
-);
+  );
+};
 
 export default HomePage;

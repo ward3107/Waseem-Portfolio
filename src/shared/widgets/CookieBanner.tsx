@@ -183,7 +183,7 @@ const CookieBanner: React.FC = () => {
             </div>
 
             {/* Right Side: Actions */}
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 sm:p-4 md:p-8 flex flex-col sm:flex-row md:flex-col justify-center gap-2 sm:gap-3 min-w-[200px] border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-3 sm:p-4 md:p-8 flex flex-col sm:flex-row md:flex-col justify-center gap-2 sm:gap-3 min-w-[200px] border-t md:border-t-0 md:border-s border-slate-100 dark:border-slate-800">
               {showDetails ? (
                 <button
                   onClick={handleSavePreferences}

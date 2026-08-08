@@ -479,4 +479,15 @@ export const he: Record<string, string> = {
     a11y_reset: "איפוס",
     a11y_hide: "הסתר",
     a11y_persist: "ההגדרות נשמרות בין ביקורים",
+
+    // Per-page document titles
+    page_title_home: "וסים — מפתח פול-סטאק ומומחה AI",
+    page_title_about: "אודות ותהליך — וסים",
+    page_title_projects: "פרויקטים וכישורים — וסים",
+    page_title_contact: "צור קשר — וסים",
+    page_title_404: "הדף לא נמצא — וסים",
+
+    // Share widget toasts
+    share_copy_failed: "לא הצלחנו להעתיק את הקישור. אנא העתק משורת הכתובת.",
+    share_unsupported: "השיתוף לא נתמך בדפדפן הזה.",
 };

@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Share2, Facebook, Linkedin, Twitter, Link as LinkIcon, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-// import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useWidgets } from '@/contexts/WidgetContext';
 
 const ShareWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // const { t } = useLanguage();
+  const [toast, setToast] = useState<string | null>(null);
+  const { t } = useLanguage();
   const { widgets } = useWidgets();
 
   // Subscribe to the router so `url` is recomputed after client-side navigation
@@ -60,14 +61,19 @@ const ShareWidget: React.FC = () => {
     } else if (navigator.clipboard) {
       try {
         await navigator.clipboard.writeText(url);
-        alert('Link copied to clipboard!');
-      } catch (err) {
+        showToast(t('share_copied'));
+      } catch {
         // Clipboard write can reject (insecure context / denied permission).
-        alert('Could not copy the link. Please copy it from the address bar.');
+        showToast(t('share_copy_failed'));
       }
     } else {
-      alert('Sharing is not supported on this browser. Please copy the URL from the address bar.');
+      showToast(t('share_unsupported'));
     }
+  };
+
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 2200);
   };
 
   return (
@@ -108,11 +114,26 @@ const ShareWidget: React.FC = () => {
             ))}
             <button
               onClick={handleNativeShare}
+              aria-label={t('share_copied')}
               className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform bg-white dark:bg-slate-800 text-slate-700 dark:text-white border border-slate-200 dark:border-slate-700"
-              title="Copy Link / Native Share"
+              title={t('share_copied')}
             >
               <LinkIcon size={20} />
             </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            role="status"
+            aria-live="polite"
+            className="absolute bottom-full mb-2 left-0 whitespace-nowrap bg-slate-900 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-lg"
+          >
+            {toast}
           </motion.div>
         )}
       </AnimatePresence>

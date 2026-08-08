@@ -1,19 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 
 const NotFoundPage: React.FC = () => {
   const { t } = useLanguage();
-
-  useEffect(() => {
-    const previousTitle = document.title;
-    document.title = '404 — Page not found';
-    // Restore on unmount so the 404 title doesn't stick after navigating away
-    // (there's no global title manager to overwrite it on the next route).
-    return () => {
-      document.title = previousTitle;
-    };
-  }, []);
+  useDocumentTitle(t('page_title_404'));
 
   return (
     <section className="min-h-[70vh] flex items-center justify-center px-6">

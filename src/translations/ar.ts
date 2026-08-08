@@ -481,4 +481,15 @@ export const ar: Record<string, string> = {
     a11y_reset: "إعادة تعيين",
     a11y_hide: "إخفاء",
     a11y_persist: "الإعدادات محفوظة عبر الجلسات",
+
+    // Per-page document titles
+    page_title_home: "وسيم — مطوّر Full-Stack ومختص بالذكاء الاصطناعي",
+    page_title_about: "معلومات وعملية العمل — وسيم",
+    page_title_projects: "المشاريع والمهارات — وسيم",
+    page_title_contact: "تواصل معي — وسيم",
+    page_title_404: "الصفحة غير موجودة — وسيم",
+
+    // Share widget toasts
+    share_copy_failed: "تعذّر نسخ الرابط. يرجى نسخه من شريط العنوان.",
+    share_unsupported: "المشاركة غير مدعومة في هذا المتصفح.",
 };
