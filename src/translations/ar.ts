@@ -13,6 +13,7 @@ export const ar: Record<string, string> = {
     hero_subtitle: "مطور شامل ومختص بالذكاء الاصطناعي، أربط بين المنطق المعقد والتصميم البديهي.",
     hero_cta_start: "ابدأ مشروعاً",
     hero_cta_view: "شاهد أعمالي",
+    hero_cta_whatsapp: "تحدّث معي عبر واتساب",
     hero_trust: "موثوق من قبل 10+ عملاء سعداء",
     hero_card_role: "مطور",
     hero_card_desc: "أحول القهوة إلى كود.",
@@ -485,6 +486,7 @@ export const ar: Record<string, string> = {
     page_title_about: "معلومات وعملية العمل — وسيم",
     page_title_projects: "المشاريع والمهارات — وسيم",
     page_title_contact: "تواصل معي — وسيم",
+    page_title_services: "خدمات — وسيم",
     page_title_404: "الصفحة غير موجودة — وسيم",
 
     // Share widget toasts

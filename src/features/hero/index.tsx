@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
+import { useContact } from '@/features/contact/useContact';
 import HeroBackground from './HeroBackground';
 import AnimatedHeadline from './AnimatedHeadline';
 import ProfileCard from './ProfileCard';
@@ -13,6 +14,7 @@ import Logo3D from '@/shared/three/Logo3D';
 const Hero: React.FC = () => {
   const { t, language } = useLanguage();
   const prefersReducedMotion = usePrefersReducedMotion();
+  const contact = useContact();
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -126,6 +128,21 @@ const Hero: React.FC = () => {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="flex flex-wrap gap-3 md:gap-4"
           >
+            {/* PRIMARY CTA — WhatsApp deep link. For the Israeli SMB market a
+                one-tap WhatsApp handoff converts far better than a contact
+                form, so this is the first thing a visitor sees. Brand green
+                #25D366; opens in a new tab so the site stays open behind it. */}
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href={contact.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-[#25D366] text-white rounded-full font-bold text-xs sm:text-sm md:text-base shadow-xl hover:shadow-2xl shadow-green-500/30 transition-all flex items-center gap-1.5 sm:gap-2 md:gap-3"
+            >
+              <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
+              {t('hero_cta_whatsapp')}
+            </motion.a>
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

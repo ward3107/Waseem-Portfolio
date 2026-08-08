@@ -657,6 +657,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <xhtml:link rel="alternate" hreflang="ar" href="${SITE}/?lang=ar" />
   </url>
 
+${simpleEntry(`${SITE}/services`, '0.95')}
 ${simpleEntry(`${SITE}/projects`, '0.9')}
 ${simpleEntry(`${SITE}/about`, '0.9')}
 ${simpleEntry(`${SITE}/contact`, '0.9')}

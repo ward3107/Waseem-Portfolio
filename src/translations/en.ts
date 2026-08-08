@@ -13,6 +13,7 @@ export const en: Record<string, string> = {
     hero_subtitle: "Full-Stack Developer & AI Specialist bridging the gap between complex logic and intuitive design.",
     hero_cta_start: "Start a Project",
     hero_cta_view: "View Work",
+    hero_cta_whatsapp: "Chat on WhatsApp",
     hero_trust: "Trusted by 10+ happy clients",
     hero_card_role: "Developer",
     hero_card_desc: "Turning coffee into code.",
@@ -492,6 +493,7 @@ export const en: Record<string, string> = {
     page_title_about: "About & Process — Waseem",
     page_title_projects: "Projects & Skills — Waseem",
     page_title_contact: "Contact — Waseem",
+    page_title_services: "Services — Waseem",
     page_title_404: "Page not found — Waseem",
 
     // Share widget toasts
