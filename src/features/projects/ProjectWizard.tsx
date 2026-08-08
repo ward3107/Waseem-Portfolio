@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
 import { trackEvent } from '@/lib/browser';
+import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
+import { getAttribution } from '@/lib/attribution';
 
 interface ProjectWizardProps {}
 
@@ -114,56 +116,103 @@ const ProjectWizard: React.FC<ProjectWizardProps> = () => {
             return;
         }
 
-        const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
-        if (!accessKey) {
-            setErrors({ general: t('error_submission_failed') });
-            setIsSubmitting(false);
-            return;
-        }
+        // Attribution: what URL/UTMs did this visitor arrive on? Snapshotted
+        // once on first paint (main.tsx → captureAttribution).
+        const attrib = getAttribution();
 
-        try {
-            const response = await fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    access_key: accessKey,
-                    subject: 'New Project Request from Portfolio Wizard',
-                    from_name: selections.name,
-                    // web3forms' reply-address key is `replyto` (no underscore);
-                    // `reply_to` was ignored, so replies had nowhere to go.
-                    replyto: selections.email,
-                    project_type: selections.type,
-                    vibe: selections.vibe,
-                    budget: selections.budget,
-                    botcheck: '',
-                    message: `
+        // Primary path: insert into the Supabase `leads` table so the data
+        // lives in Waseem's own DB (queryable, attributable, exportable).
+        // Fallback: Web3Forms — for the case where Supabase env isn't set
+        // (dev / an unconfigured deployment) or the insert throws.
+        const submitViaSupabase = async (): Promise<boolean> => {
+            if (!isSupabaseConfigured) return false;
+            const { error } = await supabase.from('leads').insert({
+                name: selections.name,
+                email: selections.email,
+                project_type: selections.type || null,
+                vibe: selections.vibe || null,
+                budget: selections.budget || null,
+                details: selections.details || null,
+                language,
+                utm_source: attrib.utm_source,
+                utm_medium: attrib.utm_medium,
+                utm_campaign: attrib.utm_campaign,
+                referrer: attrib.referrer,
+                landing_path: attrib.landing_path,
+            });
+            if (error) {
+                // Log for debugging; return false so the caller falls back.
+                console.warn('[leads] supabase insert failed, will fall back to Web3Forms:', error.message);
+                return false;
+            }
+            return true;
+        };
+
+        const submitViaWeb3Forms = async (): Promise<{ ok: boolean; msg?: string }> => {
+            const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
+            if (!accessKey) return { ok: false, msg: t('error_submission_failed') };
+
+            try {
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        access_key: accessKey,
+                        subject: 'New Project Request from Portfolio Wizard',
+                        from_name: selections.name,
+                        replyto: selections.email,
+                        project_type: selections.type,
+                        vibe: selections.vibe,
+                        budget: selections.budget,
+                        botcheck: '',
+                        message: `
 Name: ${selections.name}
 Email: ${selections.email}
 Project Type: ${selections.type}
 Vibe/Style: ${selections.vibe}
 Budget Range: ${selections.budget}
+Language: ${language}
+UTM: ${attrib.utm_source || '-'} / ${attrib.utm_medium || '-'} / ${attrib.utm_campaign || '-'}
+Referrer: ${attrib.referrer || '-'}
+Landing path: ${attrib.landing_path || '-'}
 
 Details:
 ${selections.details}
-                    `.trim()
-                }),
-            });
+                        `.trim(),
+                    }),
+                });
+                const result = await response.json();
+                return { ok: !!result.success, msg: result.message };
+            } catch {
+                return { ok: false, msg: t('error_network') };
+            }
+        };
 
-            const result = await response.json();
-            if (result.success) {
+        try {
+            const supaOk = await submitViaSupabase();
+            if (supaOk) {
                 setIsSent(true);
-                // Track analytics event
                 trackEvent('generate_lead', {
-                    form_type: 'project_wizard'
+                    form_type: 'project_wizard',
+                    sink: 'supabase',
+                    utm_source: attrib.utm_source ?? 'direct',
+                });
+                return;
+            }
+            const web = await submitViaWeb3Forms();
+            if (web.ok) {
+                setIsSent(true);
+                trackEvent('generate_lead', {
+                    form_type: 'project_wizard',
+                    sink: 'web3forms',
+                    utm_source: attrib.utm_source ?? 'direct',
                 });
             } else {
-                setErrors({ general: result.message || t('error_submission_failed') });
+                setErrors({ general: web.msg || t('error_submission_failed') });
             }
-        } catch {
-            setErrors({ general: t('error_network') });
         } finally {
             setIsSubmitting(false);
         }
