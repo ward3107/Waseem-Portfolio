@@ -108,7 +108,8 @@
     {
       "@context": "https://schema.org",
       "@type": "Person",
-      "name": "Waseem",
+      "name": "Waseem Abu Aql",
+      "alternateName": ["Vasia", "וסים אבו עקל", "وسيم أبو عقل"],
       "url": "https://waseemp.vercel.app",
       "image": "https://waseemp.vercel.app/assets/waseem-profile.webp",
       "jobTitle": "Full Stack Developer & AI Specialist",
@@ -172,13 +173,19 @@
     }
     </script>
 
-    <!-- LocalBusiness (ProfessionalService) — local SEO for "website designer in Kfar Yasif" -->
+    <!-- LocalBusiness (ProfessionalService) — local SEO for "website designer in Kfar Yasif".
+         TODO — when you have them, append these to `sameAs` below:
+           - Google Business Profile: https://g.page/YOUR_PLACE_ID (or share URL from GBP)
+           - freelancer.com profile URL
+           - xplace profile URL
+         Add them once so Google's entity graph links your website ↔ GBP ↔ citations. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
       "@id": "https://waseemp.vercel.app/#localbusiness",
       "name": "Waseem — Website Designer & Full Stack Developer",
+      "alternateName": ["Vasia", "Vasia by Waseem", "וסים אבו עקל", "وسيم أبو عقل"],
       "image": "https://waseemp.vercel.app/og-image.png",
       "url": "https://waseemp.vercel.app",
       "telephone": "+972534260632",
@@ -200,7 +207,10 @@
         { "@type": "City", "name": "Acre" },
         { "@type": "City", "name": "Karmiel" },
         { "@type": "City", "name": "Nahariya" },
-        { "@type": "City", "name": "Haifa" }
+        { "@type": "City", "name": "Haifa" },
+        { "@type": "City", "name": "Judeide-Maker" },
+        { "@type": "City", "name": "Abu Snan" },
+        { "@type": "City", "name": "Yanuh" }
       ],
       "knowsLanguage": ["he", "ar", "en"],
       "openingHoursSpecification": [
@@ -211,7 +221,7 @@
           "closes": "18:00"
         }
       ],
-      "founder": { "@type": "Person", "name": "Waseem" },
+      "founder": { "@type": "Person", "name": "Waseem Abu Aql" },
       "sameAs": [
         "https://github.com/ward3107",
         "https://www.linkedin.com/in/waseem-abu-akel-334486374/",
@@ -221,10 +231,87 @@
         "@type": "OfferCatalog",
         "name": "Web Development Services",
         "itemListElement": [
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Business Website Design", "description": "Modern, fast, mobile-first brochure and business websites." } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Full Stack Web Applications", "description": "End-to-end web apps with React, Next.js and Node.js." } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI Automation", "description": "Custom AI chatbots and workflow automation." } }
+          { "@type": "Offer", "itemOffered": { "@id": "https://waseemp.vercel.app/#service-small-business" } },
+          { "@type": "Offer", "itemOffered": { "@id": "https://waseemp.vercel.app/#service-bilingual" } },
+          { "@type": "Offer", "itemOffered": { "@id": "https://waseemp.vercel.app/#service-ai-automation" } }
         ]
+      }
+    }
+    </script>
+
+    <!-- Service #1 — Small-business website launch (the 1,000 ₪ tier). Standalone
+         so Google can surface this as its own answer for "בניית אתר לעסק קטן"
+         and "بناء موقع لنشاط تجاري صغير". Priced offer gives price rich results. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "@id": "https://waseemp.vercel.app/#service-small-business",
+      "serviceType": "Small Business Website Design",
+      "name": "Small-Business Website Launch",
+      "description": "Complete small-business website — modern, fast, mobile-first, launched in 1–2 weeks. Includes on-page SEO, LocalBusiness schema, WhatsApp CTA, and Hebrew/Arabic/English support. Ideal for restaurants, salons, clinics, event halls, and family businesses in northern Israel.",
+      "provider": { "@id": "https://waseemp.vercel.app/#localbusiness" },
+      "areaServed": [
+        { "@type": "City", "name": "Kfar Yasif" },
+        { "@type": "City", "name": "Acre" },
+        { "@type": "City", "name": "Karmiel" },
+        { "@type": "City", "name": "Nahariya" },
+        { "@type": "City", "name": "Haifa" },
+        { "@type": "City", "name": "Judeide-Maker" },
+        { "@type": "City", "name": "Abu Snan" },
+        { "@type": "City", "name": "Yanuh" }
+      ],
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Small businesses, freelancers, family businesses, restaurants, clinics"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "1000",
+        "priceCurrency": "ILS",
+        "availability": "https://schema.org/InStock",
+        "priceValidUntil": "2026-12-31",
+        "url": "https://waseemp.vercel.app/#what-i-do"
+      }
+    }
+    </script>
+
+    <!-- Service #2 — Bilingual/multilingual sites (he + ar + en with RTL). Rare
+         specialty for Arab-Israeli SMBs where a one-language site loses half
+         the addressable market. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "@id": "https://waseemp.vercel.app/#service-bilingual",
+      "serviceType": "Bilingual and Multilingual Website Development",
+      "name": "Bilingual Website (Hebrew + Arabic + English)",
+      "description": "Websites built from the ground up for Hebrew, Arabic, and English — with full RTL support, native language switching, and hreflang for search engines. Not machine-translated: real content, real structure, one site that speaks to Jewish and Arab customers equally.",
+      "provider": { "@id": "https://waseemp.vercel.app/#localbusiness" },
+      "areaServed": { "@type": "Country", "name": "Israel" },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Businesses serving mixed Hebrew and Arabic speaking markets"
+      },
+      "availableLanguage": ["he", "ar", "en"]
+    }
+    </script>
+
+    <!-- Service #3 — AI automations (chatbots, workflow, smart forms).
+         Positions this as more than "add ChatGPT" — actual automation delivery. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "@id": "https://waseemp.vercel.app/#service-ai-automation",
+      "serviceType": "AI Automation and Chatbots",
+      "name": "AI Automations",
+      "description": "Custom AI chatbots, intelligent forms, and workflow automation for small businesses. Handles customer inquiries 24/7 in Hebrew, Arabic, and English. Integrations with WhatsApp Business, Google Sheets, and CRMs.",
+      "provider": { "@id": "https://waseemp.vercel.app/#localbusiness" },
+      "areaServed": { "@type": "Country", "name": "Israel" },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Small and medium businesses that need to automate customer interactions"
       }
     }
     </script>
