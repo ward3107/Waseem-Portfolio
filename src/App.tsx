@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { MotionConfig } from 'framer-motion';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Navbar from '@/shared/layout/Navbar';
 import Footer from '@/shared/layout/Footer';
 import AccessibilityToolbar from '@/shared/widgets/AccessibilityToolbar';
@@ -157,6 +158,11 @@ const App: React.FC = () => {
                 <MotionConfig reducedMotion="user">
                   <AppContent />
                 </MotionConfig>
+                {/* Vercel Analytics — auto no-op outside production, and the
+                    script/beacon are served same-origin via /_vercel/insights
+                    on Vercel deployments. Consent-Mode wiring lives in
+                    CookieBanner (analytics_storage gate). */}
+                <Analytics />
               </BrowserRouter>
             </AdminAuthProvider>
           </WidgetProvider>

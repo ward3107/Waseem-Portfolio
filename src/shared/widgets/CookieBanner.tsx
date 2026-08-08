@@ -10,6 +10,31 @@ interface CookiePreferences {
   marketing: boolean;
 }
 
+// Google Consent Mode v2 signal mapping. The DEFAULT state (denied) is set
+// synchronously in index.html <head> before any script loads; this only
+// UPDATES the signals to reflect the visitor's choice.
+//
+// analytics_storage        → GA4, GTM analytics tags
+// ad_storage/ad_user_data/ad_personalization → Google Ads, remarketing
+// functionality_storage / security_storage stay granted (essential).
+const applyConsentMode = (prefs: CookiePreferences): void => {
+  // dataLayer is created by the default-consent inline script in index.html.
+  // If for any reason it isn't there (SSR, tests), silently no-op — nothing
+  // downstream will fire without the queue anyway.
+  const w = window as unknown as { dataLayer?: unknown[] };
+  if (!w.dataLayer) return;
+  w.dataLayer.push([
+    'consent',
+    'update',
+    {
+      analytics_storage: prefs.analytics ? 'granted' : 'denied',
+      ad_storage: prefs.marketing ? 'granted' : 'denied',
+      ad_user_data: prefs.marketing ? 'granted' : 'denied',
+      ad_personalization: prefs.marketing ? 'granted' : 'denied',
+    },
+  ]);
+};
+
 const CookieBanner: React.FC = () => {
   const { t, dir } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
@@ -28,6 +53,20 @@ const CookieBanner: React.FC = () => {
       const timer = setTimeout(() => setIsVisible(true), 1000);
       return () => clearTimeout(timer);
     }
+    // Returning visitor: re-apply their saved consent to the dataLayer so
+    // consent-aware tags (GA4, etc.) get the correct signals on this page load
+    // too — otherwise the default 'denied' from index.html would stick.
+    try {
+      const parsed = JSON.parse(savedConsent) as Partial<CookiePreferences>;
+      applyConsentMode({
+        necessary: true,
+        analytics: parsed.analytics === true,
+        marketing: parsed.marketing === true,
+      });
+    } catch {
+      // Corrupt payload — treat as no-consent, show the banner again.
+      setIsVisible(true);
+    }
   }, []);
 
   const savePreferences = (prefs: CookiePreferences) => {
@@ -35,7 +74,7 @@ const CookieBanner: React.FC = () => {
     // (Safari private mode), otherwise Accept/Decline throws and the banner
     // re-appears on every load and never records consent.
     safeSetItem('cookie-consent', JSON.stringify(prefs));
-    // Apply logic here (e.g., enable Google Analytics if prefs.analytics is true)
+    applyConsentMode(prefs);
     setIsVisible(false);
   };
 

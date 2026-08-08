@@ -46,6 +46,28 @@
         } catch (e) {}
       })();
     </script>
+
+    <!-- Google Consent Mode v2 — DEFAULT state. Must run before any analytics
+         script (GA4, Google Ads, GTM). Everything ad/analytics-related starts
+         DENIED; the CookieBanner (src/shared/widgets/CookieBanner.tsx) calls
+         gtag('consent','update',...) after the visitor makes a choice, and
+         re-applies the saved choice on subsequent visits. `wait_for_update`
+         gives the banner up to 500ms to fire an update() before consent-aware
+         scripts commit to a decision. -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+        wait_for_update: 500
+      });
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
