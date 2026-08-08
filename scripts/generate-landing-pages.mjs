@@ -661,6 +661,8 @@ ${simpleEntry(`${SITE}/services`, '0.95')}
 ${simpleEntry(`${SITE}/projects`, '0.9')}
 ${simpleEntry(`${SITE}/about`, '0.9')}
 ${simpleEntry(`${SITE}/contact`, '0.9')}
+${simpleEntry(`${SITE}/privacy`, '0.3')}
+${simpleEntry(`${SITE}/accessibility`, '0.3')}
 
 ${cityEntries}
 

@@ -194,13 +194,22 @@ const Footer: React.FC = () => {
           <p>
             © {currentYear} Waseem. {t('footer_rights')}
           </p>
-          <div className="flex gap-8 font-medium">
-            <button
-              onClick={() => openLegal('privacy')}
+          <div className="flex flex-wrap gap-4 sm:gap-6 font-medium justify-center">
+            {/* Privacy is a full page (Amendment 13 comprehensive statement)
+                so search engines can crawl and cite it. Terms stays as a
+                lightweight modal for now — no full page yet. */}
+            <Link
+              to="/privacy"
               className="hover:text-brand-purple hover:underline underline-offset-4 transition-all duration-300"
             >
               {t('footer_privacy')}
-            </button>
+            </Link>
+            <Link
+              to="/accessibility"
+              className="hover:text-brand-purple hover:underline underline-offset-4 transition-all duration-300"
+            >
+              {t('footer_accessibility')}
+            </Link>
             <button
               onClick={() => openLegal('terms')}
               className="hover:text-brand-cyan hover:underline underline-offset-4 transition-all duration-300"

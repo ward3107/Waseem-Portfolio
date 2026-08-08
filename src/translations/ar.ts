@@ -487,6 +487,9 @@ export const ar: Record<string, string> = {
     page_title_projects: "المشاريع والمهارات — وسيم",
     page_title_contact: "تواصل معي — وسيم",
     page_title_services: "خدمات — وسيم",
+    page_title_privacy: "سياسة الخصوصية — وسيم",
+    page_title_accessibility: "بيان إمكانية الوصول — وسيم",
+    footer_accessibility: "إمكانية الوصول",
     page_title_404: "الصفحة غير موجودة — وسيم",
 
     // Share widget toasts

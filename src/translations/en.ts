@@ -494,6 +494,9 @@ export const en: Record<string, string> = {
     page_title_projects: "Projects & Skills — Waseem",
     page_title_contact: "Contact — Waseem",
     page_title_services: "Services — Waseem",
+    page_title_privacy: "Privacy Policy — Waseem",
+    page_title_accessibility: "Accessibility Statement — Waseem",
+    footer_accessibility: "Accessibility",
     page_title_404: "Page not found — Waseem",
 
     // Share widget toasts

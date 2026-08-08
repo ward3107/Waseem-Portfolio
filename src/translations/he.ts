@@ -487,6 +487,9 @@ export const he: Record<string, string> = {
     page_title_projects: "פרויקטים וכישורים — וסים",
     page_title_contact: "צור קשר — וסים",
     page_title_services: "שירותים — וסים",
+    page_title_privacy: "מדיניות פרטיות — וסים",
+    page_title_accessibility: "הצהרת נגישות — וסים",
+    footer_accessibility: "נגישות",
     page_title_404: "הדף לא נמצא — וסים",
 
     // Share widget toasts

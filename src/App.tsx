@@ -18,6 +18,8 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import ServicesPage from './pages/ServicesPage';
 import FromGbpPage from './pages/FromGbpPage';
+import PrivacyPage from './pages/PrivacyPage';
+import AccessibilityPage from './pages/AccessibilityPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ShareTestimonialPage from './pages/ShareTestimonialPage';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
@@ -107,6 +109,8 @@ const AppContent: React.FC = () => {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/from-gbp" element={<FromGbpPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/accessibility" element={<AccessibilityPage />} />
         <Route path="/share-testimonial" element={<ShareTestimonialPage />} />
         <Route path="/admin/login" element={<LoginPage />} />
         {/* /admin/mfa sits outside RequireAuth so it can host both the

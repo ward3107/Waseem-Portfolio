@@ -1,3 +1,5 @@
+import typography from '@tailwindcss/typography';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -46,5 +48,10 @@ export default {
       }
     }
   },
-  plugins: [],
+  plugins: [
+    // Provides the `prose` utility used by /privacy and /accessibility for
+    // legal-document typography. Small footprint — only pages that opt in
+    // via `className="prose"` ship the styles.
+    typography,
+  ],
 }
