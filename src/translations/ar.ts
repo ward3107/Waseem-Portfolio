@@ -86,7 +86,6 @@ export const ar: Record<string, string> = {
     about_stat_1: "حل المشكلات",
     about_stat_2: "الابتكار",
     about_stat_3: "الموثوقية",
-    about_btn_cv: "تحميل السيرة الذاتية",
     about_narrative_1: "بدأت بسؤال بسيط: \"كيف يمكننا البناء بشكل أفضل؟\". قادني هذا السؤال لإتقان التقنيات بالكامل، من قاعدة البيانات إلى الرسوم المتحركة الدقيقة.",
     about_narrative_2: "اليوم، أستفيد من هذا الإتقان لمساعدة شركات مثل شركتك على النمو. مهمتي بسيطة:",
     about_mission: "إزالة المخاطر التقنية وتقديم منتج يعمل ببساطة.",
@@ -328,7 +327,6 @@ export const ar: Record<string, string> = {
     footer_privacy: "سياسة الخصوصية",
     footer_terms: "شروط الخدمة",
     footer_made_with: "صنع بـ ❤️ بواسطة",
-    footer_love: " באהבה",
     footer_tel_aviv: "وسيم",
 
     // Blog

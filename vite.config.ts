@@ -19,6 +19,10 @@ export default defineConfig({
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-framer': ['framer-motion'],
           'vendor-lucide': ['lucide-react'],
+          // Split the WebGL stack into its own cacheable chunk. Only pulled
+          // in by the 3D logo scene (src/shared/three/*) — no reason for it
+          // to bloat the main bundle.
+          'vendor-three': ['three'],
         },
       },
     },

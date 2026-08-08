@@ -86,7 +86,6 @@ export const en: Record<string, string> = {
     about_stat_1: "Problem Solving",
     about_stat_2: "Innovation",
     about_stat_3: "Reliability",
-    about_btn_cv: "Download CV",
     about_narrative_1: "I started with a simple question: \"How can we build better?\". That question drove me to master the entire stack, from the database to the pixel-perfect animation.",
     about_narrative_2: "Today, I leverage that mastery to help businesses like yours scale. My mission is simple:",
     about_mission: "To eliminate technical risk and deliver a product that just works.",
