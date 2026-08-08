@@ -25,6 +25,10 @@ dist-ssr
 .env.local
 .env.*.local
 
+# NAP audit — real config carries contact details, reports are per-run.
+scripts/nap-audit.config.mjs
+/.nap-audit/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
