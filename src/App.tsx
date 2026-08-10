@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { MotionConfig } from 'framer-motion';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Navbar from '@/shared/layout/Navbar';
 import Footer from '@/shared/layout/Footer';
 import AccessibilityToolbar from '@/shared/widgets/AccessibilityToolbar';
@@ -15,6 +16,10 @@ import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import ServicesPage from './pages/ServicesPage';
+import FromGbpPage from './pages/FromGbpPage';
+import PrivacyPage from './pages/PrivacyPage';
+import AccessibilityPage from './pages/AccessibilityPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ShareTestimonialPage from './pages/ShareTestimonialPage';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
@@ -90,15 +95,22 @@ const AppContent: React.FC = () => {
   // widgets). Admin, and the customer feedback page — the latter has its own
   // full-bleed cream/sage design, and the site's transparent navbar (light
   // text meant for the hero) rendered washed-out and out of place on top of it.
-  const isStandalone = isAdmin || pathname === '/share-testimonial';
+  // /from-gbp is a pure UTM-stamping redirect (renders null) — no chrome so
+  // there's no 1-frame flash of navbar before the client-side redirect fires.
+  const isStandalone =
+    isAdmin || pathname === '/share-testimonial' || pathname === '/from-gbp';
 
   const routes = (
     <Suspense fallback={<SectionSkeleton />}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/services" element={<ServicesPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/from-gbp" element={<FromGbpPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/accessibility" element={<AccessibilityPage />} />
         <Route path="/share-testimonial" element={<ShareTestimonialPage />} />
         <Route path="/admin/login" element={<LoginPage />} />
         {/* /admin/mfa sits outside RequireAuth so it can host both the
@@ -150,6 +162,11 @@ const App: React.FC = () => {
                 <MotionConfig reducedMotion="user">
                   <AppContent />
                 </MotionConfig>
+                {/* Vercel Analytics — auto no-op outside production, and the
+                    script/beacon are served same-origin via /_vercel/insights
+                    on Vercel deployments. Consent-Mode wiring lives in
+                    CookieBanner (analytics_storage gate). */}
+                <Analytics />
               </BrowserRouter>
             </AdminAuthProvider>
           </WidgetProvider>

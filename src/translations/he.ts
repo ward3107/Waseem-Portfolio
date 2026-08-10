@@ -13,6 +13,7 @@ export const he: Record<string, string> = {
     hero_subtitle: "מפתח פול-סטאק ומומחה AI המגשר על הפער בין לוגיקה מורכבת לעיצוב אינטואיטיבי.",
     hero_cta_start: "התחל פרויקט",
     hero_cta_view: "צפה בעבודות",
+    hero_cta_whatsapp: "דברו איתי בוואטסאפ",
     hero_trust: "בשימוש ע״י 10+ לקוחות מרוצים",
     hero_card_role: "מפתח",
     hero_card_desc: "הופך קפה לקוד.",
@@ -485,6 +486,10 @@ export const he: Record<string, string> = {
     page_title_about: "אודות ותהליך — וסים",
     page_title_projects: "פרויקטים וכישורים — וסים",
     page_title_contact: "צור קשר — וסים",
+    page_title_services: "שירותים — וסים",
+    page_title_privacy: "מדיניות פרטיות — וסים",
+    page_title_accessibility: "הצהרת נגישות — וסים",
+    footer_accessibility: "נגישות",
     page_title_404: "הדף לא נמצא — וסים",
 
     // Share widget toasts

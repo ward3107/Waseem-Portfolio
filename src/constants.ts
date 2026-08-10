@@ -24,6 +24,9 @@ export const SERVICE_AREAS: { he: string; ar: string; en: string; slug: string }
   { he: 'כרמיאל', ar: 'كرمئيل', en: 'Karmiel', slug: 'web-design-karmiel' },
   { he: 'נהריה', ar: 'نهاريا', en: 'Nahariya', slug: 'web-design-nahariya' },
   { he: 'חיפה', ar: 'حيفا', en: 'Haifa', slug: 'web-design-haifa' },
+  { he: "ג'דיידה-מכר", ar: 'جديدة المكر', en: 'Judeide-Maker', slug: 'web-design-judeide-maker' },
+  { he: 'אבו סנאן', ar: 'أبو سنان', en: 'Abu Snan', slug: 'web-design-abu-snan' },
+  { he: "ינוח-ג'ת", ar: 'يانوح - جث', en: 'Yanuh', slug: 'web-design-yanuh' },
 ];
 
 export const NAV_LINKS: Record<Language, NavLink[]> = {
