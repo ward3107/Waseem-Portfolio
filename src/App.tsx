@@ -21,26 +21,27 @@ import FromGbpPage from './pages/FromGbpPage';
 import PrivacyPage from './pages/PrivacyPage';
 import AccessibilityPage from './pages/AccessibilityPage';
 import NotFoundPage from './pages/NotFoundPage';
-import ShareTestimonialPage from './pages/ShareTestimonialPage';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { WidgetProvider } from './contexts/WidgetContext';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { AdminAuthProvider } from './contexts/AdminAuthContext';
-import RequireAuth from '@/features/admin/RequireAuth';
 
-// The three public pages are bundled eagerly. Each is small (a few kB
-// after gzip), and lazy-loading them caused a visible flash of the
-// previous page's paint while React Router waited for the chunk to
-// arrive after a nav click. Admin routes stay lazy — the admin bundle
-// is unrelated to what a visitor loads.
-const LoginPage = lazy(() => import('./pages/admin/LoginPage'));
-const MfaPage = lazy(() => import('./pages/admin/MfaPage'));
-const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
-// Admin page components live inside the shell via nested routes. Grouped in
-// a single lazy import so they arrive together with the shell chunk.
-const AdminPages = lazy(() =>
-  import('@/features/admin/pages/_bundle').then((m) => ({ default: m.default }))
-);
+// The public pages are bundled eagerly. Each is small (a few kB after gzip),
+// and lazy-loading them caused a visible flash of the previous page's paint
+// while React Router waited for the chunk to arrive after a nav click.
+//
+// The entire /admin tree — including its Supabase-backed auth provider —
+// stays behind this one lazy import. It is the only thing keeping
+// supabase-js (GoTrue + Realtime + PostgREST) out of the chunk every public
+// visitor downloads, so nothing from './pages/admin/AdminRoutes' or
+// '@/contexts/AdminAuthContext' may be imported eagerly here.
+const AdminRoutes = lazy(() => import('./pages/admin/AdminRoutes'));
+
+// /share-testimonial is standalone: visitors arrive by direct link (QR code,
+// WhatsApp), never by clicking through the site nav, so the flash-on-nav
+// reason for keeping public pages eager doesn't apply. It is lazy because it
+// posts to Supabase via '@/lib/content/reviews' — held eagerly, that single
+// import put supabase-js back in the entry chunk for every visitor.
+const ShareTestimonialPage = lazy(() => import('./pages/ShareTestimonialPage'));
 
 // Skip link component with proper accessibility
 const SkipLink: React.FC = () => {
@@ -97,8 +98,7 @@ const AppContent: React.FC = () => {
   // text meant for the hero) rendered washed-out and out of place on top of it.
   // /from-gbp is a pure UTM-stamping redirect (renders null) — no chrome so
   // there's no 1-frame flash of navbar before the client-side redirect fires.
-  const isStandalone =
-    isAdmin || pathname === '/share-testimonial' || pathname === '/from-gbp';
+  const isStandalone = isAdmin || pathname === '/share-testimonial' || pathname === '/from-gbp';
 
   const routes = (
     <Suspense fallback={<SectionSkeleton />}>
@@ -112,29 +112,8 @@ const AppContent: React.FC = () => {
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/accessibility" element={<AccessibilityPage />} />
         <Route path="/share-testimonial" element={<ShareTestimonialPage />} />
-        <Route path="/admin/login" element={<LoginPage />} />
-        {/* /admin/mfa sits outside RequireAuth so it can host both the
-            login-time challenge (aal1 → aal2) and the enrollment flow
-            without a redirect loop. It gates itself on `user` inside. */}
-        <Route path="/admin/mfa" element={<MfaPage />} />
-        <Route
-          path="/admin"
-          element={<RequireAuth><AdminDashboard /></RequireAuth>}
-        >
-          <Route index element={<AdminPages page="overview" />} />
-          <Route path="projects" element={<AdminPages page="projects-list" />} />
-          <Route path="projects/new" element={<AdminPages page="project-editor" />} />
-          <Route path="projects/:id" element={<AdminPages page="project-editor" />} />
-          <Route path="certifications" element={<AdminPages page="certs-list" />} />
-          <Route path="certifications/new" element={<AdminPages page="cert-editor" />} />
-          <Route path="certifications/:id" element={<AdminPages page="cert-editor" />} />
-          <Route path="reviews" element={<AdminPages page="reviews-list" />} />
-          <Route path="reviews/new" element={<AdminPages page="review-editor" />} />
-          <Route path="reviews/:id" element={<AdminPages page="review-editor" />} />
-          <Route path="collect-testimonials" element={<AdminPages page="collect-testimonials" />} />
-          <Route path="media" element={<AdminPages page="media" />} />
-          <Route path="settings" element={<AdminPages page="settings" />} />
-        </Route>
+        {/* Descendant routes — the whole admin tree lives in its own chunk. */}
+        <Route path="/admin/*" element={<AdminRoutes />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
@@ -154,21 +133,19 @@ const App: React.FC = () => {
       <LanguageProvider>
         <ThemeProvider>
           <WidgetProvider>
-            <AdminAuthProvider>
-              <BrowserRouter>
-                {/* reducedMotion="user" makes every framer-motion animation on
+            <BrowserRouter>
+              {/* reducedMotion="user" makes every framer-motion animation on
                     the site honor the OS prefers-reduced-motion setting,
                     including components that don't check it manually. */}
-                <MotionConfig reducedMotion="user">
-                  <AppContent />
-                </MotionConfig>
-                {/* Vercel Analytics — auto no-op outside production, and the
+              <MotionConfig reducedMotion="user">
+                <AppContent />
+              </MotionConfig>
+              {/* Vercel Analytics — auto no-op outside production, and the
                     script/beacon are served same-origin via /_vercel/insights
                     on Vercel deployments. Consent-Mode wiring lives in
                     CookieBanner (analytics_storage gate). */}
-                <Analytics />
-              </BrowserRouter>
-            </AdminAuthProvider>
+              <Analytics />
+            </BrowserRouter>
           </WidgetProvider>
         </ThemeProvider>
       </LanguageProvider>

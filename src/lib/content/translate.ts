@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient';
+import { db } from '@/lib/content/db';
 import type { Language, LocalizedText } from '@/types';
 
 // Callers guess source language from which UI tab or site locale is active,
@@ -23,10 +23,8 @@ export function detectLanguage(text: string): Language {
 // receives all three localized variants. Never throws — a failure of any
 // kind falls back to duplicating the original text into every language,
 // so a review submission is never blocked by a translation problem.
-export async function translateToAll(
-  text: string,
-  source: Language,
-): Promise<LocalizedText> {
+export async function translateToAll(text: string, source: Language): Promise<LocalizedText> {
+  const supabase = await db();
   const trimmed = text.trim();
   const fallback: LocalizedText = { en: trimmed, he: trimmed, ar: trimmed };
   if (!trimmed) return fallback;
@@ -38,10 +36,9 @@ export async function translateToAll(
   const effectiveSource: Language = detected !== source ? detected : source;
 
   try {
-    const { data, error } = await supabase.functions.invoke<LocalizedText>(
-      'translate-review',
-      { body: { text: trimmed, source: effectiveSource } },
-    );
+    const { data, error } = await supabase.functions.invoke<LocalizedText>('translate-review', {
+      body: { text: trimmed, source: effectiveSource },
+    });
     if (error || !data) {
       console.warn('[translate] falling back — invoke failed:', error);
       return fallback;

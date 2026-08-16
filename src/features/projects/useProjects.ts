@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Project } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { isSupabaseConfigured } from '@/lib/supabaseClient';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { listProjectRows } from '@/lib/content/projects';
 import { projectRowToModel } from '@/lib/content/mappers';
 import { getLocalizedProjects } from '@/features/projects/data';

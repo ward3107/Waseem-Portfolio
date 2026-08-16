@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { submitPublicReview } from '@/lib/content/reviews';
-import { isSupabaseConfigured } from '@/lib/supabaseClient';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { trackEvent } from '@/lib/browser';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import { useContact } from '@/features/contact/useContact';

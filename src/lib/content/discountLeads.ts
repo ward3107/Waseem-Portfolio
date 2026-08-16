@@ -1,4 +1,5 @@
-import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
+import { db } from '@/lib/content/db';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 
 export interface DiscountLeadInput {
   name: string;
@@ -16,6 +17,7 @@ export interface DiscountLeadInput {
 export async function submitDiscountLead(input: DiscountLeadInput): Promise<boolean> {
   if (!isSupabaseConfigured) return false;
   try {
+    const supabase = await db();
     const { error } = await supabase.from('discount_leads').insert({
       name: input.name,
       contact: input.contact,

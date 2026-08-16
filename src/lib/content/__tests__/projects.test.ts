@@ -36,8 +36,16 @@ describe('projects data access', () => {
 
   it('inserts on create', async () => {
     await createProject({
-      slug: 'x', title: 'X', category: 'Web', description: { en: 'x' },
-      image_url: null, tech: [], link: null, github: null, screenshots: [], sort_order: 0,
+      slug: 'x',
+      title: 'X',
+      category: 'Web',
+      description: { en: 'x' },
+      image_url: null,
+      tech: [],
+      link: null,
+      github: null,
+      screenshots: [],
+      sort_order: 0,
     });
     expect(mocks.insert).toHaveBeenCalled();
   });

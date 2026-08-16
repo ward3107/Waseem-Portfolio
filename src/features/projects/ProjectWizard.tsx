@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { ArrowRight, ArrowLeft, Check, Sparkles } from 'lucide-react';
 import { trackEvent } from '@/lib/browser';
-import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { getAttribution } from '@/lib/attribution';
 
 interface ProjectWizardProps {}
@@ -126,6 +126,12 @@ const ProjectWizard: React.FC<ProjectWizardProps> = () => {
         // (dev / an unconfigured deployment) or the insert throws.
         const submitViaSupabase = async (): Promise<boolean> => {
             if (!isSupabaseConfigured) return false;
+            // Imported here rather than at module scope: this wizard renders
+            // inside <Contact>, which /contact loads eagerly, so a top-level
+            // import put all of supabase-js (~56 KB gzipped) in the entry
+            // chunk every visitor downloads — to serve a client that is only
+            // ever used on this one form submission.
+            const { supabase } = await import('@/lib/supabaseClient');
             const { error } = await supabase.from('leads').insert({
                 name: selections.name,
                 email: selections.email,

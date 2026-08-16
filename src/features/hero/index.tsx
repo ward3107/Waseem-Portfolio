@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight, ArrowLeft, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { useContact } from '@/features/contact/useContact';
 import HeroBackground from './HeroBackground';
@@ -15,6 +16,12 @@ const Hero: React.FC = () => {
   const { t, language } = useLanguage();
   const prefersReducedMotion = usePrefersReducedMotion();
   const contact = useContact();
+  // Matches the `lg:` breakpoint the logo's wrapper is gated on below. The
+  // wrapper's `hidden lg:block` only hides the element in CSS — React still
+  // mounted <Logo3D>, which fired its dynamic import and pulled the ~127 KB
+  // (gzipped) three.js chunk onto every phone, for a logo that is
+  // display:none there. Gating the mount keeps that chunk desktop-only.
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -205,7 +212,9 @@ const Hero: React.FC = () => {
               clicks meant for the card (the canvas re-enables events itself). */}
           <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 -left-40 xl:-left-52 w-40 h-40 xl:w-52 xl:h-52 z-0 pointer-events-none">
             <div className="w-full h-full pointer-events-auto">
-              <Logo3D className="w-full h-full" enable3D={!prefersReducedMotion} />
+              {isDesktop && (
+                <Logo3D className="w-full h-full" enable3D={!prefersReducedMotion} />
+              )}
             </div>
           </div>
 

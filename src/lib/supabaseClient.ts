@@ -1,11 +1,10 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { isSupabaseConfigured, supabaseUrl, supabaseAnonKey } from '@/lib/supabaseConfig';
 
-const url = import.meta.env.VITE_SUPABASE_URL;
-const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-/** True when both env vars are present. The site still renders (with fallback
- *  content) when Supabase is not configured, so we never throw at import time. */
-export const isSupabaseConfigured = Boolean(url && anonKey);
+// Re-exported for backwards compatibility. Prefer importing this from
+// '@/lib/supabaseConfig' directly — modules on the public site's eager path
+// must not reach this file, or supabase-js lands in the main entry chunk.
+export { isSupabaseConfigured };
 
 if (!isSupabaseConfigured && import.meta.env.DEV) {
   // Loud in dev so nobody demos the site with admin sign-in silently pointing
@@ -17,7 +16,4 @@ if (!isSupabaseConfigured && import.meta.env.DEV) {
   );
 }
 
-export const supabase: SupabaseClient = createClient(
-  url ?? 'http://localhost:54321',
-  anonKey ?? 'public-anon-key-placeholder'
-);
+export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey);

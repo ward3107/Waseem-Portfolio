@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient';
+import { db } from '@/lib/content/db';
 import type { SiteSettingsRow } from '@/types';
 
 /**
@@ -6,6 +6,7 @@ import type { SiteSettingsRow } from '@/types';
  * by both the admin editor and the public site's useSiteSettings hook.
  */
 export async function getSettings(): Promise<SiteSettingsRow | null> {
+  const supabase = await db();
   const { data, error } = await supabase
     .from('site_settings')
     .select('*')
@@ -18,6 +19,7 @@ export async function getSettings(): Promise<SiteSettingsRow | null> {
 export type SettingsPatch = Partial<Omit<SiteSettingsRow, 'id' | 'updated_at'>>;
 
 export async function updateSettings(patch: SettingsPatch): Promise<void> {
+  const supabase = await db();
   const { error } = await supabase.from('site_settings').update(patch).eq('id', true);
   if (error) throw error;
 }

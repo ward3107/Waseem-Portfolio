@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient';
+import { db } from '@/lib/content/db';
 
 const BUCKET = 'assets';
 
@@ -13,6 +13,7 @@ export interface MediaAsset {
 /** Recursively walk the assets bucket. Bucket root + one level of folders
  *  is what the site uses today (projects/<slug>/, certifications/<slug>/). */
 export async function listAssets(): Promise<MediaAsset[]> {
+  const supabase = await db();
   const results: MediaAsset[] = [];
   const seen = new Set<string>();
 
@@ -47,6 +48,7 @@ export async function listAssets(): Promise<MediaAsset[]> {
 
 export async function deleteAssets(paths: string[]): Promise<void> {
   if (paths.length === 0) return;
+  const supabase = await db();
   const { error } = await supabase.storage.from(BUCKET).remove(paths);
   if (error) throw error;
 }
@@ -57,6 +59,7 @@ export interface AssetUsage {
   certifications: { id: string; slug: string }[];
 }
 export async function getAssetUsage(url: string): Promise<AssetUsage> {
+  const supabase = await db();
   // Fetch project rows in two typed queries — one for the cover URL (an
   // eq on a text column) and one for the screenshots array — instead of
   // .or()-interpolating the URL into a PostgREST filter string. The .or()

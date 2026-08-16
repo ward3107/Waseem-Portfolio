@@ -48,7 +48,7 @@ export const REVIEW_SCRIPTS: Record<ReviewScriptLang, ReviewScriptSet> = {
 export const buildHandoffMessage = (
   lang: ReviewScriptLang,
   clientName: string,
-  handoffUrl: string,
+  handoffUrl: string
 ): string => {
   if (lang === 'ar') {
     return (

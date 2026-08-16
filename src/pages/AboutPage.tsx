@@ -1,12 +1,15 @@
-import React, { lazy, Suspense } from 'react';
+import React from 'react';
 import AboutTimeline from '@/features/about/AboutTimeline';
-import SectionSkeleton from '@/shared/ui/SectionSkeleton';
+import Reviews from '@/features/reviews/Reviews';
+import Process from '@/features/home/Process';
+import FAQ from '@/features/home/FAQ';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 
-const Reviews = lazy(() => import('@/features/reviews/Reviews'));
-const Process = lazy(() => import('@/features/home/Process'));
-const FAQ = lazy(() => import('@/features/home/FAQ'));
+// Static rather than lazy — see the note in HomePage.tsx. Each section
+// rendered unconditionally on mount, so the chunks were fetched immediately
+// regardless; the split only bought a round trip and a skeleton that resized
+// the page under the reader.
 
 const AboutPage: React.FC = () => {
   const { t } = useLanguage();
@@ -14,15 +17,9 @@ const AboutPage: React.FC = () => {
   return (
     <>
       <AboutTimeline />
-      <Suspense fallback={null}>
-        <Reviews />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <Process />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <FAQ />
-      </Suspense>
+      <Reviews />
+      <Process />
+      <FAQ />
     </>
   );
 };

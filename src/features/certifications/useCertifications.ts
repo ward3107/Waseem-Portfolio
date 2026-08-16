@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Certification } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { isSupabaseConfigured } from '@/lib/supabaseClient';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { listCertRows } from '@/lib/content/certifications';
 import { certRowToModel } from '@/lib/content/mappers';
 import { CERTIFICATIONS } from '@/features/certifications/data';

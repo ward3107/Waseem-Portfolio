@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient';
+import { db } from '@/lib/content/db';
 import { translateToAll } from '@/lib/content/translate';
 import type { Language, ReviewRow } from '@/types';
 
@@ -8,6 +8,7 @@ export type ReviewInput = Omit<ReviewRow, 'id' | 'created_at' | 'updated_at'>;
 // but the explicit filter keeps the intent obvious in the code and avoids
 // rendering rejected rows for an authenticated admin viewing the public site.
 export async function listReviewRows(): Promise<ReviewRow[]> {
+  const supabase = await db();
   const { data, error } = await supabase
     .from('reviews')
     .select('*')
@@ -19,6 +20,7 @@ export async function listReviewRows(): Promise<ReviewRow[]> {
 
 // Admin sees everything — pending/approved/rejected — so it can moderate.
 export async function listAllReviewRows(): Promise<ReviewRow[]> {
+  const supabase = await db();
   const { data, error } = await supabase
     .from('reviews')
     .select('*')
@@ -54,6 +56,7 @@ export interface PublicReviewSubmission {
 const MISSING_COLUMN_CODES = new Set(['PGRST204', '42703']);
 
 export async function submitPublicReview(input: PublicReviewSubmission): Promise<void> {
+  const supabase = await db();
   const [text, helped] = await Promise.all([
     translateToAll(input.quote, input.language),
     translateToAll(input.helpedWith, input.language),
@@ -89,21 +92,25 @@ export async function submitPublicReview(input: PublicReviewSubmission): Promise
 }
 
 export async function createReview(input: ReviewInput): Promise<void> {
+  const supabase = await db();
   const { error } = await supabase.from('reviews').insert(input);
   if (error) throw error;
 }
 
 export async function updateReview(id: string, input: Partial<ReviewInput>): Promise<void> {
+  const supabase = await db();
   const { error } = await supabase.from('reviews').update(input).eq('id', id);
   if (error) throw error;
 }
 
 export async function deleteReview(id: string): Promise<void> {
+  const supabase = await db();
   const { error } = await supabase.from('reviews').delete().eq('id', id);
   if (error) throw error;
 }
 
 export async function reorderReviews(orderedIds: string[]): Promise<void> {
+  const supabase = await db();
   const updates = orderedIds.map((id, i) =>
     supabase.from('reviews').update({ sort_order: i }).eq('id', id)
   );

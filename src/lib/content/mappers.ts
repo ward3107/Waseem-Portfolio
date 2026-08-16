@@ -1,6 +1,11 @@
 import type {
-  Language, Project, Certification, Review,
-  ProjectRow, CertificationRow, ReviewRow,
+  Language,
+  Project,
+  Certification,
+  Review,
+  ProjectRow,
+  CertificationRow,
+  ReviewRow,
 } from '@/types';
 import { localized } from '@/lib/localized';
 
