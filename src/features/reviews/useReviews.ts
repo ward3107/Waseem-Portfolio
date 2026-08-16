@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Review } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { isSupabaseConfigured } from '@/lib/supabaseClient';
+import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { listReviewRows } from '@/lib/content/reviews';
 import { reviewRowToModel } from '@/lib/content/mappers';
 import { REVIEWS } from '@/features/reviews/data';

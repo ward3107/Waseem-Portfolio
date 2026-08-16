@@ -23,6 +23,14 @@ export default defineConfig({
           // in by the 3D logo scene (src/shared/three/*) — no reason for it
           // to bloat the main bundle.
           'vendor-three': ['three'],
+          // supabase-js (GoTrue + Realtime + PostgREST) is imported only from
+          // lazy chunks: the /admin tree and /share-testimonial. Because two
+          // separate async chunks share it, Rollup would otherwise hoist it
+          // into their nearest common ancestor — the entry chunk — putting
+          // ~110 KB of auth/websocket code in front of every public visitor.
+          // Naming it here keeps it a sibling chunk that only those routes
+          // pull in.
+          'vendor-supabase': ['@supabase/supabase-js'],
         },
       },
     },
