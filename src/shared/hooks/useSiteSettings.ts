@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
+import { getSettings } from '@/lib/content/settings';
 import type { SiteSettingsRow } from '@/types';
 
 /**
@@ -27,10 +28,9 @@ let settled = false;
 
 function loadSettings(): Promise<Settings> {
   if (!settingsPromise) {
-    // Imported dynamically so supabase-js stays out of the main entry chunk —
-    // the whole public site renders from constants until this resolves.
-    settingsPromise = import('@/lib/content/settings')
-      .then((m) => m.getSettings())
+    // `getSettings` resolves the Supabase client lazily via lib/content/db,
+    // so importing it here does not put supabase-js on the critical path.
+    settingsPromise = getSettings()
       .catch(() => null) // keep null; consumers use their defaults
       .then((s) => {
         settingsCache = s;
@@ -53,7 +53,9 @@ export function useSiteSettings(): { settings: Settings; loading: boolean } {
       setSettings(s);
       setLoading(false);
     });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, []);
 
   return { settings, loading };

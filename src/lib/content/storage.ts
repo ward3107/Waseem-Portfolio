@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient';
+import { db } from '@/lib/content/db';
 
 const BUCKET = 'assets';
 
@@ -27,8 +27,7 @@ const MAX_BYTES = 5 * 1024 * 1024;
  */
 async function sniffMime(file: File): Promise<string | null> {
   const head = new Uint8Array(await file.slice(0, 16).arrayBuffer());
-  const starts = (bytes: number[], offset = 0) =>
-    bytes.every((b, i) => head[offset + i] === b);
+  const starts = (bytes: number[], offset = 0) => bytes.every((b, i) => head[offset + i] === b);
   // PNG: 89 50 4E 47 0D 0A 1A 0A
   if (starts([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) return 'image/png';
   // JPEG: FF D8 FF
@@ -36,7 +35,8 @@ async function sniffMime(file: File): Promise<string | null> {
   // WebP: RIFF ???? WEBP
   if (starts([0x52, 0x49, 0x46, 0x46]) && starts([0x57, 0x45, 0x42, 0x50], 8)) return 'image/webp';
   // AVIF / HEIC-family: ???? ftyp avif  (bytes 4-11)
-  if (starts([0x66, 0x74, 0x79, 0x70], 4) && starts([0x61, 0x76, 0x69, 0x66], 8)) return 'image/avif';
+  if (starts([0x66, 0x74, 0x79, 0x70], 4) && starts([0x61, 0x76, 0x69, 0x66], 8))
+    return 'image/avif';
   // PDF: %PDF
   if (starts([0x25, 0x50, 0x44, 0x46])) return 'application/pdf';
   return null;
@@ -44,6 +44,7 @@ async function sniffMime(file: File): Promise<string | null> {
 
 /** Upload a file under `folder/` and return its public URL. */
 export async function uploadImage(file: File, folder: string): Promise<string> {
+  const supabase = await db();
   // Sniff the actual content bytes rather than trusting file.type — the
   // browser derives file.type from the filename extension, so it lies for
   // any renamed file. Refusing here matches the bucket's allow-list and
@@ -72,6 +73,7 @@ export async function uploadImage(file: File, folder: string): Promise<string> {
 
 /** Best-effort delete of an uploaded image given its public URL. */
 export async function deleteImageByUrl(url: string): Promise<void> {
+  const supabase = await db();
   const marker = `/object/public/${BUCKET}/`;
   const idx = url.indexOf(marker);
   if (idx === -1) return;
