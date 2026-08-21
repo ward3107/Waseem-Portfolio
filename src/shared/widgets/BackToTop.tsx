@@ -43,7 +43,7 @@ const BackToTop: React.FC = () => {
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
           whileHover={{ opacity: 1, scale: 1.1 }}
           onClick={scrollToTop}
-          className={`fixed bottom-6 left-6 md:bottom-24 z-40 p-2.5 md:p-3 rounded-full shadow-xl border-2 transition-colors duration-300 group ${buttonStyle}`}
+          className={`fixed bottom-24 left-6 z-40 p-2.5 md:p-3 rounded-full shadow-xl border-2 transition-colors duration-300 group ${buttonStyle}`}
           aria-label="Back to Top"
         >
           <ArrowUp size={24} className="group-hover:-translate-y-1 transition-transform duration-300" />
