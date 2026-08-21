@@ -93,3 +93,4 @@ export function resolveChapter(progress: number): {
   const chapter = Math.floor(scaled);
   return { chapter, chapterProgress: scaled - chapter };
 }
+
