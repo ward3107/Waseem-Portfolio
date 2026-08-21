@@ -23,7 +23,11 @@
   },
   "overrides": [
     {
-      "files": ["components/three/**/*.{ts,tsx}", "three-proof.tsx"],
+      "files": [
+        "components/three/**/*.{ts,tsx}",
+        "three-proof.tsx",
+        "src/experience/**/*.{ts,tsx}"
+      ],
       "rules": { "react/no-unknown-property": "off" }
     }
   ],

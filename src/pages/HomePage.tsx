@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import Hero from '@/features/hero';
 import Services from '@/features/services';
 import AISection from '@/features/ai/AISection';
@@ -8,6 +8,7 @@ import Reviews from '@/features/reviews/Reviews';
 import HomeCTA from '@/features/home/HomeCTA';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
+import { useExperienceMode } from '@/experience';
 
 // These sections were lazy, but each one rendered unconditionally on mount —
 // there was no scroll gate — so React requested all six chunks immediately
@@ -20,20 +21,44 @@ import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 // statically, the sections are part of the first render, so the page reaches
 // its layout in one pass instead of jumping to it a second and a half later.
 
+// The immersive 3D scroll-storytelling experience is code-split so its WebGL
+// bundle (react-three-fiber + drei + three + lenis) only downloads for visitors
+// who actually enter it. useExperienceMode() keeps the classic site as the
+// default and only returns '3d' for a capable desktop that opted in (see
+// src/experience/useExperienceMode.ts). Reduced-motion, no-WebGL, mobile, and
+// ?classic all resolve to the classic path below.
+const Experience = lazy(() => import('@/experience/Experience'));
+
+/** The classic, complete 2D homepage. Also the guaranteed fallback for the
+ *  3D experience (reduced-motion / no-WebGL / mobile / opt-out). */
+const ClassicHome: React.FC = () => (
+  <>
+    <Hero />
+    <Services />
+    <AISection />
+    <VibeCoding />
+    <FeaturedProjects />
+    <Reviews />
+    <HomeCTA />
+  </>
+);
+
 const HomePage: React.FC = () => {
   const { t } = useLanguage();
   useDocumentTitle(t('page_title_home'));
-  return (
-    <>
-      <Hero />
-      <Services />
-      <AISection />
-      <VibeCoding />
-      <FeaturedProjects />
-      <Reviews />
-      <HomeCTA />
-    </>
-  );
+  const mode = useExperienceMode();
+
+  if (mode === '3d') {
+    // While the WebGL chunk streams in, hold a dark screen that matches the
+    // experience background so there's no flash of the classic layout.
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-slate-950" />}>
+        <Experience />
+      </Suspense>
+    );
+  }
+
+  return <ClassicHome />;
 };
 
 export default HomePage;
