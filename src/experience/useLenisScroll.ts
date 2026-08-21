@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 import { scrollStore } from './scrollStore';
-import { resolveChapter } from './storyboard';
+import { CHAPTERS, resolveChapter } from './storyboard';
 
 /**
  * Installs Lenis smooth/inertial scrolling for as long as the experience is
@@ -30,13 +30,31 @@ export function useLenisScroll(enabled: boolean): void {
       smoothWheel: true,
     });
 
+    // Document offsets of the first and last chapter sections. Measured from
+    // the DOM rather than assumed, because chapters are not equal heights once
+    // copy wraps, and the footer sits below the last one. Refreshed on resize.
+    let bounds: { first: number; last: number } | null = null;
+    const measure = () => {
+      const tops = CHAPTERS.map((c) => {
+        const id = c.anchor ? c.anchor.replace(/^#/, '') : c.id;
+        const el = document.getElementById(id);
+        return el ? el.getBoundingClientRect().top + window.scrollY : null;
+      }).filter((v): v is number => v !== null);
+      bounds = tops.length > 1 ? { first: tops[0], last: tops[tops.length - 1] } : null;
+    };
+
     const publish = () => {
       const el = document.documentElement;
       const max = el.scrollHeight - el.clientHeight;
       const progress = max > 0 ? el.scrollTop / max : 0;
-      const { chapter, chapterProgress } = resolveChapter(progress);
-      scrollStore.set({ progress, chapter, chapterProgress });
+      if (!bounds) measure();
+      const span = bounds ? bounds.last - bounds.first : 0;
+      const journey =
+        span > 0 ? Math.min(1, Math.max(0, (el.scrollTop - bounds!.first) / span)) : progress;
+      const { chapter, chapterProgress } = resolveChapter(journey);
+      scrollStore.set({ progress, journey, chapter, chapterProgress });
     };
+    window.addEventListener('resize', measure);
 
     // Drive Lenis from a single rAF loop and publish progress each tick.
     let frame = 0;
@@ -49,6 +67,7 @@ export function useLenisScroll(enabled: boolean): void {
     publish();
 
     return () => {
+      window.removeEventListener('resize', measure);
       cancelAnimationFrame(frame);
       lenis.destroy();
       scrollStore.reset();

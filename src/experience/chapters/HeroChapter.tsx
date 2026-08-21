@@ -32,7 +32,7 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   const pointer = useThree((s) => s.pointer);
   const high = tier === 'high';
 
-  // Spin state. The rotation TRACKS scroll directly (progress × a fixed gain)
+  // Spin state. The rotation TRACKS scroll directly (journey × a fixed gain)
   // instead of integrating scroll velocity — velocity injection made a fast
   // flick whip the letter around uncontrollably. Direct coupling means the
   // spin speed is exactly proportional to how fast you scroll, perfectly
@@ -72,7 +72,7 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   useFrame((state, delta) => {
     const g = group.current;
     if (!g) return;
-    const { progress } = scrollStore.get();
+    const { journey } = scrollStore.get();
 
     // Fling momentum decays smoothly; accumulate it as an angle offset.
     fling.current *= Math.exp(-2.5 * delta);
@@ -80,7 +80,7 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
 
     // Target = slow idle drift + direct scroll coupling + fling.
     const idleDrift = state.clock.elapsedTime * 0.25;
-    const scrollSpin = progress * 7; // ~1.1 turns over the whole journey
+    const scrollSpin = journey * 7; // ~1.1 turns over the whole journey
     const spinTarget = idleDrift + scrollSpin + flingOffset.current;
     spin.current = MathUtils.lerp(spin.current, spinTarget, 1 - Math.exp(-5 * delta));
 
@@ -91,20 +91,23 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
     g.rotation.y = spin.current + tiltY.current;
     g.rotation.x = tiltX.current;
 
-    // Presence timeline, tier-dependent:
-    //   high — the hero film carries the top of the page, so the live W enters
-    //   in a crossfade exactly as the film's resting W fades (HeroFilm's fade
-    //   window), then warps back into depth through the services transition.
-    //   low — no film on phones; the W is present from the top as before.
+    // Presence timeline, in journey space so the letter is always gone by the
+    // moment the services chapter is flush. Timed against raw page progress it
+    // lingered at full size behind that heading, fighting the particle rings
+    // for attention.
     let presence: number;
     if (high) {
-      const enter = MathUtils.clamp((progress - 0.1) / 0.05, 0, 1);
-      const exitP = MathUtils.clamp(1 - Math.max(0, progress - 0.17) * 7, 0, 1);
+      // Enters as the film's resting frame fades, leaves into the particles.
+      const enter = MathUtils.clamp((journey - 0.115) / 0.03, 0, 1);
+      const exitP = MathUtils.clamp(1 - Math.max(0, journey - 0.15) * 26, 0, 1);
       presence = enter * exitP;
     } else {
-      presence = MathUtils.clamp(1 - Math.max(0, progress - 0.05) * 9, 0, 1);
+      // No film on phones: present from the top, dissolving by chapter two.
+      presence = MathUtils.clamp(1 - Math.max(0, journey - 0.12) * 12.5, 0, 1);
     }
-    g.visible = presence > 0.01;
+    // Unmount the last few percent outright: a 3%-opacity sliver of the
+    // letter still read as a stray shape behind the services heading.
+    g.visible = presence > 0.05;
     const exit = 1 - presence;
     g.position.z = MathUtils.lerp(g.position.z, -exit * 13, eased);
     g.scale.setScalar(MathUtils.lerp(g.scale.x, 0.55 + presence * 0.55, eased));
