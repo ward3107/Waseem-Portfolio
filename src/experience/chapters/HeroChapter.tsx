@@ -86,9 +86,19 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
     g.rotation.y = spin.current + tiltY.current;
     g.rotation.x = tiltX.current;
 
-    // Stay fully present at the top, then warp back into depth (spinning) as
-    // the hero chapter ends — a hard exit, not a soft dissolve. Reversible.
-    const presence = MathUtils.clamp(1 - Math.max(0, progress - 0.05) * 9, 0, 1);
+    // Presence timeline, tier-dependent:
+    //   high — the hero film carries the top of the page, so the live W enters
+    //   in a crossfade exactly as the film's resting W fades (HeroFilm's fade
+    //   window), then warps back into depth through the services transition.
+    //   low — no film on phones; the W is present from the top as before.
+    let presence: number;
+    if (high) {
+      const enter = MathUtils.clamp((progress - 0.1) / 0.05, 0, 1);
+      const exitP = MathUtils.clamp(1 - Math.max(0, progress - 0.17) * 7, 0, 1);
+      presence = enter * exitP;
+    } else {
+      presence = MathUtils.clamp(1 - Math.max(0, progress - 0.05) * 9, 0, 1);
+    }
     g.visible = presence > 0.01;
     const exit = 1 - presence;
     g.position.z = MathUtils.lerp(g.position.z, -exit * 13, eased);

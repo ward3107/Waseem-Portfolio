@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import ChapterDivider from '../components/ChapterDivider';
 
 interface ChapterOverlayProps {
   /** 0-based chapter index, for the "NN / TT" counter. */
@@ -43,6 +44,7 @@ const ChapterOverlay: React.FC<ChapterOverlayProps> = ({
 
   return (
     <div className="pointer-events-none flex w-full max-w-4xl flex-col items-center text-center">
+      <ChapterDivider />
       <motion.p
         {...reveal}
         transition={{ duration: 0.5 }}
@@ -72,20 +74,20 @@ const ChapterOverlay: React.FC<ChapterOverlayProps> = ({
       )}
 
       {chips && chips.length > 0 && (
-        <motion.ul
-          {...reveal}
-          transition={{ duration: 0.6, delay: 0.18 }}
-          className="mt-7 flex flex-wrap items-center justify-center gap-2.5"
-        >
-          {chips.map((chip) => (
-            <li
+        <ul className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
+          {chips.map((chip, i) => (
+            <motion.li
               key={chip}
-              className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm font-semibold text-slate-200 backdrop-blur"
+              initial={{ opacity: 0, y: 16, rotate: i % 2 ? 3 : -3, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ delay: 0.2 + i * 0.07, type: 'spring', stiffness: 220, damping: 18 }}
+              className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm font-semibold text-slate-200 backdrop-blur transition-colors hover:border-brand-cyan/40"
             >
               {chip}
-            </li>
+            </motion.li>
           ))}
-        </motion.ul>
+        </ul>
       )}
 
       {children && (

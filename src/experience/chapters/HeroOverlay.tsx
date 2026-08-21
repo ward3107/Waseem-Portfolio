@@ -20,7 +20,13 @@ const HeroOverlay: React.FC = () => {
   const Arrow = isRtl ? ArrowLeft : ArrowRight;
 
   return (
-    <div className="pointer-events-none flex flex-col items-center text-center">
+    <div className="pointer-events-none relative flex flex-col items-center text-center">
+      {/* Soft scrim so the headline stays legible over the film's brightest
+          frames (the 10k worst-frame legibility rule). Whisper level. */}
+      <div
+        aria-hidden="true"
+        className="absolute -inset-x-20 -inset-y-12 -z-10 rounded-[4rem] bg-slate-950/45 blur-3xl"
+      />
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -41,11 +47,17 @@ const HeroOverlay: React.FC = () => {
         className="max-w-4xl font-heading text-4xl font-black leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
       >
         <span className="text-white">{t('hero_title_1')}</span>
-        <span className="text-brand-purpleLighter drop-shadow-[0_1px_16px_rgba(121,101,193,0.65)]">
+        <span
+          className="exp-glow-pulse text-brand-purpleLighter"
+          style={{ '--glow': 'rgba(121,101,193,0.65)' } as React.CSSProperties}
+        >
           {t('hero_title_2')}
         </span>{' '}
         <span className="text-white">{t('hero_title_3')}</span>
-        <span className="bg-gradient-to-r from-brand-goldLight via-yellow-200 to-brand-goldLight bg-clip-text italic text-transparent drop-shadow-[0_1px_10px_rgba(227,208,149,0.45)]">
+        <span
+          className="exp-glow-pulse bg-gradient-to-r from-brand-goldLight via-yellow-200 to-brand-goldLight bg-clip-text italic text-transparent"
+          style={{ '--glow': 'rgba(227,208,149,0.5)' } as React.CSSProperties}
+        >
           {t('hero_title_4')}
         </span>
       </motion.h1>
