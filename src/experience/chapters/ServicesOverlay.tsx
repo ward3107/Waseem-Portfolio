@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChapterOverlay from './ChapterOverlay';
+import HeadingAccent from '../components/HeadingAccent';
 import { StartProjectButton, GhostNavButton } from './actions';
 
 /** Chapter 2 — Services. Real service names as chips + consultation CTA. */
@@ -13,12 +14,7 @@ const ServicesOverlay: React.FC<{ index: number; total: number }> = ({ index, to
       title={
         <>
           <span className="text-white">{t('services_title_1')}</span>
-          <span
-            className="exp-glow-pulse text-brand-purpleLighter"
-            style={{ '--glow': 'rgba(121,101,193,0.6)' } as React.CSSProperties}
-          >
-            {t('services_title_2')}
-          </span>
+          <HeadingAccent tone="purple">{t('services_title_2')}</HeadingAccent>
         </>
       }
       description={t('services_subtitle')}

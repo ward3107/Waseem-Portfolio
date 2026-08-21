@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChapterOverlay from './ChapterOverlay';
+import HeadingAccent from '../components/HeadingAccent';
 import { WhatsAppButton, StartProjectButton } from './actions';
 
 /** Chapter 6 — Contact finale. Real closing copy + WhatsApp-first CTAs. */
@@ -14,12 +15,7 @@ const ContactOverlay: React.FC<{ index: number; total: number }> = ({ index, tot
       title={
         <>
           <span className="text-white">{t('contact_title_1')}</span>
-          <span
-            className="exp-glow-pulse bg-gradient-to-r from-brand-goldLight via-yellow-200 to-brand-goldLight bg-clip-text italic text-transparent"
-            style={{ '--glow': 'rgba(227,208,149,0.5)' } as React.CSSProperties}
-          >
-            {t('contact_title_2')}
-          </span>
+          <HeadingAccent tone="gold" fancy>{t('contact_title_2')}</HeadingAccent>
         </>
       }
       description={t('contact_desc')}

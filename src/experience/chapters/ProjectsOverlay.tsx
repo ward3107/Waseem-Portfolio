@@ -1,9 +1,10 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getLocalizedProjects } from '@/features/projects/data';
-import ChapterOverlay from './ChapterOverlay';
+import ChapterOverlay, { containerVariants, itemVariants, useHeadingLeading } from './ChapterOverlay';
+import HeadingAccent from '../components/HeadingAccent';
 import { GhostNavButton } from './actions';
 import type { QualityTier } from '../useQualityTier';
 
@@ -24,16 +25,14 @@ const ProjectsOverlay: React.FC<{ index: number; total: number; tier: QualityTie
 }) => {
   const { t } = useLanguage();
   const projects = getLocalizedProjects(t);
+  const ref = useRef<HTMLDivElement>(null);
+  const active = useInView(ref, { amount: 0.3 });
+  const leading = useHeadingLeading();
 
   const heading = (
     <>
       <span className="text-white">{t('projects_title_1')} </span>
-      <span
-        className="exp-glow-pulse text-brand-goldLight"
-        style={{ '--glow': 'rgba(227,208,149,0.5)' } as React.CSSProperties}
-      >
-        {t('projects_title_2')}
-      </span>
+      <HeadingAccent tone="gold" fancy>{t('projects_title_2')}</HeadingAccent>
     </>
   );
 
@@ -77,20 +76,22 @@ const ProjectsOverlay: React.FC<{ index: number; total: number; tier: QualityTie
   }
 
   // HIGH TIER — 3D gallery fills the centre; DOM is heading (top) + index (bottom).
-  const reveal = {
-    initial: { opacity: 0, y: 20 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.4 },
-  };
-
   return (
-    <div className="pointer-events-none flex min-h-[82vh] w-full max-w-5xl flex-col items-center justify-between">
-      <motion.div {...reveal} transition={{ duration: 0.6 }} className="flex flex-col items-center text-center">
+    <motion.div
+      ref={ref}
+      variants={containerVariants}
+      initial="hidden"
+      animate={active ? 'show' : 'hidden'}
+      className="pointer-events-none flex min-h-[82vh] w-full max-w-5xl flex-col items-center justify-between"
+    >
+      <motion.div variants={itemVariants} className="flex flex-col items-center text-center">
         <p className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-brand-cyan">
           {String(index + 1).padStart(2, '0')} <span className="text-white/30">/</span>{' '}
           {String(total).padStart(2, '0')}
         </p>
-        <h2 className="max-w-3xl font-heading text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+        <h2
+          className={`max-w-3xl font-heading text-4xl font-black tracking-tight sm:text-5xl md:text-6xl ${leading}`}
+        >
           {heading}
         </h2>
         <p className="mt-5 max-w-xl text-base font-medium text-slate-300 sm:text-lg">
@@ -98,11 +99,7 @@ const ProjectsOverlay: React.FC<{ index: number; total: number; tier: QualityTie
         </p>
       </motion.div>
 
-      <motion.div
-        {...reveal}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="flex flex-col items-center gap-5"
-      >
+      <motion.div variants={itemVariants} className="flex flex-col items-center gap-5">
         <ul className="flex flex-wrap items-center justify-center gap-2.5">
           {projects.map((p) => (
             <li key={p.id}>
@@ -120,7 +117,7 @@ const ProjectsOverlay: React.FC<{ index: number; total: number; tier: QualityTie
         </ul>
         <GhostNavButton href="/projects">{t('home_projects_cta')}</GhostNavButton>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

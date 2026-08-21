@@ -4,6 +4,8 @@ import { ArrowRight, ArrowLeft, MessageCircle, ChevronDown } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
+import HeadingAccent from '../components/HeadingAccent';
+import { useHeadingLeading } from './ChapterOverlay';
 
 /**
  * Chapter 1 DOM overlay — the real, translated, crawlable hero content that
@@ -16,6 +18,7 @@ const HeroOverlay: React.FC = () => {
   const { t, language } = useLanguage();
   const contact = useContact();
   const navigate = useSectionNavigate();
+  const leading = useHeadingLeading();
   const isRtl = language === 'he' || language === 'ar';
   const Arrow = isRtl ? ArrowLeft : ArrowRight;
 
@@ -44,22 +47,12 @@ const HeroOverlay: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="max-w-4xl font-heading text-4xl font-black leading-[1.05] tracking-tight sm:text-6xl md:text-7xl"
+        className={`max-w-4xl font-heading text-4xl font-black tracking-tight sm:text-6xl md:text-7xl ${leading}`}
       >
         <span className="text-white">{t('hero_title_1')}</span>
-        <span
-          className="exp-glow-pulse text-brand-purpleLighter"
-          style={{ '--glow': 'rgba(121,101,193,0.65)' } as React.CSSProperties}
-        >
-          {t('hero_title_2')}
-        </span>{' '}
+        <HeadingAccent tone="purple">{t('hero_title_2')}</HeadingAccent>{' '}
         <span className="text-white">{t('hero_title_3')}</span>
-        <span
-          className="exp-glow-pulse bg-gradient-to-r from-brand-goldLight via-yellow-200 to-brand-goldLight bg-clip-text italic text-transparent"
-          style={{ '--glow': 'rgba(227,208,149,0.5)' } as React.CSSProperties}
-        >
-          {t('hero_title_4')}
-        </span>
+        <HeadingAccent tone="gold" fancy>{t('hero_title_4')}</HeadingAccent>
       </motion.h1>
 
       <motion.p

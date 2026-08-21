@@ -1,5 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useInView, type Variants } from 'framer-motion';
+import { useLanguage } from '@/contexts/LanguageContext';
 import ChapterDivider from '../components/ChapterDivider';
 
 interface ChapterOverlayProps {
@@ -19,12 +20,43 @@ interface ChapterOverlayProps {
   children?: React.ReactNode;
 }
 
+/** Container drives a staggered cascade; every child uses `item`. */
+export const containerVariants: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.085, delayChildren: 0.04 } },
+};
+
+export const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+/**
+ * Hebrew and Arabic glyphs are taller than Latin ones, so the display leading
+ * that suits Space Grotesk crops ascenders and crowds stacked lines in Heebo
+ * and Cairo. RTL headings get extra room.
+ */
+export function useHeadingLeading(): string {
+  const { language } = useLanguage();
+  return language === 'he' || language === 'ar' ? 'leading-[1.3]' : 'leading-[1.05]';
+}
+
 /**
  * Shared presentational shell for a chapter's DOM overlay: eyebrow + counter,
  * an <h2> heading, a description, optional keyword chips, optional actions, and
- * optional extra content. Centred, pointer-events-none (interactive children
- * re-enable pointer events), and reveals on scroll-in. Keeps every chapter
- * visually consistent so the journey reads as one system.
+ * optional extra content.
+ *
+ * Entrance: the cascade runs whenever this chapter's own content block is in
+ * view, and rewinds when it leaves. The previous reveal fired only once, so
+ * under fast smooth-scrolling it finished before the reader arrived and the
+ * chapter read as though it had simply appeared. Watching each block
+ * individually also survives chapters that grow taller than one screen — a
+ * single page-wide scroll ratio cannot, because sections are not equal heights
+ * once Hebrew copy wraps onto extra lines.
  */
 const ChapterOverlay: React.FC<ChapterOverlayProps> = ({
   index,
@@ -36,18 +68,22 @@ const ChapterOverlay: React.FC<ChapterOverlayProps> = ({
   actions,
   children,
 }) => {
-  const reveal = {
-    initial: { opacity: 0, y: 24 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, amount: 0.4 },
-  };
+  const ref = useRef<HTMLDivElement>(null);
+  const active = useInView(ref, { amount: 0.3 });
+  const leading = useHeadingLeading();
 
   return (
-    <div className="pointer-events-none flex w-full max-w-4xl flex-col items-center text-center">
-      <ChapterDivider />
+    <motion.div
+      ref={ref}
+      variants={containerVariants}
+      initial="hidden"
+      animate={active ? 'show' : 'hidden'}
+      className="pointer-events-none flex w-full max-w-4xl flex-col items-center text-center"
+    >
+      <ChapterDivider active={active} />
+
       <motion.p
-        {...reveal}
-        transition={{ duration: 0.5 }}
+        variants={itemVariants}
         className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-brand-cyan"
       >
         {String(index + 1).padStart(2, '0')} <span className="text-white/30">/</span>{' '}
@@ -56,17 +92,15 @@ const ChapterOverlay: React.FC<ChapterOverlayProps> = ({
       </motion.p>
 
       <motion.h2
-        {...reveal}
-        transition={{ duration: 0.6, delay: 0.05 }}
-        className="max-w-3xl font-heading text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl"
+        variants={itemVariants}
+        className={`max-w-3xl font-heading text-4xl font-black tracking-tight sm:text-5xl md:text-6xl ${leading}`}
       >
         {title}
       </motion.h2>
 
       {description && (
         <motion.p
-          {...reveal}
-          transition={{ duration: 0.6, delay: 0.12 }}
+          variants={itemVariants}
           className="mt-6 max-w-xl text-base font-medium leading-relaxed text-slate-300 sm:text-lg"
         >
           {description}
@@ -74,38 +108,37 @@ const ChapterOverlay: React.FC<ChapterOverlayProps> = ({
       )}
 
       {chips && chips.length > 0 && (
-        <ul className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
-          {chips.map((chip, i) => (
+        <motion.ul
+          variants={containerVariants}
+          className="mt-7 flex flex-wrap items-center justify-center gap-2.5"
+        >
+          {chips.map((chip) => (
             <motion.li
               key={chip}
-              initial={{ opacity: 0, y: 16, rotate: i % 2 ? 3 : -3, scale: 0.9 }}
-              whileInView={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ delay: 0.2 + i * 0.07, type: 'spring', stiffness: 220, damping: 18 }}
+              variants={itemVariants}
               className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm font-semibold text-slate-200 backdrop-blur transition-colors hover:border-brand-cyan/40"
             >
               {chip}
             </motion.li>
           ))}
-        </ul>
+        </motion.ul>
       )}
 
       {children && (
-        <motion.div {...reveal} transition={{ duration: 0.6, delay: 0.2 }} className="w-full">
+        <motion.div variants={itemVariants} className="w-full">
           {children}
         </motion.div>
       )}
 
       {actions && (
         <motion.div
-          {...reveal}
-          transition={{ duration: 0.6, delay: 0.26 }}
+          variants={itemVariants}
           className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
         >
           {actions}
         </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
