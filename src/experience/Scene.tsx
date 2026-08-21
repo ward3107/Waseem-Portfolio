@@ -1,9 +1,10 @@
-import React, { useMemo, useRef } from 'react';
+import React, { Suspense, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Float, Sparkles } from '@react-three/drei';
-import { Vector3, MathUtils, type Mesh, type Group } from 'three';
+import { Sparkles } from '@react-three/drei';
+import { Vector3, MathUtils } from 'three';
 import { scrollStore } from './scrollStore';
 import { CHAPTERS } from './storyboard';
+import HeroChapter from './chapters/HeroChapter';
 
 // Brand palette (mirrors tailwind.config.js) so the 3D world reads as the
 // same brand as the DOM site.
@@ -11,18 +12,17 @@ const BRAND_PURPLE = '#7965C1';
 const BRAND_CYAN = '#00E5FF';
 
 /**
- * Phase 1 placeholder scene. It exists to PROVE the plumbing end to end:
- * scroll progress from the store drives a camera rig along the storyboard's
- * per-chapter keyframes, with light mouse parallax and idle float. The single
- * refractive-looking monogram stand-in and the sparkle field are intentionally
- * minimal — real per-chapter content (glass monogram, service constellation,
- * project fly-through, …) replaces this in later phases without changing the
- * scroll/camera contract.
+ * The persistent 3D world. It owns the two things every chapter shares:
+ *   1. the scroll-driven camera rig (eased along the storyboard keyframes with
+ *      light mouse parallax), and
+ *   2. ambient atmosphere (dust sparkles + fill lights).
+ *
+ * Per-chapter content mounts inside. Phase 2 adds the Hero chapter (glass
+ * monogram); Phases 3–4 add the remaining chapters the same way, each isolated
+ * behind its own <Suspense> so an asset load never blanks the whole canvas.
  */
 const Scene: React.FC = () => {
   const camera = useThree((s) => s.camera);
-  const monogram = useRef<Mesh>(null);
-  const world = useRef<Group>(null);
 
   // Precompute Vector3 keyframes once from the storyboard tuples.
   const keyframes = useMemo(
@@ -56,40 +56,23 @@ const Scene: React.FC = () => {
     const a = 1 - Math.exp(-4 * delta);
     camera.position.lerp(camTarget, a);
     camera.lookAt(lookTarget);
-
-    // Idle life in the world so it never feels frozen.
-    if (monogram.current) {
-      monogram.current.rotation.y += delta * 0.25;
-      monogram.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.15;
-    }
-    if (world.current) {
-      world.current.rotation.y = progress * Math.PI * 0.5;
-    }
   });
 
   return (
-    <group ref={world}>
-      <ambientLight intensity={0.6} />
-      <pointLight position={[4, 6, 6]} intensity={80} color={BRAND_CYAN} />
-      <pointLight position={[-6, -3, -4]} intensity={60} color={BRAND_PURPLE} />
+    <group>
+      <ambientLight intensity={0.5} />
+      <pointLight position={[6, 6, 6]} intensity={60} color={BRAND_CYAN} />
+      <pointLight position={[-6, -3, -4]} intensity={40} color={BRAND_PURPLE} />
 
-      <Float speed={1.4} rotationIntensity={0.6} floatIntensity={0.8}>
-        <mesh ref={monogram}>
-          <icosahedronGeometry args={[1.2, 1]} />
-          <meshStandardMaterial
-            color={BRAND_PURPLE}
-            emissive={BRAND_PURPLE}
-            emissiveIntensity={0.35}
-            roughness={0.25}
-            metalness={0.6}
-            wireframe
-          />
-        </mesh>
-      </Float>
+      {/* Chapter 1 — glass monogram. Suspense isolates the one-time font load. */}
+      <Suspense fallback={null}>
+        <HeroChapter />
+      </Suspense>
 
+      {/* Ambient dust across the whole world. */}
       <Sparkles
         count={60}
-        scale={[12, 8, 12]}
+        scale={[14, 9, 14]}
         size={2}
         speed={0.3}
         opacity={0.5}

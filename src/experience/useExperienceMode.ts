@@ -6,13 +6,20 @@ import { useWebGLSupport } from './useWebGLSupport';
 export type ExperienceMode = 'classic' | '3d';
 
 /**
- * Phase 1 default. The immersive 3D journey is still being built chapter by
- * chapter, so it must NOT replace the live homepage yet — every visitor gets
- * the existing, complete 2D site unless they explicitly opt in with
- * `?experience` (or `?3d`). A later phase flips this to `true` once every
- * chapter renders real content, and capable visitors get 3D by default.
+ * Whether capable desktop visitors get the 3D experience by default.
+ *
+ * Now `true`: every chapter renders real content (hero glass monogram, real
+ * services / AI / projects / trust / contact copy sourced from the same
+ * translations and data as the classic site), so the experience is the default
+ * homepage for capable desktops. The richer per-chapter 3D scenes (projects
+ * fly-through, particle AI field, …) continue to land in later phases.
+ *
+ * The classic site remains the guaranteed fallback for everyone else —
+ * reduced-motion, no-WebGL, small/touch viewports, search crawlers (mobile-
+ * first, so they fail the desktop gate and get the crawlable classic content),
+ * and anyone who appends `?classic`.
  */
-const ENABLED_BY_DEFAULT = false;
+const ENABLED_BY_DEFAULT = true;
 
 function readFlag(name: string): boolean {
   if (typeof window === 'undefined') return false;

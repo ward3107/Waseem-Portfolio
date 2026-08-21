@@ -1,32 +1,48 @@
 import React, { Suspense, lazy, useState } from 'react';
-import { useLanguage } from '@/contexts/LanguageContext';
 import { useLenisScroll } from './useLenisScroll';
 import { CHAPTERS } from './storyboard';
 import ScrollProgress from './components/ScrollProgress';
+import HeroOverlay from './chapters/HeroOverlay';
+import ServicesOverlay from './chapters/ServicesOverlay';
+import AIOverlay from './chapters/AIOverlay';
+import ProjectsOverlay from './chapters/ProjectsOverlay';
+import TrustOverlay from './chapters/TrustOverlay';
+import ContactOverlay from './chapters/ContactOverlay';
+
+// Maps a storyboard chapter id to its DOM overlay. Chapter 1 (hero) is handled
+// separately because it owns the page's single <h1>.
+const OVERLAY_BY_ID: Record<string, React.FC<{ index: number; total: number }>> = {
+  services: ServicesOverlay,
+  ai: AIOverlay,
+  projects: ProjectsOverlay,
+  trust: TrustOverlay,
+  contact: ContactOverlay,
+};
 
 // The WebGL bundle (fiber + drei + three) is isolated behind this lazy import.
 // Classic-site visitors never reach this line, so they never download it.
 const ExperienceCanvas = lazy(() => import('./ExperienceCanvas'));
 
 /**
- * Phase 1 foundation of the 3D scroll-storytelling experience.
+ * The 3D scroll-storytelling experience.
  *
- * What ships in this phase:
+ * Architecture:
  *   - A persistent, fixed, full-viewport WebGL backdrop (lazy-loaded) whose
  *     camera is driven by scroll via the shared scrollStore.
  *   - Lenis smooth/inertial scrolling over native scroll.
- *   - The real DOM content layer: one semantic <section> per storyboard chapter,
- *     so headings, focus order, and crawlable text already exist. Chapter COPY
- *     and per-chapter 3D content arrive in Phases 2–4; these are labelled
- *     scaffolds for now.
- *   - A graceful fallback: if WebGL context is lost, the canvas is dropped and
- *     the DOM layer keeps working — never a blank screen.
+ *   - A real, semantic DOM content layer: one <section> per storyboard chapter,
+ *     so headings, focus order, and crawlable text exist independent of WebGL.
+ *   - A graceful fallback: if the WebGL context is lost, the canvas is dropped
+ *     and the DOM layer keeps working — never a blank screen.
  *
- * This component only renders on a capable desktop that opted in (see
- * useExperienceMode). Everyone else gets the classic site.
+ * Chapter status: Chapter 1 (Hero) ships real content — the glass monogram
+ * (3D, in Scene) plus the translated headline/CTAs (DOM, HeroOverlay). The
+ * remaining chapters are labelled scaffolds until Phases 3–4 fill them in.
+ *
+ * Only renders on a capable desktop that opted in (see useExperienceMode);
+ * everyone else gets the classic site.
  */
 const Experience: React.FC = () => {
-  const { t } = useLanguage();
   const [canvasFailed, setCanvasFailed] = useState(false);
 
   // Smooth scrolling + progress publishing, live for as long as we're mounted.
@@ -54,41 +70,37 @@ const Experience: React.FC = () => {
           interactive children opt back in with pointer-events-auto. */}
       <div className="pointer-events-none relative z-10">
         {CHAPTERS.map((chapter, i) => {
-          // Exactly one <h1> per page (the hero chapter); the rest are <h2>.
-          const Heading = i === 0 ? 'h1' : 'h2';
+          const Overlay = OVERLAY_BY_ID[chapter.id];
+          // Use the chapter's nav anchor as the section id so existing in-page
+          // links (e.g. /#what-i-do, /#ai-automation) resolve to the right
+          // chapter in the experience too.
+          const sectionId = chapter.anchor ? chapter.anchor.replace(/^#/, '') : chapter.id;
           return (
-          <section
-            key={chapter.id}
-            id={chapter.id}
-            aria-label={chapter.label}
-            className="flex min-h-screen flex-col items-center justify-center px-6 text-center"
-          >
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-brand-cyan">
-              {String(i + 1).padStart(2, '0')} / {String(CHAPTERS.length).padStart(2, '0')}
-            </p>
-            <Heading className="max-w-3xl font-heading text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
-              {chapter.label}
-            </Heading>
-            {i === 0 && (
-              <p className="mt-6 max-w-md text-sm text-slate-300">
-                {/* Falls back to English if the i18n key isn't present yet. */}
-                {t('exp_scaffold_note') === 'exp_scaffold_note'
-                  ? 'Immersive preview — scroll to move the camera through the story. Full chapter content arrives in the next phases.'
-                  : t('exp_scaffold_note')}
-              </p>
-            )}
-            {i === 0 && (
-              <a
-                href="?classic=1"
-                className="pointer-events-auto mt-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-sm font-bold text-white backdrop-blur transition-colors hover:border-brand-cyan/50 hover:bg-white/10"
-              >
-                View the classic site
-              </a>
-            )}
-          </section>
+            <section
+              key={chapter.id}
+              id={sectionId}
+              aria-label={chapter.label}
+              className="flex min-h-screen flex-col items-center justify-center px-6 py-24 text-center"
+            >
+              {i === 0 ? (
+                // Chapter 1 — real hero content (its own single <h1>).
+                <HeroOverlay />
+              ) : Overlay ? (
+                <Overlay index={i} total={CHAPTERS.length} />
+              ) : null}
+            </section>
           );
         })}
       </div>
+
+      {/* Unobtrusive escape hatch back to the classic site (the experience is
+          still opt-in / in progress). Fixed so it's reachable from any chapter. */}
+      <a
+        href="?classic=1"
+        className="fixed bottom-4 start-4 z-40 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-semibold text-white/80 backdrop-blur transition-colors hover:border-brand-cyan/40 hover:bg-white/10 hover:text-white"
+      >
+        Classic site
+      </a>
     </div>
   );
 };
