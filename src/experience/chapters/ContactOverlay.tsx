@@ -31,7 +31,7 @@ const ContactOverlay: React.FC<{ index: number; total: number }> = ({ index, tot
             aria-hidden="true"
             animate={{ opacity: [0.35, 0.7, 0.35], scale: [1, 1.15, 1] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute -inset-x-10 -inset-y-6 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.28),rgba(121,101,193,0.18),transparent)] blur-2xl"
+            className="absolute -inset-x-4 -inset-y-6 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.28),rgba(121,101,193,0.18),transparent)] blur-2xl sm:-inset-x-10"
           />
           <WhatsAppButton />
           <StartProjectButton />

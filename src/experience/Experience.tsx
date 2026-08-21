@@ -52,7 +52,13 @@ const Experience: React.FC = () => {
   useLenisScroll(true);
 
   return (
-    <div className="relative bg-slate-950 text-white">
+    // overflow-x-clip: decorative layers (text scrims, CTA glows) bleed past
+    // the content edge by design; on narrow viewports that bleed poked past
+    // the page edge and made the whole site pannable left-right. clip (not
+    // hidden) trims it without creating a scroll container, and fixed
+    // children (canvas, progress, pill) are unaffected since this element has
+    // no transform/filter.
+    <div className="relative overflow-x-clip bg-slate-950 text-white">
       {/* Fixed 3D backdrop. Sits behind the content (z-0). Pointer events stay
           on the canvas so it can track the cursor for parallax; the content
           layer above is pointer-events-none except for real interactive
