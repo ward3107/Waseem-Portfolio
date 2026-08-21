@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { AdaptiveDpr, AdaptiveEvents, Preload } from '@react-three/drei';
 import Scene from './Scene';
+import type { QualityTier } from './useQualityTier';
 
 /**
  * The React Three Fiber `<Canvas>` — deliberately the ONLY module that pulls in
@@ -36,20 +37,23 @@ const ContextLossBridge: React.FC<{ onLost: () => void }> = ({ onLost }) => {
 
 interface ExperienceCanvasProps {
   onContextLost: () => void;
+  tier: QualityTier;
 }
 
-const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({ onContextLost }) => {
+const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({ onContextLost, tier }) => {
   return (
     <Canvas
-      dpr={[1, 1.5]}
+      // Cap the pixel ratio harder on the low tier — phones have very high DPRs,
+      // and rendering at native resolution is the single biggest mobile cost.
+      dpr={tier === 'high' ? [1, 1.5] : [1, 1]}
       camera={{ position: [0, 0, 6], fov: 50, near: 0.1, far: 100 }}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      gl={{ antialias: tier === 'high', alpha: true, powerPreference: 'high-performance' }}
       // The canvas is a decorative backdrop; the real, focusable content lives
       // in the DOM layer above it. Hide it from assistive tech entirely.
       aria-hidden="true"
     >
       <ContextLossBridge onLost={onContextLost} />
-      <Scene />
+      <Scene tier={tier} />
       <AdaptiveDpr pixelated />
       <AdaptiveEvents />
       <Preload all />
