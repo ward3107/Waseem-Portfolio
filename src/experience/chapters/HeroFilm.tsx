@@ -14,13 +14,15 @@ function pickFilmSrc(): string {
   return probe.canPlayType('video/mp4; codecs="avc1.64002A"') ? FILM_MP4 : FILM_WEBM;
 }
 
-// The hero chapter owns the first 1/TOTAL of the journey; the film scrubs
-// across slightly less than that so its final resting frame holds briefly
-// before the crossfade to the live 3D monogram.
-const HERO_SPAN = 1 / CHAPTERS.length;
-const SCRUB_END = HERO_SPAN * 0.78; // film reaches its last frame here
-const FADE_START = HERO_SPAN * 0.66; // crossfade to the 3D W begins
-const FADE_END = HERO_SPAN * 0.95; // film fully gone before services
+// The hero chapter runs from the first chapter section being flush to the
+// second one being flush — i.e. the first 1/(N-1) of `journey`. The film
+// finishes early inside that window so its resting frame can hand the letter
+// over to the live 3D monogram, which in turn dissolves into the particle
+// field. Three states of the same W, one continuous beat.
+const HERO_SPAN = 1 / (CHAPTERS.length - 1);
+const SCRUB_END = HERO_SPAN * 0.6; // film reaches its last frame here
+const FADE_START = HERO_SPAN * 0.5; // crossfade to the 3D W begins
+const FADE_END = HERO_SPAN * 0.72; // film fully gone
 
 /**
  * The 10k-style scroll-scrubbed hero film ("The Forge"): scrolling down plays
@@ -87,15 +89,15 @@ const HeroFilm: React.FC = () => {
       const dur = video.duration;
       if (!Number.isFinite(dur) || dur <= 0) return;
 
-      const { progress } = scrollStore.get();
+      const { journey } = scrollStore.get();
 
       // Crossfade window (film → 3D W), written to the DOM only on change.
       const fade =
-        progress <= FADE_START
+        journey <= FADE_START
           ? 1
-          : progress >= FADE_END
+          : journey >= FADE_END
             ? 0
-            : 1 - (progress - FADE_START) / (FADE_END - FADE_START);
+            : 1 - (journey - FADE_START) / (FADE_END - FADE_START);
       const opacity = Math.round(fade * 100) / 100;
       if (opacity !== lastOpacity) {
         lastOpacity = opacity;
@@ -105,7 +107,7 @@ const HeroFilm: React.FC = () => {
       if (opacity === 0) return; // off-screen: rest (no seeks)
 
       // Map scroll to film time and ease toward it.
-      const t = Math.min(1, Math.max(0, progress / SCRUB_END)) * (dur - 0.05);
+      const t = Math.min(1, Math.max(0, journey / SCRUB_END)) * (dur - 0.05);
       displayed += (t - displayed) * 0.22;
       if (!seeking && Math.abs(video.currentTime - displayed) > 1 / 60) {
         seeking = true;

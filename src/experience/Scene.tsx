@@ -1,10 +1,11 @@
-import React, { Suspense, useMemo } from 'react';
+import React, { Suspense, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Sparkles } from '@react-three/drei';
-import { Vector3, MathUtils } from 'three';
+import { Vector3, MathUtils, type Group } from 'three';
 import { scrollStore } from './scrollStore';
 import { CHAPTERS } from './storyboard';
 import HeroChapter from './chapters/HeroChapter';
+import MorphField from './MorphField';
 import ProjectsScene from './chapters/ProjectsScene';
 import type { QualityTier } from './useQualityTier';
 
@@ -25,6 +26,10 @@ const BRAND_CYAN = '#00E5FF';
  */
 const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   const camera = useThree((s) => s.camera);
+  // The morphing field rides the camera's focus point. Left at the world
+  // origin it slid out of frame as the per-chapter camera moves panned away,
+  // which read as the shape wandering off rather than presenting itself.
+  const fieldAnchor = useRef<Group>(null);
 
   // Precompute Vector3 keyframes once from the storyboard tuples.
   const keyframes = useMemo(
@@ -40,9 +45,9 @@ const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   const lookTarget = useMemo(() => new Vector3(), []);
 
   useFrame((state, delta) => {
-    const { progress } = scrollStore.get();
+    const { journey } = scrollStore.get();
     const last = CHAPTERS.length - 1;
-    const seg = progress * last;
+    const seg = journey * last;
     const i = Math.min(last - 1, Math.max(0, Math.floor(seg)));
     const f = MathUtils.clamp(seg - i, 0, 1);
 
@@ -58,6 +63,9 @@ const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
     const a = 1 - Math.exp(-4 * delta);
     camera.position.lerp(camTarget, a);
     camera.lookAt(lookTarget);
+
+    // Keep the field composed at the centre of frame, whatever the camera does.
+    fieldAnchor.current?.position.lerp(lookTarget, a);
   });
 
   return (
@@ -65,6 +73,14 @@ const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
       <ambientLight intensity={0.5} />
       <pointLight position={[6, 6, 6]} intensity={60} color={BRAND_CYAN} />
       <pointLight position={[-6, -3, -4]} intensity={40} color={BRAND_PURPLE} />
+
+      {/* The through-line: one particle cloud that re-forms per chapter, so the
+          world is never empty between beats. Suspense isolates its font load. */}
+      <group ref={fieldAnchor} scale={0.7}>
+        <Suspense fallback={null}>
+          <MorphField tier={tier} />
+        </Suspense>
+      </group>
 
       {/* Chapter 1 — glass monogram. Suspense isolates the one-time font load. */}
       <Suspense fallback={null}>
@@ -80,9 +96,9 @@ const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
         </Suspense>
       )}
 
-      {/* Ambient dust across the whole world — thinner on the low tier. */}
+      {/* Ambient dust, well behind the morphing field so it reads as depth. */}
       <Sparkles
-        count={tier === 'high' ? 60 : 22}
+        count={tier === 'high' ? 28 : 12}
         scale={[14, 9, 14]}
         size={2}
         speed={0.3}

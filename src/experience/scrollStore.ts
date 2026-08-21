@@ -13,15 +13,24 @@
 // (see useLenisScroll) and read everywhere else.
 
 export interface ScrollSnapshot {
-  /** Whole-journey scroll position, 0 (top) → 1 (bottom). */
+  /** Whole-page scroll position, 0 (top) → 1 (bottom of the document). */
   progress: number;
+  /**
+   * Position across the chapter sections only: 0 when the first chapter is
+   * flush with the viewport, 1 when the last one is. Unlike `progress` this
+   * ignores everything after the final chapter — the site footer adds roughly
+   * 15% of page height, which left the raw ratio permanently behind the
+   * sections (the last chapter sat at 0.845, never 1). Anything that must line
+   * up with a specific chapter reads this.
+   */
+  journey: number;
   /** Index of the chapter currently filling the viewport. */
   chapter: number;
   /** Progress within the active chapter, 0 → 1. */
   chapterProgress: number;
 }
 
-let snapshot: ScrollSnapshot = { progress: 0, chapter: 0, chapterProgress: 0 };
+let snapshot: ScrollSnapshot = { progress: 0, journey: 0, chapter: 0, chapterProgress: 0 };
 const listeners = new Set<() => void>();
 
 export const scrollStore = {
@@ -37,6 +46,7 @@ export const scrollStore = {
     const prev = snapshot;
     if (
       prev.progress === next.progress &&
+      prev.journey === next.journey &&
       prev.chapter === next.chapter &&
       prev.chapterProgress === next.chapterProgress
     ) {
@@ -52,6 +62,6 @@ export const scrollStore = {
   },
   /** Reset to top — call when the experience unmounts so a remount starts clean. */
   reset(): void {
-    this.set({ progress: 0, chapter: 0, chapterProgress: 0 });
+    this.set({ progress: 0, journey: 0, chapter: 0, chapterProgress: 0 });
   },
 };

@@ -12,6 +12,6 @@ export function useScrollSnapshot(): ScrollSnapshot {
     scrollStore.subscribe,
     scrollStore.get,
     // Server / pre-hydration snapshot.
-    () => ({ progress: 0, chapter: 0, chapterProgress: 0 })
+    () => ({ progress: 0, journey: 0, chapter: 0, chapterProgress: 0 })
   );
 }
