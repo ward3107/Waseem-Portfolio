@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChapterOverlay from './ChapterOverlay';
 import { WhatsAppButton, GhostNavButton } from './actions';
@@ -19,12 +20,22 @@ const TrustOverlay: React.FC<{ index: number; total: number }> = ({ index, total
         </>
       }
     >
+      {/* Stars pop in one after another — the chapter's living moment. */}
       <div
-        className="mt-6 flex items-center justify-center gap-1 text-2xl text-brand-gold"
+        className="mt-6 flex items-center justify-center gap-1.5 text-3xl text-brand-gold"
         aria-hidden="true"
       >
-        {[1, 2, 3, 4, 5].map((i) => (
-          <span key={i}>★</span>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <motion.span
+            key={i}
+            initial={{ scale: 0, rotate: -30, opacity: 0 }}
+            whileInView={{ scale: 1, rotate: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ delay: 0.35 + i * 0.12, type: 'spring', stiffness: 300, damping: 12 }}
+            className="inline-block drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]"
+          >
+            ★
+          </motion.span>
         ))}
       </div>
     </ChapterOverlay>

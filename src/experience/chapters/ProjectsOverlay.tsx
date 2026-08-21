@@ -28,7 +28,10 @@ const ProjectsOverlay: React.FC<{ index: number; total: number; tier: QualityTie
   const heading = (
     <>
       <span className="text-white">{t('projects_title_1')} </span>
-      <span className="text-brand-goldLight drop-shadow-[0_1px_12px_rgba(227,208,149,0.45)]">
+      <span
+        className="exp-glow-pulse text-brand-goldLight"
+        style={{ '--glow': 'rgba(227,208,149,0.5)' } as React.CSSProperties}
+      >
         {t('projects_title_2')}
       </span>
     </>

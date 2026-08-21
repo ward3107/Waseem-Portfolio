@@ -13,7 +13,10 @@ const ServicesOverlay: React.FC<{ index: number; total: number }> = ({ index, to
       title={
         <>
           <span className="text-white">{t('services_title_1')}</span>
-          <span className="text-brand-purpleLighter drop-shadow-[0_1px_16px_rgba(121,101,193,0.6)]">
+          <span
+            className="exp-glow-pulse text-brand-purpleLighter"
+            style={{ '--glow': 'rgba(121,101,193,0.6)' } as React.CSSProperties}
+          >
             {t('services_title_2')}
           </span>
         </>

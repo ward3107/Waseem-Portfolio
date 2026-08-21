@@ -68,6 +68,15 @@ body {
 .glitch-text { text-shadow: 2px 0 #fff, -2px 0 #ff00c1; }
 .blink { animation: blink 1s step-end infinite; }
 
+/* Experience: slow breathing glow for highlighted headline words. Colour comes
+   from the element's own --glow (falls back to brand purple). Neutralized for
+   reduced-motion by the global block below. */
+@keyframes exp-glow-pulse {
+  0%, 100% { filter: drop-shadow(0 1px 10px var(--glow, rgba(121, 101, 193, 0.45))); }
+  50% { filter: drop-shadow(0 1px 26px var(--glow, rgba(121, 101, 193, 0.85))); }
+}
+.exp-glow-pulse { animation: exp-glow-pulse 3.5s ease-in-out infinite; }
+
 /* Global reduced-motion honor. Many decorative CSS animations (animate-pulse
    on status dots/avatars, animate-ping, animate-bounce, the tech-stack marquee,
    spin-slow) were applied unconditionally. Rather than gate each one in JSX,

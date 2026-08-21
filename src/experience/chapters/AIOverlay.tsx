@@ -14,7 +14,10 @@ const AIOverlay: React.FC<{ index: number; total: number }> = ({ index, total })
       title={
         <>
           <span className="text-white">{t('ai_title_start')} </span>
-          <span className="text-brand-cyan drop-shadow-[0_1px_16px_rgba(0,229,255,0.5)]">
+          <span
+            className="exp-glow-pulse text-brand-cyan"
+            style={{ '--glow': 'rgba(0,229,255,0.55)' } as React.CSSProperties}
+          >
             {t('ai_title_highlight')}
           </span>
         </>
