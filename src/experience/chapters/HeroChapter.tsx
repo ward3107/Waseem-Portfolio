@@ -32,12 +32,17 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   const pointer = useThree((s) => s.pointer);
   const high = tier === 'high';
 
-  // Spin state (an angular-velocity model so scroll and drag "throw" it).
+  // Spin state. The rotation TRACKS scroll directly (progress × a fixed gain)
+  // instead of integrating scroll velocity — velocity injection made a fast
+  // flick whip the letter around uncontrollably. Direct coupling means the
+  // spin speed is exactly proportional to how fast you scroll, perfectly
+  // reversible, and it settles the moment the page does. A slow idle drift
+  // keeps it alive when resting, and drag-flings decay smoothly on top.
   const spin = useRef(0);
-  const angVel = useRef(0);
+  const fling = useRef(0); // angular velocity from drag-flings only
+  const flingOffset = useRef(0);
   const tiltX = useRef(0);
   const tiltY = useRef(0);
-  const lastProgress = useRef(0);
 
   // Drag-to-fling. The mesh's onPointerDown starts a drag; window listeners
   // handle move/up so a fast drag that leaves the letter still tracks.
@@ -48,7 +53,7 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
       if (!dragging.current) return;
       const dx = ev.clientX - lastDragX.current;
       lastDragX.current = ev.clientX;
-      angVel.current += dx * 0.035; // fling proportional to drag speed
+      fling.current += dx * 0.02; // fling proportional to drag speed
     };
     const up = () => {
       if (!dragging.current) return;
@@ -64,20 +69,20 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
     };
   }, []);
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
     const g = group.current;
     if (!g) return;
     const { progress } = scrollStore.get();
-    const dP = progress - lastProgress.current;
-    lastProgress.current = progress;
-    const scrollVel = dP / Math.max(delta, 0.0001); // progress units / second
 
-    // Angular velocity: idles at a lively base spin; scrolling and dragging
-    // inject energy that eases back toward the idle.
-    const idle = high ? 1.0 : 0.7;
-    angVel.current += scrollVel * 16; // scroll whips it around
-    angVel.current = MathUtils.lerp(angVel.current, idle, 1 - Math.exp(-1.6 * delta));
-    spin.current += angVel.current * delta;
+    // Fling momentum decays smoothly; accumulate it as an angle offset.
+    fling.current *= Math.exp(-2.5 * delta);
+    flingOffset.current += fling.current * delta;
+
+    // Target = slow idle drift + direct scroll coupling + fling.
+    const idleDrift = state.clock.elapsedTime * 0.25;
+    const scrollSpin = progress * 7; // ~1.1 turns over the whole journey
+    const spinTarget = idleDrift + scrollSpin + flingOffset.current;
+    spin.current = MathUtils.lerp(spin.current, spinTarget, 1 - Math.exp(-5 * delta));
 
     // Aggressive, snappy lean toward the cursor.
     const eased = 1 - Math.exp(-7 * delta);

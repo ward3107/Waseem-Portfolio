@@ -25,7 +25,7 @@ const HeroOverlay: React.FC = () => {
           frames (the 10k worst-frame legibility rule). Whisper level. */}
       <div
         aria-hidden="true"
-        className="absolute -inset-x-20 -inset-y-12 -z-10 rounded-[4rem] bg-slate-950/45 blur-3xl"
+        className="absolute -inset-x-6 -inset-y-12 -z-10 rounded-[4rem] bg-slate-950/45 blur-3xl sm:-inset-x-16"
       />
       <motion.div
         initial={{ opacity: 0, y: 12 }}
