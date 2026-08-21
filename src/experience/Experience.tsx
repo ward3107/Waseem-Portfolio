@@ -3,6 +3,7 @@ import { useLenisScroll } from './useLenisScroll';
 import { CHAPTERS } from './storyboard';
 import { useQualityTier } from './useQualityTier';
 import ScrollProgress from './components/ScrollProgress';
+import HeroFilm from './chapters/HeroFilm';
 import HeroOverlay from './chapters/HeroOverlay';
 import ServicesOverlay from './chapters/ServicesOverlay';
 import AIOverlay from './chapters/AIOverlay';
@@ -57,6 +58,9 @@ const Experience: React.FC = () => {
           layer above is pointer-events-none except for real interactive
           elements, so clicks still reach links/buttons. */}
       <div className="fixed inset-0 z-0">
+        {/* The Forge — scroll-scrubbed hero film, behind the 3D canvas so the
+            live monogram can take over from the footage. Desktop only. */}
+        {tier === 'high' && <HeroFilm />}
         {!canvasFailed && (
           <Suspense fallback={null}>
             <ExperienceCanvas tier={tier} onContextLost={() => setCanvasFailed(true)} />
