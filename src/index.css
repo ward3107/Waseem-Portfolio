@@ -77,6 +77,16 @@ body {
 }
 .exp-glow-pulse { animation: exp-glow-pulse 3.5s ease-in-out infinite; }
 
+/* Inner pages now sit inside PageShell, whose atmosphere has to be visible.
+   Each feature section still paints the old flat page background over it, so
+   neutralise those full-width wrappers only — cards, panels and any other
+   surface keep their own fill. The `.dark` variants need the extra class in
+   the selector to outrank Tailwind's own `.dark .bg-*` rules. */
+.page-shell section,
+.dark .page-shell section {
+  background-color: transparent;
+}
+
 /* Global reduced-motion honor. Many decorative CSS animations (animate-pulse
    on status dots/avatars, animate-ping, animate-bounce, the tech-stack marquee,
    spin-slow) were applied unconditionally. Rather than gate each one in JSX,

@@ -3,6 +3,7 @@ import AboutTimeline from '@/features/about/AboutTimeline';
 import Reviews from '@/features/reviews/Reviews';
 import Process from '@/features/home/Process';
 import FAQ from '@/features/home/FAQ';
+import PageShell from '@/shared/layout/PageShell';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 
@@ -15,12 +16,12 @@ const AboutPage: React.FC = () => {
   const { t } = useLanguage();
   useDocumentTitle(t('page_title_about'));
   return (
-    <>
+    <PageShell>
       <AboutTimeline />
       <Reviews />
       <Process />
       <FAQ />
-    </>
+    </PageShell>
   );
 };
 

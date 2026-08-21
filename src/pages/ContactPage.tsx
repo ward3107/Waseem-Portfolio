@@ -1,5 +1,6 @@
 import React from 'react';
 import Contact from '@/features/contact/Contact';
+import PageShell from '@/shared/layout/PageShell';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 
@@ -9,7 +10,11 @@ import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 const ContactPage: React.FC = () => {
   const { t } = useLanguage();
   useDocumentTitle(t('page_title_contact'));
-  return <Contact />;
+  return (
+    <PageShell>
+      <Contact />
+    </PageShell>
+  );
 };
 
 export default ContactPage;

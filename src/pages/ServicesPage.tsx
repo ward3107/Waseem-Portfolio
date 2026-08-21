@@ -1,5 +1,6 @@
 import React from 'react';
 import Services from '@/features/services';
+import PageShell from '@/shared/layout/PageShell';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 
@@ -9,7 +10,11 @@ import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 const ServicesPage: React.FC = () => {
   const { t } = useLanguage();
   useDocumentTitle(t('page_title_services'));
-  return <Services />;
+  return (
+    <PageShell>
+      <Services />
+    </PageShell>
+  );
 };
 
 export default ServicesPage;
