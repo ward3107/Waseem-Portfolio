@@ -5,6 +5,8 @@ import { Vector3, MathUtils } from 'three';
 import { scrollStore } from './scrollStore';
 import { CHAPTERS } from './storyboard';
 import HeroChapter from './chapters/HeroChapter';
+import ProjectsScene from './chapters/ProjectsScene';
+import type { QualityTier } from './useQualityTier';
 
 // Brand palette (mirrors tailwind.config.js) so the 3D world reads as the
 // same brand as the DOM site.
@@ -21,7 +23,7 @@ const BRAND_CYAN = '#00E5FF';
  * monogram); Phases 3–4 add the remaining chapters the same way, each isolated
  * behind its own <Suspense> so an asset load never blanks the whole canvas.
  */
-const Scene: React.FC = () => {
+const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   const camera = useThree((s) => s.camera);
 
   // Precompute Vector3 keyframes once from the storyboard tuples.
@@ -66,12 +68,21 @@ const Scene: React.FC = () => {
 
       {/* Chapter 1 — glass monogram. Suspense isolates the one-time font load. */}
       <Suspense fallback={null}>
-        <HeroChapter />
+        <HeroChapter tier={tier} />
       </Suspense>
 
-      {/* Ambient dust across the whole world. */}
+      {/* Chapter 4 — projects fly-through. High tier only: on phones the DOM
+          project cards (ProjectsOverlay) carry this chapter instead, which fits
+          a portrait viewport far better than a wide 3D fan. */}
+      {tier === 'high' && (
+        <Suspense fallback={null}>
+          <ProjectsScene />
+        </Suspense>
+      )}
+
+      {/* Ambient dust across the whole world — thinner on the low tier. */}
       <Sparkles
-        count={60}
+        count={tier === 'high' ? 60 : 22}
         scale={[14, 9, 14]}
         size={2}
         speed={0.3}

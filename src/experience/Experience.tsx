@@ -1,6 +1,7 @@
 import React, { Suspense, lazy, useState } from 'react';
 import { useLenisScroll } from './useLenisScroll';
 import { CHAPTERS } from './storyboard';
+import { useQualityTier } from './useQualityTier';
 import ScrollProgress from './components/ScrollProgress';
 import HeroOverlay from './chapters/HeroOverlay';
 import ServicesOverlay from './chapters/ServicesOverlay';
@@ -9,12 +10,12 @@ import ProjectsOverlay from './chapters/ProjectsOverlay';
 import TrustOverlay from './chapters/TrustOverlay';
 import ContactOverlay from './chapters/ContactOverlay';
 
-// Maps a storyboard chapter id to its DOM overlay. Chapter 1 (hero) is handled
-// separately because it owns the page's single <h1>.
+// Maps a storyboard chapter id to its DOM overlay. Handled separately: chapter
+// 1 (hero) owns the page's single <h1>; projects takes the quality tier (it
+// swaps the DOM card grid for a lean index when the 3D gallery is present).
 const OVERLAY_BY_ID: Record<string, React.FC<{ index: number; total: number }>> = {
   services: ServicesOverlay,
   ai: AIOverlay,
-  projects: ProjectsOverlay,
   trust: TrustOverlay,
   contact: ContactOverlay,
 };
@@ -44,6 +45,7 @@ const ExperienceCanvas = lazy(() => import('./ExperienceCanvas'));
  */
 const Experience: React.FC = () => {
   const [canvasFailed, setCanvasFailed] = useState(false);
+  const tier = useQualityTier();
 
   // Smooth scrolling + progress publishing, live for as long as we're mounted.
   useLenisScroll(true);
@@ -57,7 +59,7 @@ const Experience: React.FC = () => {
       <div className="fixed inset-0 z-0">
         {!canvasFailed && (
           <Suspense fallback={null}>
-            <ExperienceCanvas onContextLost={() => setCanvasFailed(true)} />
+            <ExperienceCanvas tier={tier} onContextLost={() => setCanvasFailed(true)} />
           </Suspense>
         )}
         {/* Subtle vignette to seat the DOM text over the 3D scene. */}
@@ -85,6 +87,9 @@ const Experience: React.FC = () => {
               {i === 0 ? (
                 // Chapter 1 — real hero content (its own single <h1>).
                 <HeroOverlay />
+              ) : chapter.id === 'projects' ? (
+                // Projects — 3D gallery (high) + lean index, or DOM cards (low).
+                <ProjectsOverlay index={i} total={CHAPTERS.length} tier={tier} />
               ) : Overlay ? (
                 <Overlay index={i} total={CHAPTERS.length} />
               ) : null}

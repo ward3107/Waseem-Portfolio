@@ -10,6 +10,7 @@ import {
 } from '@react-three/drei';
 import { Group, MathUtils } from 'three';
 import { scrollStore } from '../scrollStore';
+import type { QualityTier } from '../useQualityTier';
 
 /**
  * Chapter 1 — "The Craftsman". A refractive glass brand monogram (the "W")
@@ -25,9 +26,10 @@ import { scrollStore } from '../scrollStore';
  * component (in Scene.tsx) isolates the one-time font load so the rest of the
  * scene never blanks while it streams in.
  */
-const HeroChapter: React.FC = () => {
+const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   const group = useRef<Group>(null);
   const pointer = useThree((s) => s.pointer);
+  const high = tier === 'high';
 
   useFrame((_, delta) => {
     const g = group.current;
@@ -61,22 +63,37 @@ const HeroChapter: React.FC = () => {
             bevelSegments={6}
           >
             W
-            <MeshTransmissionMaterial
-              samples={6}
-              resolution={256}
-              thickness={0.8}
-              roughness={0.12}
-              transmission={1}
-              ior={1.4}
-              chromaticAberration={0.06}
-              anisotropy={0.1}
-              distortion={0.2}
-              distortionScale={0.3}
-              temporalDistortion={0.05}
-              color="#A78BFA"
-              attenuationColor="#7965C1"
-              attenuationDistance={1.5}
-            />
+            {high ? (
+              // Full glass: transmission re-renders the scene each frame — the
+              // premium look, but the heaviest material, so desktop only.
+              <MeshTransmissionMaterial
+                samples={6}
+                resolution={256}
+                thickness={0.8}
+                roughness={0.12}
+                transmission={1}
+                ior={1.4}
+                chromaticAberration={0.06}
+                anisotropy={0.1}
+                distortion={0.2}
+                distortionScale={0.3}
+                temporalDistortion={0.05}
+                color="#A78BFA"
+                attenuationColor="#7965C1"
+                attenuationDistance={1.5}
+              />
+            ) : (
+              // Mobile: a glowing metallic crystal. No per-frame transmission
+              // buffer; emissive keeps it luminous, the environment gives it
+              // reflections. Cheap and smooth on phone GPUs.
+              <meshStandardMaterial
+                color="#A78BFA"
+                metalness={0.6}
+                roughness={0.18}
+                emissive="#7965C1"
+                emissiveIntensity={0.55}
+              />
+            )}
           </Text3D>
         </Center>
       </Float>
@@ -85,12 +102,14 @@ const HeroChapter: React.FC = () => {
       <pointLight position={[3, 3, 4]} intensity={40} color="#00E5FF" />
       <pointLight position={[-4, -2, 2]} intensity={28} color="#7965C1" />
 
-      {/* Procedural studio environment — no network fetch. Baked once (frames=1)
-          for the reflections/refraction the transmission material samples. */}
-      <Environment resolution={128} frames={1}>
+      {/* Procedural studio environment — no network fetch, baked once
+          (frames=1) for reflections/refraction. Lighter on the low tier. */}
+      <Environment resolution={high ? 128 : 64} frames={1}>
         <Lightformer intensity={2} position={[0, 2, 4]} scale={[8, 8, 1]} color="#00E5FF" />
         <Lightformer intensity={1.6} position={[-5, -1, -3]} scale={[6, 6, 1]} color="#7965C1" />
-        <Lightformer intensity={1.2} position={[5, 1, -2]} scale={[6, 6, 1]} color="#E3D095" />
+        {high && (
+          <Lightformer intensity={1.2} position={[5, 1, -2]} scale={[6, 6, 1]} color="#E3D095" />
+        )}
       </Environment>
     </group>
   );
