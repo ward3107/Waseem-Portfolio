@@ -3,6 +3,21 @@ import { useLenisScroll } from './useLenisScroll';
 import { CHAPTERS } from './storyboard';
 import ScrollProgress from './components/ScrollProgress';
 import HeroOverlay from './chapters/HeroOverlay';
+import ServicesOverlay from './chapters/ServicesOverlay';
+import AIOverlay from './chapters/AIOverlay';
+import ProjectsOverlay from './chapters/ProjectsOverlay';
+import TrustOverlay from './chapters/TrustOverlay';
+import ContactOverlay from './chapters/ContactOverlay';
+
+// Maps a storyboard chapter id to its DOM overlay. Chapter 1 (hero) is handled
+// separately because it owns the page's single <h1>.
+const OVERLAY_BY_ID: Record<string, React.FC<{ index: number; total: number }>> = {
+  services: ServicesOverlay,
+  ai: AIOverlay,
+  projects: ProjectsOverlay,
+  trust: TrustOverlay,
+  contact: ContactOverlay,
+};
 
 // The WebGL bundle (fiber + drei + three) is isolated behind this lazy import.
 // Classic-site visitors never reach this line, so they never download it.
@@ -54,29 +69,28 @@ const Experience: React.FC = () => {
       {/* Content layer. pointer-events-none lets cursor moves reach the canvas;
           interactive children opt back in with pointer-events-auto. */}
       <div className="pointer-events-none relative z-10">
-        {CHAPTERS.map((chapter, i) => (
-          <section
-            key={chapter.id}
-            id={chapter.id}
-            aria-label={chapter.label}
-            className="flex min-h-screen flex-col items-center justify-center px-6 text-center"
-          >
-            {i === 0 ? (
-              // Chapter 1 — real hero content (its own single <h1>).
-              <HeroOverlay />
-            ) : (
-              // Scaffolded chapters — labelled placeholders until Phases 3–4.
-              <>
-                <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-brand-cyan">
-                  {String(i + 1).padStart(2, '0')} / {String(CHAPTERS.length).padStart(2, '0')}
-                </p>
-                <h2 className="max-w-3xl font-heading text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
-                  {chapter.label}
-                </h2>
-              </>
-            )}
-          </section>
-        ))}
+        {CHAPTERS.map((chapter, i) => {
+          const Overlay = OVERLAY_BY_ID[chapter.id];
+          // Use the chapter's nav anchor as the section id so existing in-page
+          // links (e.g. /#what-i-do, /#ai-automation) resolve to the right
+          // chapter in the experience too.
+          const sectionId = chapter.anchor ? chapter.anchor.replace(/^#/, '') : chapter.id;
+          return (
+            <section
+              key={chapter.id}
+              id={sectionId}
+              aria-label={chapter.label}
+              className="flex min-h-screen flex-col items-center justify-center px-6 py-24 text-center"
+            >
+              {i === 0 ? (
+                // Chapter 1 — real hero content (its own single <h1>).
+                <HeroOverlay />
+              ) : Overlay ? (
+                <Overlay index={i} total={CHAPTERS.length} />
+              ) : null}
+            </section>
+          );
+        })}
       </div>
 
       {/* Unobtrusive escape hatch back to the classic site (the experience is
