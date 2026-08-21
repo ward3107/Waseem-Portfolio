@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import FooterConstellation from '@/shared/ui/FooterConstellation';
 import { Link } from 'react-router-dom';
 import { Github, Linkedin, Twitter, ArrowRight, X, Lock } from 'lucide-react';
 import { NAV_LINKS, SERVICE_AREAS } from '@/constants';
@@ -56,7 +57,6 @@ const Footer: React.FC = () => {
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-purple via-brand-cyan to-brand-gold"></div>
       <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-full h-full bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none opacity-20"></div>
-
       <div className="max-w-7xl mx-auto px-6 sm:px-10 pt-20 pb-10 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
           {/* Brand Column */}
@@ -190,6 +190,10 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
+        {/* The journey's epilogue: its particles settle here and rebuild the
+            W. Sweep a cursor through them and they scatter, then drift back. */}
+        <FooterConstellation />
+
         <div className="pt-8 border-t border-slate-200 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-600 dark:text-slate-500">
           <p>
             © {currentYear} Waseem. {t('footer_rights')}
@@ -229,6 +233,12 @@ const Footer: React.FC = () => {
             {t('footer_made_with')} {t('footer_tel_aviv')}
           </p>
         </div>
+
+        {/* Clearance for everything docked over the page bottom: the WhatsApp
+            bar on the bottom edge, back-to-top and the accessibility button
+            above it, and the classic-site pill above those. Without the room
+            they cover the legal links and swallow clicks meant for them. */}
+        <div aria-hidden="true" className="h-48" />
       </div>
 
       {/* Legal Modal */}

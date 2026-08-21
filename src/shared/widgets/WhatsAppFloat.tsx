@@ -1,111 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X } from 'lucide-react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { MessageCircle } from 'lucide-react';
 import { useContact } from '@/features/contact/useContact';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { trackEvent } from '@/lib/browser';
 
-// Floating WhatsApp CTA anchored to the bottom-right (bottom-left in RTL) on
-// every public page. In the Israeli SMB market a one-tap WhatsApp handoff is
-// table stakes — every competing freelancer offers it, and burying the
-// contact link in a form at the bottom of the page leaks warm leads.
+// The primary WhatsApp CTA, docked to the bottom edge of every public page the
+// way an iOS app docks its main action. In the Israeli SMB market a one-tap
+// WhatsApp handoff is table stakes, so it stays permanently reachable rather
+// than hiding in a form at the bottom of the page.
 //
-// The button auto-shows a small teaser bubble ~4s after mount on the first
-// visit of the session so the visitor notices it above other page motion,
-// then collapses to just the round icon. The bubble is dismissible with an
-// explicit close button, and we don't re-open it during the same session.
-
-const STORAGE_KEY = 'wa-teaser-dismissed';
+// It used to be a round icon floating at the side that popped a teaser bubble
+// open by itself a few seconds in. The bubble covered the page's own buttons
+// and had to be dismissed, and the icon alone never said what it was. A docked
+// bar carries its own label, so the teaser is gone entirely — the button IS
+// the message.
+//
+// `env(safe-area-inset-bottom)` keeps it clear of the iPhone home indicator.
+// The bar owns the bottom edge; BackToTop and the accessibility button sit
+// above it. The cookie banner (z-50) deliberately covers it: consent first.
 
 const WhatsAppFloat: React.FC = () => {
   const { whatsappNumber } = useContact();
   const { t, language } = useLanguage();
-  const [showTeaser, setShowTeaser] = useState(false);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (sessionStorage.getItem(STORAGE_KEY)) return;
-    const id = window.setTimeout(() => setShowTeaser(true), 4000);
-    return () => window.clearTimeout(id);
-  }, []);
-
-  const dismissTeaser = () => {
-    setShowTeaser(false);
-    try {
-      sessionStorage.setItem(STORAGE_KEY, '1');
-    } catch {
-      // Private-mode Safari throws on setItem — swallow, teaser just re-shows next visit.
-    }
-  };
-
-  const message = t('wa_float_prefill');
-  const href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-  const handleClick = () => {
-    trackEvent('generate_lead', { source: 'whatsapp_float', language });
-    dismissTeaser();
-  };
+  const href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t('wa_float_prefill'))}`;
 
   return (
-    // Pinned to the bottom-LEFT in every locale. AccessibilityToolbar owns
-    // the bottom-right; BackToTop lives on the LEFT too — bottom-6 on
-    // mobile, bottom-24 on desktop. We stack WhatsApp above BackToTop in
-    // both viewports:
-    //   mobile → bottom-24 (BackToTop is at bottom-6)
-    //   desktop → bottom-40 (BackToTop rises to bottom-24)
-    // `dir="ltr"` keeps flex `items-start` predictable inside an RTL page.
-    <div dir="ltr" className="fixed bottom-24 md:bottom-40 left-5 z-40 flex flex-col items-start gap-2 print:hidden">
-      <AnimatePresence>
-        {showTeaser && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.9 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 22 }}
-            className="relative max-w-[240px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-bl-sm shadow-xl px-4 py-3 text-sm"
-          >
-            <button
-              type="button"
-              onClick={dismissTeaser}
-              aria-label={t('wa_float_close')}
-              className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center shadow"
-            >
-              <X size={12} />
-            </button>
-            {/* dir="auto" lets the browser pick per-paragraph direction from
-                the first strong character — Hebrew/Arabic bubbles read RTL,
-                English bubbles read LTR, without the outer dir="ltr" (which
-                is there purely for absolute positioning) leaking into text. */}
-            <p dir="auto" className="font-semibold text-slate-900 dark:text-white leading-tight">
-              {t('wa_float_teaser_title')}
-            </p>
-            <p dir="auto" className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-snug">
-              {t('wa_float_teaser_body')}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* This button is fixed and visible on every page, so any perpetual
-          animation here runs for the entire session and competes with scroll.
-          The old loop tween'd box-shadow — a paint property, so it repainted
-          the layer every frame site-wide. Dropped it: the attention pulse now
-          rides on a compositor-only transform (scale) plus the existing ping
-          ring, and the glow is a static drop-shadow. Same look, no per-frame
-          repaint. */}
+    <div
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 print:hidden"
+      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.75rem)' }}
+    >
       <motion.a
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6, type: 'spring', stiffness: 220, damping: 26 }}
+        whileTap={{ scale: 0.97 }}
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        onClick={handleClick}
         aria-label={t('wa_float_aria')}
-        animate={{ scale: [1, 1.06, 1] }}
-        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-[0_8px_24px_rgba(37,211,102,0.45)] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#25D366]/40"
-        style={{ willChange: 'transform' }}
+        onClick={() => trackEvent('generate_lead', { source: 'whatsapp_dock', language })}
+        className="pointer-events-auto flex w-full max-w-sm items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-6 py-3.5 text-base font-bold text-white shadow-2xl shadow-green-900/40 ring-1 ring-white/20 transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-4 focus-visible:ring-green-300"
       >
-        <MessageCircle size={26} className="drop-shadow" />
-        <span className="absolute inset-0 rounded-full border-2 border-white/40 animate-ping pointer-events-none" aria-hidden="true" />
+        <MessageCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
+        {t('hero_cta_whatsapp')}
       </motion.a>
     </div>
   );

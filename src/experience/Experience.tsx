@@ -112,7 +112,7 @@ const Experience: React.FC = () => {
           still opt-in / in progress). Fixed so it's reachable from any chapter. */}
       <a
         href="?classic=1"
-        className="fixed bottom-4 start-4 z-40 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-semibold text-white/80 backdrop-blur transition-colors hover:border-brand-cyan/40 hover:bg-white/10 hover:text-white"
+        className="fixed bottom-40 start-4 z-40 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-semibold text-white/80 backdrop-blur transition-colors hover:border-brand-cyan/40 hover:bg-white/10 hover:text-white"
       >
         Classic site
       </a>
