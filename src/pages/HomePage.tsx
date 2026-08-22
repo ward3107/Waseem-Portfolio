@@ -6,9 +6,17 @@ import VibeCoding from '@/features/ai/VibeCoding';
 import FeaturedProjects from '@/features/projects/FeaturedProjects';
 import Reviews from '@/features/reviews/Reviews';
 import HomeCTA from '@/features/home/HomeCTA';
+import ScrollJourney from '@/features/journey/ScrollJourney';
+import Act from '@/features/journey/Act';
+import { JOURNEY_ACTS } from '@/features/journey/journeyConfig';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { useExperienceMode } from '@/experience';
+
+// Acts, in scroll order, mapping the existing sections onto the five-colour
+// journey: Identity (purple) → Services (blue) → AI (cyan) → Work (gold) →
+// Contact (emerald). Grouping only — each section's own markup is untouched.
+const [ACT_IDENTITY, ACT_SERVICES, ACT_AI, ACT_WORK, ACT_CONTACT] = JOURNEY_ACTS;
 
 // These sections were lazy, but each one rendered unconditionally on mount —
 // there was no scroll gate — so React requested all six chunks immediately
@@ -29,18 +37,30 @@ import { useExperienceMode } from '@/experience';
 // ?classic all resolve to the classic path below.
 const Experience = lazy(() => import('@/experience/Experience'));
 
-/** The classic, complete 2D homepage. Also the guaranteed fallback for the
- *  3D experience (reduced-motion / no-WebGL / mobile / opt-out). */
+/** The classic, complete 2D homepage — now a single continuous colour journey.
+ *  Also the guaranteed fallback for the 3D experience (reduced-motion / no-WebGL
+ *  / mobile / opt-out). The sections are unchanged; they are grouped into five
+ *  colour acts whose shared backdrop eases from one hue to the next on scroll. */
 const ClassicHome: React.FC = () => (
-  <>
-    <Hero />
-    <Services />
-    <AISection />
-    <VibeCoding />
-    <FeaturedProjects />
-    <Reviews />
-    <HomeCTA />
-  </>
+  <ScrollJourney>
+    <Act act={ACT_IDENTITY}>
+      <Hero />
+    </Act>
+    <Act act={ACT_SERVICES}>
+      <Services />
+    </Act>
+    <Act act={ACT_AI}>
+      <AISection />
+      <VibeCoding />
+    </Act>
+    <Act act={ACT_WORK}>
+      <FeaturedProjects />
+      <Reviews />
+    </Act>
+    <Act act={ACT_CONTACT}>
+      <HomeCTA />
+    </Act>
+  </ScrollJourney>
 );
 
 const HomePage: React.FC = () => {

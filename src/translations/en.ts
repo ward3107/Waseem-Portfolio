@@ -4,6 +4,14 @@ export const en: Record<string, string> = {
     letsTalk: "Let's Talk",
     skipToMain: "Skip to main content",
 
+    // Homepage colour-journey rail
+    journey_nav: "Journey navigation",
+    journey_identity: "Identity",
+    journey_services: "Services",
+    journey_ai: "AI",
+    journey_work: "Work",
+    journey_contact: "Contact",
+
     // Hero
     hero_badge: "Available for New Projects",
     hero_title_1: "I craft digital ",
