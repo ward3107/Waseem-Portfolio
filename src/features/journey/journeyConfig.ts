@@ -109,3 +109,30 @@ export function mixRgb(a: [number, number, number], b: [number, number, number],
     a[1] + (b[1] - a[1]) * k
   )}, ${Math.round(a[2] + (b[2] - a[2]) * k)})`;
 }
+
+/** Parse `rgba(r,g,b,a)` (the ghost strings) into an [r,g,b,a] tuple. */
+export function parseRgba(str: string): [number, number, number, number] {
+  const m = str.match(/rgba?\(([^)]+)\)/);
+  if (!m) return [0, 0, 0, 0];
+  const parts = m[1].split(',').map((s) => parseFloat(s.trim()));
+  return [parts[0] || 0, parts[1] || 0, parts[2] || 0, parts[3] ?? 1];
+}
+
+/**
+ * Linear-mix two rgba tuples into an `rgba()` string, then scale the resulting
+ * alpha by `intensity` (used for the settle-beat: the aura's glow strengthens
+ * as an act centres and eases off at the seam between two acts). `t` and
+ * `intensity` are clamped 0..1.
+ */
+export function mixRgba(
+  a: [number, number, number, number],
+  b: [number, number, number, number],
+  t: number,
+  intensity = 1
+): string {
+  const k = t < 0 ? 0 : t > 1 ? 1 : t;
+  const i = intensity < 0 ? 0 : intensity > 1 ? 1 : intensity;
+  return `rgba(${Math.round(a[0] + (b[0] - a[0]) * k)}, ${Math.round(
+    a[1] + (b[1] - a[1]) * k
+  )}, ${Math.round(a[2] + (b[2] - a[2]) * k)}, ${((a[3] + (b[3] - a[3]) * k) * i).toFixed(3)})`;
+}

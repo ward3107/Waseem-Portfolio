@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AmbientField from '@/shared/ui/AmbientField';
+import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import ColorRail from './ColorRail';
-import { JOURNEY_ACTS, hexToRgb, mixRgb } from './journeyConfig';
+import { JOURNEY_ACTS, hexToRgb, mixRgb, parseRgba, mixRgba } from './journeyConfig';
 
 /**
  * The colour-journey shell. Wraps the classic homepage sections and turns the
@@ -32,10 +33,14 @@ const ScrollJourney: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const [isDark, setIsDark] = useState(
     typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
   );
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   // Keep `active` in a ref so the scroll handler only calls setState on a real
   // change, never once per frame.
   const activeRef = useRef(0);
+  // Read reduced-motion inside the scroll handler without re-subscribing it.
+  const reduceRef = useRef(prefersReducedMotion);
+  reduceRef.current = prefersReducedMotion;
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -45,11 +50,11 @@ const ScrollJourney: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
     let dark = document.documentElement.classList.contains('dark');
     let grounds = JOURNEY_ACTS.map((a) => hexToRgb(dark ? a.groundDark : a.groundLight));
-    let ghosts = JOURNEY_ACTS.map((a) => (dark ? a.ghostDark : a.ghostLight));
+    let ghosts = JOURNEY_ACTS.map((a) => parseRgba(dark ? a.ghostDark : a.ghostLight));
 
     const refreshPalette = () => {
       grounds = JOURNEY_ACTS.map((a) => hexToRgb(dark ? a.groundDark : a.groundLight));
-      ghosts = JOURNEY_ACTS.map((a) => (dark ? a.ghostDark : a.ghostLight));
+      ghosts = JOURNEY_ACTS.map((a) => parseRgba(dark ? a.ghostDark : a.ghostLight));
     };
 
     let ticking = false;
@@ -76,11 +81,22 @@ const ScrollJourney: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
       stage.style.backgroundColor = mixRgb(grounds[lo], grounds[hi], t);
 
-      // Identity (accent + aura + rail) snaps to the nearer act rather than
-      // blending — an act "belongs" to one hue even mid-fade.
-      const near = t < 0.5 ? lo : hi;
-      aura.style.background = `radial-gradient(58% 45% at 50% 32%, ${ghosts[near]}, transparent 72%)`;
+      // Settle-beat: the aura's glow is strongest while an act is centred and
+      // eases off at the seam between two acts, giving the journey an inhale /
+      // exhale rhythm instead of a flat slide. `t` runs 0 (at lo's centre) → 1
+      // (at hi's centre), so distance-to-nearest-centre peaks at 0.5 (the seam).
+      // Held steady for reduced-motion so nothing pulses.
+      const seam = Math.min(t, 1 - t); // 0 at a centre, 0.5 at the seam
+      const intensity = reduceRef.current ? 1 : 0.6 + 0.4 * (1 - 2 * seam);
 
+      // The aura colour cross-fades continuously between the two acts (no snap),
+      // so the glow morphs from one accent into the next as you scroll.
+      const ghost = mixRgba(ghosts[lo], ghosts[hi], t, intensity);
+      aura.style.background = `radial-gradient(58% 45% at 50% 32%, ${ghost}, transparent 72%)`;
+
+      // Rail + active state still snap: an act "belongs" to one hue and one
+      // rail node even mid-fade.
+      const near = t < 0.5 ? lo : hi;
       if (near !== activeRef.current) {
         activeRef.current = near;
         setActive(near);
