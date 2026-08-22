@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { MotionConfig } from 'framer-motion';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import Navbar from '@/shared/layout/Navbar';
 import Footer from '@/shared/layout/Footer';
@@ -10,6 +10,7 @@ import CookieBanner from '@/shared/widgets/CookieBanner';
 import WhatsAppFloat from '@/shared/widgets/WhatsAppFloat';
 import ExitIntent from '@/shared/widgets/ExitIntent';
 import ScrollToHashOnRouteChange from '@/shared/ui/ScrollToHashOnRouteChange';
+import RouteTransition from '@/shared/ui/RouteTransition';
 import SectionSkeleton from '@/shared/ui/SectionSkeleton';
 import ErrorBoundary from '@/shared/ui/ErrorBoundary';
 import HomePage from './pages/HomePage';
@@ -90,39 +91,50 @@ const SiteShell: React.FC<{ children: React.ReactNode; focusMode?: boolean }> = 
  *  no cookie banner. Prevents "which nav do I use?" confusion and stops the
  *  floating widgets from covering the admin UI. */
 const AppContent: React.FC = () => {
-  const { pathname } = useLocation();
-  const isAdmin = pathname === '/admin' || pathname.startsWith('/admin/');
-  // Fully standalone routes render WITHOUT the site chrome (navbar/footer/
-  // widgets). Admin, and the customer feedback page — the latter has its own
-  // full-bleed cream/sage design, and the site's transparent navbar (light
-  // text meant for the hero) rendered washed-out and out of place on top of it.
-  // /from-gbp is a pure UTM-stamping redirect (renders null) — no chrome so
-  // there's no 1-frame flash of navbar before the client-side redirect fires.
-  const isStandalone = isAdmin || pathname === '/share-testimonial' || pathname === '/from-gbp';
-
-  const routes = (
-    <Suspense fallback={<SectionSkeleton />}>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
-        <Route path="/services" element={<ServicesPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/from-gbp" element={<FromGbpPage />} />
-        <Route path="/privacy" element={<PrivacyPage />} />
-        <Route path="/accessibility" element={<AccessibilityPage />} />
-        <Route path="/share-testimonial" element={<ShareTestimonialPage />} />
-        {/* Descendant routes — the whole admin tree lives in its own chunk. */}
-        <Route path="/admin/*" element={<AdminRoutes />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Suspense>
-  );
-
   return (
     <>
       <ScrollToHashOnRouteChange />
-      {isStandalone ? routes : <SiteShell>{routes}</SiteShell>}
+      {/* Branded route transitions. The chrome (SiteShell vs standalone) and the
+          <Routes> both read the DISPLAYED location, which lags the live one only
+          while the transition curtain is covering — so the navbar never vanishes
+          before the swap is hidden. */}
+      <RouteTransition>
+        {(display) => {
+          const { pathname } = display;
+          const isAdmin = pathname === '/admin' || pathname.startsWith('/admin/');
+          // Fully standalone routes render WITHOUT the site chrome (navbar/
+          // footer/widgets). Admin, and the customer feedback page — the latter
+          // has its own full-bleed cream/sage design, and the site's transparent
+          // navbar (light text meant for the hero) rendered washed-out and out
+          // of place on top of it. /from-gbp is a pure UTM-stamping redirect
+          // (renders null) — no chrome so there's no 1-frame flash of navbar
+          // before the client-side redirect fires.
+          const isStandalone =
+            isAdmin || pathname === '/share-testimonial' || pathname === '/from-gbp';
+
+          const routes = (
+            <Suspense fallback={<SectionSkeleton />}>
+              {/* location={display} so the exchange happens under the curtain. */}
+              <Routes location={display}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/projects" element={<ProjectsPage />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/from-gbp" element={<FromGbpPage />} />
+                <Route path="/privacy" element={<PrivacyPage />} />
+                <Route path="/accessibility" element={<AccessibilityPage />} />
+                <Route path="/share-testimonial" element={<ShareTestimonialPage />} />
+                {/* Descendant routes — the whole admin tree lives in its own chunk. */}
+                <Route path="/admin/*" element={<AdminRoutes />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </Suspense>
+          );
+
+          return isStandalone ? routes : <SiteShell>{routes}</SiteShell>;
+        }}
+      </RouteTransition>
     </>
   );
 };
