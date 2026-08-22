@@ -1,11 +1,15 @@
 import React, { lazy, Suspense } from 'react';
 import Hero from '@/features/hero';
+import AboutTimeline from '@/features/about/AboutTimeline';
+import Certifications from '@/features/certifications/Certifications';
 import Services from '@/features/services';
+import Process from '@/features/home/Process';
 import AISection from '@/features/ai/AISection';
 import VibeCoding from '@/features/ai/VibeCoding';
-import FeaturedProjects from '@/features/projects/FeaturedProjects';
+import Projects from '@/features/projects/Projects';
 import Reviews from '@/features/reviews/Reviews';
-import HomeCTA from '@/features/home/HomeCTA';
+import Contact from '@/features/contact/Contact';
+import FAQ from '@/features/home/FAQ';
 import ScrollJourney from '@/features/journey/ScrollJourney';
 import Act from '@/features/journey/Act';
 import { JOURNEY_ACTS } from '@/features/journey/journeyConfig';
@@ -37,28 +41,42 @@ const [ACT_IDENTITY, ACT_SERVICES, ACT_AI, ACT_WORK, ACT_CONTACT] = JOURNEY_ACTS
 // ?classic all resolve to the classic path below.
 const Experience = lazy(() => import('@/experience/Experience'));
 
-/** The classic, complete 2D homepage — now a single continuous colour journey.
- *  Also the guaranteed fallback for the 3D experience (reduced-motion / no-WebGL
- *  / mobile / opt-out). The sections are unchanged; they are grouped into five
- *  colour acts whose shared backdrop eases from one hue to the next on scroll. */
+/** The whole site on one page — a single continuous colour journey. What used
+ *  to be separate /about, /services, /projects and /contact routes now live
+ *  here as five colour acts, in scroll order, so the visitor never leaves the
+ *  page. The old routes redirect to the matching anchor (see App.tsx). This is
+ *  also the guaranteed fallback for the 3D experience (reduced-motion /
+ *  no-WebGL / mobile / opt-out).
+ *
+ *  Each act keeps its sections' own ids (#about, #what-i-do, #ai-automation,
+ *  #projects, #contact, …) so the nav and every CTA scroll straight to them. */
 const ClassicHome: React.FC = () => (
   <ScrollJourney>
+    {/* Identity — who Waseem is: the hero, the story/timeline, the credentials. */}
     <Act act={ACT_IDENTITY}>
       <Hero />
+      <AboutTimeline />
+      <Certifications />
     </Act>
+    {/* Services — what he builds, and how the work goes. */}
     <Act act={ACT_SERVICES}>
       <Services />
+      <Process />
     </Act>
+    {/* AI — the interactive proof, then the philosophy breather. */}
     <Act act={ACT_AI}>
       <AISection />
       <VibeCoding />
     </Act>
+    {/* Work — the projects gallery and social proof. */}
     <Act act={ACT_WORK}>
-      <FeaturedProjects />
+      <Projects />
       <Reviews />
     </Act>
+    {/* Contact — answer the last questions, then the one clear action. */}
     <Act act={ACT_CONTACT}>
-      <HomeCTA />
+      <FAQ />
+      <Contact />
     </Act>
   </ScrollJourney>
 );
