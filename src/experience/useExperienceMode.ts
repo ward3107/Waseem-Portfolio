@@ -38,18 +38,33 @@ function isCrawler(): boolean {
 }
 
 /**
+ * Phones and touch devices get the classic single-page journey, not the WebGL
+ * experience. The single-page site is the one continuous scroll visitors expect
+ * on a phone, and heavy scroll-scrubbed WebGL is awkward there; the experience
+ * stays a desktop treat (and is still reachable anywhere via `?experience`).
+ * Read once on mount so rotating or resizing never remounts the whole homepage.
+ */
+function isHandheld(): boolean {
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  const narrow = window.matchMedia('(max-width: 820px)').matches;
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
+  return narrow || coarse;
+}
+
+/**
  * Decides whether to render the WebGL storytelling experience or the classic
  * DOM site. The classic site is the guaranteed fallback and is chosen whenever
  * the 3D path would be inappropriate or unsupported:
  *
  *   - `?classic` query flag → force classic (debugging / opt-out / A-B).
+ *   - phone / touch device → classic single-page journey (unless ?experience).
  *   - `prefers-reduced-motion: reduce` → classic (accessibility).
  *   - no usable WebGL context → classic (graceful degradation).
  *   - known search/social crawler → classic (SEO: content stays crawlable).
  *
- * Otherwise the experience runs — full-quality on desktop, a lighter tier on
- * phones/tablets (useQualityTier). The gate is conservative: any doubt resolves
- * to the classic site.
+ * Otherwise the experience runs on desktop. `?experience` / `?3d` forces it on
+ * anywhere (phones included). The gate is conservative: any doubt resolves to
+ * the classic single-page site.
  */
 export function useExperienceMode(): ExperienceMode {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -62,16 +77,22 @@ export function useExperienceMode(): ExperienceMode {
     forceClassic: false,
     request3D: false,
     crawler: false,
+    handheld: false,
   });
   useEffect(() => {
     setFlags({
       forceClassic: readFlag('classic'),
       request3D: readFlag('experience') || readFlag('3d'),
       crawler: isCrawler(),
+      handheld: isHandheld(),
     });
   }, []);
 
   if (flags.forceClassic || flags.crawler) return 'classic';
+
+  // Phones/touch → the classic single-page journey, unless the visitor
+  // explicitly asked for the experience with ?experience / ?3d.
+  if (flags.handheld && !flags.request3D) return 'classic';
 
   const capable = hasWebGL && !prefersReducedMotion;
   if (!capable) return 'classic';
