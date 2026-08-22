@@ -87,6 +87,15 @@ body {
   background-color: transparent;
 }
 
+/* The homepage colour journey (src/features/journey). Same trick as the shell:
+   the fixed ground layer eases colour as you scroll, so the section wrappers it
+   holds must be transparent for it to show through. Cards, panels and blobs
+   keep their own fills. */
+.journey section,
+.dark .journey section {
+  background-color: transparent;
+}
+
 /* Global reduced-motion honor. Many decorative CSS animations (animate-pulse
    on status dots/avatars, animate-ping, animate-bounce, the tech-stack marquee,
    spin-slow) were applied unconditionally. Rather than gate each one in JSX,

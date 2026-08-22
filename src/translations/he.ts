@@ -4,6 +4,14 @@ export const he: Record<string, string> = {
     letsTalk: "בוא נדבר",
     skipToMain: "דלג לתוכן ראשי",
 
+    // Homepage colour-journey rail
+    journey_nav: "ניווט במסע",
+    journey_identity: "מי אני",
+    journey_services: "שירותים",
+    journey_ai: "בינה מלאכותית",
+    journey_work: "עבודות",
+    journey_contact: "צור קשר",
+
     // Hero
     hero_badge: "פנוי לפרויקטים חדשים",
     hero_title_1: "אני יוצר חוויות ",

@@ -4,6 +4,14 @@ export const ar: Record<string, string> = {
     letsTalk: "تحدث معي",
     skipToMain: "تخطى إلى المحتوى الرئيسي",
 
+    // Homepage colour-journey rail
+    journey_nav: "التنقل في الرحلة",
+    journey_identity: "من أنا",
+    journey_services: "خدمات",
+    journey_ai: "الذكاء الاصطناعي",
+    journey_work: "أعمال",
+    journey_contact: "تواصل",
+
     // Hero
     hero_badge: "متاح لمشاريع جديدة",
     hero_title_1: "أصمم تجارب ",
