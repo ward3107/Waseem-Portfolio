@@ -37,17 +37,37 @@ const AmbientField: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let motes: Mote[] = [];
+    const motes: Mote[] = [];
     let w = 0;
     let h = 0;
     let raf = 0;
     let running = false;
+    let dark = document.documentElement.classList.contains('dark');
 
-    const build = () => {
+    const mote = (): Mote => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.12,
+      vy: -Math.random() * 0.16 - 0.03,
+      r: Math.random() * 1.4 + 0.6,
+      c: (dark ? DARK : LIGHT)[Math.floor(Math.random() * DARK.length)],
+      a: Math.random() * 0.35 + 0.15,
+    });
+
+    /**
+     * Size the canvas and top the field up to the density the new box wants.
+     * Existing motes are carried across and rescaled rather than regenerated —
+     * every mote jumping to a fresh random spot reads as a flicker, and this
+     * runs on things as ordinary as a mobile address bar sliding away.
+     */
+    const layout = () => {
       const rect = wrap.getBoundingClientRect();
+      if (rect.width < 2 || rect.height < 2) return;
+      const sx = w > 0 ? rect.width / w : 1;
+      const sy = h > 0 ? rect.height / h : 1;
       w = rect.width;
       h = rect.height;
-      if (w < 2 || h < 2) return;
+
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
@@ -55,18 +75,15 @@ const AmbientField: React.FC = () => {
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const cols = document.documentElement.classList.contains('dark') ? DARK : LIGHT;
+      for (const m of motes) {
+        m.x *= sx;
+        m.y *= sy;
+      }
+
       // Density by area, capped — a tall page should not mean thousands of dots.
       const count = Math.min(160, Math.round((w * h) / 14000));
-      motes = Array.from({ length: count }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.12,
-        vy: -Math.random() * 0.16 - 0.03,
-        r: Math.random() * 1.4 + 0.6,
-        c: cols[Math.floor(Math.random() * cols.length)],
-        a: Math.random() * 0.35 + 0.15,
-      }));
+      if (motes.length > count) motes.length = count;
+      while (motes.length < count) motes.push(mote());
     };
 
     const draw = () => {
@@ -106,11 +123,8 @@ const AmbientField: React.FC = () => {
       cancelAnimationFrame(raf);
     };
 
-    const rebuild = () => {
-      build();
-      draw();
-    };
-    rebuild();
+    layout();
+    draw();
 
     const io =
       typeof IntersectionObserver !== 'undefined'
@@ -121,9 +135,27 @@ const AmbientField: React.FC = () => {
     if (io) io.observe(wrap);
     else start();
 
-    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(rebuild) : null;
+    // Real size changes only — this fires as a mobile address bar slides.
+    const ro =
+      typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(() => {
+            const rect = wrap.getBoundingClientRect();
+            if (Math.abs(rect.width - w) < 1 && Math.abs(rect.height - h) < 1) return;
+            layout();
+            draw();
+          })
+        : null;
     ro?.observe(wrap);
-    const mo = new MutationObserver(rebuild);
+
+    // Theme flips recolour in place. Nothing else on <html> concerns us.
+    const mo = new MutationObserver(() => {
+      const next = document.documentElement.classList.contains('dark');
+      if (next === dark) return;
+      dark = next;
+      const cols = dark ? DARK : LIGHT;
+      for (const m of motes) m.c = cols[Math.floor(Math.random() * cols.length)];
+      draw();
+    });
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
     return () => {
