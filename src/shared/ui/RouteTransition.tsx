@@ -58,15 +58,17 @@ const RouteTransition: React.FC<{ children: (location: Location) => React.ReactN
   // within the panel — the panel's transform carries them up.
   const motes = useMemo(
     () =>
-      Array.from({ length: 44 }, (_, i) => {
+      Array.from({ length: 60 }, (_, i) => {
         const top = Math.pow(Math.random(), 1.7) * 100; // bias upward
+        // Every third mote is a bright white spark; the rest brand-coloured.
+        const white = i % 3 === 0;
         return {
           key: i,
           left: Math.random() * 100,
           top,
-          size: 1 + Math.random() * 2.4,
-          color: MOTE_COLORS[i % MOTE_COLORS.length],
-          alpha: 0.25 + Math.random() * 0.5,
+          size: (white ? 1.4 : 1) + Math.random() * 2.6,
+          color: white ? '#ffffff' : MOTE_COLORS[i % MOTE_COLORS.length],
+          alpha: 0.55 + Math.random() * 0.45,
           blur: Math.random() < 0.3,
         };
       }),
@@ -91,26 +93,27 @@ const RouteTransition: React.FC<{ children: (location: Location) => React.ReactN
 
     let cancelled = false;
     const run = async () => {
-      // Rise to cover.
+      // Rise to cover. A touch slower than instinct wants — the crossing has to
+      // register as a deliberate beat, not a flicker.
       await controls.start({
         y: '0%',
-        transition: { duration: 0.3, ease: [0.7, 0, 0.3, 1] },
+        transition: { duration: 0.42, ease: [0.7, 0, 0.3, 1] },
       });
       if (cancelled) return;
 
       // Exchange the page while the curtain hides it, then hold fully covered
-      // for a beat. The hold both reads better — a moment of held black instead
+      // for a beat. The hold both reads better — a moment of held colour instead
       // of an instant flip — and guarantees the new tree has painted (and its
       // heaviest layers, the home WebGL canvas especially, have booted) before
       // any of it is revealed.
       setDisplay(location);
-      await new Promise<void>((r) => setTimeout(r, 180));
+      await new Promise<void>((r) => setTimeout(r, 240));
       if (cancelled) return;
 
       // Keep rising, off the top — revealing the new page.
       await controls.start({
         y: '-100%',
-        transition: { duration: 0.44, ease: [0.7, 0, 0.3, 1] },
+        transition: { duration: 0.55, ease: [0.7, 0, 0.3, 1] },
       });
       if (cancelled) return;
 
@@ -142,14 +145,19 @@ const RouteTransition: React.FC<{ children: (location: Location) => React.ReactN
           animate={controls}
           className="pointer-events-none fixed inset-0 z-[60] overflow-hidden"
         >
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-100 via-white to-slate-100 dark:from-[#0b1022] dark:via-[#0e1430] dark:to-[#0a0f1f]" />
+        {/* A vivid brand sweep, not a dark-on-dark whisper — the whole point is
+            that the crossing is unmistakable. Deep indigo into brand purple into
+            cyan, the journey's own colours, so it reads the same striking way in
+            both themes. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1a0f4a] via-[#5b3fd6] to-[#00c2e8]" />
 
-        {/* Brand haze. */}
-        <div className="absolute -top-32 left-1/4 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-brand-purple/20 blur-3xl dark:bg-brand-purple/25" />
-        <div className="absolute -bottom-24 right-1/4 h-[24rem] w-[24rem] translate-x-1/2 rounded-full bg-brand-cyan/15 blur-3xl dark:bg-brand-cyan/20" />
+        {/* Brand haze — bright blooms that make the sweep glow. */}
+        <div className="absolute -top-24 left-1/3 h-[30rem] w-[30rem] -translate-x-1/2 rounded-full bg-brand-purple/50 blur-3xl" />
+        <div className="absolute -bottom-16 right-1/3 h-[26rem] w-[26rem] translate-x-1/2 rounded-full bg-brand-cyan/45 blur-3xl" />
+        <div className="absolute top-1/3 left-2/3 h-[20rem] w-[20rem] -translate-x-1/2 rounded-full bg-fuchsia-500/25 blur-3xl" />
 
-        {/* Leading-edge glow — the crest of the wave. */}
-        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-brand-cyan/25 to-transparent blur-xl dark:from-brand-cyan/30" />
+        {/* Leading-edge glow — a bright crest on the wave's front. */}
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-white/40 via-brand-cyan/40 to-transparent blur-lg" />
 
         {/* The motes. */}
         {motes.map((m) => (
