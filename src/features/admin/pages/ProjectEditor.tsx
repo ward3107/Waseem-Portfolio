@@ -15,6 +15,7 @@ import {
   type ProjectInput,
 } from '@/lib/content/projects';
 import { fetchRepoMeta } from '@/lib/github';
+import { normalizeHttpUrl } from '@/lib/url';
 import { toastSaved, toastDeleted, toastError } from '@/lib/adminToast';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import type { LocalizedText, Language } from '@/types';
@@ -30,23 +31,6 @@ const EMPTY: ProjectInput = {
   github: null,
   screenshots: [],
   sort_order: 0,
-};
-
-/**
- * Coerce a typed URL to satisfy the DB's `^https?://` check (projects_link_scheme
- * / projects_gh_scheme): blank → null, a scheme-less host like "example.com" →
- * "https://example.com", an already-schemed URL kept as typed. Without this a
- * value like "careerconnect.com" reaches Postgres verbatim and the whole insert
- * is rejected with a check-constraint violation.
- */
-const normalizeUrl = (value: string | null): string | null => {
-  const v = (value ?? '').trim();
-  if (!v) return null;
-  // Lowercase the scheme when present — the DB check `~ '^https?://'` is
-  // case-sensitive, so "HTTPS://x" would otherwise still be rejected.
-  const schemed = v.match(/^(https?):\/\/(.*)$/i);
-  if (schemed) return `${schemed[1].toLowerCase()}://${schemed[2]}`;
-  return `https://${v}`;
 };
 
 /** slugify — lowercase, spaces→dashes, strip anything that's not [a-z0-9-]. */
@@ -157,8 +141,8 @@ const ProjectEditor: React.FC = () => {
       // satisfies the DB's `^https?://` check instead of failing the insert.
       const payload: ProjectInput = {
         ...form,
-        link: normalizeUrl(form.link),
-        github: normalizeUrl(form.github),
+        link: normalizeHttpUrl(form.link),
+        github: normalizeHttpUrl(form.github),
         image_url: form.screenshots[0] ?? null,
       };
       if (isNew) {
