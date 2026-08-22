@@ -8,7 +8,11 @@ import { useProjects } from '@/features/projects/useProjects';
 import { safeHref } from '@/lib/safe';
 import type { Project } from '@/types';
 
-type FilterCategory = 'All' | 'Web' | 'AI' | 'Mobile';
+// 'All' plus whatever categories the projects data actually uses. Deriving the
+// list from the data (rather than a fixed Web/AI/Mobile set) means a category
+// with no projects — e.g. Mobile today — never shows a tab that leads to an
+// empty grid.
+type FilterKey = string;
 
 // Per-card scroll-linked reveal: opacity is bound directly to the card's own
 // scroll position so it can never lag behind a fast scroll and pop in. The
@@ -160,7 +164,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
 const Projects: React.FC = () => {
   const { t, dir, language } = useLanguage();
-  const [filter, setFilter] = useState<FilterCategory>('All');
+  const [filter, setFilter] = useState<FilterKey>('All');
   const [flippedId, setFlippedId] = useState<string | null>(null);
 
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -186,11 +190,19 @@ const Projects: React.FC = () => {
     ? localizedProjects
     : localizedProjects.filter(p => p.category === filter);
 
-  const filters: { key: FilterCategory; label: string }[] = [
+  // Only offer 'All' plus categories that actually have a project, preserving
+  // the order they first appear in the data. Label from the matching
+  // projects_filter_* key, falling back to the raw category name if a new
+  // category has no translation yet.
+  const presentCategories = Array.from(new Set(localizedProjects.map((p) => p.category)));
+  const labelForCategory = (cat: string): string => {
+    const key = `projects_filter_${cat.toLowerCase()}`;
+    const label = t(key);
+    return label === key ? cat : label;
+  };
+  const filters: { key: FilterKey; label: string }[] = [
     { key: 'All', label: t('projects_filter_all') },
-    { key: 'Web', label: t('projects_filter_web') },
-    { key: 'AI', label: t('projects_filter_ai') },
-    { key: 'Mobile', label: t('projects_filter_mobile') },
+    ...presentCategories.map((cat) => ({ key: cat, label: labelForCategory(cat) })),
   ];
 
   return (
