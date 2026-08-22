@@ -11,6 +11,7 @@ import {
   updateCert,
   type CertificationInput,
 } from '@/lib/content/certifications';
+import { normalizeHttpUrl } from '@/lib/url';
 import { toastSaved, toastDeleted, toastError } from '@/lib/adminToast';
 import { useConfirm } from '@/shared/hooks/useConfirm';
 import type { Language } from '@/types';
@@ -81,13 +82,21 @@ const CertEditor: React.FC = () => {
     if (saving || !dirty || !form.slug || !form.title.en || !form.issuer || !form.issue_date || !form.credential_url) return;
     setSaving(true);
     try {
+      // credential_url is required (NOT NULL) and carries the DB's `^https?://`
+      // check, so a scheme-less entry ("credly.com/…") would fail the write.
+      // The guard above already blocks an empty value, so normalize never
+      // returns null here — the `?? form.credential_url` is a belt-and-braces.
+      const payload: CertificationInput = {
+        ...form,
+        credential_url: normalizeHttpUrl(form.credential_url) ?? form.credential_url,
+      };
       if (isNew) {
-        await createCert(form);
+        await createCert(payload);
         toastSaved('Certificate created');
         setDirty(false);
         navigate('/admin/certifications');
       } else if (id) {
-        await updateCert(id, form);
+        await updateCert(id, payload);
         toastSaved('Certificate');
         setDirty(false);
       }
