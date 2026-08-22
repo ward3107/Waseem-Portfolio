@@ -30,26 +30,30 @@ export const SERVICE_AREAS: { he: string; ar: string; en: string; slug: string }
 ];
 
 export const NAV_LINKS: Record<Language, NavLink[]> = {
+  // The whole site is one page now, so every nav link scrolls to a section
+  // rather than routing away. The old /about, /projects, /services and
+  // /contact routes still exist as redirects to these anchors (see App.tsx)
+  // for bookmarks, deep links and search results.
   en: [
     { name: 'Services', href: '/#what-i-do' },
     { name: 'AI Solutions', href: '/#ai-automation' },
-    { name: 'About', href: '/about' },
-    { name: 'Projects', href: '/projects' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'About', href: '/#about' },
+    { name: 'Projects', href: '/#projects' },
+    { name: 'Contact', href: '/#contact' },
   ],
   he: [
     { name: 'שירותים', href: '/#what-i-do' },
     { name: 'פתרונות AI', href: '/#ai-automation' },
-    { name: 'אודות', href: '/about' },
-    { name: 'פרויקטים', href: '/projects' },
-    { name: 'צור קשר', href: '/contact' },
+    { name: 'אודות', href: '/#about' },
+    { name: 'פרויקטים', href: '/#projects' },
+    { name: 'צור קשר', href: '/#contact' },
   ],
   ar: [
     { name: 'خدمات', href: '/#what-i-do' },
     { name: 'حلول AI', href: '/#ai-automation' },
-    { name: 'من أنا', href: '/about' },
-    { name: 'مشاريع', href: '/projects' },
-    { name: 'اتصل بي', href: '/contact' },
+    { name: 'من أنا', href: '/#about' },
+    { name: 'مشاريع', href: '/#projects' },
+    { name: 'اتصل بي', href: '/#contact' },
   ],
 };
 

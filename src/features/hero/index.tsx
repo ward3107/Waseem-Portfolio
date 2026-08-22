@@ -81,7 +81,7 @@ const Hero: React.FC = () => {
 
   const handleStartProject = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigateToSection('/contact', { focusId: 'project-wizard' });
+    navigateToSection('/#contact', { focusId: 'project-wizard' });
   };
 
   return (
@@ -153,7 +153,7 @@ const Hero: React.FC = () => {
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="/contact"
+              href="/#contact"
               onClick={handleStartProject}
               className="group px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-slate-900 dark:bg-brand-purple text-white rounded-full font-bold text-xs sm:text-sm md:text-base shadow-xl hover:shadow-2xl shadow-brand-purple/20 transition-all flex items-center gap-1.5 sm:gap-2 md:gap-3"
             >
@@ -167,10 +167,10 @@ const Hero: React.FC = () => {
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="/projects"
+              href="/#projects"
               onClick={(e) => {
                 e.preventDefault();
-                navigateToSection('/projects');
+                navigateToSection('/#projects');
               }}
               className="px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-white dark:bg-transparent text-slate-800 dark:text-white border-2 border-slate-100 dark:border-slate-700 rounded-full font-bold text-xs sm:text-sm md:text-base hover:border-brand-purple/30 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-1.5 sm:gap-2"
             >
