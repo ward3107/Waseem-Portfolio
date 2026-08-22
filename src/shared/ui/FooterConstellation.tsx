@@ -42,6 +42,9 @@ interface Particle {
   ny: number;
   c: string;
   r: number;
+  fall: number; // entry drift speed, before the letter takes over
+  e: number; // entry progress 0..1 — the handover from falling to held
+  es: number; // this particle's own rate through that handover
 }
 
 const FooterConstellation: React.FC = () => {
@@ -172,10 +175,11 @@ const FooterConstellation: React.FC = () => {
         const hx = ox + nx * artW;
         const hy = oy + ny * artH;
         return {
-          // First build only: scattered, so the letter draws itself together
-          // the first time the reader arrives at the bottom of the page.
-          x: hx + (Math.random() - 0.5) * artW * 0.5,
-          y: hy + (Math.random() - 0.5) * artH * 0.6,
+          // First build only. They arrive from the page above — seeded past the
+          // top edge, where the band's overflow hides them, and drifting down.
+          // The journey's particles coming to rest, not a puff around the mark.
+          x: ox + artW * (0.5 + (Math.random() - 0.5) * 1.3),
+          y: -h * (0.1 + Math.random() * 0.85),
           vx: 0,
           vy: 0,
           hx,
@@ -184,6 +188,12 @@ const FooterConstellation: React.FC = () => {
           ny,
           c: colorAt(nx),
           r: (0.9 + Math.random() * 1.0) * scale,
+          fall: 1.6 + Math.random() * 1.8,
+          e: 0,
+          // Each one crosses the handover at its own pace, so the letter is
+          // caught a few dots at a time over ~1.5–3s instead of snapping
+          // whole in one frame.
+          es: 0.006 + Math.random() * 0.006,
         };
       });
     };
@@ -203,9 +213,20 @@ const FooterConstellation: React.FC = () => {
     const tick = () => {
       raf = requestAnimationFrame(tick);
       for (const p of particles) {
+        // Entry: falling, with the letter's pull easing in underneath it. The
+        // drift fades out as the pull comes up, so a particle is carried into
+        // place rather than yanked — and once e reaches 1 this is just the
+        // resting spring, so the entrance happens exactly once.
+        let k = 0.012;
+        if (p.e < 1) {
+          p.e = Math.min(1, p.e + p.es);
+          p.y += p.fall * (1 - p.e);
+          k *= p.e * p.e;
+        }
+
         // Spring home.
-        p.vx += (p.hx - p.x) * 0.012;
-        p.vy += (p.hy - p.y) * 0.012;
+        p.vx += (p.hx - p.x) * k;
+        p.vy += (p.hy - p.y) * k;
 
         // The pointer pushes them out of the way.
         const dx = p.x - pointer.x;
@@ -241,6 +262,7 @@ const FooterConstellation: React.FC = () => {
       for (const p of particles) {
         p.x = p.hx;
         p.y = p.hy;
+        p.e = 1; // no entrance to play; it is simply already here
       }
       draw(0.6);
     };
