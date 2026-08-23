@@ -459,6 +459,8 @@ export const ar: Record<string, string> = {
     aria_github: "ملف GitHub",
     aria_linkedin: "ملف LinkedIn",
     aria_twitter: "ملف Twitter",
+    aria_carousel_prev: "السابق",
+    aria_carousel_next: "التالي",
     aria_admin: "دخول المشرف",
     aria_back: "رجوع",
     aria_close: "إغلاق",

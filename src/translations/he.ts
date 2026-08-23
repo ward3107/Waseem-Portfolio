@@ -459,6 +459,8 @@ export const he: Record<string, string> = {
     aria_github: "פרופיל GitHub",
     aria_linkedin: "פרופיל LinkedIn",
     aria_twitter: "פרופיל Twitter",
+    aria_carousel_prev: "הקודם",
+    aria_carousel_next: "הבא",
     aria_admin: "התחברות מנהל",
     aria_back: "חזרה",
     aria_close: "סגירה",
