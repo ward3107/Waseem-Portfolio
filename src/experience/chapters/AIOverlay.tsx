@@ -1,12 +1,18 @@
 import React from 'react';
+import { MessageSquare, Calendar } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChapterOverlay from './ChapterOverlay';
 import HeadingAccent from '../components/HeadingAccent';
+import MiniCardGrid from '../components/MiniCardGrid';
 import { WhatsAppButton, StartProjectButton } from './actions';
 
-/** Chapter 3 — AI & Automation. Real AI copy + capability chips. */
+/** Chapter 3 — AI & Automation. Real AI copy + capability cards. */
 const AIOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
   const { t } = useLanguage();
+  const capabilities = [
+    { label: t('ai_card_1_title'), Icon: MessageSquare },
+    { label: t('ai_card_2_title'), Icon: Calendar },
+  ];
   return (
     <ChapterOverlay
       index={index}
@@ -19,14 +25,17 @@ const AIOverlay: React.FC<{ index: number; total: number }> = ({ index, total })
         </>
       }
       description={t('ai_desc')}
-      chips={[t('ai_card_1_title'), t('ai_card_2_title')]}
       actions={
         <>
           <WhatsAppButton />
           <StartProjectButton />
         </>
       }
-    />
+    >
+      <div className="mx-auto w-full max-w-md">
+        <MiniCardGrid items={capabilities} />
+      </div>
+    </ChapterOverlay>
   );
 };
 

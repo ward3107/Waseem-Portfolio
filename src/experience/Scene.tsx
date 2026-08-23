@@ -6,7 +6,6 @@ import { scrollStore } from './scrollStore';
 import { CHAPTERS } from './storyboard';
 import HeroChapter from './chapters/HeroChapter';
 import MorphField from './MorphField';
-import ProjectsScene from './chapters/ProjectsScene';
 import type { QualityTier } from './useQualityTier';
 
 // Brand palette (mirrors tailwind.config.js) so the 3D world reads as the
@@ -87,14 +86,10 @@ const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
         <HeroChapter tier={tier} />
       </Suspense>
 
-      {/* Chapter 4 — projects fly-through. High tier only: on phones the DOM
-          project cards (ProjectsOverlay) carry this chapter instead, which fits
-          a portrait viewport far better than a wide 3D fan. */}
-      {tier === 'high' && (
-        <Suspense fallback={null}>
-          <ProjectsScene />
-        </Suspense>
-      )}
+      {/* Chapter 4 — projects now render as one compact DOM card grid
+          (ProjectsOverlay), identical on mobile and desktop, so the old
+          desktop-only 3D fly-through fan is retired for a consistent, condensed
+          presentation. */}
 
       {/* Ambient dust, well behind the morphing field so it reads as depth. */}
       <Sparkles
