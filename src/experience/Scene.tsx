@@ -5,6 +5,7 @@ import { Vector3, MathUtils, type Group } from 'three';
 import { scrollStore } from './scrollStore';
 import { CHAPTERS } from './storyboard';
 import HeroChapter from './chapters/HeroChapter';
+import ProjectsScene from './chapters/ProjectsScene';
 import MorphField from './MorphField';
 import type { QualityTier } from './useQualityTier';
 
@@ -86,10 +87,16 @@ const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
         <HeroChapter tier={tier} />
       </Suspense>
 
-      {/* Chapter 4 — projects now render as one compact DOM card grid
-          (ProjectsOverlay), identical on mobile and desktop, so the old
-          desktop-only 3D fly-through fan is retired for a consistent, condensed
-          presentation. */}
+      {/* Chapter 4 — the projects fly-through gallery: the real screenshots
+          float in a fanned arc the camera sweeps through. Scrolling (or swiping
+          on a phone) brings each screen to the front and enlarges it; hovering
+          lifts it; clicking opens the live site. This is the journey's "wow"
+          beat, so it now runs on every device rather than desktop-only. The
+          gallery fades in only around the projects chapter, so it costs nothing
+          elsewhere; Suspense isolates its texture load. */}
+      <Suspense fallback={null}>
+        <ProjectsScene />
+      </Suspense>
 
       {/* Ambient dust, well behind the morphing field so it reads as depth. */}
       <Sparkles
