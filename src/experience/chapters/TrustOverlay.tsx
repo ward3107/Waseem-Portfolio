@@ -3,7 +3,7 @@ import { motion, type Variants } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChapterOverlay, { containerVariants } from './ChapterOverlay';
 import CertCarousel from '../components/CertCarousel';
-import { WhatsAppButton, GhostNavButton } from './actions';
+import { GhostNavButton } from './actions';
 
 /** Stars pop in one after another as the chapter arrives. */
 const starVariants: Variants = {
@@ -25,12 +25,7 @@ const TrustOverlay: React.FC<{ index: number; total: number }> = ({ index, total
       total={total}
       eyebrow={t('testimonial_video_title')}
       title={<span className="text-white">{t('hero_trust')}</span>}
-      actions={
-        <>
-          <GhostNavButton href="/projects">{t('hero_cta_view')}</GhostNavButton>
-          <WhatsAppButton />
-        </>
-      }
+      actions={<GhostNavButton href="/projects">{t('hero_cta_view')}</GhostNavButton>}
     >
       {/* Variants inherit from the chapter container, so the stars cascade in
           step with the rest of the chapter — and replay on every visit. */}

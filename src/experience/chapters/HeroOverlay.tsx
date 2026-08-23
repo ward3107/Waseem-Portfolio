@@ -1,8 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, ArrowLeft, MessageCircle, ChevronDown } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ChevronDown } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useContact } from '@/features/contact/useContact';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import HeadingAccent from '../components/HeadingAccent';
 import { useHeadingLeading } from './ChapterOverlay';
@@ -16,7 +15,6 @@ import { useHeadingLeading } from './ChapterOverlay';
  */
 const HeroOverlay: React.FC = () => {
   const { t, language } = useLanguage();
-  const contact = useContact();
   const navigate = useSectionNavigate();
   const leading = useHeadingLeading();
   const isRtl = language === 'he' || language === 'ar';
@@ -70,15 +68,6 @@ const HeroOverlay: React.FC = () => {
         transition={{ delay: 0.5, duration: 0.6 }}
         className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
       >
-        <a
-          href={contact.whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="pointer-events-auto flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-sm font-bold text-white shadow-xl shadow-green-500/30 transition-transform hover:scale-105 sm:text-base"
-        >
-          <MessageCircle className="h-4 w-4" aria-hidden="true" />
-          {t('hero_cta_whatsapp')}
-        </a>
         <a
           href="/contact"
           onClick={(e) => {
