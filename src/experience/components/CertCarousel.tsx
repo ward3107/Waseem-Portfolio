@@ -3,6 +3,7 @@ import { ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCertifications } from '@/features/certifications/useCertifications';
 import { safeHref } from '@/lib/safe';
+import Carousel from './Carousel';
 
 /**
  * A compact, swipeable certifications carousel for the Trust chapter. Credentials
@@ -22,11 +23,7 @@ const CertCarousel: React.FC = () => {
   if (!certifications.length) return null;
 
   return (
-    <div
-      className="pointer-events-auto mt-8 flex w-full snap-x snap-mandatory gap-3 overflow-x-auto pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      role="list"
-      aria-label={`${t('certifications_title_1')} ${t('certifications_title_2')}`}
-    >
+    <Carousel ariaLabel={`${t('certifications_title_1')} ${t('certifications_title_2')}`}>
       {certifications.map((cert) => {
         const href = safeHref(cert.credentialUrl);
         const Card = (
@@ -72,7 +69,7 @@ const CertCarousel: React.FC = () => {
           </div>
         );
       })}
-    </div>
+    </Carousel>
   );
 };
 

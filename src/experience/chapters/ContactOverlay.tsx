@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChapterOverlay from './ChapterOverlay';
 import HeadingAccent from '../components/HeadingAccent';
-import { WhatsAppButton, StartProjectButton } from './actions';
+import { StartProjectButton } from './actions';
 
 /** Chapter 6 — Contact finale. Real closing copy + WhatsApp-first CTAs. */
 const ContactOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
@@ -29,7 +29,6 @@ const ContactOverlay: React.FC<{ index: number; total: number }> = ({ index, tot
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
             className="absolute -inset-x-4 -inset-y-6 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.28),rgba(121,101,193,0.18),transparent)] blur-2xl sm:-inset-x-10"
           />
-          <WhatsAppButton />
           <StartProjectButton />
         </span>
       }

@@ -4,14 +4,14 @@ import { getLocalizedProjects } from '@/features/projects/data';
 import { safeHref } from '@/lib/safe';
 import ChapterOverlay from './ChapterOverlay';
 import HeadingAccent from './../components/HeadingAccent';
+import Carousel from '../components/Carousel';
 import { GhostNavButton } from './actions';
 
 /**
- * Chapter 4 — Projects. One compact image-card grid, identical on mobile and
- * desktop (no per-tier split, no desktop-only 3D fly-through), so the chapter
- * reads the same everywhere and stays condensed. Cards are real anchors to each
- * live project, so they're keyboard-reachable and crawlable over the
- * aria-hidden canvas.
+ * Chapter 4 — Projects. A swipeable carousel of project cards, the same on
+ * mobile and desktop (swipe on a phone, scroll/drag on desktop). Cards are real
+ * anchors to each live project, so they're keyboard-reachable and crawlable over
+ * the aria-hidden canvas.
  */
 const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
   const { t } = useLanguage();
@@ -32,16 +32,16 @@ const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, to
       description={t('projects_subtitle')}
       actions={<GhostNavButton href="/projects">{t('home_projects_cta')}</GhostNavButton>}
     >
-      <ul className="mx-auto mt-8 grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-3">
+      <Carousel ariaLabel={`${t('projects_title_1')} ${t('projects_title_2')}`}>
         {projects.map((p) => {
           const href = safeHref(p.link);
           return (
-            <li key={p.id}>
+            <div key={p.id} role="listitem" className="w-56 flex-none snap-start sm:w-64">
               <a
                 href={href || '#'}
                 target={href ? '_blank' : undefined}
                 rel={href ? 'noopener noreferrer' : undefined}
-                className="pointer-events-auto group flex h-full flex-col overflow-hidden rounded-xl border border-white/10 bg-white/5 text-start backdrop-blur transition-all hover:border-brand-cyan/40 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
+                className="group block h-full overflow-hidden rounded-xl border border-white/10 bg-white/5 text-start backdrop-blur transition-all hover:border-brand-cyan/40 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
               >
                 <div className="aspect-video overflow-hidden">
                   <img
@@ -51,17 +51,17 @@ const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, to
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
-                <div className="flex flex-1 flex-col gap-0.5 p-2.5">
-                  <p className="text-xs font-bold leading-tight text-white sm:text-sm">{p.title}</p>
-                  <p className="text-[10px] font-medium text-slate-400 sm:text-[11px]">
+                <div className="flex flex-col gap-0.5 p-3">
+                  <p className="text-sm font-bold leading-tight text-white">{p.title}</p>
+                  <p className="text-[11px] font-medium text-slate-400">
                     {p.tech.slice(0, 2).join(' · ')}
                   </p>
                 </div>
               </a>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </Carousel>
     </ChapterOverlay>
   );
 };
