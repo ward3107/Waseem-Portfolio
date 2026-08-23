@@ -463,6 +463,8 @@ export const en: Record<string, string> = {
     aria_github: "GitHub profile",
     aria_linkedin: "LinkedIn profile",
     aria_twitter: "Twitter profile",
+    aria_carousel_prev: "Previous",
+    aria_carousel_next: "Next",
     aria_admin: "Admin login",
     aria_back: "Back",
     aria_close: "Close",
