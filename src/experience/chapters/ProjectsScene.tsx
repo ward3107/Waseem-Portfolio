@@ -3,15 +3,26 @@ import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import { Group, MathUtils, Mesh, MeshBasicMaterial, SRGBColorSpace } from 'three';
 import { scrollStore } from '../scrollStore';
+import { CHAPTERS } from '../storyboard';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getLocalizedProjects } from '@/features/projects/data';
 
 const CARD_W = 2.5;
 const CARD_H = 1.56;
 
-// The projects chapter occupies scroll range [3/6, 4/6]; its centre is at 3.5/6.
-const PROJECTS_CENTER = 3.5 / 6;
-const FOCUS_HALF = 0.14; // fade the gallery in/out over ~0.85 of a chapter width.
+// Where the projects chapter sits on the *journey* timeline (the chapter-only
+// axis the camera rig is keyed to, ignoring the ~15% footer). Chapter i is
+// centred at journey = i / (n - 1), so the gallery peaks exactly when the
+// projects section fills the viewport. The old code faded off the raw page
+// `progress` centred at 3.5/6 — but the footer stretches `progress`, which
+// pushed this peak late, leaving the fan ~90% visible once the reviews chapter
+// had already scrolled in. That was the bleed into the next section.
+const PROJECTS_CENTER =
+  Math.max(0, CHAPTERS.findIndex((c) => c.id === 'projects')) / (CHAPTERS.length - 1);
+// Fade the gallery fully out well before the neighbouring chapters (each ±0.2
+// away on this axis), so it stays confined to its own section and never bleeds
+// over the reviews/certifications beat.
+const FOCUS_HALF = 0.12;
 
 /**
  * Chapter 4 showpiece — a 3D gallery of the real projects. Each project is a
@@ -57,8 +68,8 @@ const ProjectsScene: React.FC = () => {
   useFrame((state, delta) => {
     const g = group.current;
     if (!g) return;
-    const { progress } = scrollStore.get();
-    const focus = MathUtils.clamp(1 - Math.abs(progress - PROJECTS_CENTER) / FOCUS_HALF, 0, 1);
+    const { journey } = scrollStore.get();
+    const focus = MathUtils.clamp(1 - Math.abs(journey - PROJECTS_CENTER) / FOCUS_HALF, 0, 1);
     g.visible = focus > 0.005;
     if (!g.visible) return;
 
@@ -66,7 +77,7 @@ const ProjectsScene: React.FC = () => {
     // Sweep the fan as you scroll through the chapter + a touch of mouse parallax.
     g.rotation.y = MathUtils.lerp(
       g.rotation.y,
-      (progress - PROJECTS_CENTER) * 3 + state.pointer.x * 0.12,
+      (journey - PROJECTS_CENTER) * 3 + state.pointer.x * 0.12,
       eased
     );
     // Sit a little above centre (clear of the CTA row / cookie banner) and
