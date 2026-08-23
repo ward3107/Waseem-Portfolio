@@ -98,8 +98,8 @@ const Experience: React.FC = () => {
                 // Chapter 1 — real hero content (its own single <h1>).
                 <HeroOverlay />
               ) : chapter.id === 'projects' ? (
-                // Projects — 3D gallery (high) + lean index, or DOM cards (low).
-                <ProjectsOverlay index={i} total={CHAPTERS.length} tier={tier} />
+                // Projects — one compact card grid, the same on every device.
+                <ProjectsOverlay index={i} total={CHAPTERS.length} />
               ) : Overlay ? (
                 <Overlay index={i} total={CHAPTERS.length} />
               ) : null}
