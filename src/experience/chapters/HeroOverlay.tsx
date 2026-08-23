@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, ArrowLeft, ChevronDown } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useContact } from '@/features/contact/useContact';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import HeadingAccent from '../components/HeadingAccent';
 import { useHeadingLeading } from './ChapterOverlay';
@@ -15,6 +16,7 @@ import { useHeadingLeading } from './ChapterOverlay';
  */
 const HeroOverlay: React.FC = () => {
   const { t, language } = useLanguage();
+  const contact = useContact();
   const navigate = useSectionNavigate();
   const leading = useHeadingLeading();
   const isRtl = language === 'he' || language === 'ar';
@@ -69,11 +71,9 @@ const HeroOverlay: React.FC = () => {
         className="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
       >
         <a
-          href="/contact"
-          onClick={(e) => {
-            e.preventDefault();
-            navigate('/contact', { focusId: 'project-wizard' });
-          }}
+          href={contact.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           className="pointer-events-auto flex items-center gap-2 rounded-full bg-brand-purple px-6 py-3 text-sm font-bold text-white shadow-xl shadow-brand-purple/30 transition-transform hover:scale-105 sm:text-base"
         >
           {t('hero_cta_start')}

@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
+import { useContact } from '@/features/contact/useContact';
 import NavShareButton from '@/shared/widgets/NavShareButton';
 
 
@@ -17,6 +18,7 @@ const Navbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { scrollYProgress } = useScroll();
   const navigateToSection = useSectionNavigate();
+  const contact = useContact();
 
   useEffect(() => {
     let rafId = 0;
@@ -116,11 +118,9 @@ const Navbar: React.FC = () => {
 
             {/* CTA Button */}
             <a
-              href="/#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                navigateToSection('/#contact', { focusId: 'project-wizard' });
-              }}
+              href={contact.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-4 py-2 bg-brand-purple text-white rounded-full font-bold text-sm shadow-md hover:shadow-lg hover:bg-brand-purpleLight transition-all"
             >
               {t('hero_cta_start')}
@@ -206,12 +206,10 @@ const Navbar: React.FC = () => {
                 </a>
               ))}
               <a
-                href="/#contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsOpen(false);
-                  setTimeout(() => navigateToSection('/#contact', { focusId: 'project-wizard' }), 100);
-                }}
+                href={contact.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsOpen(false)}
                 className="w-full text-center py-3 rounded-xl bg-brand-purple text-white font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 cursor-pointer"
               >
                 {t('letsTalk')}

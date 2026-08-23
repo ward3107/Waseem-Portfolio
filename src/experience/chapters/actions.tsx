@@ -28,18 +28,17 @@ export const WhatsAppButton: React.FC<{ label?: string }> = ({ label }) => {
   );
 };
 
-/** Secondary "start a project" — routes to the contact wizard. */
+/** "Start a project" / "Book a consultation" — opens WhatsApp directly, the
+ *  same conversion target as the primary CTA. */
 export const StartProjectButton: React.FC<{ label?: string }> = ({ label }) => {
   const { t, language } = useLanguage();
-  const navigate = useSectionNavigate();
+  const contact = useContact();
   const Arrow = language === 'he' || language === 'ar' ? ArrowLeft : ArrowRight;
   return (
     <a
-      href="/contact"
-      onClick={(e) => {
-        e.preventDefault();
-        navigate('/contact', { focusId: 'project-wizard' });
-      }}
+      href={contact.whatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
       className={`${BASE} bg-brand-purple text-white shadow-xl shadow-brand-purple/30`}
     >
       {label ?? t('hero_cta_start')}
