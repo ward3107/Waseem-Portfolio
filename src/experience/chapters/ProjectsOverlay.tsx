@@ -1,68 +1,83 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getLocalizedProjects } from '@/features/projects/data';
 import { safeHref } from '@/lib/safe';
-import ChapterOverlay from './ChapterOverlay';
-import HeadingAccent from './../components/HeadingAccent';
-import Carousel from '../components/Carousel';
+import HeadingAccent from '../components/HeadingAccent';
+import { useHeadingLeading } from './ChapterOverlay';
 import { GhostNavButton } from './actions';
 
 /**
- * Chapter 4 — Projects. A swipeable carousel of project cards, the same on
- * mobile and desktop (swipe on a phone, scroll/drag on desktop). Cards are real
- * anchors to each live project, so they're keyboard-reachable and crawlable over
- * the aria-hidden canvas.
+ * Chapter 4 — Projects. The visual is the 3D fly-through gallery (ProjectsScene,
+ * in the canvas): the real screenshots fan out and whichever one is swept to the
+ * front enlarges. This DOM layer deliberately keeps the centre of the screen
+ * clear for that gallery — the heading is pinned to the top and an accessible
+ * link index + CTA to the bottom. Those links keep every project
+ * keyboard-reachable and crawlable even though the canvas is aria-hidden, and
+ * they double as a tap target on touch. Same on every device.
  */
+const reveal = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.4 },
+} as const;
+
 const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
   const { t } = useLanguage();
   const projects = getLocalizedProjects(t);
+  const leading = useHeadingLeading();
 
   return (
-    <ChapterOverlay
-      index={index}
-      total={total}
-      title={
-        <>
+    <div className="pointer-events-none flex min-h-[82vh] w-full max-w-5xl flex-col items-center justify-between">
+      <motion.div
+        {...reveal}
+        transition={{ duration: 0.6 }}
+        className="flex flex-col items-center text-center"
+      >
+        <p className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-brand-cyan">
+          {String(index + 1).padStart(2, '0')} <span className="text-white/30">/</span>{' '}
+          {String(total).padStart(2, '0')}
+        </p>
+        <h2
+          className={`max-w-3xl font-heading text-4xl font-black tracking-tight sm:text-5xl md:text-6xl ${leading}`}
+        >
           <span className="text-white">{t('projects_title_1')} </span>
           <HeadingAccent tone="gold" fancy>
             {t('projects_title_2')}
           </HeadingAccent>
-        </>
-      }
-      description={t('projects_subtitle')}
-      actions={<GhostNavButton href="/projects">{t('home_projects_cta')}</GhostNavButton>}
-    >
-      <Carousel ariaLabel={`${t('projects_title_1')} ${t('projects_title_2')}`}>
-        {projects.map((p) => {
-          const href = safeHref(p.link);
-          return (
-            <div key={p.id} role="listitem" className="w-56 flex-none snap-start sm:w-64">
-              <a
-                href={href || '#'}
-                target={href ? '_blank' : undefined}
-                rel={href ? 'noopener noreferrer' : undefined}
-                className="group block h-full overflow-hidden rounded-xl border border-white/10 bg-white/5 text-start backdrop-blur transition-all hover:border-brand-cyan/40 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
-              >
-                <div className="aspect-video overflow-hidden">
-                  <img
-                    src={p.image}
-                    alt={p.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-                <div className="flex flex-col gap-0.5 p-3">
-                  <p className="text-sm font-bold leading-tight text-white">{p.title}</p>
-                  <p className="text-[11px] font-medium text-slate-400">
-                    {p.tech.slice(0, 2).join(' · ')}
-                  </p>
-                </div>
-              </a>
-            </div>
-          );
-        })}
-      </Carousel>
-    </ChapterOverlay>
+        </h2>
+        <p className="mt-5 max-w-xl text-base font-medium text-slate-300 sm:text-lg">
+          {t('projects_subtitle')}
+        </p>
+      </motion.div>
+
+      <motion.div
+        {...reveal}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="flex flex-col items-center gap-5"
+      >
+        <ul className="flex flex-wrap items-center justify-center gap-2.5">
+          {projects.map((p) => {
+            const href = safeHref(p.link);
+            return (
+              <li key={p.id}>
+                <a
+                  href={href || '#'}
+                  target={href ? '_blank' : undefined}
+                  rel={href ? 'noopener noreferrer' : undefined}
+                  className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 backdrop-blur transition-colors hover:border-brand-cyan/50 hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
+                >
+                  {p.title}
+                  <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        <GhostNavButton href="/projects">{t('home_projects_cta')}</GhostNavButton>
+      </motion.div>
+    </div>
   );
 };
 

@@ -82,14 +82,31 @@ const ProjectsScene: React.FC = () => {
       }
     });
 
-    // Per-screen idle float + hover lift.
+    // Which screen is swept to the front right now? After the group's rotation,
+    // its origin sits nearest the centre line (world-x ≈ 0). That card enlarges
+    // on its own, so scrolling on desktop — or swiping on a touch screen, where
+    // there is no hover — brings each project forward and enlarges it in turn.
+    // This is the "swipe/hover to enlarge" wow the whole gallery is built around.
+    const cos = Math.cos(g.rotation.y);
+    const sin = Math.sin(g.rotation.y);
+    let active = 0;
+    let best = Infinity;
+    for (let i = 0; i < layout.length; i++) {
+      const worldX = Math.abs(layout[i].x * cos + layout[i].z * sin);
+      if (worldX < best) {
+        best = worldX;
+        active = i;
+      }
+    }
+
+    // Per-screen idle float + lift for the hovered or front-and-centre screen.
     const hoverEase = 1 - Math.exp(-8 * delta);
     items.current.forEach((it, i) => {
       if (!it) return;
       const L = layout[i];
-      const isH = hovered === i;
-      it.scale.setScalar(MathUtils.lerp(it.scale.x, isH ? 1.09 : 1, hoverEase));
-      it.position.z = MathUtils.lerp(it.position.z, L.z + (isH ? 0.55 : 0), hoverEase);
+      const lifted = hovered === i || active === i;
+      it.scale.setScalar(MathUtils.lerp(it.scale.x, lifted ? 1.12 : 1, hoverEase));
+      it.position.z = MathUtils.lerp(it.position.z, L.z + (lifted ? 0.6 : 0), hoverEase);
       it.position.y = L.y + Math.sin(state.clock.elapsedTime * 0.7 + i) * 0.06;
     });
   });
