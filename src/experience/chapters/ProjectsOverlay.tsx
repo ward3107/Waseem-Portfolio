@@ -2,16 +2,16 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { getLocalizedProjects } from '@/features/projects/data';
+import { useProjects } from '@/features/projects/useProjects';
 import { safeHref } from '@/lib/safe';
 import HeadingAccent from '../components/HeadingAccent';
 import { useHeadingLeading } from './ChapterOverlay';
 import { GhostNavButton } from './actions';
 
 /**
- * Chapter 4 — Projects. The visual is the 3D fly-through gallery (ProjectsScene,
- * in the canvas): the real screenshots fan out and whichever one is swept to the
- * front enlarges. This DOM layer deliberately keeps the centre of the screen
+ * Chapter 4 — Projects. The visual is the 3D turntable (ProjectsScene, in the
+ * canvas): every project's screenshot rides a slowly rotating ring and the one
+ * at the front enlarges and opens on click. This DOM layer keeps the centre clear
  * clear for that gallery — the heading is pinned to the top and an accessible
  * link index + CTA to the bottom. Those links keep every project
  * keyboard-reachable and crawlable even though the canvas is aria-hidden, and
@@ -25,7 +25,7 @@ const reveal = {
 
 const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
   const { t } = useLanguage();
-  const projects = getLocalizedProjects(t);
+  const { projects } = useProjects();
   const leading = useHeadingLeading();
 
   return (
