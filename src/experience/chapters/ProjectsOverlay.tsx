@@ -57,7 +57,12 @@ const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, to
         transition={{ duration: 0.6, delay: 0.1 }}
         className="flex flex-col items-center gap-5"
       >
-        <ul className="flex flex-wrap items-center justify-center gap-2.5">
+        {/* The per-project link index. On phones the 3D turntable already sits
+            right here and these pills piled on top of it — crowding the screen
+            and covering the screenshot — so they're hidden below `sm` and the
+            single "all projects" CTA carries the section. Desktops keep the full
+            index (room to spare, and it doubles as the keyboard/crawler path). */}
+        <ul className="hidden flex-wrap items-center justify-center gap-2.5 sm:flex">
           {projects.map((p) => {
             const href = safeHref(p.link);
             return (

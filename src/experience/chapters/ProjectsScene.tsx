@@ -101,7 +101,9 @@ const ProjectsScene: React.FC = () => {
       const dx = ev.clientX - lastX.current;
       lastX.current = ev.clientX;
       moved.current += Math.abs(dx);
-      spin.current -= dx * DRAG_K;
+      // Direct manipulation: the ring follows the finger — drag right and the
+      // front card travels right with it (dragging the other way felt reversed).
+      spin.current += dx * DRAG_K;
     };
     const onUp = () => {
       if (!dragging.current) return;
