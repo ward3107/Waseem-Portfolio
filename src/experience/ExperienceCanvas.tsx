@@ -35,6 +35,26 @@ const ContextLossBridge: React.FC<{ onLost: () => void }> = ({ onLost }) => {
   return null;
 };
 
+/** Lets touch drags reach the scene. Without an explicit touch-action the mobile
+ *  browser claims every touch on the canvas for its own scroll/zoom gesture
+ *  detection and fires pointercancel the moment a finger moves sideways — so the
+ *  projects turntable never receives the pointermove stream it needs to spin
+ *  (desktop mice are unaffected, which is why it only broke on phones). `pan-y`
+ *  keeps vertical panning native — the page still scrolls the scene normally —
+ *  while horizontal swipes are handed to our pointer handlers to turn the ring. */
+const TouchActionBridge: React.FC = () => {
+  const gl = useThree((s) => s.gl);
+  useEffect(() => {
+    const canvas = gl.domElement;
+    const previous = canvas.style.touchAction;
+    canvas.style.touchAction = 'pan-y';
+    return () => {
+      canvas.style.touchAction = previous;
+    };
+  }, [gl]);
+  return null;
+};
+
 interface ExperienceCanvasProps {
   onContextLost: () => void;
   tier: QualityTier;
@@ -53,6 +73,7 @@ const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({ onContextLost, tier
       aria-hidden="true"
     >
       <ContextLossBridge onLost={onContextLost} />
+      <TouchActionBridge />
       <Scene tier={tier} />
       <AdaptiveDpr pixelated />
       <AdaptiveEvents />
