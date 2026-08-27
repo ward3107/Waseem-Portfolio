@@ -3,6 +3,7 @@ import { motion, type Variants } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChapterOverlay, { containerVariants } from './ChapterOverlay';
 import CertCarousel from '../components/CertCarousel';
+import ReviewCarousel from '../components/ReviewCarousel';
 import { GhostNavButton } from './actions';
 
 /** Stars pop in one after another as the chapter arrives. */
@@ -45,9 +46,15 @@ const TrustOverlay: React.FC<{ index: number; total: number }> = ({ index, total
         ))}
       </motion.div>
 
+      {/* The real client testimonials, swipeable, so visitors to the 3D
+          experience actually see the reviews — not only the classic site. */}
+      <div className="mx-auto w-full max-w-3xl">
+        <ReviewCarousel />
+      </div>
+
       {/* Credentials as a compact, swipeable carousel — verifiable proof inside
           the experience, not just on the classic site. */}
-      <div className="mx-auto w-full max-w-3xl">
+      <div className="mx-auto mt-4 w-full max-w-3xl">
         <CertCarousel />
       </div>
     </ChapterOverlay>
