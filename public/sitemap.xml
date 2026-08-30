@@ -199,42 +199,108 @@
     <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://waseemp.vercel.app/en/blog/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waseemp.vercel.app/ar/blog/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/" />
+  </url>
+  <url>
+    <loc>https://waseemp.vercel.app/en/blog/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://waseemp.vercel.app/en/blog/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waseemp.vercel.app/ar/blog/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/" />
+  </url>
+  <url>
+    <loc>https://waseemp.vercel.app/ar/blog/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://waseemp.vercel.app/en/blog/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waseemp.vercel.app/ar/blog/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/" />
+  </url>
+  <url>
+    <loc>https://waseemp.vercel.app/blog/itzuv-atarim-3d/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/itzuv-atarim-3d/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://waseemp.vercel.app/en/blog/itzuv-atarim-3d/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waseemp.vercel.app/ar/blog/itzuv-atarim-3d/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/itzuv-atarim-3d/" />
+  </url>
+  <url>
+    <loc>https://waseemp.vercel.app/en/blog/itzuv-atarim-3d/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/itzuv-atarim-3d/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://waseemp.vercel.app/en/blog/itzuv-atarim-3d/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waseemp.vercel.app/ar/blog/itzuv-atarim-3d/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/itzuv-atarim-3d/" />
+  </url>
+  <url>
+    <loc>https://waseemp.vercel.app/ar/blog/itzuv-atarim-3d/</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/itzuv-atarim-3d/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://waseemp.vercel.app/en/blog/itzuv-atarim-3d/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://waseemp.vercel.app/ar/blog/itzuv-atarim-3d/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/itzuv-atarim-3d/" />
   </url>
   <url>
     <loc>https://waseemp.vercel.app/blog/kama-ole-atar-tadmit/</loc>
     <lastmod>2026-07-07</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/kama-ole-atar-tadmit/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/kama-ole-atar-tadmit/" />
   </url>
   <url>
     <loc>https://waseemp.vercel.app/blog/atar-tadmit-mul-hanut-online/</loc>
     <lastmod>2026-07-07</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/atar-tadmit-mul-hanut-online/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/atar-tadmit-mul-hanut-online/" />
   </url>
   <url>
     <loc>https://waseemp.vercel.app/blog/lama-esek-tzarich-atar/</loc>
     <lastmod>2026-07-07</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/lama-esek-tzarich-atar/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/lama-esek-tzarich-atar/" />
   </url>
   <url>
     <loc>https://waseemp.vercel.app/blog/seo-mekomi-tzafon/</loc>
     <lastmod>2026-07-07</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/seo-mekomi-tzafon/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/seo-mekomi-tzafon/" />
   </url>
   <url>
     <loc>https://waseemp.vercel.app/blog/wordpress-mul-react/</loc>
     <lastmod>2026-07-07</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/wordpress-mul-react/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/wordpress-mul-react/" />
   </url>
   <url>
     <loc>https://waseemp.vercel.app/blog/kama-zman-lokeach-livnot-atar/</loc>
     <lastmod>2026-07-07</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://waseemp.vercel.app/blog/kama-zman-lokeach-livnot-atar/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://waseemp.vercel.app/blog/kama-zman-lokeach-livnot-atar/" />
   </url>
 
 </urlset>
