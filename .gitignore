@@ -17,6 +17,7 @@ dist-ssr
 # regenerated into public/ during `npm run build`).
 /public/web-design-*/
 /public/ar/
+/public/en/
 /public/blog/
 /public/review/
 

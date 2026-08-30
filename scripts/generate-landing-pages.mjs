@@ -14,6 +14,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { ARTICLES } from './blog-content.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(__dirname, '..', 'public');
@@ -610,16 +611,43 @@ for (const city of cities) {
 
 // ---------------------------------------------------------------------------
 // Regenerate sitemap.xml (homepage + city pages he/ar with hreflang + blog).
-// Blog slugs mirror scripts/generate-blog.mjs — keep in sync.
+// The blog section is derived from scripts/blog-content.mjs (the single source
+// of truth shared with generate-blog.mjs), so slugs, languages and hreflang
+// alternates can never drift out of sync with the pages actually generated.
 // ---------------------------------------------------------------------------
-const BLOG_SLUGS = [
-  'kama-ole-atar-tadmit',
-  'atar-tadmit-mul-hanut-online',
-  'lama-esek-tzarich-atar',
-  'seo-mekomi-tzafon',
-  'wordpress-mul-react',
-  'kama-zman-lokeach-livnot-atar',
-];
+const BLOG_LANGS = ['he', 'en', 'ar'];
+const blogPrefix = (l) => (l === 'he' ? '' : `/${l}`);
+const blogIndexUrl = (l) => `${SITE}${blogPrefix(l)}/blog/`;
+const blogArticleUrl = (l, s) => `${SITE}${blogPrefix(l)}/blog/${s}/`;
+
+// Blog index, one entry per language, cross-linked with hreflang.
+const blogIndexEntries = BLOG_LANGS.map(
+  (l) => `  <url>
+    <loc>${blogIndexUrl(l)}</loc>
+    <lastmod>${LASTMOD}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+${BLOG_LANGS.map((a) => `    <xhtml:link rel="alternate" hreflang="${a}" href="${blogIndexUrl(a)}" />`).join('\n')}
+    <xhtml:link rel="alternate" hreflang="x-default" href="${blogIndexUrl('he')}" />
+  </url>`
+).join('\n');
+
+// One entry per article per language it exists in; hreflang lists only the
+// languages that article actually has (so a Hebrew-only post never advertises a
+// missing translation).
+const blogArticleEntries = ARTICLES.flatMap((a) => {
+  const langs = Object.keys(a.i18n).filter((l) => BLOG_LANGS.includes(l));
+  return langs.map(
+    (l) => `  <url>
+    <loc>${blogArticleUrl(l, a.slug)}</loc>
+    <lastmod>${LASTMOD}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+${langs.map((x) => `    <xhtml:link rel="alternate" hreflang="${x}" href="${blogArticleUrl(x, a.slug)}" />`).join('\n')}
+    <xhtml:link rel="alternate" hreflang="x-default" href="${blogArticleUrl('he', a.slug)}" />
+  </url>`
+  );
+}).join('\n');
 
 const simpleEntry = (loc, priority) => `  <url>
     <loc>${loc}</loc>
@@ -666,8 +694,8 @@ ${simpleEntry(`${SITE}/accessibility`, '0.3')}
 
 ${cityEntries}
 
-${simpleEntry(`${SITE}/blog/`, '0.7')}
-${BLOG_SLUGS.map((s) => simpleEntry(`${SITE}/blog/${s}/`, '0.6')).join('\n')}
+${blogIndexEntries}
+${blogArticleEntries}
 
 </urlset>
 `;
