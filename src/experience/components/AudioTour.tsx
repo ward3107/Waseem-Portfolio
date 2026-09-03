@@ -3,16 +3,18 @@ import { Headphones, Pause, Play, Volume2, VolumeX, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
- * The audio tour — a narrated walk-through of the experience. A visitor taps
- * "Listen" once (browsers block autoplaying sound until a user gesture), and
- * from then on a warm voice reads a short line for each chapter as it scrolls
- * into view. Clips are pre-generated static MP3s (see public/audio/<lang>/), so
- * there's no per-visit cost or latency and the page stays fast.
+ * The audio tour — a narrated walk-through of the experience. It auto-starts on
+ * the visitor's first interaction (a click/tap anywhere — the earliest moment a
+ * browser allows sound), and from then on a warm, deep voice reads a short line
+ * for each chapter as it scrolls into view. A "Listen" button is the manual
+ * fallback, and closing the tour opts out for the rest of the session. Clips are
+ * pre-generated static MP3s (see public/audio/<lang>/), so there's no per-visit
+ * cost or latency and the page stays fast.
  *
- * Scope: the narration is currently English-only, so the control only appears
- * for English visitors — Hebrew/Arabic never hear an English voice. Adding a
- * language is just another folder of clips under public/audio/ plus an entry in
- * CLIPS_BY_LANG.
+ * Scope: the narration is currently recorded in English and plays for EVERY
+ * visitor, whatever the site language — Hebrew/Arabic hear the English voice
+ * too. When a language gets its own clip folder (public/audio/<lang>/) plus an
+ * entry in CLIPS_BY_LANG, it is picked up here automatically.
  *
  * Which chapter is "active" comes from an IntersectionObserver over the real
  * chapter <section> elements (by their DOM id), so it works the same whether the
@@ -33,9 +35,26 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
   ],
 };
 
+// The clips are recorded slowly; playing a little under 1× (with pitch
+// preserved, so the deep tone stays) makes the delivery slower still without
+// regenerating anything.
+const PLAYBACK_RATE = 0.82;
+
+// Remembers, for this browser tab, that the visitor closed the tour — so it
+// doesn't auto-start again on their next click.
+const DISMISS_KEY = 'audioTourDismissed';
+const wasDismissed = (): boolean => {
+  try {
+    return sessionStorage.getItem(DISMISS_KEY) === '1';
+  } catch {
+    return false;
+  }
+};
+
 const AudioTour: React.FC = () => {
   const { language } = useLanguage();
-  const clips = CLIPS_BY_LANG[language] ?? null;
+  // English narration plays for everyone; a localized folder wins when present.
+  const clips = CLIPS_BY_LANG[language] ?? CLIPS_BY_LANG.en;
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [enabled, setEnabled] = useState(false);
@@ -54,6 +73,11 @@ const AudioTour: React.FC = () => {
     if (!clips) return;
     const a = new Audio();
     a.preload = 'none';
+    // Slow, deliberate delivery — keep the deep pitch (no chipmunk effect) while
+    // playing a touch slower than recorded.
+    a.defaultPlaybackRate = PLAYBACK_RATE;
+    a.playbackRate = PLAYBACK_RATE;
+    (a as HTMLAudioElement & { preservesPitch?: boolean }).preservesPitch = true;
     audioRef.current = a;
     const onPlay = () => setPlaying(true);
     const onPause = () => setPlaying(false);
@@ -131,6 +155,11 @@ const AudioTour: React.FC = () => {
     setEnabled(false);
     enabledRef.current = false;
     audioRef.current?.pause();
+    try {
+      sessionStorage.setItem(DISMISS_KEY, '1');
+    } catch {
+      /* private mode / storage blocked — fine, just won't remember */
+    }
   };
   const togglePlay = () => {
     const a = audioRef.current;
@@ -150,6 +179,25 @@ const AudioTour: React.FC = () => {
       return next;
     });
   };
+
+  // Auto-start on the visitor's first interaction. Browsers won't let audio
+  // play before a gesture, so the earliest honest moment is the first click /
+  // tap / key anywhere on the page — unless they've closed the tour this session.
+  useEffect(() => {
+    if (!clips || wasDismissed()) return;
+    const start = () => {
+      if (!enabledRef.current) enable();
+    };
+    window.addEventListener('pointerdown', start, { once: true, passive: true });
+    window.addEventListener('keydown', start, { once: true });
+    return () => {
+      window.removeEventListener('pointerdown', start);
+      window.removeEventListener('keydown', start);
+    };
+    // enable is stable in practice (only touches refs/setters); re-running on
+    // every render would re-arm the one-shot listeners needlessly.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clips]);
 
   // No narration for this language (or SSR): render nothing.
   if (!clips) return null;
