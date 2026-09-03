@@ -3,6 +3,7 @@ import { useLenisScroll } from './useLenisScroll';
 import { CHAPTERS } from './storyboard';
 import { useQualityTier } from './useQualityTier';
 import ScrollProgress from './components/ScrollProgress';
+import AudioTour from './components/AudioTour';
 import HeroFilm from './chapters/HeroFilm';
 import HeroOverlay from './chapters/HeroOverlay';
 import ServicesOverlay from './chapters/ServicesOverlay';
@@ -77,6 +78,10 @@ const Experience: React.FC = () => {
       </div>
 
       <ScrollProgress />
+
+      {/* Narrated audio tour — opt-in "Listen" control that reads a short line
+          for each chapter as it scrolls into view (English clips only for now). */}
+      <AudioTour />
 
       {/* Content layer. pointer-events-none lets cursor moves reach the canvas;
           interactive children opt back in with pointer-events-auto. */}
