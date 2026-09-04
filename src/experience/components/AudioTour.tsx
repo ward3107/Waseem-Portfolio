@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Headphones, Pause, Play, Volume2, VolumeX, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { audioTourStore } from '../audioTourStore';
 
 /**
  * The audio tour — a narrated walk-through of the experience, as automatic as a
@@ -24,6 +25,13 @@ import { useLanguage } from '@/contexts/LanguageContext';
  * chapter <section> elements (by their DOM id), so it works the same whether the
  * visitor is scrolling the 3D experience or the classic fallback. Each section
  * narrates once per visit; the Play button replays the current one on demand.
+ *
+ * A glassy 3D "assistant" face (see TalkingHead) lip-syncs to whatever is
+ * playing: this component taps the narration through a Web Audio AnalyserNode
+ * and publishes the live mouth openness (plus the active/speaking flags) to
+ * audioTourStore, which the head reads in its own render loop. That tap is
+ * best-effort and fully isolated — if Web Audio is unavailable the narration is
+ * unaffected and the head animates with a procedural talking motion instead.
  */
 type Clip = { id: string; src: string };
 
@@ -92,6 +100,53 @@ const AudioTour: React.FC = () => {
   const activeRef = useRef<string>(clips?.[0]?.id ?? 'hero');
   const playedRef = useRef<Set<string>>(new Set());
 
+  // Web Audio graph that feeds the 3D talking head its lip-sync. Built lazily on
+  // the first real gesture (an AudioContext can't start before one). Everything
+  // is wrapped in try/catch and connected straight through to the speakers, so
+  // if any of it is unsupported the narration audio itself is never affected —
+  // the head just falls back to a procedural talking motion (see the mouth loop).
+  const ctxRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const freqRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
+  const analyserFailedRef = useRef(false);
+  const mouthRef = useRef(0); // smoothed openness the loop eases
+  const rafRef = useRef(0);
+
+  // Route the <audio> element through an AnalyserNode → speakers. Idempotent and
+  // gesture-safe: a MediaElementSource can only be made once per element, and
+  // the context must be resumed inside a user gesture.
+  const ensureAnalyser = useCallback(() => {
+    if (analyserFailedRef.current || analyserRef.current) {
+      void ctxRef.current?.resume().catch(() => {});
+      return;
+    }
+    const a = audioRef.current;
+    if (!a) return;
+    try {
+      const Ctor =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!Ctor) throw new Error('no AudioContext');
+      const ctx = new Ctor();
+      const source = ctx.createMediaElementSource(a);
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.75;
+      // source → analyser → speakers. The analyser is a pass-through tap, so
+      // connecting it to the destination keeps the audio audible.
+      source.connect(analyser);
+      analyser.connect(ctx.destination);
+      ctxRef.current = ctx;
+      analyserRef.current = analyser;
+      freqRef.current = new Uint8Array(new ArrayBuffer(analyser.frequencyBinCount));
+      void ctx.resume().catch(() => {});
+    } catch {
+      // Unsupported / already-tapped element: keep the narration working and let
+      // the head animate procedurally instead of from real amplitude.
+      analyserFailedRef.current = true;
+    }
+  }, []);
+
   // One reusable <audio> element. `preload="none"` so nothing downloads until
   // the visitor opts in.
   useEffect(() => {
@@ -116,6 +171,13 @@ const AudioTour: React.FC = () => {
       a.removeEventListener('pause', onPause);
       a.removeEventListener('ended', onEnded);
       audioRef.current = null;
+      // Tear down the Web Audio graph so a remount can build a fresh one.
+      void ctxRef.current?.close().catch(() => {});
+      ctxRef.current = null;
+      analyserRef.current = null;
+      freqRef.current = null;
+      analyserFailedRef.current = false;
+      audioTourStore.reset();
     };
   }, [clips]);
 
@@ -171,13 +233,68 @@ const AudioTour: React.FC = () => {
     return () => io.disconnect();
   }, [clips, playSection]);
 
+  // Drive the 3D talking head's mouth from the live narration. Runs only while
+  // the tour is on: each frame it eases the mouth toward the current speech
+  // amplitude (or a procedural talking envelope when Web Audio is unavailable)
+  // and publishes it to audioTourStore for the head to read inside its own
+  // render loop. Purely cosmetic — it never touches playback.
+  useEffect(() => {
+    if (!enabled) return;
+    let running = true;
+
+    const amplitude = (): number => {
+      const analyser = analyserRef.current;
+      const buf = freqRef.current;
+      if (!analyser || !buf) return -1; // no analyser → caller goes procedural
+      analyser.getByteFrequencyData(buf);
+      // Speech energy concentrates in the low-mid bands; average the lower half.
+      const n = Math.max(1, Math.floor(buf.length * 0.5));
+      let sum = 0;
+      for (let i = 0; i < n; i++) sum += buf[i];
+      return sum / n / 255; // 0..1
+    };
+
+    const tick = () => {
+      if (!running) return;
+      const a = audioRef.current;
+      const audible = !!a && !a.paused && !a.muted && !a.ended;
+      let target = 0;
+      if (audible) {
+        const amp = amplitude();
+        if (amp >= 0) {
+          target = Math.min(1, amp * 1.8); // lift quiet speech into a clear range
+        } else {
+          // Procedural fallback: a lively mouth cadence around speech rhythm.
+          const t = performance.now() / 1000;
+          target = Math.min(1, 0.25 + 0.35 * (Math.sin(t * 11) * 0.5 + 0.5) + 0.2 * Math.random());
+        }
+      }
+      // Open quickly, close a little slower — reads as speech, not a strobe.
+      const k = target > mouthRef.current ? 0.5 : 0.25;
+      mouthRef.current += (target - mouthRef.current) * k;
+      if (mouthRef.current < 0.001) mouthRef.current = 0;
+      audioTourStore.set({ speaking: audible, mouth: mouthRef.current });
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      running = false;
+      cancelAnimationFrame(rafRef.current);
+      mouthRef.current = 0;
+      audioTourStore.set({ speaking: false, mouth: 0 });
+    };
+  }, [enabled]);
+
   const enable = (startMuted: boolean) => {
     setEnabled(true);
     enabledRef.current = true;
+    audioTourStore.set({ active: true });
     if (!startMuted) {
       unmutedRef.current = true;
       mutedRef.current = false;
       setMuted(false);
+      ensureAnalyser(); // real gesture → safe to start the Web Audio graph
     }
     playSection(activeRef.current, true);
   };
@@ -189,6 +306,7 @@ const AudioTour: React.FC = () => {
     unmutedRef.current = true;
     mutedRef.current = false;
     setMuted(false);
+    ensureAnalyser(); // real gesture → safe to start the Web Audio graph
     const a = audioRef.current;
     if (a) {
       a.muted = false;
@@ -201,6 +319,7 @@ const AudioTour: React.FC = () => {
     setEnabled(false);
     enabledRef.current = false;
     audioRef.current?.pause();
+    audioTourStore.set({ active: false, speaking: false, mouth: 0 });
     try {
       sessionStorage.setItem(DISMISS_KEY, '1');
     } catch {
@@ -221,7 +340,10 @@ const AudioTour: React.FC = () => {
     setMuted((m) => {
       const next = !m;
       mutedRef.current = next;
-      if (!next) unmutedRef.current = true; // manual unmute counts as the unmute
+      if (!next) {
+        unmutedRef.current = true; // manual unmute counts as the unmute
+        ensureAnalyser(); // button click is a gesture → start the graph
+      }
       if (audioRef.current) audioRef.current.muted = next;
       return next;
     });

@@ -26,6 +26,11 @@ const OVERLAY_BY_ID: Record<string, React.FC<{ index: number; total: number }>> 
 // Classic-site visitors never reach this line, so they never download it.
 const ExperienceCanvas = lazy(() => import('./ExperienceCanvas'));
 
+// The lip-syncing assistant face is its own small WebGL surface — lazy too, so
+// it shares the fiber/drei chunk and never weighs on the classic site. It only
+// mounts a canvas once the audio tour is active (see TalkingHead's gate).
+const TalkingHead = lazy(() => import('./components/TalkingHead'));
+
 /**
  * The 3D scroll-storytelling experience.
  *
@@ -79,9 +84,15 @@ const Experience: React.FC = () => {
 
       <ScrollProgress />
 
-      {/* Narrated audio tour — opt-in "Listen" control that reads a short line
-          for each chapter as it scrolls into view (English clips only for now). */}
+      {/* Narrated audio tour — auto-starts muted and unmutes on the first
+          gesture, reading a short line for each chapter (English/Hebrew/Arabic). */}
       <AudioTour />
+
+      {/* The glassy assistant face that lip-syncs to the tour. Renders its own
+          tiny canvas only while the tour is active; null otherwise. */}
+      <Suspense fallback={null}>
+        <TalkingHead tier={tier} />
+      </Suspense>
 
       {/* Content layer. pointer-events-none lets cursor moves reach the canvas;
           interactive children opt back in with pointer-events-auto. */}
