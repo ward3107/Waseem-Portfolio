@@ -28,7 +28,8 @@ const ExperienceCanvas = lazy(() => import('./ExperienceCanvas'));
 
 // The lip-syncing assistant face is its own small WebGL surface — lazy too, so
 // it shares the fiber/drei chunk and never weighs on the classic site. It only
-// mounts a canvas once the audio tour is active (see TalkingHead's gate).
+// shows a small looping video avatar once the audio tour is active (see the
+// TalkingHead gate); no WebGL, so its chunk stays tiny.
 const TalkingHead = lazy(() => import('./components/TalkingHead'));
 
 // The live voice agent (ElevenLabs Conversational AI). Lazy so its SDK is a
@@ -95,7 +96,7 @@ const Experience: React.FC = () => {
       {/* The glassy assistant face that lip-syncs to the tour. Renders its own
           tiny canvas only while the tour is active; null otherwise. */}
       <Suspense fallback={null}>
-        <TalkingHead tier={tier} />
+        <TalkingHead />
       </Suspense>
 
       {/* Live voice agent — "Talk to Waseem". Visitors speak to the face and it
