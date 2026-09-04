@@ -3,13 +3,16 @@ import { Headphones, Pause, Play, Volume2, VolumeX, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
- * The audio tour — a narrated walk-through of the experience. It auto-starts on
- * the visitor's first interaction (a click/tap anywhere — the earliest moment a
- * browser allows sound), and from then on a warm, deep voice reads a short line
- * for each chapter as it scrolls into view. A "Listen" button is the manual
- * fallback, and closing the tour opts out for the rest of the session. Clips are
- * pre-generated static MP3s (see public/audio/<lang>/), so there's no per-visit
- * cost or latency and the page stays fast.
+ * The audio tour — a narrated walk-through of the experience, as automatic as a
+ * browser allows. It starts playing on load MUTED (muted autoplay needs no
+ * gesture), then unmutes on the visitor's very first interaction — a click, key,
+ * or the first scroll-touch (on a phone, starting to scroll is enough), so it
+ * opens to sound essentially on its own. Sound genuinely cannot play before any
+ * interaction — that is a hard browser rule, not a setting. From then on a warm,
+ * deep voice reads a short line for each chapter as it scrolls into view. Closing
+ * the tour opts out for the session (then a "Listen" button is the way back in).
+ * Clips are pre-generated static MP3s (see public/audio/<lang>/), so there's no
+ * per-visit cost or latency and the page stays fast.
  *
  * Scope: the narration is currently recorded in English and plays for EVERY
  * visitor, whatever the site language — Hebrew/Arabic hear the English voice
@@ -59,11 +62,15 @@ const AudioTour: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [enabled, setEnabled] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(false);
+  // Starts muted: browsers allow *muted* autoplay on load, and we unmute on the
+  // visitor's first gesture (see the unmute effect) — that first gesture is
+  // usually the first scroll-touch, so on phones it opens to sound on its own.
+  const [muted, setMuted] = useState(true);
 
   // Refs mirror state so the observer callback (bound once) reads live values.
   const enabledRef = useRef(false);
-  const mutedRef = useRef(false);
+  const mutedRef = useRef(true);
+  const unmutedRef = useRef(false); // has the first-gesture unmute already run?
   const activeRef = useRef<string>(clips?.[0]?.id ?? 'hero');
   const playedRef = useRef<Set<string>>(new Set());
 
@@ -146,10 +153,31 @@ const AudioTour: React.FC = () => {
     return () => io.disconnect();
   }, [clips, playSection]);
 
-  const enable = () => {
+  const enable = (startMuted: boolean) => {
     setEnabled(true);
     enabledRef.current = true;
+    if (!startMuted) {
+      unmutedRef.current = true;
+      mutedRef.current = false;
+      setMuted(false);
+    }
     playSection(activeRef.current, true);
+  };
+
+  // Turn sound on. Only works inside a real user gesture (browsers gate audio),
+  // so this is called from the first-gesture listeners and the Sound button.
+  const unmute = () => {
+    if (unmutedRef.current) return;
+    unmutedRef.current = true;
+    mutedRef.current = false;
+    setMuted(false);
+    const a = audioRef.current;
+    if (a) {
+      a.muted = false;
+      // Replay the current section from the top so it's heard cleanly, not
+      // caught halfway through whatever was playing silently.
+      playSection(activeRef.current, true);
+    }
   };
   const disable = () => {
     setEnabled(false);
@@ -175,27 +203,50 @@ const AudioTour: React.FC = () => {
     setMuted((m) => {
       const next = !m;
       mutedRef.current = next;
+      if (!next) unmutedRef.current = true; // manual unmute counts as the unmute
       if (audioRef.current) audioRef.current.muted = next;
       return next;
     });
   };
 
-  // Auto-start on the visitor's first interaction. Browsers won't let audio
-  // play before a gesture, so the earliest honest moment is the first click /
-  // tap / key anywhere on the page — unless they've closed the tour this session.
+  // Auto-start the moment the page is ready — MUTED, which browsers permit
+  // without a gesture. The tour is "playing" from the first paint; it just has
+  // no sound yet. Skipped if the visitor closed it earlier this session.
   useEffect(() => {
     if (!clips || wasDismissed()) return;
-    const start = () => {
-      if (!enabledRef.current) enable();
+    // Defer a tick so the section elements exist for the observer to track.
+    const t = window.setTimeout(() => {
+      if (!enabledRef.current) enable(true);
+    }, 0);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clips]);
+
+  // Unmute on the visitor's very first interaction — a click, tap, key, or the
+  // first scroll-touch (pointerdown fires for touch, so starting to scroll on a
+  // phone is enough). This is the earliest a browser lets sound through, so it's
+  // as close to fully automatic as the platform allows.
+  useEffect(() => {
+    if (!clips) return;
+    // Only genuine "activation" events (pointerdown covers mouse-down AND the
+    // first touch of a scroll; keydown; touchend) — a browser lets sound through
+    // in their handlers. Scroll/wheel are NOT activation events, so unmuting
+    // there would flip the UI on while staying silent.
+    const onGesture = () => {
+      if (wasDismissed()) return;
+      if (!enabledRef.current) enable(false); // gesture beat the muted auto-start
+      else unmute();
     };
-    window.addEventListener('pointerdown', start, { once: true, passive: true });
-    window.addEventListener('keydown', start, { once: true });
+    const opts = { once: true, passive: true } as const;
+    window.addEventListener('pointerdown', onGesture, opts);
+    window.addEventListener('touchend', onGesture, opts);
+    window.addEventListener('keydown', onGesture, { once: true });
     return () => {
-      window.removeEventListener('pointerdown', start);
-      window.removeEventListener('keydown', start);
+      window.removeEventListener('pointerdown', onGesture);
+      window.removeEventListener('touchend', onGesture);
+      window.removeEventListener('keydown', onGesture);
     };
-    // enable is stable in practice (only touches refs/setters); re-running on
-    // every render would re-arm the one-shot listeners needlessly.
+    // enable/unmute only touch refs + setters, so binding once on mount is safe.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clips]);
 
@@ -206,7 +257,14 @@ const AudioTour: React.FC = () => {
     return (
       <button
         type="button"
-        onClick={enable}
+        onClick={() => {
+          try {
+            sessionStorage.removeItem(DISMISS_KEY);
+          } catch {
+            /* storage blocked — fine */
+          }
+          enable(false);
+        }}
         aria-label="Listen — play the narrated audio tour"
         className="pointer-events-auto fixed bottom-5 left-5 z-50 inline-flex items-center gap-2 rounded-full border border-white/15 bg-slate-900/70 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-black/40 backdrop-blur transition hover:border-brand-cyan/50 hover:bg-slate-900/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
       >
@@ -223,17 +281,21 @@ const AudioTour: React.FC = () => {
       aria-label="Audio tour controls"
     >
       <span
-        className={`ml-1.5 mr-1 inline-flex items-center gap-2 text-xs font-semibold ${playing ? 'text-brand-gold' : 'text-slate-300'}`}
+        className={`ml-1.5 mr-1 inline-flex items-center gap-2 text-xs font-semibold ${
+          muted ? 'text-brand-cyan' : playing ? 'text-brand-gold' : 'text-slate-300'
+        }`}
       >
         <span className="relative flex h-2 w-2">
-          {playing && (
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-gold/70" />
+          {(muted || playing) && (
+            <span
+              className={`absolute inline-flex h-full w-full animate-ping rounded-full ${muted ? 'bg-brand-cyan/70' : 'bg-brand-gold/70'}`}
+            />
           )}
           <span
-            className={`relative inline-flex h-2 w-2 rounded-full ${playing ? 'bg-brand-gold' : 'bg-slate-500'}`}
+            className={`relative inline-flex h-2 w-2 rounded-full ${muted ? 'bg-brand-cyan' : playing ? 'bg-brand-gold' : 'bg-slate-500'}`}
           />
         </span>
-        {playing ? 'Speaking…' : 'Audio tour'}
+        {muted ? 'Tap for sound' : playing ? 'Speaking…' : 'Audio tour'}
       </span>
 
       <button
