@@ -14,6 +14,15 @@ export interface ConvoLabels {
   unmute: string;
   micError: string;
   title: string;
+  // Text chat (used as-is for Hebrew, where voice isn't supported, and as an
+  // opt-in "type instead" for English/Arabic).
+  chat: string;
+  typeInstead: string;
+  chatTitle: string;
+  placeholder: string;
+  send: string;
+  close: string;
+  chatError: string;
 }
 
 export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
@@ -27,6 +36,13 @@ export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
     unmute: 'Unmute microphone',
     micError: 'Microphone access is needed to talk. Please allow it and try again.',
     title: "Waseem's AI assistant",
+    chat: 'Chat with Waseem',
+    typeInstead: 'Prefer to type?',
+    chatTitle: "Chat with Waseem's assistant",
+    placeholder: 'Type your message…',
+    send: 'Send',
+    close: 'Close chat',
+    chatError: 'The chat could not connect. Please try again.',
   },
   he: {
     talk: 'דברו עם וסים',
@@ -38,6 +54,13 @@ export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
     unmute: 'ביטול השתקה',
     micError: 'צריך גישה למיקרופון כדי לדבר. אשרו את ההרשאה ונסו שוב.',
     title: 'העוזר החכם של וסים',
+    chat: "צ'אט עם וסים",
+    typeInstead: 'מעדיפים להקליד?',
+    chatTitle: "צ'אט עם העוזר של וסים",
+    placeholder: 'כתבו הודעה…',
+    send: 'שליחה',
+    close: "סגירת הצ'אט",
+    chatError: 'לא הצלחנו להתחבר לצ׳אט. נסו שוב.',
   },
   ar: {
     talk: 'تحدّث مع وسيم',
@@ -49,8 +72,19 @@ export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
     unmute: 'إلغاء كتم الميكروفون',
     micError: 'نحتاج إذن الميكروفون للتحدث. يُرجى السماح والمحاولة مرة أخرى.',
     title: 'مساعد وسيم الذكي',
+    chat: 'دردشة مع وسيم',
+    typeInstead: 'تفضّل الكتابة؟',
+    chatTitle: 'دردشة مع مساعد وسيم',
+    placeholder: 'اكتب رسالتك…',
+    send: 'إرسال',
+    close: 'إغلاق الدردشة',
+    chatError: 'تعذّر الاتصال بالدردشة. حاول مرة أخرى.',
   },
 };
+
+// Hebrew has no ElevenLabs conversational agent-voice yet, so Hebrew visitors
+// get the text chat as their primary way to talk to the assistant.
+export const voiceSupported = (language: string): boolean => language !== 'he';
 
 export const labelsFor = (language: string): ConvoLabels =>
   CONVO_LABELS[(language as ConvoLang) in CONVO_LABELS ? (language as ConvoLang) : 'en'];
