@@ -222,30 +222,79 @@ const AudioTour: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clips]);
 
-  // Unmute on the visitor's very first interaction — a click, tap, key, or the
-  // first scroll-touch (pointerdown fires for touch, so starting to scroll on a
-  // phone is enough). This is the earliest a browser lets sound through, so it's
-  // as close to fully automatic as the platform allows.
+  // The visitor's VERY FIRST scroll gesture is spent turning the sound on and
+  // (re)starting the narration from the hero — the page does NOT move for it.
+  // Only the next gesture scrolls. That way the first swipe never carries them
+  // past the intro before they've heard it. Taps and keys just activate (they
+  // don't scroll anyway). A gesture that beats the muted auto-start starts it
+  // unmuted directly. Skipped entirely if the tour was closed this session.
+  //
+  // Touch is safe to intercept here: this site runs Lenis with smoothWheel only
+  // (no smooth touch), so mobile scrolling is native — preventing the first
+  // touchmove cleanly holds the page still without fighting Lenis.
   useEffect(() => {
-    if (!clips) return;
-    // Only genuine "activation" events (pointerdown covers mouse-down AND the
-    // first touch of a scroll; keydown; touchend) — a browser lets sound through
-    // in their handlers. Scroll/wheel are NOT activation events, so unmuting
-    // there would flip the UI on while staying silent.
-    const onGesture = () => {
-      if (wasDismissed()) return;
-      if (!enabledRef.current) enable(false); // gesture beat the muted auto-start
-      else unmute();
+    if (!clips || wasDismissed()) return;
+    let released = false; // has the one-time scroll hold been lifted?
+
+    const activate = () => {
+      if (!enabledRef.current) enable(false); // muted auto-start hadn't run yet
+      else unmute(); // both restart the current (hero) section from the top
     };
-    const opts = { once: true, passive: true } as const;
-    window.addEventListener('pointerdown', onGesture, opts);
-    window.addEventListener('touchend', onGesture, opts);
-    window.addEventListener('keydown', onGesture, { once: true });
-    return () => {
-      window.removeEventListener('pointerdown', onGesture);
-      window.removeEventListener('touchend', onGesture);
-      window.removeEventListener('keydown', onGesture);
+    const release = () => {
+      if (released) return;
+      released = true;
+      window.clearTimeout(wheelTimer);
+      window.removeEventListener('touchstart', onTouchStart, cap);
+      window.removeEventListener('touchmove', onTouchMove, blockOpts);
+      window.removeEventListener('touchend', onTouchEnd, cap);
+      window.removeEventListener('wheel', onWheel, blockOpts);
+      window.removeEventListener('keydown', onKeyDown, cap);
+      window.removeEventListener('pointerdown', onMouseDown, cap);
     };
+
+    const onTouchStart = () => {
+      if (!released) activate();
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (released) return;
+      e.preventDefault(); // hold the page still for the whole first swipe
+      activate();
+    };
+    const onTouchEnd = () => {
+      if (released) return;
+      activate();
+      release(); // first swipe/tap over → the next gesture scrolls normally
+    };
+    let wheelTimer = 0;
+    const onWheel = (e: WheelEvent) => {
+      if (released) return;
+      e.preventDefault(); // hold still for the first wheel burst (desktop)
+      activate();
+      window.clearTimeout(wheelTimer);
+      wheelTimer = window.setTimeout(release, 300);
+    };
+    const onKeyDown = () => {
+      if (!released) {
+        activate();
+        release();
+      }
+    };
+    const onMouseDown = (e: PointerEvent) => {
+      if (!released && e.pointerType === 'mouse') {
+        activate();
+        release();
+      }
+    };
+
+    const cap = { capture: true } as const;
+    const blockOpts = { capture: true, passive: false } as const;
+    window.addEventListener('touchstart', onTouchStart, cap);
+    window.addEventListener('touchmove', onTouchMove, blockOpts);
+    window.addEventListener('touchend', onTouchEnd, cap);
+    window.addEventListener('wheel', onWheel, blockOpts);
+    window.addEventListener('keydown', onKeyDown, cap);
+    window.addEventListener('pointerdown', onMouseDown, cap);
+    return release;
     // enable/unmute only touch refs + setters, so binding once on mount is safe.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clips]);
