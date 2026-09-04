@@ -25,6 +25,14 @@ import { getPrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion'
 const VIDEO_SRC = '/avatar/assistant.mp4';
 const POSTER_SRC = '/avatar/assistant-poster.webp';
 
+// Master on/off switch for the assistant face. OFF by default so live visitors
+// don't see it while it's still being refined. To turn it on for everyone,
+// either set VITE_ENABLE_ASSISTANT_FACE=true in the host env (Vercel) and
+// redeploy, or flip this fallback to 'true'. The whole avatar (video, glow,
+// responsive dock) stays wired up regardless — this only controls visibility.
+const FACE_ENABLED =
+  ((import.meta.env.VITE_ENABLE_ASSISTANT_FACE as string | undefined) ?? 'false') === 'true';
+
 type Mode = 'off' | 'guide' | 'call';
 
 const subscribe = (cb: () => void) => audioTourStore.subscribe(cb);
@@ -108,7 +116,8 @@ const Avatar: React.FC<{ mode: Mode; reduced: boolean }> = ({ mode, reduced }) =
 const TalkingHead: React.FC = () => {
   const mode = useSyncExternalStore(subscribe, getMode, () => 'off' as Mode);
   const reduced = getPrefersReducedMotion();
-  if (mode === 'off') return null;
+  // Hidden entirely while the master switch is off — nothing renders or loads.
+  if (!FACE_ENABLED || mode === 'off') return null;
   return <Avatar mode={mode} reduced={reduced} />;
 };
 
