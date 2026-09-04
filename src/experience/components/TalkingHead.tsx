@@ -160,10 +160,15 @@ const HeadCanvas: React.FC<{ tier: QualityTier }> = ({ tier }) => (
  * coarse `active` flag via useSyncExternalStore (not the per-frame mouth value).
  */
 const subscribe = (cb: () => void) => audioTourStore.subscribe(cb);
-const getActive = () => audioTourStore.get().active;
+// Shown while the narration tour is on OR a live agent conversation is up — the
+// same face lip-syncs to whichever is speaking.
+const getShown = () => {
+  const s = audioTourStore.get();
+  return s.active || s.conversing;
+};
 
 const TalkingHead: React.FC<{ tier: QualityTier }> = ({ tier }) => {
-  const active = useSyncExternalStore(subscribe, getActive, () => false);
+  const active = useSyncExternalStore(subscribe, getShown, () => false);
   // A lip-syncing, blinking face is motion; honour the reduced-motion setting.
   const reduced = useMemo(() => getPrefersReducedMotion(), []);
   if (!active || reduced) return null;

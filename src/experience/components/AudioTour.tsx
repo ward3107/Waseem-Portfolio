@@ -256,6 +256,12 @@ const AudioTour: React.FC = () => {
 
     const tick = () => {
       if (!running) return;
+      // A live agent conversation owns the face while it's connected — yield the
+      // mouth to it (ConversationAgent writes the store) rather than fighting it.
+      if (audioTourStore.get().conversing) {
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
       const a = audioRef.current;
       const audible = !!a && !a.paused && !a.muted && !a.ended;
       let target = 0;
@@ -285,6 +291,17 @@ const AudioTour: React.FC = () => {
       audioTourStore.set({ speaking: false, mouth: 0 });
     };
   }, [enabled]);
+
+  // When a live agent conversation connects, pause the narration so the two
+  // voices never overlap — the visitor is talking to the bot now, not listening.
+  useEffect(() => {
+    let wasConversing = audioTourStore.get().conversing;
+    return audioTourStore.subscribe(() => {
+      const now = audioTourStore.get().conversing;
+      if (now && !wasConversing) audioRef.current?.pause();
+      wasConversing = now;
+    });
+  }, []);
 
   const enable = (startMuted: boolean) => {
     setEnabled(true);

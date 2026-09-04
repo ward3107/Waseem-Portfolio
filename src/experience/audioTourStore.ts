@@ -5,19 +5,23 @@
 // re-renders. DOM widgets that only care about the coarse `active` flag
 // subscribe via useSyncExternalStore instead.
 //
-//   - `active`   — the tour is on (a face should be shown).
-//   - `speaking` — a clip is currently playing (not paused/muted-silent).
-//   - `mouth`    — live mouth openness 0 (closed) → 1 (wide), derived from the
-//                  narration's amplitude when Web Audio is available, or a
-//                  procedural talking envelope as a fallback.
+//   - `active`     — the narration tour is on (a face should be shown).
+//   - `conversing` — a live voice conversation with the agent is connected. The
+//                    face is shown while either `active` or `conversing` is set,
+//                    and the conversation drives the mouth (the narration yields).
+//   - `speaking`   — the current source (narration clip or agent) is speaking.
+//   - `mouth`      — live mouth openness 0 (closed) → 1 (wide), from the
+//                    narration's amplitude, the agent's output volume, or a
+//                    procedural talking envelope as a fallback.
 
 export interface AudioTourSnapshot {
   active: boolean;
+  conversing: boolean;
   speaking: boolean;
   mouth: number;
 }
 
-let snapshot: AudioTourSnapshot = { active: false, speaking: false, mouth: 0 };
+let snapshot: AudioTourSnapshot = { active: false, conversing: false, speaking: false, mouth: 0 };
 const listeners = new Set<() => void>();
 
 export const audioTourStore = {
@@ -34,7 +38,9 @@ export const audioTourStore = {
   set(patch: Partial<AudioTourSnapshot>): void {
     const next = { ...snapshot, ...patch };
     const coarseChanged =
-      next.active !== snapshot.active || next.speaking !== snapshot.speaking;
+      next.active !== snapshot.active ||
+      next.conversing !== snapshot.conversing ||
+      next.speaking !== snapshot.speaking;
     snapshot = next;
     if (coarseChanged) listeners.forEach((l) => l());
   },
@@ -45,7 +51,7 @@ export const audioTourStore = {
   },
   /** Reset to idle — call when the tour unmounts so a remount starts clean. */
   reset(): void {
-    snapshot = { active: false, speaking: false, mouth: 0 };
+    snapshot = { active: false, conversing: false, speaking: false, mouth: 0 };
     listeners.forEach((l) => l());
   },
 };

@@ -31,6 +31,10 @@ const ExperienceCanvas = lazy(() => import('./ExperienceCanvas'));
 // mounts a canvas once the audio tour is active (see TalkingHead's gate).
 const TalkingHead = lazy(() => import('./components/TalkingHead'));
 
+// The live voice agent (ElevenLabs Conversational AI). Lazy so its SDK is a
+// separate chunk, loaded only for experience visitors; it drives the same face.
+const ConversationAgent = lazy(() => import('./components/ConversationAgent'));
+
 /**
  * The 3D scroll-storytelling experience.
  *
@@ -92,6 +96,12 @@ const Experience: React.FC = () => {
           tiny canvas only while the tour is active; null otherwise. */}
       <Suspense fallback={null}>
         <TalkingHead tier={tier} />
+      </Suspense>
+
+      {/* Live voice agent — "Talk to Waseem". Visitors speak to the face and it
+          answers; while connected it drives the same face and pauses narration. */}
+      <Suspense fallback={null}>
+        <ConversationAgent />
       </Suspense>
 
       {/* Content layer. pointer-events-none lets cursor moves reach the canvas;
