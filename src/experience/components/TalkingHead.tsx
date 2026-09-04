@@ -15,24 +15,25 @@ import type { QualityTier } from '../useQualityTier';
 import { getPrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 
 /**
- * The "assistant" — an ABSTRACT face made of glowing particles, the same look as
- * the brand "W" monogram (a Points cloud with additive blending), not a solid
- * or realistic head. Two eye clusters, a head outline, and a mouth that opens
- * and closes with the live audio: it reads the narration/agent amplitude from
- * audioTourStore every frame (never React state) and spreads the mouth points
- * apart in time with speech, plus idle life (gentle sway + the occasional blink).
+ * The "assistant" — an ABSTRACT face made of living particles, the same additive
+ * Points look as the brand "W" monogram, and (like the W) always in gentle
+ * motion: every dot drifts and swirls around its place while the whole cloud
+ * sways, so it reads as alive rather than a static graphic. Two eye clusters, a
+ * faint elliptical head outline, and a mouth built from an ellipse of points
+ * whose vertical radius grows with the live audio — so it lip-syncs to the
+ * narration and the agent, with the occasional blink.
  *
- * It renders in its own tiny transparent <Canvas> pinned above the audio-tour
- * controls, mounted only while the tour is active OR a voice call is connected,
- * and skipped under reduced-motion. Purely decorative: pointer-events-none.
+ * Placement follows the moment: while the tour narrates, a compact face floats
+ * bottom-centre, above the controls; when a live voice/text conversation
+ * connects, it grows and moves to centre-stage as the focal "person" you are
+ * talking to. It is always pointer-events-none, so it never blocks clicks, and
+ * it is skipped entirely under reduced-motion.
  */
 
-// Brand palette (mirrors tailwind.config.js / MorphField).
 const HEAD_COLOR = '#A78BFA';
 const EYE_COLOR = '#00E5FF';
 const MOUTH_COLOR = '#E3D095';
 
-// Face geometry (local units; the head spans ~±1.1).
 const EYE_CY = 0.34;
 const EYE_DX = 0.4;
 const EYE_R = 0.15;
@@ -43,22 +44,24 @@ const MOUTH_RY_OPEN = 0.5;
 
 type FaceData = {
   geometry: BufferGeometry;
-  rest: Float32Array; // base positions (x kept, y recomputed for eyes/mouth)
+  rest: Float32Array; // base positions
   kind: Uint8Array; // 0 head, 1 eye, 2 mouth
-  aux: Float32Array; // mouth: sin factor; eye: dy from eye-centre; head: 0
+  aux: Float32Array; // mouth: sin factor; eye: dy from centre; head: 0
+  phase: Float32Array; // per-particle drift phase
 };
 
 function buildFace(tier: QualityTier): FaceData {
   const high = tier === 'high';
-  const headCount = high ? 340 : 170; // outline rings
-  const eyeCount = high ? 70 : 38; // per eye
-  const mouthCount = high ? 170 : 90;
+  const headCount = high ? 420 : 200;
+  const eyeCount = high ? 80 : 40; // per eye
+  const mouthCount = high ? 200 : 100;
   const total = headCount + eyeCount * 2 + mouthCount;
 
   const pos = new Float32Array(total * 3);
   const col = new Float32Array(total * 3);
   const kind = new Uint8Array(total);
   const aux = new Float32Array(total);
+  const phase = new Float32Array(total);
 
   const head = new Color(HEAD_COLOR);
   const eye = new Color(EYE_COLOR);
@@ -74,6 +77,7 @@ function buildFace(tier: QualityTier): FaceData {
     col[o * 3 + 2] = c.b;
     kind[o] = k;
     aux[o] = a;
+    phase[o] = Math.random() * Math.PI * 2;
     o++;
   };
 
@@ -81,15 +85,13 @@ function buildFace(tier: QualityTier): FaceData {
   for (let i = 0; i < headCount; i++) {
     const ang = (i / headCount) * Math.PI * 2;
     const ring = i % 2 === 0 ? 1 : 0.9;
-    const jitter = 0.02;
-    const x = Math.cos(ang) * 1.0 * ring + (Math.random() - 0.5) * jitter;
-    const y = Math.sin(ang) * 1.2 * ring + (Math.random() - 0.5) * jitter;
-    const z = (Math.random() - 0.5) * 0.12;
+    const x = Math.cos(ang) * 1.0 * ring + (Math.random() - 0.5) * 0.02;
+    const y = Math.sin(ang) * 1.2 * ring + (Math.random() - 0.5) * 0.02;
+    const z = (Math.random() - 0.5) * 0.14;
     put(x, y, z, head, 0, 0);
   }
 
-  // Eyes — two small filled discs of points; aux holds each point's dy from the
-  // eye centre so a blink can squash them vertically.
+  // Eyes — two small filled discs; aux = each point's dy from the eye centre.
   for (const dir of [-1, 1]) {
     for (let i = 0; i < eyeCount; i++) {
       const a = Math.random() * Math.PI * 2;
@@ -101,8 +103,7 @@ function buildFace(tier: QualityTier): FaceData {
     }
   }
 
-  // Mouth — an ellipse outline; aux holds sin(angle) so we can grow its vertical
-  // radius with the audio (closed = a line, open = an oval).
+  // Mouth — an ellipse outline; aux = sin(angle) so the vertical radius grows.
   for (let i = 0; i < mouthCount; i++) {
     const ang = (i / mouthCount) * Math.PI * 2;
     const s = Math.sin(ang);
@@ -115,7 +116,7 @@ function buildFace(tier: QualityTier): FaceData {
   const geo = new BufferGeometry();
   geo.setAttribute('position', new BufferAttribute(pos, 3));
   geo.setAttribute('color', new BufferAttribute(col, 3));
-  return { geometry: geo, rest: pos.slice(), kind, aux };
+  return { geometry: geo, rest: pos.slice(), kind, aux, phase };
 }
 
 const Face: React.FC<{ tier: QualityTier }> = ({ tier }) => {
@@ -124,7 +125,7 @@ const Face: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   const blink = useRef({ next: 1.5, until: 0 });
   const openRef = useRef(0);
 
-  const { geometry, material, rest, kind, aux } = useMemo(() => {
+  const { geometry, material, rest, kind, aux, phase } = useMemo(() => {
     const face = buildFace(tier);
     const mat = new PointsMaterial({
       size: tier === 'high' ? 0.05 : 0.07,
@@ -135,18 +136,16 @@ const Face: React.FC<{ tier: QualityTier }> = ({ tier }) => {
       depthWrite: false,
       blending: AdditiveBlending,
     });
-    return { geometry: face.geometry, material: mat, rest: face.rest, kind: face.kind, aux: face.aux };
+    return { geometry: face.geometry, material: mat, rest: face.rest, kind: face.kind, aux: face.aux, phase: face.phase };
   }, [tier]);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     const { mouth: openness, speaking } = audioTourStore.get();
 
-    // Ease the mouth opening toward the live amplitude.
     openRef.current = MathUtils.lerp(openRef.current, openness, 0.4);
     const ry = MOUTH_RY_CLOSED + openRef.current * MOUTH_RY_OPEN;
 
-    // Blink on an irregular cadence.
     const b = blink.current;
     if (t > b.next && t > b.until) {
       b.until = t + 0.12;
@@ -154,29 +153,42 @@ const Face: React.FC<{ tier: QualityTier }> = ({ tier }) => {
     }
     const blinkScale = t < b.until ? 0.12 : 1;
 
+    // Livelier drift while speaking, but always moving — this is what makes the
+    // dots feel like the W's cloud rather than a static picture.
+    const drift = speaking ? 0.05 : 0.03;
+
     const obj = points.current;
     if (obj) {
       const arr = (obj.geometry.attributes.position as BufferAttribute).array as Float32Array;
       for (let i = 0; i < kind.length; i++) {
+        const ph = phase[i];
+        const dx = Math.sin(t * 0.9 + ph) * drift;
+        const dy = Math.cos(t * 0.8 + ph * 1.3) * drift;
+        const dz = Math.sin(t * 1.1 + ph * 0.7) * drift;
+        const bx = rest[i * 3];
+        const bz = rest[i * 3 + 2];
+        arr[i * 3] = bx + dx;
+        arr[i * 3 + 2] = bz + dz;
         if (kind[i] === 2) {
-          // mouth: y = centre + growing vertical radius * sin(angle)
-          arr[i * 3 + 1] = MOUTH_CY + ry * aux[i];
+          arr[i * 3 + 1] = MOUTH_CY + ry * aux[i] + dy * 0.5;
         } else if (kind[i] === 1) {
-          // eye: squash toward its centre on a blink
-          arr[i * 3 + 1] = EYE_CY + aux[i] * blinkScale;
+          arr[i * 3 + 1] = EYE_CY + aux[i] * blinkScale + dy * 0.4;
         } else {
-          arr[i * 3 + 1] = rest[i * 3 + 1];
+          arr[i * 3 + 1] = rest[i * 3 + 1] + dy;
         }
       }
       (obj.geometry.attributes.position as BufferAttribute).needsUpdate = true;
     }
 
-    // Idle life: gentle sway, a touch livelier while speaking.
+    // Whole-cloud sway + a slow breathing scale — front-facing so the eyes and
+    // mouth stay readable, but never still.
     if (group.current) {
-      const energy = speaking ? 1 : 0.5;
-      group.current.rotation.y = Math.sin(t * 0.5) * 0.25 * energy + state.pointer.x * 0.15;
-      group.current.rotation.x = Math.sin(t * 0.8 + 1) * 0.08 * energy;
-      group.current.position.y = Math.sin(t * 1.3) * 0.03;
+      const energy = speaking ? 1 : 0.6;
+      group.current.rotation.y = Math.sin(t * 0.4) * 0.35 * energy;
+      group.current.rotation.x = Math.sin(t * 0.7 + 1) * 0.1 * energy;
+      group.current.rotation.z = Math.sin(t * 0.3) * 0.04;
+      const s = 1 + Math.sin(t * 1.2) * 0.02;
+      group.current.scale.setScalar(s);
     }
   });
 
@@ -187,36 +199,46 @@ const Face: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   );
 };
 
-const HeadCanvas: React.FC<{ tier: QualityTier }> = ({ tier }) => (
-  <div
-    className="pointer-events-none fixed bottom-[4.75rem] left-4 z-40 h-24 w-24 overflow-hidden rounded-full border border-brand-cyan/25 bg-slate-950/50 shadow-lg shadow-brand-cyan/10 backdrop-blur-sm sm:h-32 sm:w-32"
-    aria-hidden="true"
-  >
-    <Canvas
-      dpr={tier === 'high' ? [1, 1.5] : [1, 1]}
-      camera={{ position: [0, 0, 3.6], fov: 40, near: 0.1, far: 20 }}
-      gl={{ antialias: tier === 'high', alpha: true, powerPreference: 'low-power' }}
+type Mode = 'off' | 'guide' | 'call';
+
+const HeadCanvas: React.FC<{ tier: QualityTier; mode: Mode }> = ({ tier, mode }) => {
+  // Bottom-centre and compact while narrating; centre-stage and large on a call.
+  const box =
+    mode === 'call'
+      ? 'top-[26%] h-64 w-64 sm:h-80 sm:w-80'
+      : 'bottom-24 h-40 w-40 sm:bottom-28 sm:h-52 sm:w-52';
+  return (
+    <div
+      className={`pointer-events-none fixed left-1/2 z-40 -translate-x-1/2 overflow-hidden rounded-full transition-all duration-500 ease-out ${box}`}
+      aria-hidden="true"
     >
-      <Face tier={tier} />
-    </Canvas>
-  </div>
-);
+      <Canvas
+        dpr={tier === 'high' ? [1, 1.5] : [1, 1]}
+        camera={{ position: [0, 0, 3.6], fov: 40, near: 0.1, far: 20 }}
+        gl={{ antialias: tier === 'high', alpha: true, powerPreference: 'low-power' }}
+      >
+        <Face tier={tier} />
+      </Canvas>
+    </div>
+  );
+};
 
 /**
- * Mount gate: renders the head only while the narration tour is on OR a live
- * agent conversation is connected, so its WebGL context exists only on opt-in.
+ * Mount gate + placement mode. Shown while the narration tour is on OR a live
+ * conversation is connected; `conversing` promotes it to the centre-stage size.
  */
 const subscribe = (cb: () => void) => audioTourStore.subscribe(cb);
-const getShown = () => {
+const getMode = (): Mode => {
   const s = audioTourStore.get();
-  return s.active || s.conversing;
+  if (!s.active && !s.conversing) return 'off';
+  return s.conversing ? 'call' : 'guide';
 };
 
 const TalkingHead: React.FC<{ tier: QualityTier }> = ({ tier }) => {
-  const active = useSyncExternalStore(subscribe, getShown, () => false);
+  const mode = useSyncExternalStore(subscribe, getMode, () => 'off' as Mode);
   const reduced = useMemo(() => getPrefersReducedMotion(), []);
-  if (!active || reduced) return null;
-  return <HeadCanvas tier={tier} />;
+  if (mode === 'off' || reduced) return null;
+  return <HeadCanvas tier={tier} mode={mode} />;
 };
 
 export default TalkingHead;
