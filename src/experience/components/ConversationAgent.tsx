@@ -81,6 +81,7 @@ const ConversationAgent: React.FC = () => {
 
       {canVoice ? (
         <>
+          {/* Primary: talk. iOS-style circular button — no wide pill to overflow. */}
           <button
             type="button"
             onClick={() => {
@@ -88,21 +89,23 @@ const ConversationAgent: React.FC = () => {
               setMode('voice');
             }}
             aria-label={L.talk}
-            className="inline-flex items-center gap-2 rounded-full border border-brand-cyan/30 bg-slate-900/80 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-cyan/10 backdrop-blur transition hover:border-brand-cyan/60 hover:bg-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
+            title={L.talk}
+            className="pointer-events-auto grid h-14 w-14 place-items-center rounded-full border border-brand-cyan/40 bg-slate-900/80 text-white shadow-lg shadow-brand-cyan/20 backdrop-blur transition active:scale-95 hover:border-brand-cyan/70 hover:bg-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
           >
-            <Sparkles className="h-4 w-4 text-brand-cyan" aria-hidden="true" />
-            {L.talk}
+            <Sparkles className="h-6 w-6 text-brand-cyan" aria-hidden="true" />
           </button>
+          {/* Secondary: type instead. */}
           <button
             type="button"
             onClick={() => {
               setChatError(false);
               setMode('text');
             }}
-            className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium text-slate-300 underline-offset-2 transition hover:text-white hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
+            aria-label={L.typeInstead}
+            title={L.typeInstead}
+            className="pointer-events-auto grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-slate-900/70 text-white shadow-lg shadow-black/40 backdrop-blur transition active:scale-95 hover:bg-slate-900/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
           >
-            <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
-            {L.typeInstead}
+            <MessageCircle className="h-5 w-5 text-slate-200" aria-hidden="true" />
           </button>
         </>
       ) : (
@@ -113,10 +116,10 @@ const ConversationAgent: React.FC = () => {
             setMode('text');
           }}
           aria-label={L.chat}
-          className="inline-flex items-center gap-2 rounded-full border border-brand-cyan/30 bg-slate-900/80 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-cyan/10 backdrop-blur transition hover:border-brand-cyan/60 hover:bg-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
+          title={L.chat}
+          className="pointer-events-auto grid h-14 w-14 place-items-center rounded-full border border-brand-cyan/40 bg-slate-900/80 text-white shadow-lg shadow-brand-cyan/20 backdrop-blur transition active:scale-95 hover:border-brand-cyan/70 hover:bg-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
         >
-          <MessageCircle className="h-4 w-4 text-brand-cyan" aria-hidden="true" />
-          {L.chat}
+          <MessageCircle className="h-6 w-6 text-brand-cyan" aria-hidden="true" />
         </button>
       )}
     </div>

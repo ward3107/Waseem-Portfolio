@@ -459,6 +459,11 @@ const AudioTour: React.FC = () => {
   // No narration for this language (or SSR): render nothing.
   if (!clips) return null;
 
+  // iOS-style: standalone circular glass buttons (44px touch targets), never a
+  // wide text pill — so nothing overflows onto the other on-screen controls.
+  const circleBtn =
+    'pointer-events-auto grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-slate-900/70 text-white shadow-lg shadow-black/40 backdrop-blur transition active:scale-95 hover:bg-slate-900/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan';
+
   if (!enabled) {
     return (
       <button
@@ -472,62 +477,47 @@ const AudioTour: React.FC = () => {
           enable(false);
         }}
         aria-label="Listen — play the narrated audio tour"
-        className="pointer-events-auto fixed bottom-5 left-5 z-50 inline-flex items-center gap-2 rounded-full border border-white/15 bg-slate-900/70 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-black/40 backdrop-blur transition hover:border-brand-cyan/50 hover:bg-slate-900/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
+        className={`fixed bottom-5 left-5 z-50 ${circleBtn}`}
       >
-        <Headphones className="h-4 w-4 text-brand-cyan" aria-hidden="true" />
-        Listen
+        <Headphones className="h-5 w-5 text-brand-cyan" aria-hidden="true" />
       </button>
     );
   }
 
   return (
     <div
-      className="pointer-events-auto fixed bottom-5 left-5 z-50 flex items-center gap-1 rounded-full border border-white/15 bg-slate-900/80 p-1.5 shadow-lg shadow-black/40 backdrop-blur"
+      className="fixed bottom-5 left-5 z-50 flex items-center gap-2"
       role="group"
       aria-label="Audio tour controls"
     >
-      <span
-        className={`ml-1.5 mr-1 inline-flex items-center gap-2 text-xs font-semibold ${
-          muted ? 'text-brand-cyan' : playing ? 'text-brand-gold' : 'text-slate-300'
-        }`}
-      >
-        <span className="relative flex h-2 w-2">
-          {(muted || playing) && (
-            <span
-              className={`absolute inline-flex h-full w-full animate-ping rounded-full ${muted ? 'bg-brand-cyan/70' : 'bg-brand-gold/70'}`}
-            />
-          )}
-          <span
-            className={`relative inline-flex h-2 w-2 rounded-full ${muted ? 'bg-brand-cyan' : playing ? 'bg-brand-gold' : 'bg-slate-500'}`}
-          />
-        </span>
-        {muted ? 'Tap for sound' : playing ? 'Speaking…' : 'Audio tour'}
-      </span>
-
       <button
         type="button"
         onClick={togglePlay}
         aria-label={playing ? 'Pause narration' : 'Play narration'}
-        className="grid h-9 w-9 place-items-center rounded-full text-white transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
+        className={`${circleBtn} ${playing ? 'text-brand-gold' : ''}`}
       >
-        {playing ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
+        {playing ? <Pause className="h-5 w-5" aria-hidden="true" /> : <Play className="h-5 w-5" aria-hidden="true" />}
       </button>
       <button
         type="button"
         onClick={toggleMute}
         aria-label={muted ? 'Unmute narration' : 'Mute narration'}
         aria-pressed={muted}
-        className="grid h-9 w-9 place-items-center rounded-full text-white transition hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
+        className={`relative ${circleBtn} ${muted ? 'text-brand-cyan' : ''}`}
       >
-        {muted ? <VolumeX className="h-4 w-4" aria-hidden="true" /> : <Volume2 className="h-4 w-4" aria-hidden="true" />}
+        {/* Pulsing hint that a tap turns the sound on. */}
+        {muted && (
+          <span className="pointer-events-none absolute inset-0 animate-ping rounded-full border border-brand-cyan/60" />
+        )}
+        {muted ? <VolumeX className="h-5 w-5" aria-hidden="true" /> : <Volume2 className="h-5 w-5" aria-hidden="true" />}
       </button>
       <button
         type="button"
         onClick={disable}
         aria-label="Close the audio tour"
-        className="grid h-9 w-9 place-items-center rounded-full text-slate-400 transition hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
+        className={`${circleBtn} text-slate-300 hover:text-white`}
       >
-        <X className="h-4 w-4" aria-hidden="true" />
+        <X className="h-5 w-5" aria-hidden="true" />
       </button>
     </div>
   );
