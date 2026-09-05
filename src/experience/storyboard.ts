@@ -36,6 +36,14 @@ export const CHAPTERS: Chapter[] = [
     lookAt: [0, 0, 0],
   },
   {
+    id: 'about',
+    label: 'About — The Identity',
+    titleKey: 'exp_chapter_about',
+    anchor: '#about',
+    camera: [1.5, 0.4, 5.6],
+    lookAt: [0, 0, -1],
+  },
+  {
     id: 'services',
     label: 'Services — What I build',
     titleKey: 'exp_chapter_services',
