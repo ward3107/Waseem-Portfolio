@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Headphones, Pause, Play, Volume2, VolumeX, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { audioTourStore } from '../audioTourStore';
 
@@ -366,6 +365,42 @@ const AudioTour: React.FC = () => {
     });
   };
 
+  // (Re)start the tour from a "Listen" tap — clears the session dismissal so it
+  // plays again even if the visitor had closed it earlier.
+  const start = () => {
+    try {
+      sessionStorage.removeItem(DISMISS_KEY);
+    } catch {
+      /* storage blocked — fine */
+    }
+    if (!enabledRef.current) enable(false);
+    else unmute();
+  };
+
+  // Publish coarse playback state so the detached control surface (the header
+  // button, via audioTourStore) can reflect and drive it.
+  useEffect(() => {
+    audioTourStore.set({ playing });
+  }, [playing]);
+  useEffect(() => {
+    audioTourStore.set({ muted });
+  }, [muted]);
+
+  // Register imperative controls for the header button. The registered object
+  // reads a ref so it always calls the latest closures (which themselves lean
+  // on refs/setters, so stale capture is harmless), and `present` flips true
+  // for as long as the tour is mounted.
+  const ctrlRef = useRef({ start, togglePlay, toggleMute, close: disable });
+  ctrlRef.current = { start, togglePlay, toggleMute, close: disable };
+  useEffect(() => {
+    return audioTourStore.registerControls({
+      start: () => ctrlRef.current.start(),
+      togglePlay: () => ctrlRef.current.togglePlay(),
+      toggleMute: () => ctrlRef.current.toggleMute(),
+      close: () => ctrlRef.current.close(),
+    });
+  }, []);
+
   // Auto-start the moment the page is ready — MUTED, which browsers permit
   // without a gesture. The tour is "playing" from the first paint; it just has
   // no sound yet. Skipped if the visitor closed it earlier this session.
@@ -456,71 +491,12 @@ const AudioTour: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clips]);
 
-  // No narration for this language (or SSR): render nothing.
-  if (!clips) return null;
-
-  // iOS-style: standalone circular glass buttons (44px touch targets), never a
-  // wide text pill — so nothing overflows onto the other on-screen controls.
-  const circleBtn =
-    'pointer-events-auto grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-slate-900/70 text-white shadow-lg shadow-black/40 backdrop-blur transition active:scale-95 hover:bg-slate-900/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan';
-
-  if (!enabled) {
-    return (
-      <button
-        type="button"
-        onClick={() => {
-          try {
-            sessionStorage.removeItem(DISMISS_KEY);
-          } catch {
-            /* storage blocked — fine */
-          }
-          enable(false);
-        }}
-        aria-label="Listen — play the narrated audio tour"
-        className={`fixed bottom-5 left-5 z-50 ${circleBtn}`}
-      >
-        <Headphones className="h-5 w-5 text-brand-cyan" aria-hidden="true" />
-      </button>
-    );
-  }
-
-  return (
-    <div
-      className="fixed bottom-5 left-5 z-50 flex items-center gap-2"
-      role="group"
-      aria-label="Audio tour controls"
-    >
-      <button
-        type="button"
-        onClick={togglePlay}
-        aria-label={playing ? 'Pause narration' : 'Play narration'}
-        className={`${circleBtn} ${playing ? 'text-brand-gold' : ''}`}
-      >
-        {playing ? <Pause className="h-5 w-5" aria-hidden="true" /> : <Play className="h-5 w-5" aria-hidden="true" />}
-      </button>
-      <button
-        type="button"
-        onClick={toggleMute}
-        aria-label={muted ? 'Unmute narration' : 'Mute narration'}
-        aria-pressed={muted}
-        className={`relative ${circleBtn} ${muted ? 'text-brand-cyan' : ''}`}
-      >
-        {/* Pulsing hint that a tap turns the sound on. */}
-        {muted && (
-          <span className="pointer-events-none absolute inset-0 animate-ping rounded-full border border-brand-cyan/60" />
-        )}
-        {muted ? <VolumeX className="h-5 w-5" aria-hidden="true" /> : <Volume2 className="h-5 w-5" aria-hidden="true" />}
-      </button>
-      <button
-        type="button"
-        onClick={disable}
-        aria-label="Close the audio tour"
-        className={`${circleBtn} text-slate-300 hover:text-white`}
-      >
-        <X className="h-5 w-5" aria-hidden="true" />
-      </button>
-    </div>
-  );
+  // Headless: AudioTour owns the audio element, the narration logic and the
+  // Web Audio tap, but renders no UI of its own. Its controls live in the site
+  // header (see AudioHeaderControl), driven through audioTourStore. The
+  // `enabled` / `playing` / `muted` state feeds the effects above and the
+  // registered controls; the visible rail is gone.
+  return null;
 };
 
 export default AudioTour;

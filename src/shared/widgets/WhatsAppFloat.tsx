@@ -31,21 +31,28 @@ const WhatsAppFloat: React.FC = () => {
       className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 print:hidden"
       style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.75rem)' }}
     >
-      <motion.a
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6, type: 'spring', stiffness: 220, damping: 26 }}
-        whileTap={{ scale: 0.97 }}
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={t('wa_float_aria')}
-        onClick={() => trackEvent('generate_lead', { source: 'whatsapp_dock', language })}
-        className="pointer-events-auto flex w-full max-w-sm items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-6 py-3.5 text-base font-bold text-white shadow-2xl shadow-green-900/40 ring-1 ring-white/20 transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-4 focus-visible:ring-green-300"
-      >
-        <MessageCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
-        {t('hero_cta_whatsapp')}
-      </motion.a>
+      {/* Centered dock: the WhatsApp CTA plus a trailing action slot. The
+          experience portals its "chat" button into the slot so it sits beside
+          this bar; on every other page the slot is empty (display:contents), so
+          the pill stays perfectly centered and full-width. */}
+      <div className="flex w-full max-w-sm items-center gap-2">
+        <motion.a
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, type: 'spring', stiffness: 220, damping: 26 }}
+          whileTap={{ scale: 0.97 }}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={t('wa_float_aria')}
+          onClick={() => trackEvent('generate_lead', { source: 'whatsapp_dock', language })}
+          className="pointer-events-auto flex flex-1 items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-6 py-3.5 text-base font-bold text-white shadow-2xl shadow-green-900/40 ring-1 ring-white/20 transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-4 focus-visible:ring-green-300"
+        >
+          <MessageCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
+          {t('hero_cta_whatsapp')}
+        </motion.a>
+        <div id="assistant-dock-slot" className="contents" />
+      </div>
     </div>
   );
 };

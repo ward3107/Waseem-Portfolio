@@ -7,6 +7,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { useContact } from '@/features/contact/useContact';
 import NavShareButton from '@/shared/widgets/NavShareButton';
+import AudioHeaderControl from '@/experience/components/AudioHeaderControl';
 
 
 const Navbar: React.FC = () => {
@@ -104,6 +105,10 @@ const Navbar: React.FC = () => {
               </button>
             </div>
 
+            {/* Audio tour control — only visible while the experience tour is
+                mounted; hidden on every other page. */}
+            <AudioHeaderControl />
+
             {/* Share (replaces the floating ShareWidget on mobile+desktop) */}
             <NavShareButton />
 
@@ -129,6 +134,9 @@ const Navbar: React.FC = () => {
 
           {/* Mobile Toggle */}
           <div className="md:hidden flex items-center gap-2">
+            {/* Audio tour control (mobile) — hidden unless the tour is mounted. */}
+            <AudioHeaderControl />
+
             {/* Mobile Share (replaces the floating ShareWidget) */}
             <NavShareButton />
 
