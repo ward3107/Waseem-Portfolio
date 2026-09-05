@@ -23,6 +23,10 @@ export interface ConvoLabels {
   send: string;
   close: string;
   chatError: string;
+  // Bot disclosure + human handoff (accessibility / consumer-protection).
+  assistant: string;
+  human: string;
+  humanHandoff: string;
 }
 
 export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
@@ -43,6 +47,9 @@ export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
     send: 'Send',
     close: 'Close chat',
     chatError: 'The chat could not connect. Please try again.',
+    assistant: 'Automated assistant',
+    human: 'Talk to a human',
+    humanHandoff: 'Prefer a person? Message Waseem directly on WhatsApp and he’ll get back to you.',
   },
   he: {
     talk: 'דברו עם וסים',
@@ -61,6 +68,9 @@ export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
     send: 'שליחה',
     close: "סגירת הצ'אט",
     chatError: 'לא הצלחנו להתחבר לצ׳אט. נסו שוב.',
+    assistant: 'עוזר אוטומטי',
+    human: 'לדבר עם נציג',
+    humanHandoff: 'מעדיפים אדם? כתבו לוסים ישירות בוואטסאפ והוא יחזור אליכם.',
   },
   ar: {
     talk: 'تحدّث مع وسيم',
@@ -79,6 +89,9 @@ export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
     send: 'إرسال',
     close: 'إغلاق الدردشة',
     chatError: 'تعذّر الاتصال بالدردشة. حاول مرة أخرى.',
+    assistant: 'مساعد آلي',
+    human: 'التحدث مع ممثل',
+    humanHandoff: 'تفضّل التحدث مع شخص؟ راسل وسيم مباشرة على واتساب وسيعود إليك.',
   },
 };
 
