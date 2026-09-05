@@ -67,6 +67,15 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
 // regenerating anything.
 const PLAYBACK_RATE = 0.82;
 
+// The Web Audio analyser tap exists ONLY to drive the assistant face's lip-sync
+// (see TalkingHead). While the face is off, creating an AudioContext is pure
+// waste — and Chrome logs "The AudioContext was not allowed to start…" for it —
+// so we skip the analyser entirely and let the <audio> element play on its own.
+// Mirrors TalkingHead's flag; flip the env var to turn the face (and the tap)
+// back on together.
+const FACE_ENABLED =
+  ((import.meta.env.VITE_ENABLE_ASSISTANT_FACE as string | undefined) ?? 'false') === 'true';
+
 // Remembers, for this browser tab, that the visitor closed the tour — so it
 // doesn't auto-start again on their next click.
 const DISMISS_KEY = 'audioTourDismissed';
@@ -115,6 +124,14 @@ const AudioTour: React.FC = () => {
   // gesture-safe: a MediaElementSource can only be made once per element, and
   // the context must be resumed inside a user gesture.
   const ensureAnalyser = useCallback(() => {
+    // The analyser only feeds the face's lip-sync. With the face off, don't
+    // create an AudioContext at all — the narration plays fine on its own and
+    // Chrome stops logging its autoplay warning. (The mouth loop already falls
+    // back to a procedural envelope when there's no analyser.)
+    if (!FACE_ENABLED) {
+      analyserFailedRef.current = true;
+      return;
+    }
     if (analyserFailedRef.current || analyserRef.current) {
       void ctxRef.current?.resume().catch(() => {});
       return;
