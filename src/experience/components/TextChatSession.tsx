@@ -5,11 +5,14 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { AGENT_ID, labelsFor } from './conversationLabels';
 
 /**
- * Text chat with Waseem's agent — the typed alternative to the voice call, and
- * the primary path for Hebrew (which ElevenLabs' conversational voice doesn't
- * support yet). It runs the same public agent in text-only mode, so it needs no
- * microphone and no API key; the agent replies in text in the visitor's own
- * language (the LLM handles Hebrew fine even though the voice can't).
+ * Text chat with Waseem's assistant — the assistant is text-only (voice was
+ * removed), in every language. It runs the public ElevenLabs agent in text-only
+ * mode, so it needs no microphone and no API key. The agent is grounded on a
+ * Services/FAQ knowledge base and replies in the visitor's own language
+ * (English / Hebrew / Arabic), detected from what they type.
+ *
+ * The visitor's own messages are rendered optimistically on send (the SDK does
+ * not reliably echo them back); onMessage only appends the agent's replies.
  *
  * Lazy-loaded (it pulls the ElevenLabs SDK) — only mounted once a visitor opens
  * the chat.
@@ -35,7 +38,11 @@ const TextChatInner: React.FC<Props> = ({ onClose, onError }) => {
 
   const conversation = useConversation({
     onMessage: ({ message, source }: { message: string; source: 'user' | 'ai' }) => {
-      if (message) setTurns((prev) => [...prev, { source, text: message }]);
+      // Only append the agent's replies here. The visitor's own messages are
+      // shown optimistically the moment they hit Send (see `submit`) — the
+      // text-only SDK doesn't reliably echo them back through onMessage, so
+      // relying on it left the transcript showing only the AI side.
+      if (message && source === 'ai') setTurns((prev) => [...prev, { source, text: message }]);
     },
     onError: () => {
       if (erroredRef.current) return;
@@ -75,13 +82,16 @@ const TextChatInner: React.FC<Props> = ({ onClose, onError }) => {
     e.preventDefault();
     const text = draft.trim();
     if (!text || !connected) return;
+    // Show the visitor's message immediately (optimistic) — the SDK won't echo
+    // it back — then send it to the agent.
+    setTurns((prev) => [...prev, { source: 'user', text }]);
     sendUserMessage(text);
     setDraft('');
   };
 
   return (
     <div
-      className="pointer-events-auto fixed bottom-5 right-5 z-50 flex h-[26rem] max-h-[calc(100vh-2.5rem)] w-[min(22rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-white/15 bg-slate-900/90 shadow-xl shadow-black/50 backdrop-blur"
+      className="pointer-events-auto fixed bottom-5 right-5 z-[60] flex h-[26rem] max-h-[calc(100vh-2.5rem)] w-[min(22rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-white/15 bg-slate-900/90 shadow-xl shadow-black/50 backdrop-blur"
       role="dialog"
       aria-label={L.chatTitle}
       dir={dir}
