@@ -56,7 +56,8 @@ function buildW(count: number, font: unknown): Float32Array {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     font: font as any,
     size: 3.2,
-    height: 0.8,
+    // `depth` replaces the deprecated `height` param in current three.js.
+    depth: 0.8,
     curveSegments: 6,
     bevelEnabled: false,
   });
