@@ -18,7 +18,7 @@ import { useContact } from '@/features/contact/useContact';
 // benefits from being reviewable in-full context, and the copy rarely churns.
 // Effective date: bump `LAST_UPDATED` when the policy substantively changes.
 
-const LAST_UPDATED = '2026-08-08';
+const LAST_UPDATED = '2026-09-05';
 
 const PrivacyPage: React.FC = () => {
   const { language, t } = useLanguage();
@@ -64,6 +64,14 @@ const PrivacyPage: React.FC = () => {
         <li>
           <b>מידע טכני הכרחי:</b> כתובת IP ומידע שרת רגיל שנרשם באופן זמני לצורך
           אבטחה ואבחון תקלות (עד 30 יום).
+        </li>
+        <li>
+          <b>עוזר צ'אט מבוסס בינה מלאכותית (AI):</b> באתר יש עוזר וירטואלי אוטומטי.
+          אם תבחרו לכתוב אליו, ההודעות שלכם מעובדות על ידי ספק חיצוני,{' '}
+          <b>ElevenLabs</b>, ששרתיו נמצאים מחוץ לישראל (בארה"ב), כדי לייצר את
+          התשובות. תמלילי השיחה נשמרים אצל הספק עד <b>30 יום</b> ואז נמחקים. זהו
+          עוזר אוטומטי — אנא אל תשתפו איתו מידע רגיש (מספר ת.ז., פרטי אשראי או בנק).
+          למחיקת שיחה מוקדם יותר, פנו ל־<a href={`mailto:${contact.email}`}>{contact.email}</a>.
         </li>
       </ul>
 
@@ -205,6 +213,15 @@ const PrivacyPage: React.FC = () => {
           <b>بيانات تقنية ضرورية:</b> عنوان IP وسجلات الخادم العادية تُحفظ مؤقتًا
           لأغراض الأمان وتصحيح الأخطاء (حتى 30 يومًا).
         </li>
+        <li>
+          <b>مساعد دردشة بالذكاء الاصطناعي (AI):</b> يتوفّر في الموقع مساعد افتراضي
+          آلي. إذا اخترتم الكتابة إليه، تُعالَج رسائلكم عبر مزوّد خارجي،{' '}
+          <b>ElevenLabs</b>، تقع خوادمه خارج إسرائيل (في الولايات المتحدة)، لإنشاء
+          الردود. تُحفظ نصوص المحادثة لدى المزوّد حتى <b>30 يومًا</b> ثم تُحذف. إنه
+          مساعد آلي — يُرجى عدم مشاركة بيانات حسّاسة معه (رقم الهوية، تفاصيل بطاقة
+          الائتمان أو البنك). لحذف محادثة مبكرًا، راسلونا على{' '}
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>.
+        </li>
       </ul>
 
       <h2>3. لماذا تُجمع</h2>
@@ -344,6 +361,17 @@ const PrivacyPage: React.FC = () => {
         <li>
           <b>Essential technical data:</b> IP address and standard server logs
           are recorded temporarily for security and diagnostics (up to 30 days).
+        </li>
+        <li>
+          <b>AI chat assistant:</b> the site offers an automated virtual
+          assistant. If you choose to write to it, your messages are processed by
+          a third-party provider, <b>ElevenLabs</b>, whose servers are located
+          outside Israel (in the United States), to generate the replies. Chat
+          transcripts are retained by the provider for up to <b>30 days</b> and
+          then deleted. It is an automated assistant — please do not share
+          sensitive data with it (ID number, credit-card or bank details). To
+          have a conversation deleted sooner, contact{' '}
+          <a href={`mailto:${contact.email}`}>{contact.email}</a>.
         </li>
       </ul>
 
