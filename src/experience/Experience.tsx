@@ -6,6 +6,7 @@ import ScrollProgress from './components/ScrollProgress';
 import AudioTour from './components/AudioTour';
 import HeroFilm from './chapters/HeroFilm';
 import HeroOverlay from './chapters/HeroOverlay';
+import AboutOverlay from './chapters/AboutOverlay';
 import ServicesOverlay from './chapters/ServicesOverlay';
 import AIOverlay from './chapters/AIOverlay';
 import ProjectsOverlay from './chapters/ProjectsOverlay';
@@ -16,6 +17,7 @@ import ContactOverlay from './chapters/ContactOverlay';
 // 1 (hero) owns the page's single <h1>; projects takes the quality tier (it
 // swaps the DOM card grid for a lean index when the 3D gallery is present).
 const OVERLAY_BY_ID: Record<string, React.FC<{ index: number; total: number }>> = {
+  about: AboutOverlay,
   services: ServicesOverlay,
   ai: AIOverlay,
   trust: TrustOverlay,
