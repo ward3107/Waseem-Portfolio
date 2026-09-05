@@ -19,6 +19,14 @@ import { labelsFor } from './conversationLabels';
  */
 const TextChatSession = lazy(() => import('./TextChatSession'));
 
+// Master on/off switch for the AI chat assistant. OFF by default so it's hidden
+// for now. To turn it back on for everyone, set VITE_ENABLE_CHAT_ASSISTANT=true
+// in the host env (Vercel) and redeploy, or flip this fallback to 'true'. The
+// whole component (dock button, lazy session) stays wired up — this only
+// controls whether it renders at all.
+const CHAT_ENABLED =
+  ((import.meta.env.VITE_ENABLE_CHAT_ASSISTANT as string | undefined) ?? 'false') === 'true';
+
 type Mode = 'idle' | 'text';
 
 const ConversationAgent: React.FC = () => {
@@ -40,6 +48,9 @@ const ConversationAgent: React.FC = () => {
       {L.connecting}
     </div>
   );
+
+  // Hidden while the master switch is off — nothing renders or loads.
+  if (!CHAT_ENABLED) return null;
 
   if (mode === 'text') {
     return (
