@@ -27,6 +27,9 @@ export interface ConvoLabels {
   assistant: string;
   human: string;
   humanHandoff: string;
+  // Tappable suggested questions — a "click instead of type" shortcut, focused
+  // on the site's services. Sent verbatim as the visitor's message.
+  quickReplies: string[];
 }
 
 export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
@@ -50,6 +53,7 @@ export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
     assistant: 'Automated assistant',
     human: 'Talk to a human',
     humanHandoff: 'Prefer a person? Message Waseem directly on WhatsApp and he’ll get back to you.',
+    quickReplies: ['What do you offer?', 'Build me a website', 'What does it cost?', 'AI automation & bots'],
   },
   he: {
     talk: 'דברו עם וסים',
@@ -71,6 +75,7 @@ export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
     assistant: 'עוזר אוטומטי',
     human: 'לדבר עם נציג',
     humanHandoff: 'מעדיפים אדם? כתבו לוסים ישירות בוואטסאפ והוא יחזור אליכם.',
+    quickReplies: ['מה אתה מציע?', 'בנה לי אתר', 'כמה זה עולה?', 'אוטומציה ובוטים'],
   },
   ar: {
     talk: 'تحدّث مع وسيم',
@@ -92,6 +97,7 @@ export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
     assistant: 'مساعد آلي',
     human: 'التحدث مع ممثل',
     humanHandoff: 'تفضّل التحدث مع شخص؟ راسل وسيم مباشرة على واتساب وسيعود إليك.',
+    quickReplies: ['ما الذي تقدّمه؟', 'ابنِ لي موقعاً', 'كم التكلفة؟', 'أتمتة وبوتات'],
   },
 };
 

@@ -136,10 +136,10 @@ const TextChatInner: React.FC<Props> = ({ onClose, onError }) => {
     setTurns((prev) => [...prev, { source: 'ai', text: L.humanHandoff }]);
   };
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
+  // Single send path — used by the input form and by the tappable suggestions.
+  const sendText = (raw: string) => {
     // Validate at the door: non-empty, trimmed, length-capped.
-    const text = draft.trim().slice(0, MAX_LEN);
+    const text = raw.trim().slice(0, MAX_LEN);
     if (!text || !connected) return;
     // Show the visitor's message immediately (optimistic), then send it.
     setTurns((prev) => [...prev, { source: 'user', text }]);
@@ -148,6 +148,11 @@ const TextChatInner: React.FC<Props> = ({ onClose, onError }) => {
     // If they're asking for a person, surface the human path right away (the
     // agent is also instructed to hand off).
     if (isHumanRequest(text)) showHandoff();
+  };
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendText(draft);
   };
 
   const remaining = MAX_LEN - draft.length;
@@ -219,6 +224,27 @@ const TextChatInner: React.FC<Props> = ({ onClose, onError }) => {
           </div>
         ))}
       </div>
+
+      {/* Tappable suggested questions — a "click instead of type" shortcut,
+          always available so a visitor can steer the chat with one tap. */}
+      {connected && (
+        <div
+          className="flex gap-1.5 overflow-x-auto border-t border-white/10 px-2 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          role="group"
+          aria-label={L.chatTitle}
+        >
+          {L.quickReplies.map((q) => (
+            <button
+              key={q}
+              type="button"
+              onClick={() => sendText(q)}
+              className="shrink-0 whitespace-nowrap rounded-full border border-brand-cyan/30 bg-brand-cyan/10 px-3 py-1.5 text-xs font-medium text-brand-cyan transition hover:bg-brand-cyan/20 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+      )}
 
       <form onSubmit={submit} className="flex items-center gap-2 border-t border-white/10 p-2">
         <input
