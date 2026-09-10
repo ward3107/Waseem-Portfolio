@@ -44,14 +44,7 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
     { id: 'reviews', src: '/audio/en/trust.mp3' },
     { id: 'contact', src: '/audio/en/contact.mp3' },
   ],
-  he: [
-    { id: 'hero', src: '/audio/he/hero.mp3' },
-    { id: 'what-i-do', src: '/audio/he/services.mp3' },
-    { id: 'ai-automation', src: '/audio/he/ai.mp3' },
-    { id: 'projects', src: '/audio/he/projects.mp3' },
-    { id: 'reviews', src: '/audio/he/trust.mp3' },
-    { id: 'contact', src: '/audio/he/contact.mp3' },
-  ],
+  // Hebrew narration is intentionally absent — see NARRATION_DISABLED_LANGS.
   ar: [
     { id: 'hero', src: '/audio/ar/hero.mp3' },
     { id: 'what-i-do', src: '/audio/ar/services.mp3' },
@@ -66,6 +59,15 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
 // preserved, so the deep tone stays) makes the delivery slower still without
 // regenerating anything.
 const PLAYBACK_RATE = 0.82;
+
+// Languages the audio tour is disabled for. The Hebrew clips were synthesized
+// with a non-Hebrew voice (an English narrator reading Hebrew) and were not
+// intelligible to native speakers — sounding, in one listener's words, "like
+// Yiddish" — so rather than play a broken tour (or fall back to English, which
+// a Hebrew visitor wouldn't want), Hebrew visitors get no audio tour at all: no
+// clips, no header "Listen" control. To bring it back, drop the language from
+// this list AND add native-Hebrew clips to public/audio/he/ + CLIPS_BY_LANG.
+const NARRATION_DISABLED_LANGS = ['he'];
 
 // The Web Audio analyser tap exists ONLY to drive the assistant face's lip-sync
 // (see TalkingHead). While the face is off, creating an AudioContext is pure
@@ -89,9 +91,11 @@ const wasDismissed = (): boolean => {
 
 const AudioTour: React.FC = () => {
   const { language } = useLanguage();
+  const narrationDisabled = NARRATION_DISABLED_LANGS.includes(language);
   // Each supported language narrates in its own voice folder; anything without
-  // one falls back to the English clips.
-  const clips = CLIPS_BY_LANG[language] ?? CLIPS_BY_LANG.en;
+  // one falls back to the English clips. A disabled language gets no clips at
+  // all, so every effect below (all guarded on `clips`) stays dormant.
+  const clips = narrationDisabled ? null : (CLIPS_BY_LANG[language] ?? CLIPS_BY_LANG.en);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [enabled, setEnabled] = useState(false);
@@ -410,13 +414,16 @@ const AudioTour: React.FC = () => {
   const ctrlRef = useRef({ start, togglePlay, toggleMute, close: disable });
   ctrlRef.current = { start, togglePlay, toggleMute, close: disable };
   useEffect(() => {
+    // When narration is disabled for this language, don't register controls —
+    // `present` stays false, so the header "Listen" button never appears.
+    if (narrationDisabled) return;
     return audioTourStore.registerControls({
       start: () => ctrlRef.current.start(),
       togglePlay: () => ctrlRef.current.togglePlay(),
       toggleMute: () => ctrlRef.current.toggleMute(),
       close: () => ctrlRef.current.close(),
     });
-  }, []);
+  }, [narrationDisabled]);
 
   // Auto-start the moment the page is ready — MUTED, which browsers permit
   // without a gesture. The tour is "playing" from the first paint; it just has
