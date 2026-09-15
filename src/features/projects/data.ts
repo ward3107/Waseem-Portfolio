@@ -72,6 +72,7 @@ export const getRequiredPortfolioProjects = (
     description: t('project_wordpress_portfolio_desc'),
     image: '/assets/wordpress-portfolio.svg',
     tech: ['WordPress.com', 'Gutenberg', 'Responsive Design'],
+    link: 'https://waseemstudiodemo.wordpress.com/',
   },
   {
     id: 'wordpress-shop-demo',
@@ -80,6 +81,7 @@ export const getRequiredPortfolioProjects = (
     description: t('project_wordpress_shop_desc'),
     image: '/assets/wordpress-shop.svg',
     tech: ['WordPress.com', 'Gutenberg', 'E-commerce UX'],
+    link: 'https://waseemshopdemo.wordpress.com/',
   },
 ];
 
