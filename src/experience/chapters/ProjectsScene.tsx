@@ -6,11 +6,13 @@ import { scrollStore } from '../scrollStore';
 import { CHAPTERS } from '../storyboard';
 import { useProjects } from '@/features/projects/useProjects';
 import { safeHref } from '@/lib/safe';
+import { projectRailOffset } from './projectRail';
 
 const CARD_W = 2.4;
 const CARD_H = 1.5;
 
-// Turntable geometry: every project sits on a ring the camera faces.
+// The original front depth is preserved for the camera rig; cards now use a
+// flat rail with fixed spacing rather than intersecting faces on a small ring.
 const RING_RADIUS = 3.2;
 const RING_Z = -3.4; // ring centre; the front card sits ≈ z -0.2 (nearest camera)
 const DWELL = 2.8; // seconds a project holds at the front before auto-advancing
@@ -43,9 +45,9 @@ const openInNewTab = (url: string) => {
 };
 
 /**
- * Chapter 4 showpiece — a 3D turntable of the real projects. Every project the
+ * Chapter 4 showpiece — a spaced, draggable rail of the real projects. Every project the
  * site knows about (Supabase-backed via useProjects — the full list, not a
- * hard-coded five) rides a ring the camera faces. It turns on its own, bringing
+ * hard-coded five) rides a rail the camera faces. It advances on its own, bringing
  * each project to front-centre in turn; the reader can also grab it — drag with
  * the mouse or swipe with a finger to spin left/right — and on release it snaps
  * the nearest project back to centre, so the front screen is always a clean tap
@@ -91,7 +93,7 @@ const ProjectsScene: React.FC = () => {
   const anglesRef = useRef(angles);
   anglesRef.current = angles;
   const urlsRef = useRef<(string | undefined)[]>([]);
-  urlsRef.current = useMemo(() => projects.map((p) => safeHref(p.link)), [projects]);
+  urlsRef.current = useMemo(() => projects.map((p) => safeHref(p.link) || '/projects'), [projects]);
 
   // Track the whole drag on window, so a swipe keeps spinning even if the pointer
   // slides off the card it started on; a press that barely moves is a tap → open.
@@ -115,7 +117,7 @@ const ProjectsScene: React.FC = () => {
         const g = group.current;
         const url = urlsRef.current[idx];
         // Only the screen actually facing the reader opens.
-        if (g && url && Math.cos(anglesRef.current[idx] + g.rotation.y) >= 0.3) {
+        if (g && url && Math.abs(projectRailOffset(idx, anglesRef.current.length, spin.current)) < 0.55) {
           openInNewTab(url);
         }
       }
@@ -169,25 +171,29 @@ const ProjectsScene: React.FC = () => {
       }
       spin.current = MathUtils.lerp(spin.current, target.current, 1 - Math.exp(-4 * delta));
     }
-    g.rotation.y = spin.current;
+    // Keep cards on a spaced rail instead of a ring: ring faces intersect as
+    // the project count grows, and transparent backs obscure the front card.
+    g.rotation.y = 0;
     g.position.y = MathUtils.lerp(g.position.y, 0.35 + (1 - focus) * -1.6, 1 - Math.exp(-4 * delta));
 
     // Per-card depth styling from how close it is to the front of the ring.
     const lift = 1 - Math.exp(-8 * delta);
     items.current.forEach((it, i) => {
       if (!it) return;
-      const frontness = Math.cos(angles[i] + g.rotation.y); // 1 front, -1 back
-      const tf = (frontness + 1) / 2; // 0…1
-      const depth = tf * tf;
-      it.scale.setScalar(MathUtils.lerp(it.scale.x, 0.6 + depth * 0.62, lift));
-      it.position.y = Math.sin(state.clock.elapsedTime * 0.6 + i) * 0.05;
+      const offset = projectRailOffset(i, n, spin.current);
+      const distance = Math.abs(offset);
+      it.visible = distance < 1.65;
+      const depth = Math.max(0, 1 - distance / 1.65);
+      it.scale.setScalar(MathUtils.lerp(it.scale.x, 0.85 + depth * 0.3, lift));
+      it.position.set(offset * 3.4, 0, RING_RADIUS);
+      it.rotation.y = 0;
 
       const bezel = (it.children[0] as Mesh | undefined)?.material as MeshBasicMaterial | undefined;
       const shot = (it.children[1] as Mesh | undefined)?.material as MeshBasicMaterial | undefined;
       if (shot) shot.opacity = focus * (0.05 + 0.95 * depth);
       if (bezel) {
         bezel.opacity = focus * (0.04 + 0.7 * depth);
-        bezel.color.set(frontness > 0.86 ? BEZEL_ACTIVE : BEZEL_IDLE);
+        bezel.color.set(distance < 0.4 ? BEZEL_ACTIVE : BEZEL_IDLE);
       }
     });
   });
@@ -233,12 +239,12 @@ const ProjectsScene: React.FC = () => {
               {/* Bezel / drop shadow behind the screen (colour + fade per frame). */}
               <mesh position={[0, 0, -0.03]}>
                 <planeGeometry args={[CARD_W + 0.16, CARD_H + 0.16]} />
-                <meshBasicMaterial color={BEZEL_IDLE} transparent opacity={0} />
+                <meshBasicMaterial color={BEZEL_IDLE} transparent opacity={0} depthWrite={false} />
               </mesh>
               {/* The screenshot. */}
               <mesh>
                 <planeGeometry args={[CARD_W, CARD_H]} />
-                <meshBasicMaterial map={textures[i]} transparent opacity={0} toneMapped={false} />
+                <meshBasicMaterial map={textures[i]} transparent opacity={0} toneMapped={false} depthWrite={false} />
               </mesh>
             </group>
           );
