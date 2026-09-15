@@ -70,7 +70,7 @@ export const getRequiredPortfolioProjects = (
     title: 'Waseem Studio — WordPress Portfolio',
     category: 'WordPress',
     description: t('project_wordpress_portfolio_desc'),
-    image: 'https://waseemstudiodemo.wordpress.com/wp-content/uploads/2026/09/newstudioart.png?w=1024',
+    image: '/assets/wordpress-portfolio.svg',
     tech: ['WordPress.com', 'Gutenberg', 'Responsive Design'],
   },
   {
@@ -78,7 +78,7 @@ export const getRequiredPortfolioProjects = (
     title: 'Waseem Shop — WordPress Store',
     category: 'WordPress',
     description: t('project_wordpress_shop_desc'),
-    image: 'https://waseemshopdemo.wordpress.com/wp-content/uploads/2026/09/newshopart.png?w=1024',
+    image: '/assets/wordpress-shop.svg',
     tech: ['WordPress.com', 'Gutenberg', 'E-commerce UX'],
   },
 ];
