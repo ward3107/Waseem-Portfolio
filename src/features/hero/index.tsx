@@ -118,9 +118,18 @@ const Hero: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-600 dark:text-slate-300 mb-6 md:mb-10 max-w-lg leading-relaxed font-medium break-words"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-600 dark:text-slate-300 mb-3 max-w-xl leading-relaxed font-medium break-words"
           >
             {t('hero_subtitle')}
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.28, duration: 0.45 }}
+            className="mb-6 md:mb-9 text-xs sm:text-sm font-bold tracking-wide text-brand-purple dark:text-brand-purpleLighter"
+          >
+            {t('hero_platforms')}
           </motion.p>
 
           <motion.div

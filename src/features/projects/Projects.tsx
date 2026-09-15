@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ExternalLink, Github, Hand } from 'lucide-react';
-import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import Dimensional3DWord, { fontForLanguage } from '@/shared/three/Dimensional3DWord';
@@ -14,16 +14,10 @@ import type { Project } from '@/types';
 // empty grid.
 type FilterKey = string;
 
-// Per-card scroll-linked reveal: opacity is bound directly to the card's own
-// scroll position so it can never lag behind a fast scroll and pop in. The
-// parallax `y` (driven by the grid's scroll progress) is composed with the
-// reveal on the same style object. Reduced-motion users get static opacity 1
-// with no scroll binding at all.
 type ProjectCardProps = {
   project: Project;
   isFlipped: boolean;
   toggleFlip: () => void;
-  parallaxY: MotionValue<number>;
   prefersReducedMotion: boolean;
   t: (key: string) => string;
 };
@@ -32,25 +26,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
   isFlipped,
   toggleFlip,
-  parallaxY,
   prefersReducedMotion,
   t,
 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'start 70%'],
-  });
-  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
-  const style = prefersReducedMotion
-    ? undefined
-    : { opacity, y: parallaxY, willChange: 'opacity, transform' };
-
   return (
     <motion.div
-      ref={ref}
-      style={style}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.55, ease: [0.22, 1, 0.36, 1] }}
       role="button"
       tabIndex={0}
       aria-pressed={isFlipped}
@@ -64,7 +48,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       }}
       className="group h-96 w-full [perspective:1000px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded-3xl"
     >
-      <div className={`relative h-full w-full [transform-style:preserve-3d] ${prefersReducedMotion ? '' : 'transition-all duration-700 group-hover:[transform:rotateY(180deg)]'} ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
+      <div className={`relative h-full w-full [transform-style:preserve-3d] ${prefersReducedMotion ? '' : 'transition-transform duration-700'} ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
         {/* Front */}
         <div className="absolute inset-0 h-full w-full rounded-3xl bg-white dark:bg-slate-900 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden [backface-visibility:hidden]">
 
@@ -88,7 +72,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             />
 
             {/* Mobile Hint - Visible on Mobile & Tablet (hidden on large desktops) */}
-            <div className="lg:hidden absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 animate-pulse shadow-lg">
+            <div className="lg:hidden absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/20 shadow-lg">
               <Hand size={12} className="text-brand-gold" />
               <span>{t('projects_hint')}</span>
             </div>
@@ -172,17 +156,6 @@ const Projects: React.FC = () => {
   // Reset flipped card whenever the filter changes so users don't see a flipped
   // card after switching categories.
   useEffect(() => setFlippedId(null), [filter]);
-
-  // Scroll-linked parallax: alternating cards drift at slightly different rates
-  // as the grid passes through the viewport, adding depth on top of the one-shot
-  // flip-card interaction (a separate transform, so the two never fight).
-  const gridRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: gridScrollProgress } = useScroll({
-    target: gridRef,
-    offset: ['start end', 'end start'],
-  });
-  const parallaxA = useTransform(gridScrollProgress, [0, 1], [36, -16]);
-  const parallaxB = useTransform(gridScrollProgress, [0, 1], [16, -36]);
 
   const { projects: localizedProjects } = useProjects();
 
@@ -273,14 +246,13 @@ const Projects: React.FC = () => {
           </div>
         </div>
 
-        <div ref={gridRef} id="projects-grid" role="tabpanel" aria-live="polite" aria-label={`${t('projects_title_1')} ${t('projects_title_2')} - ${filter === 'All' ? t('projects_filter_all') : t(`projects_filter_${filter.toLowerCase()}`)}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((project, index) => (
+        <div id="projects-grid" role="tabpanel" aria-live="polite" aria-label={`${t('projects_title_1')} ${t('projects_title_2')} - ${filter === 'All' ? t('projects_filter_all') : t(`projects_filter_${filter.toLowerCase()}`)}`} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredProjects.map((project) => (
             <ProjectCard
               key={project.id}
               project={project}
               isFlipped={flippedId === project.id}
               toggleFlip={() => setFlippedId(prev => prev === project.id ? null : project.id)}
-              parallaxY={index % 2 === 0 ? parallaxA : parallaxB}
               prefersReducedMotion={prefersReducedMotion}
               t={t}
             />

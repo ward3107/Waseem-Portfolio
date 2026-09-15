@@ -64,6 +64,15 @@ const HeroOverlay: React.FC = () => {
         {t('hero_subtitle')}
       </motion.p>
 
+      <motion.p
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.43, duration: 0.5 }}
+        className="mt-3 text-xs font-bold tracking-wide text-brand-purpleLighter sm:text-sm"
+      >
+        {t('hero_platforms')}
+      </motion.p>
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

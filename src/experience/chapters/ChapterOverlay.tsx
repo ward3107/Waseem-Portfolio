@@ -50,13 +50,9 @@ export function useHeadingLeading(): string {
  * an <h2> heading, a description, optional keyword chips, optional actions, and
  * optional extra content.
  *
- * Entrance: the cascade runs whenever this chapter's own content block is in
- * view, and rewinds when it leaves. The previous reveal fired only once, so
- * under fast smooth-scrolling it finished before the reader arrived and the
- * chapter read as though it had simply appeared. Watching each block
- * individually also survives chapters that grow taller than one screen — a
- * single page-wide scroll ratio cannot, because sections are not equal heights
- * once Hebrew copy wraps onto extra lines.
+ * Entrance: each chapter reveals once when it reaches the viewport. Content
+ * remains visible when the visitor scrolls back, avoiding repeated animation
+ * work and preventing text from disappearing during fast scrolling.
  */
 const ChapterOverlay: React.FC<ChapterOverlayProps> = ({
   index,
@@ -69,7 +65,7 @@ const ChapterOverlay: React.FC<ChapterOverlayProps> = ({
   children,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const active = useInView(ref, { amount: 0.3 });
+  const active = useInView(ref, { once: true, amount: 0.18 });
   const leading = useHeadingLeading();
 
   return (

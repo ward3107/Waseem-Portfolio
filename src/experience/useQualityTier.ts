@@ -14,6 +14,11 @@ export type QualityTier = 'high' | 'low';
  * Reactive, so rotating a tablet or resizing a window re-tiers on the fly.
  */
 export function useQualityTier(): QualityTier {
-  const isDesktop = useMediaQuery('(min-width: 1024px)');
-  return isDesktop ? 'high' : 'low';
+  const hasLargeFinePointer = useMediaQuery('(min-width: 1024px) and (pointer: fine)');
+  if (!hasLargeFinePointer || typeof navigator === 'undefined') return 'low';
+
+  const device = navigator as Navigator & { deviceMemory?: number };
+  const enoughMemory = device.deviceMemory === undefined || device.deviceMemory >= 4;
+  const enoughCores = navigator.hardwareConcurrency === undefined || navigator.hardwareConcurrency >= 6;
+  return enoughMemory && enoughCores ? 'high' : 'low';
 }
