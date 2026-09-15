@@ -209,13 +209,23 @@ const AudioTour: React.FC = () => {
       const clip = clips?.find((c) => c.id === id);
       if (!a || !clip) return;
       if (!force && playedRef.current.has(id)) return;
-      playedRef.current.add(id);
       if (a.src.indexOf(clip.src) === -1) a.src = clip.src;
       else a.currentTime = 0;
       a.muted = mutedRef.current;
       // A rejected play (no gesture yet, or interrupted) is fine to swallow —
       // the control still reflects the real state via the audio events.
-      void a.play().catch(() => {});
+      void a.play().then(() => {
+        if (audioRef.current === a && !a.muted) playedRef.current.add(id);
+      }).catch((error: unknown) => {
+        if (audioRef.current !== a) return;
+        // A blocked wheel-triggered play must not consume the later click/tap.
+        if (error instanceof DOMException && error.name === 'NotAllowedError') {
+          unmutedRef.current = false;
+          mutedRef.current = true;
+          a.muted = true;
+          setMuted(true);
+        }
+      });
     },
     [clips]
   );
@@ -244,7 +254,7 @@ const AudioTour: React.FC = () => {
         }
         if (best && best !== activeRef.current) {
           activeRef.current = best;
-          if (enabledRef.current) playSection(best);
+          if (enabledRef.current && !audioTourStore.get().conversing) playSection(best);
         }
       },
       { threshold: [0.2, 0.4, 0.6, 0.8] }
@@ -438,28 +448,21 @@ const AudioTour: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clips]);
 
-  // The visitor's VERY FIRST scroll gesture is spent turning the sound on and
-  // (re)starting the narration from the hero — the page does NOT move for it.
-  // Only the next gesture scrolls. That way the first swipe never carries them
-  // past the intro before they've heard it. Taps and keys just activate (they
-  // don't scroll anyway). A gesture that beats the muted auto-start starts it
-  // unmuted directly. Skipped entirely if the tour was closed this session.
-  //
-  // Touch is safe to intercept here: this site runs Lenis with smoothWheel only
-  // (no smooth touch), so mobile scrolling is native — preventing the first
-  // touchmove cleanly holds the page still without fighting Lenis.
+  // Attempt audible playback on interaction without intercepting native scroll.
+  // Wheel is not an activation gesture in every browser. Keep click/tap/key
+  // listeners available so a rejected attempt can recover on the next gesture.
   useEffect(() => {
     if (!clips || wasDismissed()) return;
-    let released = false; // has the one-time scroll hold been lifted?
+    let released = false;
 
     const activate = () => {
+      if (released || wasDismissed() || unmutedRef.current) return;
       if (!enabledRef.current) enable(false); // muted auto-start hadn't run yet
       else unmute(); // both restart the current (hero) section from the top
     };
     const release = () => {
       if (released) return;
       released = true;
-      window.clearTimeout(wheelTimer);
       window.removeEventListener('touchstart', onTouchStart, cap);
       window.removeEventListener('touchmove', onTouchMove, blockOpts);
       window.removeEventListener('touchend', onTouchEnd, cap);
@@ -471,39 +474,31 @@ const AudioTour: React.FC = () => {
     const onTouchStart = () => {
       if (!released) activate();
     };
-    const onTouchMove = (e: TouchEvent) => {
+    const onTouchMove = () => {
       if (released) return;
-      e.preventDefault(); // hold the page still for the whole first swipe
       activate();
     };
     const onTouchEnd = () => {
       if (released) return;
       activate();
-      release(); // first swipe/tap over → the next gesture scrolls normally
     };
-    let wheelTimer = 0;
-    const onWheel = (e: WheelEvent) => {
+    const onWheel = () => {
       if (released) return;
-      e.preventDefault(); // hold still for the first wheel burst (desktop)
       activate();
-      window.clearTimeout(wheelTimer);
-      wheelTimer = window.setTimeout(release, 300);
     };
     const onKeyDown = () => {
       if (!released) {
         activate();
-        release();
       }
     };
     const onMouseDown = (e: PointerEvent) => {
       if (!released && e.pointerType === 'mouse') {
         activate();
-        release();
       }
     };
 
     const cap = { capture: true } as const;
-    const blockOpts = { capture: true, passive: false } as const;
+    const blockOpts = { capture: true, passive: true } as const;
     window.addEventListener('touchstart', onTouchStart, cap);
     window.addEventListener('touchmove', onTouchMove, blockOpts);
     window.addEventListener('touchend', onTouchEnd, cap);
