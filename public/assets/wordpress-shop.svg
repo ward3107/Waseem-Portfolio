@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title description">
+  <title id="title">Waseem Shop WordPress store preview</title>
+  <desc id="description">Editorial digital-product storefront in green, cream, and charcoal.</desc>
+  <defs>
+    <linearGradient id="shopBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ecfdf5"/>
+      <stop offset="1" stop-color="#fefce8"/>
+    </linearGradient>
+    <linearGradient id="cardA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#064e3b"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="cardB" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#18181b"/>
+      <stop offset="1" stop-color="#3f3f46"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" rx="36" fill="url(#shopBg)"/>
+  <rect x="44" y="36" width="1112" height="728" rx="28" fill="#fffef8" stroke="#d1fae5" stroke-width="2"/>
+  <text x="82" y="90" fill="#052e26" font-family="Arial, sans-serif" font-size="30" font-weight="800">WASEEM SHOP</text>
+  <text x="1110" y="86" text-anchor="end" fill="#3f6212" font-family="Arial, sans-serif" font-size="17" font-weight="700">PRODUCTS  ·  ABOUT  ·  CART (0)</text>
+  <line x1="82" y1="116" x2="1110" y2="116" stroke="#d1d5db"/>
+  <text x="82" y="205" fill="#052e26" font-family="Arial, sans-serif" font-size="66" font-weight="800">DIGITAL TOOLS.</text>
+  <text x="82" y="269" fill="#047857" font-family="Arial, sans-serif" font-size="66" font-weight="800">REAL MOMENTUM.</text>
+  <text x="82" y="316" fill="#475569" font-family="Arial, sans-serif" font-size="22">Ready-to-use kits for brands that want to move faster.</text>
+  <rect x="82" y="352" width="176" height="54" rx="27" fill="#052e26"/>
+  <text x="170" y="386" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="17" font-weight="700">SHOP THE KITS</text>
+  <g transform="translate(82 456)">
+    <rect width="306" height="240" rx="22" fill="url(#cardA)"/>
+    <circle cx="245" cy="52" r="62" fill="#a7f3d0" opacity=".3"/>
+    <text x="28" y="58" fill="#a7f3d0" font-family="Arial, sans-serif" font-size="14" font-weight="700">BRAND KIT</text>
+    <text x="28" y="133" fill="white" font-family="Arial, sans-serif" font-size="34" font-weight="800">BUILD A</text>
+    <text x="28" y="177" fill="white" font-family="Arial, sans-serif" font-size="34" font-weight="800">BOLD BRAND.</text>
+    <text x="28" y="215" fill="#d1fae5" font-family="Arial, sans-serif" font-size="16">₪149 · Instant download</text>
+  </g>
+  <g transform="translate(420 456)">
+    <rect width="306" height="240" rx="22" fill="url(#cardB)"/>
+    <rect x="208" y="25" width="72" height="72" rx="20" fill="#fef3c7" opacity=".95"/>
+    <text x="28" y="58" fill="#fde68a" font-family="Arial, sans-serif" font-size="14" font-weight="700">SOCIAL KIT</text>
+    <text x="28" y="133" fill="white" font-family="Arial, sans-serif" font-size="34" font-weight="800">POST WITH</text>
+    <text x="28" y="177" fill="white" font-family="Arial, sans-serif" font-size="34" font-weight="800">CONFIDENCE.</text>
+    <text x="28" y="215" fill="#e4e4e7" font-family="Arial, sans-serif" font-size="16">₪119 · Instant download</text>
+  </g>
+  <g transform="translate(758 456)">
+    <rect width="306" height="240" rx="22" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+    <path d="M227 34h44v44h-44z" fill="#16a34a" opacity=".2"/>
+    <text x="28" y="58" fill="#166534" font-family="Arial, sans-serif" font-size="14" font-weight="700">WEBSITE PLANNER</text>
+    <text x="28" y="133" fill="#052e26" font-family="Arial, sans-serif" font-size="34" font-weight="800">PLAN IT.</text>
+    <text x="28" y="177" fill="#052e26" font-family="Arial, sans-serif" font-size="34" font-weight="800">LAUNCH IT.</text>
+    <text x="28" y="215" fill="#3f6212" font-family="Arial, sans-serif" font-size="16">₪89 · Instant download</text>
+  </g>
+</svg>
