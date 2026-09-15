@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useProjects } from '@/features/projects/useProjects';
 import { safeHref } from '@/lib/safe';
@@ -18,13 +19,14 @@ import { GhostNavButton } from './actions';
  * they double as a tap target on touch. Same on every device.
  */
 const reveal = {
-  initial: { opacity: 0, y: 20 },
+  initial: { opacity: 0.72, y: 12 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.4 },
 } as const;
 
 const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const draftLabel = language === 'he' ? 'פרטים · הדמו טרם פורסם' : language === 'ar' ? 'التفاصيل · العرض لم يُنشر بعد' : 'Details · demo not published';
   const { projects } = useProjects();
   const leading = useHeadingLeading();
 
@@ -67,8 +69,9 @@ const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, to
             const href = safeHref(p.link);
             return (
               <li key={p.id}>
+                {href ? (
                 <a
-                  href={href || '#'}
+                  href={href}
                   target={href ? '_blank' : undefined}
                   rel={href ? 'noopener noreferrer' : undefined}
                   className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 backdrop-blur transition-colors hover:border-brand-cyan/50 hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
@@ -76,6 +79,15 @@ const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, to
                   {p.title}
                   <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
                 </a>
+                ) : (
+                  <Link
+                    to="/projects"
+                    className="pointer-events-auto inline-flex flex-col items-center rounded-2xl border border-white/15 bg-slate-900 px-4 py-2 text-sm text-slate-200 hover:border-brand-cyan/50 focus-visible:ring-2 focus-visible:ring-brand-cyan"
+                  >
+                    <span className="font-semibold">{p.title}</span>
+                    <span className="text-xs text-slate-300">{draftLabel}</span>
+                  </Link>
+                )}
               </li>
             );
           })}
