@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
+import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useWebGLSupport } from './useWebGLSupport';
 
 export type ExperienceMode = 'classic' | '3d';
@@ -7,11 +8,8 @@ export type ExperienceMode = 'classic' | '3d';
 /**
  * Whether capable visitors get the 3D experience by default.
  *
- * `true`: every chapter renders real content (hero glass monogram, real
- * services / AI / projects / trust / contact copy sourced from the same
- * translations and data as the classic site), so the experience is the default
- * homepage. Desktops get the full-quality tier; phones/tablets get a lighter
- * tier (see useQualityTier) — both run the experience.
+ * The immersive experience is the default on capable desktop devices. Phones,
+ * tablets and coarse-pointer devices receive the faster classic homepage.
  *
  * The classic site remains the guaranteed fallback for everyone else —
  * reduced-motion, no-WebGL, search crawlers (kept on the content-rich classic
@@ -55,15 +53,16 @@ function isCrawler(): boolean {
 export function useExperienceMode(): ExperienceMode {
   const prefersReducedMotion = usePrefersReducedMotion();
   const hasWebGL = useWebGLSupport();
+  const hasDesktopInput = useMediaQuery('(min-width: 1024px) and (pointer: fine)');
 
   // URL flags + crawler check are read once on mount — they don't change
   // without a reload. crawler goes in state so the first paint (before effects)
   // never briefly mounts WebGL for a bot.
-  const [flags, setFlags] = useState({
-    forceClassic: false,
-    request3D: false,
-    crawler: false,
-  });
+  const [flags, setFlags] = useState(() => ({
+    forceClassic: readFlag('classic'),
+    request3D: readFlag('experience') || readFlag('3d'),
+    crawler: isCrawler(),
+  }));
   useEffect(() => {
     setFlags({
       forceClassic: readFlag('classic'),
@@ -74,7 +73,7 @@ export function useExperienceMode(): ExperienceMode {
 
   if (flags.forceClassic || flags.crawler) return 'classic';
 
-  const capable = hasWebGL && !prefersReducedMotion;
+  const capable = hasWebGL && !prefersReducedMotion && (hasDesktopInput || flags.request3D);
   if (!capable) return 'classic';
 
   return ENABLED_BY_DEFAULT || flags.request3D ? '3d' : 'classic';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Code, Globe, Bot, Box, TrendingUp, Search } from 'lucide-react';
+import { Sparkles, Code, PanelsTopLeft, Bot, ShoppingBag, TrendingUp, Search } from 'lucide-react';
 import { Service } from '@/types';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
@@ -24,8 +24,8 @@ const Services: React.FC = () => {
     { title: t('service_1_title'), description: t('service_1_desc'), icon: Code, color: 'text-brand-purple' },
     { title: t('service_2_title'), description: t('service_2_desc'), icon: Search, color: 'text-brand-blue' },
     { title: t('service_3_title'), description: t('service_3_desc'), icon: Bot, color: 'text-brand-teal' },
-    { title: t('service_4_title'), description: t('service_4_desc'), icon: Globe, color: 'text-brand-orange' },
-    { title: t('service_5_title'), description: t('service_5_desc'), icon: Box, color: 'text-brand-gold' },
+    { title: t('service_4_title'), description: t('service_4_desc'), icon: PanelsTopLeft, color: 'text-brand-orange' },
+    { title: t('service_5_title'), description: t('service_5_desc'), icon: ShoppingBag, color: 'text-brand-gold' },
     {
       title: t('service_marketing_title'),
       description: t('service_marketing_desc'),

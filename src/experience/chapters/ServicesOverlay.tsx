@@ -1,5 +1,5 @@
 import React from 'react';
-import { Code, Search, Bot, Globe, Box, TrendingUp } from 'lucide-react';
+import { Code, Search, Bot, PanelsTopLeft, ShoppingBag, TrendingUp } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import ChapterOverlay from './ChapterOverlay';
 import HeadingAccent from '../components/HeadingAccent';
@@ -13,8 +13,8 @@ const ServicesOverlay: React.FC<{ index: number; total: number }> = ({ index, to
     { label: t('service_1_title'), Icon: Code },
     { label: t('service_2_title'), Icon: Search },
     { label: t('service_3_title'), Icon: Bot },
-    { label: t('service_4_title'), Icon: Globe },
-    { label: t('service_5_title'), Icon: Box },
+    { label: t('service_4_title'), Icon: PanelsTopLeft },
+    { label: t('service_5_title'), Icon: ShoppingBag },
     { label: t('service_marketing_title'), Icon: TrendingUp },
   ];
   return (

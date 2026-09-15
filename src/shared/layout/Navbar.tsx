@@ -6,7 +6,6 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { useContact } from '@/features/contact/useContact';
-import NavShareButton from '@/shared/widgets/NavShareButton';
 import AudioHeaderControl from '@/experience/components/AudioHeaderControl';
 
 
@@ -60,7 +59,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-sm border-b border-brand-gold/20 dark:border-slate-800' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo/Name — single instance, scales with viewport */}
           <a
             href="/"
@@ -75,7 +74,7 @@ const Navbar: React.FC = () => {
           </a>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex gap-8 items-center">
+          <div className="hidden md:flex gap-5 items-center">
             {NAV_LINKS[language].map((link) => (
               <a
                 key={link.name}
@@ -109,9 +108,6 @@ const Navbar: React.FC = () => {
                 mounted; hidden on every other page. */}
             <AudioHeaderControl />
 
-            {/* Share (replaces the floating ShareWidget on mobile+desktop) */}
-            <NavShareButton />
-
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
@@ -136,9 +132,6 @@ const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center gap-2">
             {/* Audio tour control (mobile) — hidden unless the tour is mounted. */}
             <AudioHeaderControl />
-
-            {/* Mobile Share (replaces the floating ShareWidget) */}
-            <NavShareButton />
 
             {/* Mobile Language Switcher (Simple Toggle) */}
             <button

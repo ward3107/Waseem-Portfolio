@@ -25,9 +25,10 @@ export function useLenisScroll(enabled: boolean): void {
 
     const lenis = new Lenis({
       // A touch of weight without feeling sluggish. Tuned further in polish.
-      duration: 1.1,
-      easing: (t: number) => 1 - Math.pow(1 - t, 3),
+      duration: 0.72,
+      easing: (t: number) => 1 - Math.pow(1 - t, 4),
       smoothWheel: true,
+      syncTouch: false,
     });
 
     // Document offsets of the first and last chapter sections. Measured from
