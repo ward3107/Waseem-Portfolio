@@ -16,6 +16,10 @@ describe('required portfolio projects', () => {
       'wordpress-shop-demo',
     ]);
     expect(projects.every((project) => project.category === 'WordPress')).toBe(true);
+    expect(projects.map((project) => project.link)).toEqual([
+      'https://waseemstudiodemo.wordpress.com/',
+      'https://waseemshopdemo.wordpress.com/',
+    ]);
   });
 
   it('pins required projects and removes duplicate remote entries', () => {
