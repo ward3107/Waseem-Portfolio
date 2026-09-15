@@ -41,23 +41,34 @@ const Hero: React.FC = () => {
   // rAF-throttled: mousemove can fire 60–200 Hz. Feeding every event into two
   // MotionValues that drive six useTransform chains, a spring, and a huge
   // blurred backdrop pins a CPU core on mid-range laptops. Coalesce to one
-  // update per frame; also cache the section's bounding rect and only invalidate
-  // it on scroll/resize (getBoundingClientRect per event is a layout read).
+  // update per frame. Cache document-space geometry on real size changes only;
+  // reading getBoundingClientRect on every scroll was a forced-layout hotspot.
   const sectionRef = useRef<HTMLElement>(null);
-  const rectRef = useRef<DOMRect | null>(null);
+  const rectRef = useRef<{ left: number; top: number; width: number; height: number } | null>(null);
   const rafRef = useRef<number | null>(null);
   const pendingRef = useRef<{ cx: number; cy: number } | null>(null);
 
   useEffect(() => {
     const refresh = () => {
-      rectRef.current = sectionRef.current?.getBoundingClientRect() ?? null;
+      const rect = sectionRef.current?.getBoundingClientRect();
+      rectRef.current = rect
+        ? {
+            left: rect.left + window.scrollX,
+            top: rect.top + window.scrollY,
+            width: rect.width,
+            height: rect.height,
+          }
+        : null;
     };
     refresh();
     window.addEventListener('resize', refresh);
-    window.addEventListener('scroll', refresh, { passive: true });
+    const resizeObserver = typeof ResizeObserver === 'undefined'
+      ? null
+      : new ResizeObserver(refresh);
+    if (sectionRef.current) resizeObserver?.observe(sectionRef.current);
     return () => {
       window.removeEventListener('resize', refresh);
-      window.removeEventListener('scroll', refresh);
+      resizeObserver?.disconnect();
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
     };
   }, []);
@@ -72,8 +83,8 @@ const Hero: React.FC = () => {
         const p = pendingRef.current;
         const rect = rectRef.current;
         if (!p || !rect) return;
-        x.set((p.cx - rect.left) / rect.width - 0.5);
-        y.set((p.cy - rect.top) / rect.height - 0.5);
+        x.set((p.cx + window.scrollX - rect.left) / rect.width - 0.5);
+        y.set((p.cy + window.scrollY - rect.top) / rect.height - 0.5);
       });
     },
     [prefersReducedMotion, x, y]

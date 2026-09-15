@@ -50,6 +50,8 @@ const ScrollJourney: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     let dark = document.documentElement.classList.contains('dark');
     let grounds = JOURNEY_ACTS.map((a) => hexToRgb(dark ? a.groundDark : a.groundLight));
     let ghosts = JOURNEY_ACTS.map((a) => parseRgba(dark ? a.ghostDark : a.ghostLight));
+    let acts = Array.from(wrap.querySelectorAll<HTMLElement>('[data-act]'));
+    let centers: number[] = [];
 
     const refreshPalette = () => {
       grounds = JOURNEY_ACTS.map((a) => hexToRgb(dark ? a.groundDark : a.groundLight));
@@ -59,16 +61,9 @@ const ScrollJourney: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     let ticking = false;
     const update = () => {
       ticking = false;
-      const acts = Array.prototype.slice.call(
-        wrap.querySelectorAll('[data-act]')
-      ) as HTMLElement[];
-      if (!acts.length) return;
+      if (!centers.length) return;
 
       const mid = window.scrollY + window.innerHeight * 0.5;
-      const centers = acts.map((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top + window.scrollY + r.height / 2;
-      });
 
       let lo = 0;
       for (let i = 0; i < centers.length; i++) {
@@ -108,8 +103,31 @@ const ScrollJourney: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       requestAnimationFrame(update);
     };
 
+    // Act boundaries change only when content is inserted/resized, not on every
+    // scroll frame. Cache them and refresh through ResizeObserver so scrolling
+    // performs no layout reads and cannot trigger forced reflow warnings.
+    let measureRaf = 0;
+    const refreshLayout = () => {
+      measureRaf = 0;
+      acts = Array.from(wrap.querySelectorAll<HTMLElement>('[data-act]'));
+      centers = acts.map((el) => {
+        const rect = el.getBoundingClientRect();
+        return rect.top + window.scrollY + rect.height / 2;
+      });
+      update();
+    };
+    const scheduleLayoutRefresh = () => {
+      if (measureRaf) return;
+      measureRaf = requestAnimationFrame(refreshLayout);
+    };
+
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    window.addEventListener('resize', scheduleLayoutRefresh);
+
+    const resizeObserver = typeof ResizeObserver === 'undefined'
+      ? null
+      : new ResizeObserver(scheduleLayoutRefresh);
+    acts.forEach((act) => resizeObserver?.observe(act));
 
     // Recolour in place when the theme toggles.
     const mo = new MutationObserver(() => {
@@ -122,11 +140,13 @@ const ScrollJourney: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     });
     mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-    update();
+    refreshLayout();
 
     return () => {
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('resize', scheduleLayoutRefresh);
+      cancelAnimationFrame(measureRaf);
+      resizeObserver?.disconnect();
       mo.disconnect();
     };
   }, []);
