@@ -56,12 +56,11 @@ const Services: React.FC = () => {
           was repainting the whole blurred layer every frame. */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/10 rounded-full blur-3xl -z-10"></div>
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-brand-cyan/10 rounded-full blur-3xl -z-10"></div>
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f0a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f0a_1px,transparent_1px)] bg-[size:14px_24px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10 relative z-10 w-full">
         <div className="text-center mb-4 sm:mb-6 max-w-2xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.72, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mb-4 sm:mb-6"
@@ -73,7 +72,7 @@ const Services: React.FC = () => {
           </motion.div>
 
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.72, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-xl sm:text-2xl md:text-3xl font-heading font-bold text-slate-900 dark:text-white mb-2 sm:mb-3"
@@ -89,7 +88,7 @@ const Services: React.FC = () => {
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0.72, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm md:text-base"
@@ -121,7 +120,7 @@ const Services: React.FC = () => {
 
           <motion.div
             variants={{
-              hidden: { opacity: 0, y: 30 },
+              hidden: { opacity: 0.72, y: 16 },
               visible: {
                 opacity: 1,
                 y: 0,

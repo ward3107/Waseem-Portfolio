@@ -45,7 +45,7 @@ const Contact: React.FC = () => {
           {/* Left Column: Copy & Info */}
           <div className="flex flex-col">
             <motion.div
-              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={prefersReducedMotion ? { duration: 0 } : undefined}
@@ -59,7 +59,7 @@ const Contact: React.FC = () => {
             </motion.div>
 
             <motion.h2
-              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1 }}
@@ -76,7 +76,7 @@ const Contact: React.FC = () => {
             </motion.h2>
 
             <motion.p
-              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.2 }}
@@ -86,7 +86,7 @@ const Contact: React.FC = () => {
             </motion.p>
 
             <motion.div
-              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.3 }}
@@ -117,7 +117,7 @@ const Contact: React.FC = () => {
 
           {/* Right Column: Contact Form */}
           <motion.div
-            initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, x: 20 }}
+            initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.4 }}

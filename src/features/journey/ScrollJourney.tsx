@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import AmbientField from '@/shared/ui/AmbientField';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import ColorRail from './ColorRail';
 import { JOURNEY_ACTS, hexToRgb, mixRgb, parseRgba, mixRgba } from './journeyConfig';
@@ -142,16 +141,17 @@ const ScrollJourney: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   return (
     <div ref={wrapRef} className="journey relative">
-      {/* Fixed atmosphere: colour ground, grid, aura, drifting motes. */}
+      {/* Fixed atmosphere: a calm colour ground and soft aura. Repeated grid
+          lines and animated motes made long-form copy look noisy and reduced
+          legibility while scrolling, so the journey now keeps the depth
+          without placing texture behind every paragraph. */}
       <div className="pointer-events-none fixed inset-0 -z-20 overflow-hidden" aria-hidden="true">
         <div
           ref={stageRef}
           className="absolute inset-0 transition-[background-color] duration-200 ease-linear"
           style={{ backgroundColor: isDark ? JOURNEY_ACTS[0].groundDark : JOURNEY_ACTS[0].groundLight }}
         />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808010_1px,transparent_1px),linear-gradient(to_bottom,#80808010_1px,transparent_1px)] bg-[size:26px_26px]" />
         <div ref={auraRef} className="absolute inset-0" />
-        <AmbientField />
       </div>
 
       <ColorRail active={active} accents={accents} onSelect={goToAct} />

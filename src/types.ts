@@ -18,7 +18,7 @@ export interface Service {
 export interface Project {
   id: string;
   title: string;
-  category: 'Web' | 'AI' | 'Mobile' | 'All';
+  category: 'Web' | 'AI' | 'Mobile' | 'WordPress' | 'All';
   description: string;
   image: string;
   tech: string[];

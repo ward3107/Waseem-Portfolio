@@ -6,6 +6,7 @@ import { Project } from '@/types';
 export const getLocalizedProjects = (
   t: (key: string) => string
 ): Project[] => [
+  ...getRequiredPortfolioProjects(t),
   {
     id: 'souvlaki',
     title: 'Authentic Greek Restaurant',
@@ -55,3 +56,40 @@ export const getLocalizedProjects = (
     github: 'https://github.com/ward3107/Vocaband',
   },
 ];
+
+/**
+ * Portfolio entries that must remain visible even when Supabase is configured.
+ * Remote rows are editorial content; they must not be allowed to replace the
+ * two WordPress case studies that prove Waseem's platform experience.
+ */
+export const getRequiredPortfolioProjects = (
+  t: (key: string) => string
+): Project[] => [
+  {
+    id: 'wordpress-studio-demo',
+    title: 'Waseem Studio — WordPress Portfolio',
+    category: 'WordPress',
+    description: t('project_wordpress_portfolio_desc'),
+    image: 'https://waseemstudiodemo.wordpress.com/wp-content/uploads/2026/09/newstudioart.png?w=1024',
+    tech: ['WordPress.com', 'Gutenberg', 'Responsive Design'],
+  },
+  {
+    id: 'wordpress-shop-demo',
+    title: 'Waseem Shop — WordPress Store',
+    category: 'WordPress',
+    description: t('project_wordpress_shop_desc'),
+    image: 'https://waseemshopdemo.wordpress.com/wp-content/uploads/2026/09/newshopart.png?w=1024',
+    tech: ['WordPress.com', 'Gutenberg', 'E-commerce UX'],
+  },
+];
+
+export const mergeRequiredPortfolioProjects = (
+  remoteProjects: Project[],
+  requiredProjects: Project[]
+): Project[] => {
+  const requiredIds = new Set(requiredProjects.map((project) => project.id));
+  return [
+    ...requiredProjects,
+    ...remoteProjects.filter((project) => !requiredIds.has(project.id)),
+  ];
+};

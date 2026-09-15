@@ -127,6 +127,7 @@ export const en: Record<string, string> = {
     projects_filter_web: "Web",
     projects_filter_ai: "AI",
     projects_filter_mobile: "Mobile",
+    projects_filter_wordpress: "WordPress",
     projects_hint: "Tap to Flip",
     projects_details: "Details",
     projects_demo: "Live Demo",
@@ -138,6 +139,8 @@ export const en: Record<string, string> = {
     project_5_desc: "Gamified vocabulary learning app for EFL students.",
     project_6_desc: "Aluminum and steel design solutions company website.",
     project_7_desc: "Professional medical website for Dr. Maya Khalil.",
+    project_wordpress_portfolio_desc: "A modern multilingual portfolio built in WordPress with Gutenberg, responsive layouts, clear service positioning, and conversion-focused sections.",
+    project_wordpress_shop_desc: "A polished WordPress storefront concept for digital products, with product discovery, brand consistency, and a mobile-first shopping experience.",
 
     // Process
     process_step_1_title: "🧭 Discovery & Strategy",

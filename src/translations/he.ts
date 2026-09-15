@@ -127,6 +127,7 @@ export const he: Record<string, string> = {
     projects_filter_web: "ווב",
     projects_filter_ai: "AI",
     projects_filter_mobile: "מובייל",
+    projects_filter_wordpress: "WordPress",
     projects_hint: "לחץ להיפוך",
     projects_details: "פרטים",
     projects_demo: "דמו חי",
@@ -138,6 +139,8 @@ export const he: Record<string, string> = {
     project_5_desc: "אפליקציית משחוק ללימוד אוצר מילים לתלמידי אנגלית כשפה זרה.",
     project_6_desc: "אתר לחברת פתרונות עיצוב באלומיניום ופלדה.",
     project_7_desc: "אתר רפואי מקצועי עבור ד״ר מאיה חליל.",
+    project_wordpress_portfolio_desc: "פורטפוליו מודרני ורב־לשוני שנבנה ב־WordPress עם Gutenberg, פריסה רספונסיבית, הצגת שירותים ברורה ואזורים ממוקדי המרה.",
+    project_wordpress_shop_desc: "קונספט מלוטש לחנות מוצרים דיגיטליים ב־WordPress, עם גילוי מוצרים נוח, שפה מותגית עקבית וחוויית קנייה שמתחילה במובייל.",
 
     // Process
     process_step_1_title: "🧭 גילוי ואסטרטגיה",

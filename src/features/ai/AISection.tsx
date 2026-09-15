@@ -13,7 +13,7 @@ const AISection: React.FC = () => {
   const prefersReducedMotion = usePrefersReducedMotion();
 
   const containerVariants: Variants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0.72 },
     visible: {
       opacity: 1,
       transition: {
@@ -24,7 +24,7 @@ const AISection: React.FC = () => {
   };
 
   const wordVariants: Variants = {
-    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 20 },
+    hidden: { opacity: 0.72, y: prefersReducedMotion ? 0 : 12 },
     visible: {
       opacity: 1,
       y: 0,
@@ -45,7 +45,6 @@ const AISection: React.FC = () => {
           600×600 blurred layer. */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-purple/5 rounded-full blur-3xl -z-10"></div>
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-brand-cyan/5 rounded-full blur-3xl -z-10"></div>
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="flex flex-col lg:flex-row items-center gap-16">
@@ -53,7 +52,7 @@ const AISection: React.FC = () => {
 
             {/* Eye-catching badge */}
             <motion.div
-              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -10 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: -8 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.2 }}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 dark:bg-slate-900 border border-brand-cyan/30 text-brand-cyan text-sm font-bold shadow-lg shadow-brand-cyan/10 mb-8"
@@ -97,7 +96,7 @@ const AISection: React.FC = () => {
             </motion.div>
 
             <motion.p
-              initial={{ opacity: 0 }}
+              initial={{ opacity: 0.72 }}
               whileInView={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
               className="text-slate-600 dark:text-slate-300 text-xl mb-10 leading-relaxed max-w-lg"
@@ -106,7 +105,7 @@ const AISection: React.FC = () => {
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0.72, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
               className="space-y-6"
@@ -134,7 +133,7 @@ const AISection: React.FC = () => {
 
           <div className="lg:w-1/2 relative">
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.96, opacity: 0.72 }}
               whileInView={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
               className="relative z-10 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 rounded-2xl shadow-2xl"

@@ -33,7 +33,6 @@ const VibeCoding: React.FC = () => {
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-purple/20 rounded-full blur-3xl opacity-60"></div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-cyan/10 rounded-full blur-3xl"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:40px_40px] opacity-20"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
@@ -41,7 +40,7 @@ const VibeCoding: React.FC = () => {
 
           {/* Badge */}
           <motion.div
-            initial={{ opacity: 0, scale: 0 }}
+            initial={{ opacity: 0.72, scale: 0.92 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 backdrop-blur-md text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-8 md:mb-16 shadow-lg"
@@ -52,7 +51,7 @@ const VibeCoding: React.FC = () => {
 
           {/* Main Title - Massive */}
           <motion.h2
-            initial={{ opacity: 0, scale: 2, filter: 'blur(20px)' }}
+            initial={{ opacity: 0.72, scale: 1.04, filter: 'blur(0px)' }}
             whileInView={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
             viewport={{ once: true }}
             transition={{
@@ -78,7 +77,7 @@ const VibeCoding: React.FC = () => {
 
               {/* 1. From Left */}
               <motion.div
-                initial={{ x: -200, opacity: 0 }}
+                initial={{ x: -20, opacity: 0.72 }}
                 whileInView={{ x: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
@@ -89,7 +88,7 @@ const VibeCoding: React.FC = () => {
 
               {/* 2. From Right - The Wavy Soulful Text */}
               <motion.div
-                initial={{ x: 200, opacity: 0 }}
+                initial={{ x: 20, opacity: 0.72 }}
                 whileInView={{ x: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
@@ -141,7 +140,7 @@ const VibeCoding: React.FC = () => {
 
               {/* 3. From Bottom (Up) */}
               <motion.div
-                initial={{ y: 100, opacity: 0 }}
+                initial={{ y: 20, opacity: 0.72 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.1 }}
@@ -152,7 +151,7 @@ const VibeCoding: React.FC = () => {
 
               {/* 4. From Top (Down) - Delay slightly to land last */}
               <motion.div
-                initial={{ y: -100, opacity: 0 }}
+                initial={{ y: -20, opacity: 0.72 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
