@@ -11,6 +11,7 @@ import AnimatedHeadline from './AnimatedHeadline';
 import ProfileCard from './ProfileCard';
 import TrustBadges from '@/shared/ui/TrustBadges';
 import Logo3D from '@/shared/three/Logo3D';
+import { useWebGLSupport } from '@/experience/useWebGLSupport';
 
 const Hero: React.FC = () => {
   const { t, language } = useLanguage();
@@ -22,6 +23,7 @@ const Hero: React.FC = () => {
   // (gzipped) three.js chunk onto every phone, for a logo that is
   // display:none there. Gating the mount keeps that chunk desktop-only.
   const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const hasWebGL = useWebGLSupport();
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -217,7 +219,7 @@ const Hero: React.FC = () => {
               clicks meant for the card (the canvas re-enables events itself). */}
           <div className="hidden lg:block absolute top-1/2 -translate-y-1/2 -left-40 xl:-left-52 w-40 h-40 xl:w-52 xl:h-52 z-0 pointer-events-none">
             <div className="w-full h-full pointer-events-auto">
-              {isDesktop && (
+              {isDesktop && hasWebGL && (
                 <Logo3D className="w-full h-full" enable3D={!prefersReducedMotion} />
               )}
             </div>
