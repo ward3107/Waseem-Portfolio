@@ -31,9 +31,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 }) => {
   return (
     <motion.div
-      initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
+      initial={prefersReducedMotion ? false : { opacity: 0.72, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ once: true, amount: 0.05 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.55, ease: [0.22, 1, 0.36, 1] }}
       role="button"
       tabIndex={0}
@@ -188,7 +188,7 @@ const Projects: React.FC = () => {
 
           {/* Modernized Header with Drop Animation */}
           <motion.div
-            initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: -60 }}
+            initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: -16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.8, ease: "easeOut" }}

@@ -109,7 +109,6 @@ const AboutTimeline: React.FC = () => {
                     static blobs — they're pure decoration — but dropped the animation. */}
                 <div className="absolute top-20 left-0 w-96 h-96 bg-brand-purple/5 rounded-full blur-3xl"></div>
                 <div className="absolute bottom-20 right-0 w-96 h-96 bg-brand-cyan/5 rounded-full blur-3xl"></div>
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] opacity-30"></div>
             </div>
 
             <div className="max-w-7xl mx-auto px-6 sm:px-10 relative z-10">
@@ -117,7 +116,7 @@ const AboutTimeline: React.FC = () => {
                 {/* Section Header - The "Fact" Presentation */}
                 <div className="mb-20 perspective-1000">
                     <motion.div
-                        initial={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0.72, x: -12 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         className="flex items-center gap-3 mb-6"
@@ -131,7 +130,7 @@ const AboutTimeline: React.FC = () => {
 
                     {/* Fade from Back to Front Effect */}
                     <motion.h2
-                        initial={{ opacity: 0, scale: 0.8, filter: 'blur(10px)' }}
+                        initial={{ opacity: 0.72, scale: 0.96, filter: 'blur(0px)' }}
                         whileInView={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
                         viewport={{ once: true }}
                         transition={{ duration: 1, ease: "easeOut" }}
@@ -148,7 +147,7 @@ const AboutTimeline: React.FC = () => {
                     </motion.h2>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0.72, y: 12 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.2 }}
@@ -172,7 +171,7 @@ const AboutTimeline: React.FC = () => {
                         timeline scrolls past, so the narrative reads as a guided story. */}
                     <div className="lg:col-span-5 flex flex-col gap-8 lg:sticky lg:top-28">
                         <motion.div
-                            initial={{ opacity: 0, rotateY: 15 }}
+                            initial={{ opacity: 0.72, rotateY: 8 }}
                             whileInView={{ opacity: 1, rotateY: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.8 }}
@@ -314,7 +313,7 @@ const AboutTimeline: React.FC = () => {
                             {localizedTimeline.map((item, index) => (
                                 <motion.div
                                     key={index}
-                                    initial={{ opacity: 0, x: 20 }}
+                                    initial={{ opacity: 0.72, x: 12 }}
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: index * 0.2 }}

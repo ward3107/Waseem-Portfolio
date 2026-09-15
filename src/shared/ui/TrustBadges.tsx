@@ -40,7 +40,7 @@ const TrustBadges: React.FC<TrustBadgesProps> = ({ className = '', variant = 'he
       {chips.map((chip, i) => (
         <motion.span
           key={chip.label}
-          initial={{ opacity: 0, y: 6 }}
+          initial={{ opacity: 0.72, y: 6 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.05 * i, duration: 0.3 }}

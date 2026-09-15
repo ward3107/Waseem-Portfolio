@@ -19,9 +19,9 @@ const formatDate = (iso: string | null | undefined, locale: string): string => {
 };
 
 // Per-card scroll-linked reveal: opacity is bound directly to the card's own
-// scroll position, so it can never lag behind a fast scroll and pop in. When
-// the card is below the fold it is opacity 0; it fades to 1 as it scrolls
-// from the viewport bottom to the upper third. Reduced-motion users get
+// scroll position. Cards remain readable before the reveal completes, then
+// settle to full opacity as they scroll into the upper part of the viewport.
+// Reduced-motion users get
 // static opacity 1 with no scroll binding at all.
 type CertificationCardProps = {
   cert: Certification;
@@ -41,7 +41,7 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
     target: ref,
     offset: ['start end', 'start 70%'],
   });
-  const opacity = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.72, 1]);
 
   // An empty/invalid credential URL yields no href — the anchor is then a dead,
   // non-focusable card that still says "Verify →". Only show the verify
@@ -131,7 +131,7 @@ const Certifications: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="text-center mb-12 md:mb-16">
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0.72, y: -8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 mb-4"
@@ -145,7 +145,7 @@ const Certifications: React.FC = () => {
           </motion.div>
 
           <motion.h2
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0.72, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}

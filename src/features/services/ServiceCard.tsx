@@ -13,7 +13,9 @@ interface ServiceCardProps {
 }
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
+  // The card is readable before IntersectionObserver fires. The remaining
+  // opacity/translate delta still gives it a clear entrance on scroll.
+  hidden: { opacity: 0.72, y: 16 },
   visible: {
     opacity: 1,
     y: 0,

@@ -127,6 +127,7 @@ export const ar: Record<string, string> = {
     projects_filter_web: "ويب",
     projects_filter_ai: "ذكاء اصطناعي",
     projects_filter_mobile: "موبايل",
+    projects_filter_wordpress: "WordPress",
     projects_hint: "انقر للقلب",
     projects_details: "تفاصيل",
     projects_demo: "عرض حي",
@@ -138,6 +139,8 @@ export const ar: Record<string, string> = {
     project_5_desc: "تطبيق تعليم مفردات مُلعّب لطلاب اللغة الإنجليزية كلغة أجنبية.",
     project_6_desc: "موقع لشركة حلول تصميم بالألمنيوم والفولاذ.",
     project_7_desc: "موقع طبي احترافي للدكتورة مايا خليل.",
+    project_wordpress_portfolio_desc: "ملف أعمال حديث ومتعدد اللغات مبني على WordPress وGutenberg، بتصميم متجاوب وعرض واضح للخدمات وأقسام تركز على التحويل.",
+    project_wordpress_shop_desc: "تصور احترافي لمتجر منتجات رقمية على WordPress، مع اكتشاف سهل للمنتجات وهوية متناسقة وتجربة شراء تبدأ من الهاتف.",
 
     // Process
     process_step_1_title: "🧭 الاكتشاف والاستراتيجية",

@@ -70,7 +70,7 @@ const FAQ: React.FC = () => {
                     <div className="lg:col-span-5">
                         <div className="lg:sticky lg:top-32">
                             <motion.div
-                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: 12 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={prefersReducedMotion ? { duration: 0 } : undefined}
@@ -81,7 +81,7 @@ const FAQ: React.FC = () => {
                             </motion.div>
 
                             <motion.h2
-                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: 12 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1 }}
@@ -98,7 +98,7 @@ const FAQ: React.FC = () => {
                             </motion.h2>
 
                             <motion.p
-                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: 12 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.2 }}
@@ -108,7 +108,7 @@ const FAQ: React.FC = () => {
                             </motion.p>
 
                             <motion.div
-                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
+                                initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: 12 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.3 }}
@@ -141,7 +141,7 @@ const FAQ: React.FC = () => {
                             return (
                                 <motion.div
                                     key={index}
-                                    initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 20 }}
+                                    initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0.72, y: 12 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 }}

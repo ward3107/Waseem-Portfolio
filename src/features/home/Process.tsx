@@ -91,7 +91,6 @@ const Process: React.FC = () => {
       <div className="hidden lg:flex">
         {/* Left/right depends on `dir` — semantically "visual". */}
         <div className="w-5/12 h-screen sticky top-0 flex items-center justify-center bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 overflow-hidden relative">
-          <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
           {/* Dark vignette — only in dark mode. In light mode the panel is
               white, so slate-900 fades at the top/bottom looked like a bug. */}
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-transparent to-transparent dark:from-slate-900 dark:to-slate-900 z-10"></div>
@@ -100,7 +99,7 @@ const Process: React.FC = () => {
             {steps.map((step, index) => (
               <motion.div
                 key={step.id}
-                initial={{ opacity: 0, scale: 0.8, rotate: -20 }}
+                initial={{ opacity: 0.72, scale: 0.94, rotate: -8 }}
                 animate={{
                   opacity: activeStep === index ? 1 : 0,
                   scale: activeStep === index ? 1 : 0.8,
@@ -198,7 +197,7 @@ const Process: React.FC = () => {
           {steps.map((step, index) => (
             <motion.div
               key={step.id}
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0.72, x: -12 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: index * 0.1 }}
