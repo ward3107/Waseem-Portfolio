@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Globe, Moon, Sun } from 'lucide-react';
+import {
+  Blocks,
+  Bot,
+  Briefcase,
+  Clapperboard,
+  Globe,
+  Mail,
+  Menu,
+  Moon,
+  Sun,
+  UserRound,
+  X,
+  type LucideIcon,
+} from 'lucide-react';
 import { NAV_LINKS } from '@/constants';
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -8,6 +21,14 @@ import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { useContact } from '@/features/contact/useContact';
 import AudioHeaderControl from '@/experience/components/AudioHeaderControl';
 
+const NAV_ICONS: Record<string, LucideIcon> = {
+  '/#what-i-do': Blocks,
+  '/#ai-automation': Bot,
+  '/#about': UserRound,
+  '/#projects': Briefcase,
+  '/video-ads': Clapperboard,
+  '/#contact': Mail,
+};
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -54,10 +75,10 @@ const Navbar: React.FC = () => {
     };
   }, [isOpen]);
 
-
-
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-sm border-b border-brand-gold/20 dark:border-slate-800' : 'bg-transparent'}`}>
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-sm border-b border-brand-gold/20 dark:border-slate-800' : 'bg-transparent'}`}
+    >
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Name — single instance, scales with viewport */}
@@ -74,20 +95,32 @@ const Navbar: React.FC = () => {
           </a>
 
           {/* Desktop Menu */}
-          <div className="hidden xl:flex gap-5 items-center">
-            {NAV_LINKS[language].map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigateToSection(link.href);
-                }}
-                className="text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight transition-colors font-medium text-sm tracking-wide"
-              >
-                {link.name}
-              </a>
-            ))}
+          <div className="hidden xl:flex gap-2 items-center">
+            {NAV_LINKS[language].map((link) => {
+              const Icon = NAV_ICONS[link.href] ?? Blocks;
+              return (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  title={link.name}
+                  aria-label={link.name}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigateToSection(link.href);
+                  }}
+                  className="group relative grid h-11 w-11 place-items-center rounded-xl text-slate-600 transition-colors hover:bg-brand-purple/10 hover:text-brand-purple focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 dark:text-slate-300 dark:hover:bg-brand-purpleLight/10 dark:hover:text-brand-purpleLight"
+                >
+                  <Icon size={21} strokeWidth={1.9} aria-hidden="true" />
+                  <span
+                    aria-hidden="true"
+                    dir={language === 'en' ? 'ltr' : 'rtl'}
+                    className="pointer-events-none absolute top-full z-50 mt-2 whitespace-nowrap rounded-lg bg-slate-950 px-3 py-1.5 text-xs font-semibold text-white opacity-0 shadow-xl transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 dark:bg-white dark:text-slate-950"
+                  >
+                    {link.name}
+                  </span>
+                </a>
+              );
+            })}
 
             {/* Language Switcher */}
             <div className="relative">
@@ -111,10 +144,16 @@ const Navbar: React.FC = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              aria-label={theme === 'dark' ? t('aria_theme_toggle_light') : t('aria_theme_toggle_dark')}
+              aria-label={
+                theme === 'dark' ? t('aria_theme_toggle_light') : t('aria_theme_toggle_dark')
+              }
               className="p-2 text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
             >
-              {theme === 'dark' ? <Moon size={20} aria-hidden="true" /> : <Sun size={20} aria-hidden="true" />}
+              {theme === 'dark' ? (
+                <Moon size={20} aria-hidden="true" />
+              ) : (
+                <Sun size={20} aria-hidden="true" />
+              )}
             </button>
 
             {/* CTA Button */}
@@ -147,10 +186,16 @@ const Navbar: React.FC = () => {
 
             <button
               onClick={toggleTheme}
-              aria-label={theme === 'dark' ? t('aria_theme_toggle_light') : t('aria_theme_toggle_dark')}
+              aria-label={
+                theme === 'dark' ? t('aria_theme_toggle_light') : t('aria_theme_toggle_dark')
+              }
               className="text-slate-700 dark:text-slate-300 hover:text-brand-purple min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"
             >
-              {theme === 'dark' ? <Moon size={20} aria-hidden="true" /> : <Sun size={20} aria-hidden="true" />}
+              {theme === 'dark' ? (
+                <Moon size={20} aria-hidden="true" />
+              ) : (
+                <Sun size={20} aria-hidden="true" />
+              )}
             </button>
 
             <button
@@ -192,29 +237,33 @@ const Navbar: React.FC = () => {
               aria-label="Main navigation menu"
             >
               <div className="px-6 pt-4 pb-8 space-y-4 flex flex-col">
-              {NAV_LINKS[language].map((link) => (
+                {NAV_LINKS[language].map((link) => {
+                  const Icon = NAV_ICONS[link.href] ?? Blocks;
+                  return (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsOpen(false);
+                        setTimeout(() => navigateToSection(link.href), 100);
+                      }}
+                      className="flex min-h-12 items-center gap-4 rounded-xl px-3 py-2 text-lg font-medium text-slate-600 hover:bg-brand-purple/10 hover:text-brand-purple focus:outline-none focus:ring-2 focus:ring-brand-purple dark:text-slate-300"
+                    >
+                      <Icon size={22} strokeWidth={1.9} aria-hidden="true" />
+                      <span>{link.name}</span>
+                    </a>
+                  );
+                })}
                 <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsOpen(false);
-                    setTimeout(() => navigateToSection(link.href), 100);
-                  }}
-                  className="text-slate-600 dark:text-slate-300 hover:text-brand-purple text-lg font-medium focus:outline-none focus:ring-2 focus:ring-brand-purple rounded-lg px-2 py-1 -mx-2 block cursor-pointer"
+                  href={contact.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsOpen(false)}
+                  className="w-full text-center py-3 rounded-xl bg-brand-purple text-white font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 cursor-pointer"
                 >
-                  {link.name}
+                  {t('letsTalk')}
                 </a>
-              ))}
-              <a
-                href={contact.whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsOpen(false)}
-                className="w-full text-center py-3 rounded-xl bg-brand-purple text-white font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 cursor-pointer"
-              >
-                {t('letsTalk')}
-              </a>
               </div>
             </motion.div>
           </>
