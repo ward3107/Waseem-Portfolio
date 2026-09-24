@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://waseemp.vercel.app/sitemap.xml
+Sitemap: https://www.vasia.dev/sitemap.xml
 
 # Crawl-delay (optional, helps with server load)
 Crawl-delay: 1

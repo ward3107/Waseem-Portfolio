@@ -40,7 +40,7 @@ export default {
   // unauthenticated bots — the script flags those clearly instead of
   // pretending they're consistent.
   profiles: [
-    { label: 'Portfolio (canonical site)', url: 'https://waseemp.vercel.app' },
+    { label: 'Portfolio (canonical site)', url: 'https://www.vasia.dev' },
     { label: 'GitHub', url: 'https://github.com/ward3107' },
     { label: 'LinkedIn', url: 'https://www.linkedin.com/in/waseem-abu-akel-334486374/' },
     // { label: 'Google Business Profile', url: 'https://g.page/YOUR_PLACE_ID' },

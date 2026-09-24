@@ -77,7 +77,7 @@ export default function VideoAdsPage() {
   useDocumentTitle(copy.title);
 
   useEffect(() => {
-    const url = 'https://waseemp.vercel.app/video-ads';
+    const url = 'https://www.vasia.dev/video-ads';
     const updates: [string, string, string][] = [
       ['meta[name="description"]', 'content', copy.intro],
       ['link[rel="canonical"]', 'href', url],

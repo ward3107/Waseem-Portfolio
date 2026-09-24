@@ -81,7 +81,7 @@ You need to create two optimized images for social media sharing:
 
 Replace the placeholder URL with your actual deployment URL:
 
-**Current placeholder:** `https://waseemp.vercel.app/`
+**Current placeholder:** `https://www.vasia.dev/`
 
 **Find and replace in `index.html`:**
 - Line 25: `og:url`
@@ -125,7 +125,7 @@ Consider creating a `MetaTags.tsx` component to generate meta tags dynamically b
 Example structure:
 ```tsx
 export const MetaTags: React.FC<{ lang?: Language }> = ({ lang = 'en' }) => {
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://waseemp.vercel.app';
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.vasia.dev';
 
   return (
     <Helmet>
@@ -149,7 +149,7 @@ Add structured data for better search engine understanding:
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Waseem",
-  "url": "https://waseemp.vercel.app",
+  "url": "https://www.vasia.dev",
   "jobTitle": "Full Stack Developer",
   "description": "Expert in React, TypeScript, and AI automation",
   "knowsAbout": ["React", "TypeScript", "AI", "Web Development"],

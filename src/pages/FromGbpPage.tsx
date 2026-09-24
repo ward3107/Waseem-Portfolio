@@ -5,9 +5,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 // Stamps consistent UTM params before handing off to the real destination, so
 // GBP-sourced traffic is unambiguously attributable in Vercel Analytics / GA4.
 //
-// Usage on GBP: https://waseemp.vercel.app/from-gbp                 → /
-//               https://waseemp.vercel.app/from-gbp?to=/services    → /services
-//               https://waseemp.vercel.app/from-gbp?to=/projects    → /projects
+// Usage on GBP: https://www.vasia.dev/from-gbp                 → /
+//               https://www.vasia.dev/from-gbp?to=/services    → /services
+//               https://www.vasia.dev/from-gbp?to=/projects    → /projects
 //
 // The `to` param is treated as an internal path only. Anything that isn't a
 // same-origin path (starts with `/` and doesn't start with `//` or `/http`)

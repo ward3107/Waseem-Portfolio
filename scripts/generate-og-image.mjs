@@ -58,11 +58,11 @@ const textSvg = Buffer.from(`
   <text x="620" y="240" class="name">Waseem</text>
   <text x="620" y="305" class="role">Full Stack Developer</text>
   <text x="620" y="355" class="accent">&amp; AI Specialist</text>
-  <rect x="620" y="395" width="190" height="44" rx="22" fill="#ffffff" fill-opacity="0.10" stroke="#ffffff" stroke-opacity="0.25"/>
+  <rect x="620" y="395" width="256" height="44" rx="22" fill="#ffffff" fill-opacity="0.10" stroke="#ffffff" stroke-opacity="0.25"/>
   <text x="640" y="425" class="pill">React · TypeScript</text>
-  <rect x="824" y="395" width="138" height="44" rx="22" fill="#ffffff" fill-opacity="0.10" stroke="#ffffff" stroke-opacity="0.25"/>
-  <text x="844" y="425" class="pill">AI · Automation</text>
-  <text x="620" y="500" class="url">waseemp.vercel.app</text>
+  <rect x="890" y="395" width="232" height="44" rx="22" fill="#ffffff" fill-opacity="0.10" stroke="#ffffff" stroke-opacity="0.25"/>
+  <text x="910" y="425" class="pill">AI · Automation</text>
+  <text x="620" y="500" class="url">vasia.dev</text>
 </svg>
 `);
 
