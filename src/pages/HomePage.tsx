@@ -7,6 +7,7 @@ import Process from '@/features/home/Process';
 import AISection from '@/features/ai/AISection';
 import VibeCoding from '@/features/ai/VibeCoding';
 import Projects from '@/features/projects/Projects';
+import VideoAdsPreview from '@/features/video-ads/VideoAdsPreview';
 import Reviews from '@/features/reviews/Reviews';
 import Contact from '@/features/contact/Contact';
 import FAQ from '@/features/home/FAQ';
@@ -71,6 +72,7 @@ const ClassicHome: React.FC = () => (
     {/* Work — the projects gallery and social proof. */}
     <Act act={ACT_WORK}>
       <Projects />
+      <VideoAdsPreview />
       <Reviews />
     </Act>
     {/* Contact — answer the last questions, then the one clear action. */}

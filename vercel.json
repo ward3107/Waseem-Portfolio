@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/video-ads", "destination": "/video-ads/index.html" },
+    { "source": "/video-ads/", "destination": "/video-ads/index.html" },
     { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ],
   "headers": [
