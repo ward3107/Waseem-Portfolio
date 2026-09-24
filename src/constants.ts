@@ -30,7 +30,8 @@ export const SERVICE_AREAS: { he: string; ar: string; en: string; slug: string }
 ];
 
 export const NAV_LINKS: Record<Language, NavLink[]> = {
-  // The whole site is one page now, so every nav link scrolls to a section
+  // Core services live on the homepage; video ads have a shareable showcase.
+  // Most nav links scroll to a section
   // rather than routing away. The old /about, /projects, /services and
   // /contact routes still exist as redirects to these anchors (see App.tsx)
   // for bookmarks, deep links and search results.
@@ -39,6 +40,7 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'AI Solutions', href: '/#ai-automation' },
     { name: 'About', href: '/#about' },
     { name: 'Projects', href: '/#projects' },
+    { name: 'Video Ads', href: '/video-ads' },
     { name: 'Contact', href: '/#contact' },
   ],
   he: [
@@ -46,6 +48,7 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'פתרונות AI', href: '/#ai-automation' },
     { name: 'אודות', href: '/#about' },
     { name: 'פרויקטים', href: '/#projects' },
+    { name: 'סרטוני פרסום', href: '/video-ads' },
     { name: 'צור קשר', href: '/#contact' },
   ],
   ar: [
@@ -53,6 +56,7 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'حلول AI', href: '/#ai-automation' },
     { name: 'من أنا', href: '/#about' },
     { name: 'مشاريع', href: '/#projects' },
+    { name: 'إعلانات فيديو', href: '/video-ads' },
     { name: 'اتصل بي', href: '/#contact' },
   ],
 };

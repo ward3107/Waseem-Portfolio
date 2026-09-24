@@ -74,7 +74,7 @@ const Navbar: React.FC = () => {
           </a>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex gap-5 items-center">
+          <div className="hidden xl:flex gap-5 items-center">
             {NAV_LINKS[language].map((link) => (
               <a
                 key={link.name}
@@ -129,7 +129,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile Toggle */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="xl:hidden flex items-center gap-2">
             {/* Audio tour control (mobile) — hidden unless the tour is mounted. */}
             <AudioHeaderControl />
 
@@ -180,14 +180,14 @@ const Navbar: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="md:hidden fixed inset-0 bg-black/50 z-40 cursor-default"
+              className="xl:hidden fixed inset-0 bg-black/50 z-40 cursor-default"
             />
             <motion.div
               id="mobile-menu"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 overflow-hidden relative z-50"
+              className="xl:hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 overflow-hidden relative z-50"
               role="navigation"
               aria-label="Main navigation menu"
             >
