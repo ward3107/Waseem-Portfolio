@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url';
 const output = new URL('../dist/video-ads/', import.meta.url);
 const site = 'https://waseemp.vercel.app';
 const url = `${site}/video-ads`;
-const title = 'Video Ads for Brands | Waseem';
-const description = 'Turn your product photos into social video ads. Watch the GreenTouch portfolio concept: 27 seconds of motion, Hebrew captions, and music.';
+const title = 'Social Video Portfolio | Waseem';
+const description = 'Watch GreenTouch and NINNYO FLOWERS: two vertical social-video case studies made from real product photography.';
 let html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
 html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${title}</title>`);
 const values = {
@@ -14,11 +14,11 @@ const values = {
   'og:title': title, 'twitter:title': title,
   'og:description': description, 'twitter:description': description,
   'og:url': url, 'twitter:url': url,
-  'og:image': `${site}/assets/video-ads/greentouch-share.jpg`,
-  'twitter:image': `${site}/assets/video-ads/greentouch-share.jpg`,
+  'og:image': `${site}/assets/video-ads/video-work-share.jpg`,
+  'twitter:image': `${site}/assets/video-ads/video-work-share.jpg`,
   'og:image:width': '1080', 'og:image:height': '1080',
-  'og:image:alt': 'GreenTouch video ad portfolio concept',
-  'twitter:image:alt': 'GreenTouch video ad portfolio concept',
+  'og:image:alt': 'GreenTouch and NINNYO FLOWERS social video portfolio',
+  'twitter:image:alt': 'GreenTouch and NINNYO FLOWERS social video portfolio',
 };
 html = html.replace(/<meta\s+(?:name|property)="([^"]+)"\s+content="[^"]*"\s*\/?\s*>/g,
   (tag, key) => key in values ? tag.replace(/content="[^"]*"/, `content="${values[key]}"`) : tag);
