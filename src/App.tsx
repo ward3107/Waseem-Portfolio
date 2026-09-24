@@ -20,6 +20,7 @@ import FromGbpPage from './pages/FromGbpPage';
 import PrivacyPage from './pages/PrivacyPage';
 import AccessibilityPage from './pages/AccessibilityPage';
 import NotFoundPage from './pages/NotFoundPage';
+import StartPage from './pages/StartPage';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { WidgetProvider } from './contexts/WidgetContext';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -108,7 +109,7 @@ const AppContent: React.FC = () => {
           // (renders null) — no chrome so there's no 1-frame flash of navbar
           // before the client-side redirect fires.
           const isStandalone =
-            isAdmin || pathname === '/share-testimonial' || pathname === '/from-gbp';
+            isAdmin || pathname === '/share-testimonial' || pathname === '/from-gbp' || pathname === '/start';
 
           const routes = (
             <Suspense fallback={<SectionSkeleton />}>
@@ -124,6 +125,7 @@ const AppContent: React.FC = () => {
                 <Route path="/services" element={<Navigate to="/#what-i-do" replace />} />
                 <Route path="/about" element={<Navigate to="/#about" replace />} />
                 <Route path="/contact" element={<Navigate to="/#contact" replace />} />
+                <Route path="/start" element={<StartPage />} />
                 <Route path="/from-gbp" element={<FromGbpPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/accessibility" element={<AccessibilityPage />} />
