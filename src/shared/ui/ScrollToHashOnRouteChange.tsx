@@ -23,8 +23,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
  * back to the top repeatedly — which reads as the page "flashing".
  */
 
-/** Events that mean "the user is driving the scroll now — stop correcting it". */
-const INTENT_EVENTS = ['wheel', 'touchstart', 'touchmove', 'keydown'] as const;
+/** Events that mean "the user is driving the page now — stop correcting it".
+ * `pointerdown` also protects an early in-page jump click: without it, a
+ * pending top-reset timer can undo the smooth scroll during the first 800ms. */
+const INTENT_EVENTS = ['wheel', 'touchstart', 'touchmove', 'pointerdown', 'keydown'] as const;
 const SCROLL_KEYS = new Set([
   'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Spacebar',
 ]);
@@ -162,8 +164,8 @@ const ScrollToHashOnRouteChange: React.FC = () => {
         document.getElementById(focusId)?.focus({ preventScroll: true });
       }, 400);
     }
-    // Stop re-asserting the moment the user scrolls on their own, otherwise the
-    // remaining timers drag them back to the top mid-gesture.
+    // Stop re-asserting the moment the user scrolls or clicks on their own,
+    // otherwise the remaining timers can drag an early section jump back up.
     const clearTimers = () => {
       timers.forEach((t) => window.clearTimeout(t));
       if (focusTimer !== undefined) window.clearTimeout(focusTimer);
