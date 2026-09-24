@@ -29,7 +29,7 @@ const EXAMPLE_PATH = resolve(__dirname, 'nap-audit.config.example.mjs');
 
 const FETCH_TIMEOUT_MS = 15_000;
 const USER_AGENT =
-  'Mozilla/5.0 (compatible; nap-audit/1.0; +https://waseemp.vercel.app)';
+  'Mozilla/5.0 (compatible; nap-audit/1.0; +https://www.vasia.dev)';
 
 // ---------------------------------------------------------------------------
 // Load config (falls back to example with a warning).

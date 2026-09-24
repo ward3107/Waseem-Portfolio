@@ -26,7 +26,7 @@ import { dirname, resolve } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(__dirname, '..', 'public');
 
-const SITE = 'https://waseemp.vercel.app';
+const SITE = 'https://www.vasia.dev';
 const WHATSAPP = '972534260632';
 const PUBLISHED = '2026-07-07';
 const UPDATED = '2026-08-30';

@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const output = new URL('../dist/video-ads/', import.meta.url);
-const site = 'https://waseemp.vercel.app';
+const site = 'https://www.vasia.dev';
 const url = `${site}/video-ads`;
 const title = 'Social Video Portfolio | Waseem';
 const description = 'Watch GreenTouch and NINNYO FLOWERS: two vertical social-video case studies made from real product photography.';
