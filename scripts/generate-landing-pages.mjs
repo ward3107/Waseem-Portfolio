@@ -688,6 +688,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 ${simpleEntry(`${SITE}/services`, '0.95')}
 ${simpleEntry(`${SITE}/projects`, '0.9')}
 ${simpleEntry(`${SITE}/video-ads`, '0.9')}
+${simpleEntry(`${SITE}/brand`, '0.5')}
 ${simpleEntry(`${SITE}/about`, '0.9')}
 ${simpleEntry(`${SITE}/contact`, '0.9')}
 ${simpleEntry(`${SITE}/privacy`, '0.3')}

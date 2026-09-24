@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '@/shared/hooks/useFocusTrap';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { useContact } from '@/features/contact/useContact';
+import BrandLogo from '@/shared/brand/BrandLogo';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -61,9 +62,13 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
           {/* Brand Column */}
           <div className="space-y-6">
-            <h3 className="font-heading font-bold text-xl sm:text-2xl text-brand-purple dark:text-brand-purpleLighter">
-              Waseem
-            </h3>
+            <Link
+              to="/brand"
+              aria-label="vasia.dev brand kit"
+              className="block w-56 text-slate-950 transition-colors hover:text-brand-purple focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple dark:text-white dark:hover:text-brand-purpleLighter rounded"
+            >
+              <BrandLogo className="h-auto w-full" />
+            </Link>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
               {t('footer_desc')}
             </p>
@@ -134,6 +139,18 @@ const Footer: React.FC = () => {
                   {{ ar: 'مدونة', en: 'Blog', he: 'בלוג' }[language]}
                 </a>
               </li>
+              <li>
+                <Link
+                  to="/brand"
+                  className="hover:text-brand-purple transition-colors flex items-center gap-2 group py-1.5"
+                >
+                  <ArrowRight
+                    size={14}
+                    className="opacity-0 -ms-4 rtl:rotate-180 group-hover:opacity-100 group-hover:ms-0 transition-all duration-300 text-brand-purple"
+                  />
+                  {{ ar: 'ملفات الشعار', en: 'Brand kit', he: 'ערכת הלוגו' }[language]}
+                </Link>
+              </li>
             </ul>
 
             {/* Service Areas — internal links to local SEO landing pages */}
@@ -186,7 +203,6 @@ const Footer: React.FC = () => {
               ))}
             </ul>
           </div>
-
         </div>
 
         {/* Bottom Bar */}
@@ -196,7 +212,7 @@ const Footer: React.FC = () => {
 
         <div className="pt-8 border-t border-slate-200 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-600 dark:text-slate-500">
           <p>
-            © {currentYear} Waseem. {t('footer_rights')}
+            © {currentYear} vasia.dev. {t('footer_rights')}
           </p>
           <div className="flex flex-wrap gap-4 sm:gap-6 font-medium justify-center">
             {/* Privacy is a full page (Amendment 13 comprehensive statement)

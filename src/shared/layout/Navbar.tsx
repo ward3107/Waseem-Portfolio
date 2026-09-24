@@ -20,6 +20,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { useContact } from '@/features/contact/useContact';
 import AudioHeaderControl from '@/experience/components/AudioHeaderControl';
+import BrandLogo from '@/shared/brand/BrandLogo';
 
 const NAV_ICONS: Record<string, LucideIcon> = {
   '/#what-i-do': Blocks,
@@ -89,9 +90,10 @@ const Navbar: React.FC = () => {
               setIsOpen(false);
               navigateToSection('/');
             }}
-            className="text-lg md:text-xl font-heading font-bold text-slate-900 dark:text-white hover:text-brand-purple dark:hover:text-brand-purpleLight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded"
+            aria-label="vasia.dev"
+            className="block w-[156px] text-slate-900 transition-colors hover:text-brand-purple focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 dark:text-white dark:hover:text-brand-purpleLighter sm:w-[174px] rounded"
           >
-            Waseem
+            <BrandLogo className="h-auto w-full" />
           </a>
 
           {/* Desktop Menu */}

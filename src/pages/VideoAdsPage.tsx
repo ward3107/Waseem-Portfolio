@@ -4,6 +4,7 @@ import { MessageCircle, Play } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
+import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { VIDEO_ADS, type VideoAd, videoAdsCopy } from '@/features/video-ads/content';
 import '@/features/video-ads/video-ads.css';
 
@@ -73,6 +74,7 @@ export default function VideoAdsPage() {
   const { language } = useLanguage();
   const copy = videoAdsCopy[language];
   const contact = useContact();
+  const navigateToSection = useSectionNavigate();
   const whatsapp = `${contact.whatsappUrl}?text=${encodeURIComponent(copy.prefill)}`;
   useDocumentTitle(copy.title);
 
@@ -111,7 +113,14 @@ export default function VideoAdsPage() {
 
         <nav className="va-project-jump" aria-label={copy.category}>
           {VIDEO_ADS.map((project) => (
-            <a key={project.id} href={`#${project.id}`}>
+            <a
+              key={project.id}
+              href={`#${project.id}`}
+              onClick={(event) => {
+                event.preventDefault();
+                navigateToSection(`/video-ads#${project.id}`);
+              }}
+            >
               <img src={project.thumbnail} alt="" width={168} height={168} />
               <span><bdi>{copy.projects[project.id].project}</bdi><small>{project.duration}s</small></span>
             </a>
