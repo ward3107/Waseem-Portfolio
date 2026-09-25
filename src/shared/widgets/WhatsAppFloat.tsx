@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
 import { useContact } from '@/features/contact/useContact';
@@ -19,15 +19,38 @@ import { trackEvent } from '@/lib/browser';
 // `env(safe-area-inset-bottom)` keeps it clear of the iPhone home indicator.
 // The bar owns the bottom edge; BackToTop and the accessibility button sit
 // above it. The cookie banner (z-50) deliberately covers it: consent first.
+//
+// The dock's real height (bar + padding + safe-area inset) is published as the
+// `--wa-dock-h` CSS variable so those buttons stack exactly above it. A fixed
+// offset guessed that height and overlapped the bar wherever the inset was
+// large (Android gesture bar, in-app browsers such as Facebook's).
 
 const WhatsAppFloat: React.FC = () => {
   const { whatsappNumber } = useContact();
   const { t, language } = useLanguage();
 
+  const dockRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = dockRef.current;
+    if (!el) return;
+    const root = document.documentElement;
+    const publish = () => root.style.setProperty('--wa-dock-h', `${el.offsetHeight}px`);
+    publish();
+    if (typeof ResizeObserver === 'undefined') return () => root.style.removeProperty('--wa-dock-h');
+    const ro = new ResizeObserver(publish);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty('--wa-dock-h');
+    };
+  }, []);
+
   const href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(t('wa_float_prefill'))}`;
 
   return (
     <div
+      ref={dockRef}
       className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-4 print:hidden"
       style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.75rem)' }}
     >

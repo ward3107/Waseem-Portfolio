@@ -171,7 +171,10 @@ const AccessibilityToolbar: React.FC = () => {
 
   if (!isOpen) {
     return (
-      <div className="fixed bottom-24 right-6 z-50 flex items-end gap-3">
+      <div
+        className="fixed right-4 md:right-6 z-50 flex items-end gap-3"
+        style={{ bottom: 'calc(var(--wa-dock-h, 0.75rem) + 0.75rem)' }}
+      >
         {/* First-visit tooltip. Sits to the LEFT of the button so it
             doesn't push it off-screen on narrow mobiles. Dismissible with
             the X or "Continue"; either choice persists for the session. */}
@@ -182,7 +185,7 @@ const AccessibilityToolbar: React.FC = () => {
           whileFocus={{ opacity: 1 }}
           whileTap={{ scale: 0.95, opacity: 1 }}
           onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-br from-brand-purple to-brand-purpleLight text-white p-2.5 md:p-4 rounded-full shadow-2xl hover:shadow-brand-purple/50 transition-shadow focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group border-2 border-white/20"
+          className="bg-gradient-to-br from-brand-purple to-brand-purpleLight text-white p-2.5 md:p-3.5 rounded-full shadow-xl hover:shadow-brand-purple/50 transition-shadow focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group border-2 border-white/20"
           aria-label={getAccessibilityLabel() + ' Options'}
           style={{ transition: 'opacity 200ms ease' }}
         >

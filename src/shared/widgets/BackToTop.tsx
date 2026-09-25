@@ -31,22 +31,23 @@ const BackToTop: React.FC = () => {
   // a white button on a white background, i.e. an invisible control.)
   const buttonStyle =
     theme === 'dark'
-      ? 'bg-white text-slate-900 border-white hover:bg-slate-200'
-      : 'bg-slate-900 text-white border-slate-900 hover:bg-brand-purple hover:border-brand-purple';
+      ? 'bg-slate-900/85 text-white border-white/25 hover:bg-slate-800'
+      : 'bg-white/90 text-slate-900 border-slate-300 hover:bg-slate-100';
 
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.button
           initial={{ opacity: 0, scale: 0.5, y: 20 }}
-          animate={{ opacity: 0.5, scale: 1, y: 0 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.5, y: 20 }}
           whileHover={{ opacity: 1, scale: 1.1 }}
           onClick={scrollToTop}
-          className={`fixed bottom-24 left-6 z-40 p-2.5 md:p-3 rounded-full shadow-xl border-2 transition-colors duration-300 group ${buttonStyle}`}
+          className={`fixed left-4 md:left-6 z-40 p-2.5 md:p-3 rounded-full shadow-xl border backdrop-blur transition-colors duration-300 group ${buttonStyle}`}
+          style={{ bottom: 'calc(var(--wa-dock-h, 0.75rem) + 0.75rem)' }}
           aria-label="Back to Top"
         >
-          <ArrowUp size={24} className="group-hover:-translate-y-1 transition-transform duration-300" />
+          <ArrowUp size={22} className="group-hover:-translate-y-1 transition-transform duration-300" />
         </motion.button>
       )}
     </AnimatePresence>

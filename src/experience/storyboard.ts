@@ -68,6 +68,14 @@ export const CHAPTERS: Chapter[] = [
     lookAt: [0, 0, -6],
   },
   {
+    id: 'videos',
+    label: 'Video ads — Social reels',
+    titleKey: 'exp_chapter_videos',
+    anchor: '#video-ads',
+    camera: [-1.5, 0.6, 6],
+    lookAt: [0, 0, -4],
+  },
+  {
     id: 'trust',
     label: 'Trust — Reviews & Reach',
     titleKey: 'exp_chapter_trust',
