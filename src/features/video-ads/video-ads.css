@@ -305,70 +305,18 @@
 }
 
 .va-preview-layout {
-  display: grid;
-  grid-template-columns: minmax(260px, 420px) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(36px, 7vw, 90px);
-  border-top: 1px solid var(--va-line);
-  padding-top: 52px;
-}
-.va-preview-reels {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  min-height: 430px;
-  isolation: isolate;
-}
-.va-preview-reels figure {
-  position: relative;
-  width: 86%;
-  border: 7px solid var(--va-paper);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 18px 50px #0003;
-}
-.va-preview-reels figure:nth-child(1) {
-  align-self: start;
-  transform: rotate(-5deg);
-  z-index: 4;
-}
-.va-preview-reels figure:nth-child(2) {
-  justify-self: end;
-  align-self: start;
-  transform: translateY(22px) rotate(5deg);
-  z-index: 3;
-}
-.va-preview-reels figure:nth-child(3) {
-  align-self: end;
-  transform: translateY(-12px) rotate(3deg);
-  z-index: 2;
-}
-.va-preview-reels figure:nth-child(4) {
-  justify-self: end;
-  align-self: end;
-  transform: translateY(6px) rotate(-4deg);
-  z-index: 1;
-}
-.va-preview-reels img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  display: block;
-}
-.va-preview-reels figcaption {
-  position: absolute;
-  inset-inline-start: 12px;
-  bottom: 12px;
   display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 12px;
-  border-radius: 99px;
-  color: white;
-  background: #2e246bef;
-  direction: ltr;
-  font-size: 0.78rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  border-top: 1px solid var(--va-line);
+  padding-top: 44px;
+}
+.va-preview-layout > ul {
+  align-self: stretch;
+}
+.va-preview-layout .va-description {
+  margin-block: 14px 0;
 }
 
 @media (max-width: 767px) {
@@ -414,12 +362,15 @@
     align-items: start;
   }
   .va-preview-layout {
-    grid-template-columns: 1fr;
-    gap: 34px;
+    gap: 18px;
+    padding-top: 32px;
   }
-  .va-preview-reels {
-    max-width: 390px;
-    min-height: 320px;
+  .va-preview-layout .va-category {
+    margin-bottom: 10px;
+  }
+  .va-preview-layout .va-description {
+    font-size: 0.95rem;
+    line-height: 1.65;
   }
 }
 

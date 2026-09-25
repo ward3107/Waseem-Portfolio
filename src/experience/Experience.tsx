@@ -11,6 +11,7 @@ import ServicesOverlay from './chapters/ServicesOverlay';
 import AIOverlay from './chapters/AIOverlay';
 import ProjectsOverlay from './chapters/ProjectsOverlay';
 import TrustOverlay from './chapters/TrustOverlay';
+import VideosOverlay from './chapters/VideosOverlay';
 import ContactOverlay from './chapters/ContactOverlay';
 
 // Maps a storyboard chapter id to its DOM overlay. Handled separately: chapter
@@ -20,6 +21,7 @@ const OVERLAY_BY_ID: Record<string, React.FC<{ index: number; total: number }>> 
   about: AboutOverlay,
   services: ServicesOverlay,
   ai: AIOverlay,
+  videos: VideosOverlay,
   trust: TrustOverlay,
   contact: ContactOverlay,
 };
