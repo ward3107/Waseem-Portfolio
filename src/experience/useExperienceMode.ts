@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
-import { useMediaQuery } from '@/shared/hooks/useMediaQuery';
 import { useWebGLSupport } from './useWebGLSupport';
 
 export type ExperienceMode = 'classic' | '3d';
@@ -8,8 +7,8 @@ export type ExperienceMode = 'classic' | '3d';
 /**
  * Whether capable visitors get the 3D experience by default.
  *
- * The immersive experience is the default on capable desktop devices. Phones,
- * tablets and coarse-pointer devices receive the faster classic homepage.
+ * The immersive experience is the default on capable devices, including phones.
+ * Rendering quality adapts separately; a small screen is not an opt-out.
  *
  * The classic site remains the guaranteed fallback for everyone else —
  * reduced-motion, no-WebGL, search crawlers (kept on the content-rich classic
@@ -53,7 +52,6 @@ function isCrawler(): boolean {
 export function useExperienceMode(): ExperienceMode {
   const prefersReducedMotion = usePrefersReducedMotion();
   const hasWebGL = useWebGLSupport();
-  const hasDesktopInput = useMediaQuery('(min-width: 1024px) and (pointer: fine)');
 
   // URL flags + crawler check are read once on mount — they don't change
   // without a reload. crawler goes in state so the first paint (before effects)
@@ -73,7 +71,7 @@ export function useExperienceMode(): ExperienceMode {
 
   if (flags.forceClassic || flags.crawler) return 'classic';
 
-  const capable = hasWebGL && !prefersReducedMotion && (hasDesktopInput || flags.request3D);
+  const capable = hasWebGL && !prefersReducedMotion;
   if (!capable) return 'classic';
 
   return ENABLED_BY_DEFAULT || flags.request3D ? '3d' : 'classic';

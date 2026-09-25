@@ -8,8 +8,8 @@ export type QualityTier = 'high' | 'low';
  *   - 'high' — desktop/laptop (≥1024px): full effects (glass transmission
  *     material, richer environment, higher DPR, the projects fly-through).
  *   - 'low'  — phones/tablets: cheaper materials, capped DPR, fewer particles,
- *     and the DOM project cards instead of the 3D gallery. Keeps the experience
- *     smooth on battery-powered GPUs.
+ *     while preserving the live 3D project gallery, morphs and touch interaction.
+ *     Reduces the cost of the experience on battery-powered GPUs.
  *
  * Reactive, so rotating a tablet or resizing a window re-tiers on the fly.
  */

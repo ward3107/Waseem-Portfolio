@@ -122,13 +122,23 @@ const ProjectsScene: React.FC = () => {
         }
       }
     };
+    // A vertical touch scroll cancels the pointer stream. It must never be
+    // treated as a tap and unexpectedly open a project in another tab.
+    const onCancel = () => {
+      dragging.current = false;
+      snapPending.current = true;
+      downIndex.current = -1;
+      hovering.current = false;
+      document.body.style.cursor = 'auto';
+    };
     window.addEventListener('pointermove', onMove, { passive: true });
     window.addEventListener('pointerup', onUp, { passive: true });
-    window.addEventListener('pointercancel', onUp, { passive: true });
+    window.addEventListener('pointercancel', onCancel, { passive: true });
     return () => {
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('pointercancel', onUp);
+      window.removeEventListener('pointercancel', onCancel);
+      document.body.style.cursor = 'auto';
     };
   }, []);
 

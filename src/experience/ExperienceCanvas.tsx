@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { AdaptiveDpr, AdaptiveEvents, Preload } from '@react-three/drei';
 import Scene from './Scene';
@@ -8,7 +8,7 @@ import type { QualityTier } from './useQualityTier';
  * The React Three Fiber `<Canvas>` — deliberately the ONLY module that pulls in
  * @react-three/fiber, drei, and three. It is loaded via React.lazy from
  * Experience.tsx, so the entire WebGL bundle is a separate async chunk that
- * reduced-motion / no-WebGL / mobile visitors (who render the classic DOM site)
+ * reduced-motion / no-WebGL visitors (who render the classic DOM site)
  * never download.
  *
  * Performance posture (matches the rest of the codebase):
@@ -61,8 +61,18 @@ interface ExperienceCanvasProps {
 }
 
 const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({ onContextLost, tier }) => {
+  const [visible, setVisible] = useState(() => document.visibilityState !== 'hidden');
+  useEffect(() => {
+    const update = () => setVisible(document.visibilityState !== 'hidden');
+    document.addEventListener('visibilitychange', update);
+    return () => document.removeEventListener('visibilitychange', update);
+  }, []);
+
   return (
     <Canvas
+      // Keep the scene and textures mounted while backgrounded, but stop GPU
+      // work. Resume the same scene when returning from WhatsApp or another tab.
+      frameloop={visible ? 'always' : 'never'}
       // Cap the pixel ratio harder on the low tier — phones have very high DPRs,
       // and rendering at native resolution is the single biggest mobile cost.
       dpr={tier === 'high' ? [1, 1.5] : [1, 1]}

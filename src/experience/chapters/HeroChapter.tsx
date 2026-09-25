@@ -62,9 +62,11 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
     return () => {
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
       document.body.style.cursor = 'auto';
     };
   }, []);
