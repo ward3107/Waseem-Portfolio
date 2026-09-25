@@ -269,6 +269,39 @@
   font-size: 0.8rem;
   margin-top: 18px;
 }
+.va-souvlaki {
+  padding-block: 80px;
+  border-bottom: 1px solid var(--va-line);
+  scroll-margin-top: 90px;
+}
+.va-souvlaki .va-case-heading { --case-accent: #2877aa; }
+.va-souvlaki-reels {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+}
+.va-souvlaki-reel { min-width: 0; }
+.va-souvlaki-reel .va-player { border-radius: 18px; }
+.va-souvlaki-reel figcaption {
+  color: var(--va-muted);
+  font-size: 0.9rem;
+  margin-top: 12px;
+}
+@media (max-width: 900px) {
+  .va-souvlaki-reels { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .va-souvlaki-reels {
+    grid-auto-columns: minmax(75%, 1fr);
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 10px 10px 30px;
+    margin-inline: -10px;
+  }
+  .va-souvlaki-reel { scroll-snap-align: center; }
+}
 .va-direct {
   display: inline-block;
   font-size: 0.8rem;

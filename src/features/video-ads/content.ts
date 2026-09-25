@@ -44,6 +44,18 @@ export const VIDEO_ADS: VideoAd[] = [
   },
 ];
 
+export const SOUVLAKI_REELS = [
+  '1000333124',
+  '1000333189',
+  '1000333190',
+  '1000333191',
+  '1000333192',
+].map((name, index) => ({
+  src: `/assets/video-ads/souvlaki/${name}.mp4`,
+  poster: `/assets/video-ads/souvlaki/${name}.webp`,
+  number: index + 1,
+}));
+
 type ProjectCopy = {
   project: string;
   tagline: string;
@@ -82,6 +94,9 @@ type PageCopy = {
   previewTitle: string;
   previewText: string;
   explore: string;
+  souvlakiTitle: string;
+  souvlakiIntro: string;
+  souvlakiWatch: string;
   projects: Record<VideoAd['id'], ProjectCopy>;
 };
 
@@ -90,7 +105,7 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     title: 'Social Video Portfolio | Waseem',
     heading: 'Real products.\nStories made for the feed.',
     intro:
-      'Four vertical social-video edits, built from original product photography and shaped for clear, fast mobile storytelling.',
+      'Social-video work for GreenTouch, NINNYO FLOWERS and Souvlaki, made for mobile viewing.',
     category: 'Video editing for brands',
     cta: 'Get a video for your business',
     prefill: 'Hi Waseem, I saw your social-video portfolio and would like a reel for my business.',
@@ -108,10 +123,13 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     ask: 'Have the photos? Let’s make them move.',
     askText:
       'Send your product photos and the message people should remember. I’ll shape the pacing, captions, music and final call to action around your business.',
-    previewTitle: 'Four social edits. Every frame has a job.',
+    previewTitle: 'Social video made for the phone.',
     previewText:
-      'Watch GreenTouch and three NINNYO FLOWERS reels: vertical social ads built from real product photos, Hebrew copy and music.',
+      'Watch GreenTouch, NINNYO FLOWERS and five Souvlaki restaurant reels.',
     explore: 'View the video work',
+    souvlakiTitle: 'Souvlaki',
+    souvlakiIntro: 'Five vertical reels for the Greek restaurant in Kafr Yasif.',
+    souvlakiWatch: 'Watch Souvlaki reel',
     projects: {
       greentouch: {
         project: 'GreenTouch',
@@ -218,7 +236,7 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     title: 'תיק עבודות וידאו לסושיאל | Waseem',
     heading: 'מוצרים אמיתיים.\nסיפורים שנועדו לפיד.',
     intro:
-      'ארבע עבודות וידאו אנכיות לסושיאל, שנבנו מתמונות מוצר מקוריות ועברו עריכה ברורה, מהירה ומדויקת למובייל.',
+      'עבודות וידאו אנכיות ל־GreenTouch, ל־NINNYO FLOWERS ולמסעדת סופלאקי, מותאמות לצפייה בטלפון.',
     category: 'עריכת וידאו למותגים',
     cta: 'רוצים סרטון לעסק שלכם?',
     prefill: 'היי ואסים, ראיתי את עבודות הווידאו שלך ואשמח לריל עבור העסק שלי.',
@@ -236,10 +254,13 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     ask: 'יש לכם תמונות? בואו ניתן להן תנועה.',
     askText:
       'שלחו את תמונות המוצרים ואת המסר שחשוב שיזכרו. אתאים לעסק את הקצב, הכיתובים, המוזיקה וההנעה לפעולה.',
-    previewTitle: 'ארבע עריכות לסושיאל. לכל פריים יש תפקיד.',
+    previewTitle: 'סרטוני סושיאל שנועדו למסך הטלפון.',
     previewText:
-      'GreenTouch ושלושה רילים של NINNYO FLOWERS: סרטוני סושיאל אנכיים מתמונות מוצר אמיתיות, טקסט עברי ומוזיקה.',
+      'GreenTouch, ‏NINNYO FLOWERS וחמישה רילים למסעדת סופלאקי.',
     explore: 'לצפייה בעבודות הווידאו',
+    souvlakiTitle: 'סופלאקי',
+    souvlakiIntro: 'חמישה רילים אנכיים למסעדת סופלאקי בכפר יאסיף.',
+    souvlakiWatch: 'צפייה בריל של סופלאקי',
     projects: {
       greentouch: {
         project: 'GreenTouch',
@@ -332,7 +353,7 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     title: 'معرض فيديو للسوشيال | Waseem',
     heading: 'منتجات حقيقية.\nقصص صُممت للمنشورات.',
     intro:
-      'أربعة أعمال فيديو عمودية للسوشيال، صُنعت من صور منتجات أصلية وبمونتاج واضح وسريع يناسب الهاتف.',
+      'أعمال فيديو عمودية لـGreenTouch وNINNYO FLOWERS ومطعم سوفلاكي، مناسبة للمشاهدة على الهاتف.',
     category: 'مونتاج فيديو للعلامات التجارية',
     cta: 'تريدون فيديو لمشروعكم؟',
     prefill: 'مرحباً وسيم، شاهدت أعمال الفيديو وأرغب بريل لمشروعي.',
@@ -350,10 +371,13 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     ask: 'لديكم الصور؟ لنمنحها الحركة.',
     askText:
       'أرسلوا صور المنتجات والرسالة التي تريدون أن يتذكّرها الناس. سأبني الإيقاع والنصوص والموسيقى والدعوة للتواصل بما يناسب مشروعكم.',
-    previewTitle: 'أربعة مونتاجات للسوشيال. لكل لقطة دور.',
+    previewTitle: 'فيديوهات للسوشيال صُممت للهاتف.',
     previewText:
-      'GreenTouch وثلاثة ريلز لـNINNYO FLOWERS: فيديوهات عمودية بصور منتجات حقيقية ونص عبري وموسيقى.',
+      'GreenTouch وNINNYO FLOWERS وخمسة ريلز لمطعم سوفلاكي.',
     explore: 'شاهد أعمال الفيديو',
+    souvlakiTitle: 'سوفلاكي',
+    souvlakiIntro: 'خمسة ريلز عمودية لمطعم سوفلاكي في كفر ياسيف.',
+    souvlakiWatch: 'شاهد ريل سوفلاكي',
     projects: {
       greentouch: {
         project: 'GreenTouch',
