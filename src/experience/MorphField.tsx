@@ -153,6 +153,7 @@ const MorphField: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   const count = tier === 'high' ? 5000 : 1600;
   const font = useFont('/fonts/logo-font.json');
   const points = useRef<Points>(null);
+  const lastMorph = useRef({ geometry: null as BufferGeometry | null, journey: -1 });
 
   const { shapes, geometry, material, swirl } = useMemo(() => {
     const w = buildW(count, font);
@@ -196,12 +197,17 @@ const MorphField: React.FC<{ tier: QualityTier }> = ({ tier }) => {
     const to = shapes[i + 1];
 
     // Morph, with a mid-flight bulge so particles swarm rather than slide.
-    const arr = (obj.geometry.attributes.position as BufferAttribute).array as Float32Array;
-    const bulge = Math.sin(Math.PI * t) * 0.9;
-    for (let k = 0; k < arr.length; k++) {
-      arr[k] = from[k] + (to[k] - from[k]) * t + swirl[k] * bulge;
+    // Shape changes only with scroll. Keep the idle rotation alive without
+    // recalculating/uploading thousands of positions on every resting frame.
+    if (lastMorph.current.geometry !== obj.geometry || lastMorph.current.journey !== journey) {
+      const arr = (obj.geometry.attributes.position as BufferAttribute).array as Float32Array;
+      const bulge = Math.sin(Math.PI * t) * 0.9;
+      for (let k = 0; k < arr.length; k++) {
+        arr[k] = from[k] + (to[k] - from[k]) * t + swirl[k] * bulge;
+      }
+      (obj.geometry.attributes.position as BufferAttribute).needsUpdate = true;
+      lastMorph.current = { geometry: obj.geometry, journey };
     }
-    (obj.geometry.attributes.position as BufferAttribute).needsUpdate = true;
 
     // Chapter tint.
     colorA.set(SHAPE_COLORS[i]);

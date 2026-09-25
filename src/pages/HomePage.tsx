@@ -37,8 +37,8 @@ const [ACT_IDENTITY, ACT_SERVICES, ACT_AI, ACT_WORK, ACT_CONTACT] = JOURNEY_ACTS
 // The immersive 3D scroll-storytelling experience is code-split so its WebGL
 // bundle (react-three-fiber + drei + three + lenis) only downloads for visitors
 // who actually enter it. useExperienceMode() keeps the classic site as the
-// default and only returns '3d' for a capable desktop that opted in (see
-// src/experience/useExperienceMode.ts). Reduced-motion, no-WebGL, mobile, and
+// fallback and returns '3d' for capable desktop and mobile devices (see
+// src/experience/useExperienceMode.ts). Reduced-motion, no-WebGL, and
 // ?classic all resolve to the classic path below.
 const Experience = lazy(() => import('@/experience/Experience'));
 
@@ -47,7 +47,7 @@ const Experience = lazy(() => import('@/experience/Experience'));
  *  here as five colour acts, in scroll order, so the visitor never leaves the
  *  page. The old routes redirect to the matching anchor (see App.tsx). This is
  *  also the guaranteed fallback for the 3D experience (reduced-motion /
- *  no-WebGL / mobile / opt-out).
+ *  no-WebGL / opt-out).
  *
  *  Each act keeps its sections' own ids (#about, #what-i-do, #ai-automation,
  *  #projects, #contact, …) so the nav and every CTA scroll straight to them. */

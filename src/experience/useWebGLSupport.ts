@@ -16,11 +16,11 @@ function detectWebGL(): boolean {
   }
   try {
     const canvas = document.createElement('canvas');
-    const gl =
-      canvas.getContext('webgl2') ||
-      canvas.getContext('webgl') ||
-      canvas.getContext('experimental-webgl');
+    // Three r170 requires WebGL2. Release the probe immediately so it does not
+    // occupy one of the limited GPU contexts available on mobile Safari.
+    const gl = canvas.getContext('webgl2');
     cached = Boolean(gl);
+    gl?.getExtension('WEBGL_lose_context')?.loseContext();
   } catch {
     cached = false;
   }

@@ -54,8 +54,8 @@ const ConversationAgent = lazy(() => import('./components/ConversationAgent'));
  * (3D, in Scene) plus the translated headline/CTAs (DOM, HeroOverlay). The
  * remaining chapters are labelled scaffolds until Phases 3–4 fill them in.
  *
- * Only renders on a capable desktop that opted in (see useExperienceMode);
- * everyone else gets the classic site.
+ * Runs by default on capable desktops and phones (see useExperienceMode).
+ * Phones retain the same scenes with a smaller GPU rendering budget.
  */
 const Experience: React.FC = () => {
   const [canvasFailed, setCanvasFailed] = useState(false);
@@ -121,7 +121,7 @@ const Experience: React.FC = () => {
               key={chapter.id}
               id={sectionId}
               aria-label={chapter.label}
-              className="flex min-h-screen flex-col items-center justify-center px-6 py-24 text-center"
+              className="flex min-h-[100svh] flex-col items-center justify-center px-5 py-24 text-center sm:px-6"
             >
               {i === 0 ? (
                 // Chapter 1 — real hero content (its own single <h1>).

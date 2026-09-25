@@ -64,11 +64,21 @@ export function useLenisScroll(enabled: boolean): void {
       publish();
       frame = requestAnimationFrame(raf);
     };
-    frame = requestAnimationFrame(raf);
+    const visibilityChanged = () => {
+      cancelAnimationFrame(frame);
+      if (document.visibilityState !== 'hidden') {
+        measure();
+        publish();
+        frame = requestAnimationFrame(raf);
+      }
+    };
+    document.addEventListener('visibilitychange', visibilityChanged);
+    visibilityChanged();
     publish();
 
     return () => {
       window.removeEventListener('resize', measure);
+      document.removeEventListener('visibilitychange', visibilityChanged);
       cancelAnimationFrame(frame);
       lenis.destroy();
       scrollStore.reset();
