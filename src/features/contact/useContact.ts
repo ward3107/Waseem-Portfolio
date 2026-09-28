@@ -18,6 +18,8 @@ export interface ContactInfo {
   whatsappDisplay: string;
   github: string;
   linkedin: string;
+  instagram: string;
+  facebook: string;
   twitter: string;
 }
 
@@ -44,6 +46,8 @@ export function useContact(): ContactInfo {
           : formatWhatsapp(whatsappNumber),
       github: prefer(settings?.github_url, CONTACT.github),
       linkedin: prefer(settings?.linkedin_url, CONTACT.linkedin),
+      instagram: CONTACT.instagram,
+      facebook: CONTACT.facebook,
       twitter: prefer(settings?.twitter_url, CONTACT.twitter),
     };
   }, [settings]);

@@ -10,6 +10,7 @@ import HeroBackground from './HeroBackground';
 import AnimatedHeadline from './AnimatedHeadline';
 import ProfileCard from './ProfileCard';
 import TrustBadges from '@/shared/ui/TrustBadges';
+import SocialLinks from '@/shared/ui/SocialLinks';
 import Logo3D from '@/shared/three/Logo3D';
 import { useWebGLSupport } from '@/experience/useWebGLSupport';
 
@@ -194,6 +195,15 @@ const Hero: React.FC = () => {
             >
               {t('hero_cta_view')}
             </motion.a>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.38, duration: 0.45 }}
+            className="mt-3 sm:mt-4"
+          >
+            <SocialLinks />
           </motion.div>
 
           <TrustBadges className="mt-3 sm:mt-4 justify-start rtl:justify-end" variant="hero" />

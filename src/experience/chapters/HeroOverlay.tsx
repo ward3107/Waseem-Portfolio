@@ -6,6 +6,7 @@ import { useContact } from '@/features/contact/useContact';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import HeadingAccent from '../components/HeadingAccent';
 import { useHeadingLeading } from './ChapterOverlay';
+import SocialLinks from '@/shared/ui/SocialLinks';
 
 /**
  * Chapter 1 DOM overlay — the real, translated, crawlable hero content that
@@ -98,6 +99,15 @@ const HeroOverlay: React.FC = () => {
         >
           {t('hero_cta_view')}
         </a>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.62, duration: 0.5 }}
+        className="pointer-events-auto mt-4"
+      >
+        <SocialLinks variant="dark" />
       </motion.div>
 
       <motion.div
