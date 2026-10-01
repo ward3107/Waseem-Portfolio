@@ -76,6 +76,14 @@ export const CHAPTERS: Chapter[] = [
     lookAt: [0, 0, -4],
   },
   {
+    id: 'social',
+    label: 'Social media — Content & management',
+    titleKey: 'exp_chapter_social',
+    anchor: '#social-media',
+    camera: [1, 0.8, 6],
+    lookAt: [0, 0, -4],
+  },
+  {
     id: 'trust',
     label: 'Trust — Reviews & Reach',
     titleKey: 'exp_chapter_trust',
@@ -109,4 +117,3 @@ export function resolveChapter(progress: number): {
   const chapter = Math.floor(scaled);
   return { chapter, chapterProgress: scaled - chapter };
 }
-

@@ -43,6 +43,7 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'About', href: '/#about' },
     { name: 'Projects', href: '/#projects' },
     { name: 'Video Ads', href: '/video-ads' },
+    { name: 'Social Media', href: '/#social-media' },
     { name: 'Contact', href: '/#contact' },
   ],
   he: [
@@ -51,6 +52,7 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'אודות', href: '/#about' },
     { name: 'פרויקטים', href: '/#projects' },
     { name: 'סרטוני פרסום', href: '/video-ads' },
+    { name: 'סושיאל מדיה', href: '/#social-media' },
     { name: 'צור קשר', href: '/#contact' },
   ],
   ar: [
@@ -59,6 +61,7 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
     { name: 'من أنا', href: '/#about' },
     { name: 'مشاريع', href: '/#projects' },
     { name: 'إعلانات فيديو', href: '/video-ads' },
+    { name: 'سوشيال ميديا', href: '/#social-media' },
     { name: 'اتصل بي', href: '/#contact' },
   ],
 };

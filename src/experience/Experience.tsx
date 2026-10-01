@@ -13,6 +13,7 @@ import ProjectsOverlay from './chapters/ProjectsOverlay';
 import TrustOverlay from './chapters/TrustOverlay';
 import VideosOverlay from './chapters/VideosOverlay';
 import ContactOverlay from './chapters/ContactOverlay';
+import SocialMediaSection from '@/features/social-media/SocialMediaSection';
 
 // Maps a storyboard chapter id to its DOM overlay. Handled separately: chapter
 // 1 (hero) owns the page's single <h1>; projects takes the quality tier (it
@@ -128,6 +129,10 @@ const Experience: React.FC = () => {
               {i === 0 ? (
                 // Chapter 1 — real hero content (its own single <h1>).
                 <HeroOverlay />
+              ) : chapter.id === 'social' ? (
+                <div className="w-full max-w-5xl">
+                  <SocialMediaSection embedded />
+                </div>
               ) : chapter.id === 'projects' ? (
                 // Projects — 3D fly-through gallery (in the canvas) is the
                 // visual; this overlay is the accessible heading + link index.
@@ -139,7 +144,6 @@ const Experience: React.FC = () => {
           );
         })}
       </div>
-
     </div>
   );
 };

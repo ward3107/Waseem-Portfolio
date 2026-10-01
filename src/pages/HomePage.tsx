@@ -9,6 +9,7 @@ import VibeCoding from '@/features/ai/VibeCoding';
 import Projects from '@/features/projects/Projects';
 import VideoAdsPreview from '@/features/video-ads/VideoAdsPreview';
 import Reviews from '@/features/reviews/Reviews';
+import SocialMediaSection from '@/features/social-media/SocialMediaSection';
 import Contact from '@/features/contact/Contact';
 import FAQ from '@/features/home/FAQ';
 import ScrollJourney from '@/features/journey/ScrollJourney';
@@ -74,6 +75,7 @@ const ClassicHome: React.FC = () => (
     <Act act={ACT_WORK}>
       <Projects />
       <VideoAdsPreview />
+      <SocialMediaSection />
       <Reviews />
     </Act>
     {/* Contact — answer the last questions, then the one clear action. */}

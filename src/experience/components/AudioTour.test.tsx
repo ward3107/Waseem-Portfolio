@@ -1,11 +1,13 @@
-import { act, cleanup, render } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import AudioTour from './AudioTour';
+import AudioHeaderControl from './AudioHeaderControl';
 import { audioTourStore } from '../audioTourStore';
 
 const locale = vi.hoisted(() => ({ language: 'he' }));
 vi.mock('@/contexts/LanguageContext', () => ({ useLanguage: () => locale }));
 let current: MockAudio;
+let observerCallback: IntersectionObserverCallback;
 class MockAudio extends EventTarget {
   src = '';
   muted = false;
@@ -17,6 +19,7 @@ class MockAudio extends EventTarget {
   playbackRate = 1;
   play = vi.fn(() => {
     this.paused = false;
+    this.dispatchEvent(new Event('play'));
     return Promise.resolve();
   });
   pause = vi.fn(() => {
@@ -37,6 +40,9 @@ beforeEach(() => {
   vi.stubGlobal(
     'IntersectionObserver',
     class {
+      constructor(callback: IntersectionObserverCallback) {
+        observerCallback = callback;
+      }
       observe() {}
       disconnect() {}
     }
@@ -50,6 +56,31 @@ afterEach(() => {
 });
 
 describe('Hebrew audio tour and mobile activation', () => {
+  it('uses one direct button to play, mute and play again without a menu', async () => {
+    render(
+      <>
+        <AudioTour />
+        <AudioHeaderControl />
+      </>
+    );
+    await act(async () => {
+      vi.runOnlyPendingTimers();
+    });
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'הפעל קריינות' }));
+    });
+    expect(current.muted).toBe(false);
+    expect(screen.queryByRole('menu')).toBeNull();
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'השתק קריינות' }));
+    });
+    expect(current.muted).toBe(true);
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'הפעל קריינות' }));
+    });
+    expect(current.muted).toBe(false);
+    expect(current.paused).toBe(false);
+  });
   it('registers Hebrew controls and plays the approved clip at natural speed', async () => {
     render(<AudioTour />);
     await act(async () => {
@@ -100,5 +131,54 @@ describe('Hebrew audio tour and mobile activation', () => {
     });
     expect(current.play).toHaveBeenCalledOnce();
     expect(current.muted).toBe(false);
+  });
+  it.each(['he', 'en', 'ar'])('narrates video and social sections in %s', async (language) => {
+    locale.language = language;
+    const videoSection = document.createElement('section');
+    videoSection.id = 'video-ads';
+    const socialSection = document.createElement('section');
+    socialSection.id = 'social-media';
+    document.body.append(videoSection, socialSection);
+    render(<AudioTour />);
+    await act(async () => {
+      vi.runOnlyPendingTimers();
+      window.dispatchEvent(new Event('pointerup'));
+    });
+    await act(async () => {
+      observerCallback(
+        [
+          { target: videoSection, isIntersecting: true, intersectionRatio: 1 },
+        ] as unknown as IntersectionObserverEntry[],
+        {} as IntersectionObserver
+      );
+    });
+    expect(current.src).toBe(`/audio/${language}/videos.mp3`);
+    expect(current.playbackRate).toBe(1);
+    await act(async () => {
+      observerCallback(
+        [
+          { target: videoSection, isIntersecting: false, intersectionRatio: 0 },
+          { target: socialSection, isIntersecting: true, intersectionRatio: 1 },
+        ] as unknown as IntersectionObserverEntry[],
+        {} as IntersectionObserver
+      );
+    });
+    expect(current.src).toBe(`/audio/${language}/social.mp3`);
+    videoSection.remove();
+    socialSection.remove();
+  });
+  it('pauses narration when an audible video starts', async () => {
+    render(<AudioTour />);
+    await act(async () => {
+      vi.runOnlyPendingTimers();
+      window.dispatchEvent(new Event('pointerup'));
+    });
+    const video = document.createElement('video');
+    document.body.append(video);
+    await act(async () => {
+      video.dispatchEvent(new Event('play'));
+    });
+    expect(current.paused).toBe(true);
+    video.remove();
   });
 });

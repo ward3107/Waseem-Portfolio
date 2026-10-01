@@ -15,8 +15,7 @@ import { audioTourStore } from '../audioTourStore';
  * per-visit cost or latency and the page stays fast.
  *
  * Scope: the narration is recorded per language — English, Hebrew, and Arabic
- * each have their own clip folder (public/audio/<lang>/), with a young Hebrew narrator approved in preview. English and Arabic
- * retain their existing recorded voices. A visitor hears their own language; any
+ * each have their own clip folder (public/audio/<lang>/), with the same young narrator approved in preview across all languages. A visitor hears their own language; any
  * language without a folder falls back to English. Adding one is a folder of
  * clips plus an entry in CLIPS_BY_LANG.
  *
@@ -41,6 +40,8 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
     { id: 'what-i-do', src: '/audio/en/services.mp3' },
     { id: 'ai-automation', src: '/audio/en/ai.mp3' },
     { id: 'projects', src: '/audio/en/projects.mp3' },
+    { id: 'video-ads', src: '/audio/en/videos.mp3' },
+    { id: 'social-media', src: '/audio/en/social.mp3' },
     { id: 'reviews', src: '/audio/en/trust.mp3' },
     { id: 'contact', src: '/audio/en/contact.mp3' },
   ],
@@ -49,6 +50,8 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
     { id: 'what-i-do', src: '/audio/he/services.mp3' },
     { id: 'ai-automation', src: '/audio/he/ai.mp3' },
     { id: 'projects', src: '/audio/he/projects.mp3' },
+    { id: 'video-ads', src: '/audio/he/videos.mp3' },
+    { id: 'social-media', src: '/audio/he/social.mp3' },
     { id: 'reviews', src: '/audio/he/trust.mp3' },
     { id: 'contact', src: '/audio/he/contact.mp3' },
   ],
@@ -57,17 +60,15 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
     { id: 'what-i-do', src: '/audio/ar/services.mp3' },
     { id: 'ai-automation', src: '/audio/ar/ai.mp3' },
     { id: 'projects', src: '/audio/ar/projects.mp3' },
+    { id: 'video-ads', src: '/audio/ar/videos.mp3' },
+    { id: 'social-media', src: '/audio/ar/social.mp3' },
     { id: 'reviews', src: '/audio/ar/trust.mp3' },
     { id: 'contact', src: '/audio/ar/contact.mp3' },
   ],
 };
 
-// The clips are recorded slowly; playing a little under 1× (with pitch
-// preserved, so the deep tone stays) makes the delivery slower still without
-// regenerating anything.
-const PLAYBACK_RATE = 0.82;
-
-// Hebrew uses the approved young narrator at the preview's natural speed.
+// All clips use the approved narrator and natural preview speed.
+const PLAYBACK_RATE = 1;
 const NARRATION_DISABLED_LANGS: string[] = [];
 
 // The Web Audio analyser tap exists ONLY to drive the assistant face's lip-sync
@@ -181,9 +182,8 @@ const AudioTour: React.FC = () => {
     setMuted(true);
     const a = new Audio();
     a.preload = 'none';
-    // Slow, deliberate delivery — keep the deep pitch (no chipmunk effect) while
-    // playing a touch slower than recorded.
-    a.defaultPlaybackRate = language === 'he' ? 1 : PLAYBACK_RATE;
+    // Preserve the approved voice and natural recorded pace.
+    a.defaultPlaybackRate = PLAYBACK_RATE;
     a.playbackRate = a.defaultPlaybackRate;
     (a as HTMLAudioElement & { preservesPitch?: boolean }).preservesPitch = true;
     audioRef.current = a;
@@ -207,18 +207,22 @@ const AudioTour: React.FC = () => {
       analyserFailedRef.current = false;
       audioTourStore.reset();
     };
-  }, [clips, language]);
+  }, [clips]);
 
   // Play a section's clip. Auto-triggered plays happen once per section; a
   // forced play (the Listen/Play buttons) always replays the current one.
   const playSection = useCallback(
     (id: string, force = false) => {
+      // A visitor watching a reel owns the speakers until the dialog closes.
+      if (audioTourStore.get().conversing || document.querySelector('[role="dialog"] video'))
+        return;
       const a = audioRef.current;
       const clip = clips?.find((c) => c.id === id);
       if (!a || !clip) return;
       if (!force && playedRef.current.has(id)) return;
       if (a.src.indexOf(clip.src) === -1) a.src = clip.src;
       else a.currentTime = 0;
+      a.playbackRate = PLAYBACK_RATE;
       a.muted = mutedRef.current;
       // A rejected play (no gesture yet, or interrupted) is fine to swallow —
       // the control still reflects the real state via the audio events.
@@ -344,6 +348,17 @@ const AudioTour: React.FC = () => {
     });
   }, []);
 
+  // Stop narration when an audible video starts, so voices never overlap.
+  useEffect(() => {
+    const onMediaPlay = (event: Event) => {
+      if (event.target instanceof HTMLVideoElement && !event.target.muted) {
+        audioRef.current?.pause();
+      }
+    };
+    document.addEventListener('play', onMediaPlay, true);
+    return () => document.removeEventListener('play', onMediaPlay, true);
+  }, []);
+
   const enable = (startMuted: boolean) => {
     setEnabled(true);
     enabledRef.current = true;
@@ -415,8 +430,7 @@ const AudioTour: React.FC = () => {
     } catch {
       /* storage blocked — fine */
     }
-    if (!enabledRef.current) enable(false);
-    else unmute();
+    enable(false);
   };
 
   // Publish coarse playback state so the detached control surface (the header
@@ -466,8 +480,18 @@ const AudioTour: React.FC = () => {
     if (!clips || wasDismissed()) return;
     let released = false;
 
-    const activate = () => {
-      if (released || wasDismissed() || unmutedRef.current) return;
+    const activate = (event?: Event) => {
+      // The header button owns its gesture; global auto-start must not toggle
+      // sound before the direct click handler runs.
+      if (event?.target instanceof Element && event.target.closest('[data-audio-tour-control]'))
+        return;
+      if (
+        released ||
+        wasDismissed() ||
+        unmutedRef.current ||
+        document.querySelector('[role="dialog"] video')
+      )
+        return;
       if (!enabledRef.current)
         enable(false); // muted auto-start hadn't run yet
       else unmute(); // both restart the current (hero) section from the top
@@ -485,34 +509,34 @@ const AudioTour: React.FC = () => {
       window.removeEventListener('click', activate, cap);
     };
 
-    const onTouchStart = () => {
-      if (!released) activate();
+    const onTouchStart = (event: TouchEvent) => {
+      if (!released) activate(event);
     };
-    const onTouchMove = () => {
+    const onTouchMove = (event: TouchEvent) => {
       if (released) return;
-      activate();
+      activate(event);
     };
-    const onTouchEnd = () => {
+    const onTouchEnd = (event: TouchEvent) => {
       if (released) return;
-      activate();
+      activate(event);
     };
-    const onWheel = () => {
+    const onWheel = (event: WheelEvent) => {
       if (released) return;
-      activate();
+      activate(event);
     };
-    const onKeyDown = () => {
+    const onKeyDown = (event: KeyboardEvent) => {
       if (!released) {
-        activate();
+        activate(event);
       }
     };
     const onMouseDown = (e: PointerEvent) => {
       if (!released && e.pointerType === 'mouse') {
-        activate();
+        activate(e);
       }
     };
 
     // Touch/pen activation may only be granted on release, rather than down.
-    const onPointerUp = () => activate();
+    const onPointerUp = (event: PointerEvent) => activate(event);
     const cap = { capture: true } as const;
     const blockOpts = { capture: true, passive: true } as const;
     window.addEventListener('touchstart', onTouchStart, cap);
