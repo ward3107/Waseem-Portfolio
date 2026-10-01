@@ -40,3 +40,11 @@ scripts/nap-audit.config.mjs
 *.njsproj
 *.sln
 *.sw?
+
+# Generated portfolio magazine pages
+public/gallery/
+public/stories/
+public/en/gallery/
+public/en/stories/
+public/ar/gallery/
+public/ar/stories/

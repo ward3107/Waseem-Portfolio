@@ -6,6 +6,7 @@
 declare global {
   interface Window {
     gtag?: (command: string, targetId: string, config?: Record<string, unknown>) => void;
+    vasiaTrack?: (name: string, data?: Record<string, unknown>) => void;
     webkitAudioContext?: typeof AudioContext;
   }
 }
@@ -21,8 +22,20 @@ export const hasGtag = (): boolean => {
  * Safely call gtag with proper type checking
  */
 export const trackEvent = (eventName: string, parameters?: Record<string, unknown>): void => {
-  if (hasGtag() && window.gtag) {
-    window.gtag('event', eventName, parameters);
+  // Only successful form submissions count as received leads. Link clicks
+  // are captured once by the delegated contact-intent listener.
+  if (typeof window === 'undefined') return;
+  if (eventName === 'generate_lead') {
+    if (parameters?.form_type === 'project_wizard' || parameters?.saved === true) {
+      window.vasiaTrack?.('lead_submitted', {
+        channel: 'form',
+        source: parameters?.form_type || 'discount_game',
+      });
+    } else if (parameters?.source === 'exit_intent') {
+      window.vasiaTrack?.('contact_intent', { channel: 'whatsapp', source: 'exit_intent' });
+    }
+  } else if (eventName === 'testimonial_submitted') {
+    window.vasiaTrack?.('testimonial_submitted');
   }
 };
 

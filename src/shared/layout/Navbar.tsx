@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
   Blocks,
   BookOpen,
+  Images,
+  PanelsTopLeft,
   Bot,
   Briefcase,
   Clapperboard,
@@ -27,6 +29,12 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   '/#projects': Briefcase,
   '/video-ads': Clapperboard,
   '/#contact': Mail,
+  '/gallery/': Images,
+  '/en/gallery/': Images,
+  '/ar/gallery/': Images,
+  '/stories/': PanelsTopLeft,
+  '/en/stories/': PanelsTopLeft,
+  '/ar/stories/': PanelsTopLeft,
   '/blog/': BookOpen,
   '/en/blog/': BookOpen,
   '/ar/blog/': BookOpen,
@@ -107,7 +115,7 @@ const Navbar: React.FC = () => {
                   title={link.name}
                   aria-label={link.name}
                   onClick={(e) => {
-                    if (link.href.endsWith('/blog/')) return;
+                    if (/\/(blog|gallery|stories)\/$/.test(link.href)) return;
                     e.preventDefault();
                     navigateToSection(link.href);
                   }}
@@ -218,7 +226,7 @@ const Navbar: React.FC = () => {
                       key={link.name}
                       href={link.href}
                       onClick={(e) => {
-                        if (link.href.endsWith('/blog/')) return;
+                        if (/\/(blog|gallery|stories)\/$/.test(link.href)) return;
                         e.preventDefault();
                         setIsOpen(false);
                         setTimeout(() => navigateToSection(link.href), 100);

@@ -624,7 +624,7 @@ const blogArticleUrl = (l, s) => `${SITE}${blogPrefix(l)}/blog/${s}/`;
 const blogIndexEntries = BLOG_LANGS.map(
   (l) => `  <url>
     <loc>${blogIndexUrl(l)}</loc>
-    <lastmod>${LASTMOD}</lastmod>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
 ${BLOG_LANGS.map((a) => `    <xhtml:link rel="alternate" hreflang="${a}" href="${blogIndexUrl(a)}" />`).join('\n')}
@@ -640,7 +640,7 @@ const blogArticleEntries = ARTICLES.flatMap((a) => {
   return langs.map(
     (l) => `  <url>
     <loc>${blogArticleUrl(l, a.slug)}</loc>
-    <lastmod>${LASTMOD}</lastmod>
+    <lastmod>2026-10-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
 ${langs.map((x) => `    <xhtml:link rel="alternate" hreflang="${x}" href="${blogArticleUrl(x, a.slug)}" />`).join('\n')}
@@ -698,6 +698,7 @@ ${cityEntries}
 
 ${blogIndexEntries}
 ${blogArticleEntries}
+${['he','en','ar'].flatMap(l=>['gallery','stories','stories/ninnyo-friday','stories/greentouch','stories/wordpress-studio'].map(path=>simpleEntry(`${SITE}${blogPrefix(l)}/${path}/`, '0.7'))).join('\n')}
 
 </urlset>
 `;

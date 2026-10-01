@@ -74,6 +74,7 @@ const CookieBanner: React.FC = () => {
     // (Safari private mode), otherwise Accept/Decline throws and the banner
     // re-appears on every load and never records consent.
     safeSetItem('cookie-consent', JSON.stringify(prefs));
+    window.dispatchEvent(new Event('vasia:consent'));
     applyConsentMode(prefs);
     setIsVisible(false);
   };
@@ -96,7 +97,7 @@ const CookieBanner: React.FC = () => {
 
   const togglePreference = (key: keyof CookiePreferences) => {
     if (key === 'necessary') return; // Strictly necessary cannot be toggled
-    setPreferences(prev => ({ ...prev, [key]: !prev[key] }));
+    setPreferences((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   return (
@@ -110,7 +111,6 @@ const CookieBanner: React.FC = () => {
           className="fixed bottom-0 left-0 right-0 z-50 p-2 sm:p-4 md:p-6 flex justify-center pointer-events-none"
         >
           <div className="bg-white dark:bg-slate-900 w-full max-w-4xl rounded-xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 pointer-events-auto overflow-hidden flex flex-col md:flex-row shadow-brand-purple/10 transition-colors duration-300">
-
             {/* Left Side: Content — trimmed on mobile so the banner doesn't
                 cover half the viewport. Long body copy is hidden until the
                 user opens "Details" (or automatically visible on md+). */}
@@ -138,7 +138,6 @@ const CookieBanner: React.FC = () => {
                     className="overflow-hidden"
                   >
                     <div className="space-y-4 mb-6 border-t border-slate-100 dark:border-slate-800 pt-4">
-
                       {/* Necessary */}
                       <div className="flex items-start justify-between gap-4">
                         <div>
@@ -146,7 +145,9 @@ const CookieBanner: React.FC = () => {
                             {t('cookie_cat_necessary')}
                             <ShieldCheck size={14} className="text-brand-green" />
                           </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('cookie_cat_necessary_desc')}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            {t('cookie_cat_necessary_desc')}
+                          </p>
                         </div>
                         <button
                           type="button"
@@ -157,7 +158,9 @@ const CookieBanner: React.FC = () => {
                           disabled
                           className="relative inline-flex h-6 w-11 items-center rounded-full bg-brand-purple/50 cursor-not-allowed"
                         >
-                          <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${dir === 'rtl' ? '-translate-x-6' : 'translate-x-6'}`} />
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${dir === 'rtl' ? '-translate-x-6' : 'translate-x-6'}`}
+                          />
                         </button>
                       </div>
 
@@ -167,7 +170,9 @@ const CookieBanner: React.FC = () => {
                           <p className="font-bold text-sm text-slate-900 dark:text-white">
                             {t('cookie_cat_analytics')}
                           </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('cookie_cat_analytics_desc')}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            {t('cookie_cat_analytics_desc')}
+                          </p>
                         </div>
                         <button
                           type="button"
@@ -177,10 +182,17 @@ const CookieBanner: React.FC = () => {
                           onClick={() => togglePreference('analytics')}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 ${preferences.analytics ? 'bg-brand-purple' : 'bg-slate-200 dark:bg-slate-700'}`}
                         >
-                          <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${preferences.analytics
-                            ? (dir === 'rtl' ? '-translate-x-6' : 'translate-x-6')
-                            : (dir === 'rtl' ? '-translate-x-1' : 'translate-x-1')
-                            }`} />
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                              preferences.analytics
+                                ? dir === 'rtl'
+                                  ? '-translate-x-6'
+                                  : 'translate-x-6'
+                                : dir === 'rtl'
+                                  ? '-translate-x-1'
+                                  : 'translate-x-1'
+                            }`}
+                          />
                         </button>
                       </div>
 
@@ -190,7 +202,9 @@ const CookieBanner: React.FC = () => {
                           <p className="font-bold text-sm text-slate-900 dark:text-white">
                             {t('cookie_cat_marketing')}
                           </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('cookie_cat_marketing_desc')}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            {t('cookie_cat_marketing_desc')}
+                          </p>
                         </div>
                         <button
                           type="button"
@@ -200,13 +214,19 @@ const CookieBanner: React.FC = () => {
                           onClick={() => togglePreference('marketing')}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 ${preferences.marketing ? 'bg-brand-purple' : 'bg-slate-200 dark:bg-slate-700'}`}
                         >
-                          <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${preferences.marketing
-                            ? (dir === 'rtl' ? '-translate-x-6' : 'translate-x-6')
-                            : (dir === 'rtl' ? '-translate-x-1' : 'translate-x-1')
-                            }`} />
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition ${
+                              preferences.marketing
+                                ? dir === 'rtl'
+                                  ? '-translate-x-6'
+                                  : 'translate-x-6'
+                                : dir === 'rtl'
+                                  ? '-translate-x-1'
+                                  : 'translate-x-1'
+                            }`}
+                          />
                         </button>
                       </div>
-
                     </div>
                   </motion.div>
                 )}
@@ -247,7 +267,6 @@ const CookieBanner: React.FC = () => {
                 </>
               )}
             </div>
-
           </div>
         </motion.div>
       )}

@@ -23,6 +23,11 @@ export const useSectionNavigate = () => {
 
   return useCallback(
     (href: string, options?: { focusId?: string }) => {
+      // Generated editorial pages are full HTML documents outside the SPA.
+      if (/^\/(?:en\/|ar\/)?(?:blog|gallery|stories)(?:\/|$)/.test(href)) {
+        window.location.assign(href);
+        return;
+      }
       const [path, hash] = href.split('#');
       const targetPath = path || '/';
 

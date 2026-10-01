@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { MotionConfig } from 'framer-motion';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Analytics } from '@vercel/analytics/react';
 import Navbar from '@/shared/layout/Navbar';
 import Footer from '@/shared/layout/Footer';
 import AccessibilityToolbar from '@/shared/widgets/AccessibilityToolbar';
@@ -109,7 +108,10 @@ const AppContent: React.FC = () => {
           // (renders null) — no chrome so there's no 1-frame flash of navbar
           // before the client-side redirect fires.
           const isStandalone =
-            isAdmin || pathname === '/share-testimonial' || pathname === '/from-gbp' || pathname === '/start';
+            isAdmin ||
+            pathname === '/share-testimonial' ||
+            pathname === '/from-gbp' ||
+            pathname === '/start';
 
           const routes = (
             <Suspense fallback={<SectionSkeleton />}>
@@ -137,7 +139,11 @@ const AppContent: React.FC = () => {
             </Suspense>
           );
 
-          return isStandalone ? routes : <SiteShell focusMode={pathname === '/video-ads'}>{routes}</SiteShell>;
+          return isStandalone ? (
+            routes
+          ) : (
+            <SiteShell focusMode={pathname === '/video-ads'}>{routes}</SiteShell>
+          );
         }}
       </RouteTransition>
     </>
@@ -157,11 +163,6 @@ const App: React.FC = () => {
               <MotionConfig reducedMotion="user">
                 <AppContent />
               </MotionConfig>
-              {/* Vercel Analytics — auto no-op outside production, and the
-                    script/beacon are served same-origin via /_vercel/insights
-                    on Vercel deployments. Consent-Mode wiring lives in
-                    CookieBanner (analytics_storage gate). */}
-              <Analytics />
             </BrowserRouter>
           </WidgetProvider>
         </ThemeProvider>
