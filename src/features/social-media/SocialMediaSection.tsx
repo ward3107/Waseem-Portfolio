@@ -1,9 +1,8 @@
-import { CalendarDays, MessageCircle, Palette, Send } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+import BrandPlatforms from './BrandPlatforms';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import { socialMediaCopy } from './content';
-
-const icons = [CalendarDays, Palette, Send];
 
 /** Shared content for the regular home page and the immersive social chapter. */
 export default function SocialMediaSection({ embedded = false }: { embedded?: boolean }) {
@@ -32,49 +31,7 @@ export default function SocialMediaSection({ embedded = false }: { embedded?: bo
         >
           {copy.title}
         </h2>
-        <p
-          className={`mt-4 max-w-2xl text-base leading-relaxed ${embedded ? 'text-slate-300' : 'text-slate-600 dark:text-slate-300'}`}
-        >
-          {copy.intro}
-        </p>
-        <p
-          dir="ltr"
-          className={`mt-5 text-start text-xs font-semibold tracking-wide ${embedded ? 'text-slate-300' : 'text-slate-500 dark:text-slate-300'}`}
-        >
-          {copy.platforms}
-        </p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-3">
-          {copy.services.map((service, i) => {
-            const Icon = icons[i];
-            return (
-              <article
-                key={service.title}
-                className={`rounded-2xl border p-5 ${embedded ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-slate-50 dark:border-white/10 dark:bg-white/5'}`}
-              >
-                <Icon
-                  aria-hidden="true"
-                  className={`h-6 w-6 ${embedded ? 'text-cyan-300' : 'text-brand-purple dark:text-brand-cyan'}`}
-                />
-                <h3 className="mt-4 text-lg font-bold">{service.title}</h3>
-                <p
-                  className={`mt-2 text-sm leading-relaxed ${embedded ? 'text-slate-300' : 'text-slate-600 dark:text-slate-300'}`}
-                >
-                  {service.text}
-                </p>
-              </article>
-            );
-          })}
-        </div>
-        <ul className="mt-6 flex flex-wrap gap-2">
-          {copy.formats.map((format) => (
-            <li
-              key={format}
-              className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${embedded ? 'border-white/15 text-slate-200' : 'border-slate-200 text-slate-600 dark:border-white/15 dark:text-slate-200'}`}
-            >
-              {format}
-            </li>
-          ))}
-        </ul>
+        <BrandPlatforms embedded={embedded} />
         <a
           href={`${contact.whatsappUrl}${contact.whatsappUrl.includes('?') ? '&' : '?'}text=${encodeURIComponent(copy.prefill)}`}
           target="_blank"
