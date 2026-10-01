@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark" style="color-scheme: dark;">
   <head>
     <meta charset="UTF-8" />
-    <!-- Set lang+dir AND theme before paint to match the user's locale/theme.
-         Mirrors LanguageContext (URL ?lang= > saved > browser) and ThemeContext
-         (saved > dark default). Setting the `dark` class here avoids a
-         light-theme flash before React hydrates on a dark-default site. -->
+    <!-- Resolve locale before paint. Dark is the only site theme. -->
     <script>
       (function () {
         try {
@@ -23,10 +20,7 @@
           document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
         } catch (e) {}
         try {
-          var savedTheme = localStorage.getItem('vibe_theme');
-          var theme = (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'dark';
-          document.documentElement.classList.remove('light', 'dark');
-          document.documentElement.classList.add(theme);
+          localStorage.setItem('vibe_theme', 'dark');
         } catch (e) {}
       })();
     </script>

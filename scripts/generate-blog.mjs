@@ -136,12 +136,12 @@ const blogCss = `
     --line:rgba(255,255,255,.10);--line-soft:rgba(255,255,255,.06);
     --purple:#483AA0;--purple-l:#7965C1;--purple-ll:#A78BFA;--cyan:#00E5FF;--gold:#D4AF37;
     --white:#f4f2fb;--mute:#a9a3c9;--mute-2:#6f6a92;
-    --paper:#f7f6fb;--paper-2:#fff;--paper-ink:#1b1836;--paper-body:#332f4d;--paper-mute:#565073;--paper-line:#e7e3f3;
+    --paper:#131126;--paper-2:#1b1833;--paper-ink:#f4f2fb;--paper-body:#d5d0e8;--paper-mute:#b5aecf;--paper-line:#38314f;
     --display:'Space Grotesk','Heebo','Cairo',system-ui,sans-serif;
     --body:'Heebo','Cairo','Segoe UI',system-ui,sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;color-scheme:dark}
   body{background:
       radial-gradient(1200px 600px at 80% -10%, rgba(72,58,160,.35), transparent 60%),
       radial-gradient(900px 500px at 0% 8%, rgba(0,229,255,.09), transparent 55%),

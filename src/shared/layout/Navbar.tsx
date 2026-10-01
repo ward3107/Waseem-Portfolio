@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
   Blocks,
+  BookOpen,
   Bot,
   Briefcase,
   Clapperboard,
   Globe,
   Mail,
   Menu,
-  Moon,
-  Sun,
   UserRound,
   X,
   type LucideIcon,
@@ -16,7 +15,6 @@ import {
 import { NAV_LINKS } from '@/constants';
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useTheme } from '@/contexts/ThemeContext';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { useContact } from '@/features/contact/useContact';
 import AudioHeaderControl from '@/experience/components/AudioHeaderControl';
@@ -29,6 +27,9 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   '/#projects': Briefcase,
   '/video-ads': Clapperboard,
   '/#contact': Mail,
+  '/blog/': BookOpen,
+  '/en/blog/': BookOpen,
+  '/ar/blog/': BookOpen,
 };
 
 const Navbar: React.FC = () => {
@@ -37,7 +38,6 @@ const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
 
   const { language, setLanguage, t } = useLanguage();
-  const { theme, toggleTheme } = useTheme();
   const { scrollYProgress } = useScroll();
   const navigateToSection = useSectionNavigate();
   const contact = useContact();
@@ -107,6 +107,7 @@ const Navbar: React.FC = () => {
                   title={link.name}
                   aria-label={link.name}
                   onClick={(e) => {
+                    if (link.href.endsWith('/blog/')) return;
                     e.preventDefault();
                     navigateToSection(link.href);
                   }}
@@ -143,21 +144,6 @@ const Navbar: React.FC = () => {
                 mounted; hidden on every other page. */}
             <AudioHeaderControl />
 
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              aria-label={
-                theme === 'dark' ? t('aria_theme_toggle_light') : t('aria_theme_toggle_dark')
-              }
-              className="p-2 text-slate-600 dark:text-slate-300 hover:text-brand-purple dark:hover:text-brand-purpleLight hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
-            >
-              {theme === 'dark' ? (
-                <Moon size={20} aria-hidden="true" />
-              ) : (
-                <Sun size={20} aria-hidden="true" />
-              )}
-            </button>
-
             {/* CTA Button */}
             <a
               href={contact.whatsappUrl}
@@ -184,20 +170,6 @@ const Navbar: React.FC = () => {
               className="text-slate-700 dark:text-slate-300 font-bold uppercase text-sm border border-slate-200 dark:border-slate-700 rounded-md min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2"
             >
               {language}
-            </button>
-
-            <button
-              onClick={toggleTheme}
-              aria-label={
-                theme === 'dark' ? t('aria_theme_toggle_light') : t('aria_theme_toggle_dark')
-              }
-              className="text-slate-700 dark:text-slate-300 hover:text-brand-purple min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-brand-purple rounded"
-            >
-              {theme === 'dark' ? (
-                <Moon size={20} aria-hidden="true" />
-              ) : (
-                <Sun size={20} aria-hidden="true" />
-              )}
             </button>
 
             <button
@@ -246,6 +218,7 @@ const Navbar: React.FC = () => {
                       key={link.name}
                       href={link.href}
                       onClick={(e) => {
+                        if (link.href.endsWith('/blog/')) return;
                         e.preventDefault();
                         setIsOpen(false);
                         setTimeout(() => navigateToSection(link.href), 100);
