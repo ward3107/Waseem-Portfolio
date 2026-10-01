@@ -17,6 +17,7 @@ import { JOURNEY_ACTS } from '@/features/journey/journeyConfig';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { useExperienceMode } from '@/experience';
+import AudioTour from '@/experience/components/AudioTour';
 
 // Acts, in scroll order, mapping the existing sections onto the five-colour
 // journey: Identity (purple) → Services (blue) → AI (cyan) → Work (gold) →
@@ -98,7 +99,12 @@ const HomePage: React.FC = () => {
     );
   }
 
-  return <ClassicHome />;
+  return (
+    <>
+      <ClassicHome />
+      <AudioTour />
+    </>
+  );
 };
 
 export default HomePage;
