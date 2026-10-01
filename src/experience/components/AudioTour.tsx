@@ -6,7 +6,7 @@ import { audioTourStore } from '../audioTourStore';
  * The audio tour — a narrated walk-through of the experience, as automatic as a
  * browser allows. It starts playing on load MUTED (muted autoplay needs no
  * gesture), then unmutes on the visitor's very first interaction — a click, key,
- * or the first scroll-touch (on a phone, starting to scroll is enough), so it
+ * or a supported touch gesture (scroll activation varies by browser), so it
  * opens to sound essentially on its own. Sound genuinely cannot play before any
  * interaction — that is a hard browser rule, not a setting. From then on a warm,
  * deep voice reads a short line for each chapter as it scrolls into view. Closing
@@ -15,8 +15,8 @@ import { audioTourStore } from '../audioTourStore';
  * per-visit cost or latency and the page stays fast.
  *
  * Scope: the narration is recorded per language — English, Hebrew, and Arabic
- * each have their own clip folder (public/audio/<lang>/), all in the same deep
- * "Brian" voice for a consistent brand. A visitor hears their own language; any
+ * each have their own clip folder (public/audio/<lang>/), with a young Hebrew narrator approved in preview. English and Arabic
+ * retain their existing recorded voices. A visitor hears their own language; any
  * language without a folder falls back to English. Adding one is a folder of
  * clips plus an entry in CLIPS_BY_LANG.
  *
@@ -44,7 +44,14 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
     { id: 'reviews', src: '/audio/en/trust.mp3' },
     { id: 'contact', src: '/audio/en/contact.mp3' },
   ],
-  // Hebrew narration is intentionally absent — see NARRATION_DISABLED_LANGS.
+  he: [
+    { id: 'hero', src: '/audio/he/hero.mp3' },
+    { id: 'what-i-do', src: '/audio/he/services.mp3' },
+    { id: 'ai-automation', src: '/audio/he/ai.mp3' },
+    { id: 'projects', src: '/audio/he/projects.mp3' },
+    { id: 'reviews', src: '/audio/he/trust.mp3' },
+    { id: 'contact', src: '/audio/he/contact.mp3' },
+  ],
   ar: [
     { id: 'hero', src: '/audio/ar/hero.mp3' },
     { id: 'what-i-do', src: '/audio/ar/services.mp3' },
@@ -60,14 +67,8 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
 // regenerating anything.
 const PLAYBACK_RATE = 0.82;
 
-// Languages the audio tour is disabled for. The Hebrew clips were synthesized
-// with a non-Hebrew voice (an English narrator reading Hebrew) and were not
-// intelligible to native speakers — sounding, in one listener's words, "like
-// Yiddish" — so rather than play a broken tour (or fall back to English, which
-// a Hebrew visitor wouldn't want), Hebrew visitors get no audio tour at all: no
-// clips, no header "Listen" control. To bring it back, drop the language from
-// this list AND add native-Hebrew clips to public/audio/he/ + CLIPS_BY_LANG.
-const NARRATION_DISABLED_LANGS = ['he'];
+// Hebrew uses the approved young narrator at the preview's natural speed.
+const NARRATION_DISABLED_LANGS: string[] = [];
 
 // The Web Audio analyser tap exists ONLY to drive the assistant face's lip-sync
 // (see TalkingHead). While the face is off, creating an AudioContext is pure
@@ -171,12 +172,19 @@ const AudioTour: React.FC = () => {
   // the visitor opts in.
   useEffect(() => {
     if (!clips) return;
+    playedRef.current.clear();
+    unmutedRef.current = false;
+    mutedRef.current = true;
+    enabledRef.current = false;
+    setEnabled(false);
+    setPlaying(false);
+    setMuted(true);
     const a = new Audio();
     a.preload = 'none';
     // Slow, deliberate delivery — keep the deep pitch (no chipmunk effect) while
     // playing a touch slower than recorded.
-    a.defaultPlaybackRate = PLAYBACK_RATE;
-    a.playbackRate = PLAYBACK_RATE;
+    a.defaultPlaybackRate = language === 'he' ? 1 : PLAYBACK_RATE;
+    a.playbackRate = a.defaultPlaybackRate;
     (a as HTMLAudioElement & { preservesPitch?: boolean }).preservesPitch = true;
     audioRef.current = a;
     const onPlay = () => setPlaying(true);
@@ -199,7 +207,7 @@ const AudioTour: React.FC = () => {
       analyserFailedRef.current = false;
       audioTourStore.reset();
     };
-  }, [clips]);
+  }, [clips, language]);
 
   // Play a section's clip. Auto-triggered plays happen once per section; a
   // forced play (the Listen/Play buttons) always replays the current one.
@@ -214,18 +222,21 @@ const AudioTour: React.FC = () => {
       a.muted = mutedRef.current;
       // A rejected play (no gesture yet, or interrupted) is fine to swallow —
       // the control still reflects the real state via the audio events.
-      void a.play().then(() => {
-        if (audioRef.current === a && !a.muted) playedRef.current.add(id);
-      }).catch((error: unknown) => {
-        if (audioRef.current !== a) return;
-        // A blocked wheel-triggered play must not consume the later click/tap.
-        if (error instanceof DOMException && error.name === 'NotAllowedError') {
-          unmutedRef.current = false;
-          mutedRef.current = true;
-          a.muted = true;
-          setMuted(true);
-        }
-      });
+      void a
+        .play()
+        .then(() => {
+          if (audioRef.current === a && !a.muted) playedRef.current.add(id);
+        })
+        .catch((error: unknown) => {
+          if (audioRef.current !== a) return;
+          // A blocked wheel-triggered play must not consume the later click/tap.
+          if (error instanceof DOMException && error.name === 'NotAllowedError') {
+            unmutedRef.current = false;
+            mutedRef.current = true;
+            a.muted = true;
+            setMuted(true);
+          }
+        });
     },
     [clips]
   );
@@ -384,16 +395,16 @@ const AudioTour: React.FC = () => {
     }
   };
   const toggleMute = () => {
-    setMuted((m) => {
-      const next = !m;
-      mutedRef.current = next;
-      if (!next) {
-        unmutedRef.current = true; // manual unmute counts as the unmute
-        ensureAnalyser(); // button click is a gesture → start the graph
-      }
-      if (audioRef.current) audioRef.current.muted = next;
-      return next;
-    });
+    // Start audible playback synchronously inside the button gesture, including
+    // when a previous autoplay attempt was blocked or the silent clip ended.
+    if (mutedRef.current) {
+      unmutedRef.current = false;
+      unmute();
+    } else {
+      mutedRef.current = true;
+      setMuted(true);
+      if (audioRef.current) audioRef.current.muted = true;
+    }
   };
 
   // (Re)start the tour from a "Listen" tap — clears the session dismissal so it
@@ -433,7 +444,7 @@ const AudioTour: React.FC = () => {
       toggleMute: () => ctrlRef.current.toggleMute(),
       close: () => ctrlRef.current.close(),
     });
-  }, [narrationDisabled]);
+  }, [clips, narrationDisabled]);
 
   // Auto-start the moment the page is ready — MUTED, which browsers permit
   // without a gesture. The tour is "playing" from the first paint; it just has
@@ -457,7 +468,8 @@ const AudioTour: React.FC = () => {
 
     const activate = () => {
       if (released || wasDismissed() || unmutedRef.current) return;
-      if (!enabledRef.current) enable(false); // muted auto-start hadn't run yet
+      if (!enabledRef.current)
+        enable(false); // muted auto-start hadn't run yet
       else unmute(); // both restart the current (hero) section from the top
     };
     const release = () => {
@@ -469,6 +481,8 @@ const AudioTour: React.FC = () => {
       window.removeEventListener('wheel', onWheel, blockOpts);
       window.removeEventListener('keydown', onKeyDown, cap);
       window.removeEventListener('pointerdown', onMouseDown, cap);
+      window.removeEventListener('pointerup', onPointerUp, cap);
+      window.removeEventListener('click', activate, cap);
     };
 
     const onTouchStart = () => {
@@ -497,6 +511,8 @@ const AudioTour: React.FC = () => {
       }
     };
 
+    // Touch/pen activation may only be granted on release, rather than down.
+    const onPointerUp = () => activate();
     const cap = { capture: true } as const;
     const blockOpts = { capture: true, passive: true } as const;
     window.addEventListener('touchstart', onTouchStart, cap);
@@ -505,6 +521,8 @@ const AudioTour: React.FC = () => {
     window.addEventListener('wheel', onWheel, blockOpts);
     window.addEventListener('keydown', onKeyDown, cap);
     window.addEventListener('pointerdown', onMouseDown, cap);
+    window.addEventListener('pointerup', onPointerUp, cap);
+    window.addEventListener('click', activate, cap);
     return release;
     // enable/unmute only touch refs + setters, so binding once on mount is safe.
     // eslint-disable-next-line react-hooks/exhaustive-deps
