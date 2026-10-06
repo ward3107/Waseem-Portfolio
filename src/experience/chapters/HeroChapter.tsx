@@ -30,6 +30,7 @@ import type { QualityTier } from '../useQualityTier';
 const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   const group = useRef<Group>(null);
   const pointer = useThree((s) => s.pointer);
+  const canvasWidth = useThree((s) => s.size.width);
   const high = tier === 'high';
 
   // Spin state. The rotation TRACKS scroll directly (journey × a fixed gain)
@@ -112,7 +113,8 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
     g.visible = presence > 0.05;
     const exit = 1 - presence;
     g.position.z = MathUtils.lerp(g.position.z, -exit * 13, eased);
-    g.scale.setScalar(MathUtils.lerp(g.scale.x, 0.55 + presence * 0.55, eased));
+    const scale = (0.55 + presence * 0.55) * (canvasWidth < 640 ? 0.84 : 1);
+    g.scale.setScalar(MathUtils.lerp(g.scale.x, scale, eased));
   });
 
   const onDown = (e: ThreeEvent<PointerEvent>) => {
