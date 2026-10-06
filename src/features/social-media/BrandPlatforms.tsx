@@ -1,22 +1,15 @@
 import { Instagram } from 'lucide-react';
-import { CONTACT } from '@/constants';
-
-const platforms = [
-  { name: 'Instagram', glow: 'bg-fuchsia-500/15', border: 'border-fuchsia-400/25' },
-  { name: 'Facebook', glow: 'bg-blue-500/15', border: 'border-blue-400/25' },
-  { name: 'TikTok', glow: 'bg-cyan-400/10', border: 'border-cyan-400/25' },
-  { name: 'Google Ads', glow: 'bg-amber-400/10', border: 'border-amber-400/25' },
-];
+import { BRAND_PLATFORMS } from './platformConfig';
 const note =
   'M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z';
 
 export default function BrandPlatforms({ embedded }: { embedded: boolean }) {
   return (
     <ul dir="ltr" className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-      {platforms.map(({ name, glow, border }, index) => (
+      {BRAND_PLATFORMS.map(({ name, glow, border, enabled, href, ariaLabel }, index) => (
         <li
           key={name}
-          className={`relative isolate flex flex-col items-center justify-center overflow-hidden rounded-3xl border px-3 py-7 sm:py-9 ${border} ${embedded ? 'bg-white/5' : 'bg-slate-50 dark:bg-white/5'} ${name === 'Facebook' ? 'transition-transform hover:-translate-y-1' : ''}`}
+          className={`relative isolate flex flex-col items-center justify-center overflow-hidden rounded-3xl border px-3 py-7 sm:py-9 ${border} ${embedded ? 'bg-white/5' : 'bg-slate-50 dark:bg-white/5'} ${enabled && href ? 'transition-transform hover:-translate-y-1' : ''}`}
         >
           <span aria-hidden="true" className={`absolute inset-0 -z-10 ${glow}`} />
           <div
@@ -55,12 +48,12 @@ export default function BrandPlatforms({ embedded }: { embedded: boolean }) {
             )}
           </div>
           <h3 className="mt-5 text-sm font-bold tracking-wide sm:text-base">{name}</h3>
-          {name === 'Facebook' && (
+          {enabled && href && (
             <a
-              href={CONTACT.facebook}
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Vasia Facebook page"
+              aria-label={ariaLabel}
               className="pointer-events-auto absolute inset-0 z-10 rounded-3xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cyan"
             />
           )}
