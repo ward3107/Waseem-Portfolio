@@ -1,4 +1,5 @@
 import { Instagram } from 'lucide-react';
+import { CONTACT } from '@/constants';
 
 const platforms = [
   { name: 'Instagram', glow: 'bg-fuchsia-500/15', border: 'border-fuchsia-400/25' },
@@ -15,7 +16,7 @@ export default function BrandPlatforms({ embedded }: { embedded: boolean }) {
       {platforms.map(({ name, glow, border }, index) => (
         <li
           key={name}
-          className={`relative isolate flex flex-col items-center justify-center overflow-hidden rounded-3xl border px-3 py-7 sm:py-9 ${border} ${embedded ? 'bg-white/5' : 'bg-slate-50 dark:bg-white/5'}`}
+          className={`relative isolate flex flex-col items-center justify-center overflow-hidden rounded-3xl border px-3 py-7 sm:py-9 ${border} ${embedded ? 'bg-white/5' : 'bg-slate-50 dark:bg-white/5'} ${name === 'Facebook' ? 'transition-transform hover:-translate-y-1' : ''}`}
         >
           <span aria-hidden="true" className={`absolute inset-0 -z-10 ${glow}`} />
           <div
@@ -54,6 +55,15 @@ export default function BrandPlatforms({ embedded }: { embedded: boolean }) {
             )}
           </div>
           <h3 className="mt-5 text-sm font-bold tracking-wide sm:text-base">{name}</h3>
+          {name === 'Facebook' && (
+            <a
+              href={CONTACT.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Vasia Facebook page"
+              className="pointer-events-auto absolute inset-0 z-10 rounded-3xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cyan"
+            />
+          )}
         </li>
       ))}
     </ul>
