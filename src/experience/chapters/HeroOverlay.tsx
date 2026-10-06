@@ -25,6 +25,15 @@ const HeroOverlay: React.FC = () => {
 
   return (
     <div className="pointer-events-none relative flex flex-col items-center text-center">
+      <img
+        src="/assets/waseem-mobile-avatar.webp"
+        alt={t('hero_profile_alt')}
+        width="512"
+        height="512"
+        loading="eager"
+        decoding="async"
+        className="mb-6 h-28 w-28 rounded-full border-4 border-white/80 object-cover shadow-2xl ring-1 ring-cyan-300/50 sm:hidden"
+      />
       {/* Soft scrim so the headline stays legible over the film's brightest
           frames (the 10k worst-frame legibility rule). Whisper level. */}
       <div
