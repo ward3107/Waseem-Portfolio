@@ -32,7 +32,7 @@ const HeroOverlay: React.FC = () => {
         height="512"
         loading="eager"
         decoding="async"
-        className="mb-6 h-28 w-28 rounded-full border-4 border-white/80 object-cover shadow-2xl ring-1 ring-cyan-300/50 sm:hidden"
+        className="mb-4 h-20 w-20 self-end rounded-full border-2 border-white/80 object-cover shadow-lg ring-1 ring-cyan-300/40 sm:hidden"
       />
       {/* Soft scrim so the headline stays legible over the film's brightest
           frames (the 10k worst-frame legibility rule). Whisper level. */}
