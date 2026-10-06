@@ -105,6 +105,18 @@ const Hero: React.FC = () => {
       <div
         className="max-w-7xl mx-auto px-6 sm:px-10 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-12 items-center relative z-10">
         <div className="relative z-20">
+          <div className="mb-5 flex justify-center sm:hidden">
+            <img
+              src="/assets/waseem-mobile-avatar.webp"
+              alt={t('hero_profile_alt')}
+              width="512"
+              height="512"
+              loading="eager"
+              decoding="async"
+              className="h-28 w-28 rounded-full border-4 border-white/80 object-cover shadow-2xl ring-1 ring-cyan-300/50"
+            />
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -230,7 +242,7 @@ const Hero: React.FC = () => {
           </motion.div>
         </div>
 
-        <div className="relative">
+        <div className="relative hidden sm:block">
           {/* 3D brand logo, sitting to the outer side of the profile card.
               Desktop/large-tablet only — on phones the hero stacks and there's
               no room beside the card, so it's hidden there (the CSS-gradient
