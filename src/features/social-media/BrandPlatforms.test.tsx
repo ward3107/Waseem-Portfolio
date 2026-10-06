@@ -6,7 +6,7 @@ import BrandPlatforms from './BrandPlatforms';
 
 afterEach(() => {
   cleanup();
-  vi.doUnmock('./brandPlatforms');
+  vi.doUnmock('./platformConfig');
   vi.resetModules();
 });
 
@@ -34,8 +34,8 @@ describe('BrandPlatforms', () => {
   });
 
   it('uses configuration for future connections and ignores enabled cards without a URL', async () => {
-    vi.doMock('./brandPlatforms', async (importOriginal) => {
-      const original = await importOriginal<typeof import('./brandPlatforms')>();
+    vi.doMock('./platformConfig', async (importOriginal) => {
+      const original = await importOriginal<typeof import('./platformConfig')>();
       return {
         ...original,
         BRAND_PLATFORMS: original.BRAND_PLATFORMS.map((platform) => ({
