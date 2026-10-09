@@ -1,0 +1,41 @@
+{
+  "name": "VASIA OneTap | Waseem Abu Akel",
+  "short_name": "VASIA OneTap",
+  "description": "WhatsApp, website and social profiles for Waseem Abu Akel in one tap.",
+  "id": "/card",
+  "start_url": "/card",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
+  "background_color": "#F3F6FC",
+  "theme_color": "#233A78",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/brand/vasia-profile.png",
+      "sizes": "1080x1080",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Show QR",
+      "short_name": "QR Code",
+      "url": "/qr"
+    }
+  ]
+}
