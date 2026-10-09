@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUpRight, Check, ChevronLeft, ChevronRight, MessageCircle, Sparkles, Zap, Contact, Globe2 } from 'lucide-react';
+import { ArrowUpRight, Check, ChevronLeft, ChevronRight, MessageCircle, Sparkles, Zap, UserPlus, Globe2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { demoUrl } from '@/features/onetap/variants';
@@ -58,7 +58,7 @@ const Landing: React.FC = () => {
       : 'Hi, I would like to order a VASIA OneTap card';
   const wa = 'https://wa.me/972534260632?text=' + encodeURIComponent(message);
   const plans = [
-    {name:c.first, price:'199', description:c.classic, href:demoUrl('classic',language), glow:'#3AAFEA', icon:Contact},
+    {name:c.first, price:'199', description:c.classic, href:demoUrl('classic',language), glow:'#3AAFEA', icon:UserPlus},
     {name:c.second, price:'399', description:c.motion, href:demoUrl('motion',language), glow:'#8871FD', icon:Zap},
     {name:c.third, price:'499', description:c.custom, href:wa, glow:'#39D3B8', icon:Sparkles},
   ];
