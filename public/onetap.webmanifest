@@ -1,10 +1,10 @@
 {
-  "name": "VASIA OneTap | Waseem Abu Akel",
-  "short_name": "VASIA OneTap",
-  "description": "WhatsApp, website and social profiles for Waseem Abu Akel in one tap.",
-  "id": "/card",
+  "name": "VASIA Contact | Waseem Abu Akel",
+  "short_name": "VASIA Contact",
+  "description": "Reach Waseem at VASIA by WhatsApp and see all professional contact links.",
+  "id": "/onetap-card",
   "start_url": "/card",
-  "scope": "/",
+  "scope": "/card",
   "display": "standalone",
   "display_override": [
     "standalone"
@@ -31,11 +31,5 @@
       "purpose": "any"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "Show QR",
-      "short_name": "QR Code",
-      "url": "/qr"
-    }
-  ]
+  "shortcuts": []
 }
