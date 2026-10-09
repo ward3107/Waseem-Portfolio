@@ -1,7 +1,7 @@
 {
-  "name": "VASIA Contact | Waseem Abu Akel",
-  "short_name": "VASIA Contact",
-  "description": "Reach Waseem at VASIA by WhatsApp and see all professional contact links.",
+  "name": "VASIA OneTap | Digital Business Card",
+  "short_name": "VASIA OneTap",
+  "description": "VASIA – websites, applications, AI solutions and instant WhatsApp contact",
   "id": "/onetap-card",
   "start_url": "/card",
   "scope": "/card",
@@ -9,8 +9,8 @@
   "display_override": [
     "standalone"
   ],
-  "background_color": "#F3F6FC",
-  "theme_color": "#233A78",
+  "background_color": "#A9C8FF",
+  "theme_color": "#3664C5",
   "icons": [
     {
       "src": "/onetap/icon-192.png",
