@@ -8,6 +8,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { buildVCard, CARD_URL, digitsOnly, ONETAP_COPY, safeExternalUrl } from '@/features/onetap/cardData';
+import { useOneTapManifest } from '@/features/onetap/useOneTapManifest';
 
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -25,6 +26,7 @@ const OneTapCardPage: React.FC = () => {
   const [feedback, setFeedback] = useState<'none' | 'copied' | 'manual'>('none');
   const phone = digitsOnly(contact.whatsappNumber);
   useDocumentTitle('VASIA OneTap | Waseem Abu Akel');
+  useOneTapManifest('/onetap.webmanifest');
 
   useEffect(() => {
     const listen = (e: Event) => { e.preventDefault(); setNativePrompt(e as InstallPromptEvent); };
