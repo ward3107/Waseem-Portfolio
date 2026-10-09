@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  ArrowUpRight, Check, ChevronRight, Copy, Download, Facebook, Github,
+  ArrowUpRight, Check, ChevronRight, Copy, Facebook, Github,
   Globe2, Instagram, Linkedin, MessageCircle, PhoneCall, QrCode,
   Smartphone, UserPlus, X, type LucideIcon,
 } from 'lucide-react';
