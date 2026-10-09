@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
   ArrowUpRight, Check, Copy, UserPlus, Facebook, Github, Globe2,
-  Instagram, Linkedin, MessageCircle, PhoneCall, QrCode, Share2,
+  Instagram, Linkedin, MessageCircle, PhoneCall, QrCode,
   Smartphone, X, type LucideIcon,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
-import { buildVCard, CARD_URL, digitsOnly, ONETAP_COPY, safeExternalUrl } from '@/features/onetap/cardData';
+import { buildVCard, digitsOnly, ONETAP_COPY, safeExternalUrl } from '@/features/onetap/cardData';
 import { useOneTapManifest } from '@/features/onetap/useOneTapManifest';
 import { buildOneTapSharePayload } from '@/features/onetap/shareDetails';
 
