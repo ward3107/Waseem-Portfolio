@@ -33,7 +33,7 @@ export function buildVCard(info: ContactInfo): string {
     'ORG:VASIA',
     'TITLE:Web Development and AI Solutions',
     ...(phone ? ['TEL;TYPE=CELL:+' + phone] : []),
-    ...(info.email && /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(info.email)
+    ...(info.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(info.email)
       ? ['EMAIL;TYPE=INTERNET:' + escapeVCard(info.email)] : []),
     ...links.map((link) => 'URL:' + escapeVCard(link)),
     'END:VCARD',
