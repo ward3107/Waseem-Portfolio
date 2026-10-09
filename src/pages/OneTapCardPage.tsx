@@ -10,6 +10,7 @@ import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { buildVCard, ONETAP_COPY, safeExternalUrl } from '@/features/onetap/cardData';
 import { buildOneTapSharePayload, getWhatsAppLink, normalizeWhatsAppNumber } from '@/features/onetap/shareDetails';
 import { useOneTapManifest } from '@/features/onetap/useOneTapManifest';
+import { resolveOneTapVariant } from '@/features/onetap/variants';
 import '@/features/onetap/OneTapCard.css';
 
 interface InstallPromptEvent extends Event {
@@ -26,6 +27,7 @@ const UI = {
 
 const OneTapCardPage: React.FC = () => {
   const { language, setLanguage, dir } = useLanguage();
+  const variant = resolveOneTapVariant(window.location.search);
   const contact = useContact();
   const c = ONETAP_COPY[language];
   const ui = UI[language];
@@ -137,7 +139,7 @@ const OneTapCardPage: React.FC = () => {
   const dialogOpen = installHelp || copyDialog;
 
   return (
-    <main className="onetap-screen" dir={dir} aria-label="VASIA OneTap Digital Business Card">
+    <main className={"onetap-screen onetap--" + variant} dir={dir} aria-label="VASIA OneTap Digital Business Card">
       <div className="onetap-shell">
         <article className="onetap-glass">
           <div aria-hidden="true" className="onetap-horizon" />
@@ -165,9 +167,22 @@ const OneTapCardPage: React.FC = () => {
           <section className="onetap-hero" aria-label="VASIA digital services">
             <p className="onetap-kicker" aria-hidden="true">PEOPLE<br />IDEAS<br />TECHNOLOGY<br />FOR A BETTER<br />TOMORROW</p>
             <p className="onetap-hero-label" aria-hidden="true">IDEAS<br />AUTOMATED<br />FOR A BRIGHTER<br />TOMORROW</p>
-            <div className="onetap-orb" aria-label="VASIA">
+            <div className="onetap-orbit-system">
+              {variant === 'motion' && (
+                <div className="onetap-orbit-effects" aria-hidden="true">
+                  <span className="onetap-orbit-ring onetap-orbit-ring--one" />
+                  <span className="onetap-orbit-ring onetap-orbit-ring--two" />
+                  <span className="onetap-orbit-ring onetap-orbit-ring--three" />
+                  {Array.from({ length: 9 }, (_, i) => (
+                    <i key={i} className={"onetap-spark onetap-spark--" + i} />
+                  ))}
+                </div>
+              )}
+              <div className="onetap-orb" aria-label="VASIA">
               <img src="/onetap/vasia-v.svg" width="93" height="93" alt="VASIA logo" />
             </div>
+            </div>
+            <p className="onetap-microline" dir="ltr">WEB <span>•</span> APPS <span>•</span> AI</p>
             <p className="onetap-service">{heroRole}</p>
             <p className="onetap-slogan" dir="ltr">{ui.tagline}</p>
           </section>
