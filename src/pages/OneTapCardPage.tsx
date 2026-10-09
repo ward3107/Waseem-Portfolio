@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  ArrowUpRight, Check, ContactRound, Facebook, Github, Globe2,
+  ArrowUpRight, Check, UserPlus, Facebook, Github, Globe2,
   Instagram, Linkedin, MessageCircle, PhoneCall, QrCode, Share2,
   Smartphone, X, type LucideIcon,
 } from 'lucide-react';
@@ -167,7 +167,7 @@ const OneTapCardPage: React.FC = () => {
             <div className="mt-6 border-t border-[#E8EDF5] pt-5">
               <div className="grid grid-cols-2 gap-2.5">
                 <button type="button" onClick={downloadVCard} className="flex min-h-[55px] items-center justify-center gap-2 rounded-2xl bg-[#E9EDFF] px-2 text-xs font-bold text-[#3B319C] hover:bg-[#DBE1FF] focus-visible:outline-2 focus-visible:outline-[#473BB3] sm:text-sm">
-                  <ContactRound size={19} aria-hidden /> {c.save}
+                  <UserPlus size={19} aria-hidden /> {c.save}
                 </button>
                 <button type="button" onClick={addHome} className="flex min-h-[55px] items-center justify-center gap-2 rounded-2xl bg-[#EAF7F4] px-2 text-xs font-bold text-[#136F65] hover:bg-[#D8F0E9] focus-visible:outline-2 focus-visible:outline-[#136F65] sm:text-sm">
                   <Smartphone size={19} aria-hidden /> {c.install}
