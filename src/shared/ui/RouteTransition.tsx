@@ -39,7 +39,9 @@ const isStandalone = (pathname: string): boolean =>
   pathname === '/admin' ||
   pathname.startsWith('/admin/') ||
   pathname === '/share-testimonial' ||
-  pathname === '/from-gbp';
+  pathname === '/from-gbp' ||
+  pathname === '/card' ||
+  pathname === '/qr';
 
 const RouteTransition: React.FC<{ children: (location: Location) => React.ReactNode }> = ({
   children,

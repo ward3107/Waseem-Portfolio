@@ -1,0 +1,35 @@
+{
+  "name": "VASIA Contact | Waseem Abu Akel",
+  "short_name": "VASIA Contact",
+  "description": "Reach Waseem at VASIA by WhatsApp and see all professional contact links.",
+  "id": "/onetap-card",
+  "start_url": "/card",
+  "scope": "/card",
+  "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
+  "background_color": "#F3F6FC",
+  "theme_color": "#233A78",
+  "icons": [
+    {
+      "src": "/onetap/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/onetap/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": []
+}

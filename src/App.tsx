@@ -41,6 +41,9 @@ const AdminRoutes = lazy(() => import('./pages/admin/AdminRoutes'));
 // posts to Supabase via '@/lib/content/reviews' — held eagerly, that single
 // import put supabase-js back in the entry chunk for every visitor.
 const ShareTestimonialPage = lazy(() => import('./pages/ShareTestimonialPage'));
+// Fully standalone, lazy-loaded OneTap entrypoints.
+const OneTapCardPage = lazy(() => import('./pages/OneTapCardPage'));
+const OneTapQrPage = lazy(() => import('./pages/OneTapQrPage'));
 
 // Skip link component with proper accessibility
 const SkipLink: React.FC = () => {
@@ -111,7 +114,9 @@ const AppContent: React.FC = () => {
             isAdmin ||
             pathname === '/share-testimonial' ||
             pathname === '/from-gbp' ||
-            pathname === '/start';
+            pathname === '/start' ||
+            pathname === '/card' ||
+            pathname === '/qr';
 
           const routes = (
             <Suspense fallback={<SectionSkeleton />}>
@@ -128,6 +133,8 @@ const AppContent: React.FC = () => {
                 <Route path="/about" element={<Navigate to="/#about" replace />} />
                 <Route path="/contact" element={<Navigate to="/#contact" replace />} />
                 <Route path="/start" element={<StartPage />} />
+                <Route path="/card" element={<OneTapCardPage />} />
+                <Route path="/qr" element={<OneTapQrPage />} />
                 <Route path="/from-gbp" element={<FromGbpPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/accessibility" element={<AccessibilityPage />} />
