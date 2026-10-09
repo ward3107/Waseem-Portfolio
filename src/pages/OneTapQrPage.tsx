@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, ScanLine } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ArrowLeft, ArrowRight, Check, Copy, Download, ExternalLink, ScanLine, Smartphone, X } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { CARD_URL, ONETAP_COPY } from '@/features/onetap/cardData';
+import { useOneTapManifest } from '@/features/onetap/useOneTapManifest';
 
 const languages = ['he', 'ar', 'en'] as const;
 
@@ -12,6 +13,34 @@ const OneTapQrPage: React.FC = () => {
   const [feedback, setFeedback] = useState<'idle' | 'copied' | 'manual'>('idle');
   const Back = dir === 'rtl' ? ArrowRight : ArrowLeft;
   useDocumentTitle('VASIA OneTap QR | Waseem Abu Akel');
+  useOneTapManifest('/onetap-qr.webmanifest');
+  const [installHelp, setInstallHelp] = useState(false);
+  const [deferredInstall, setDeferredInstall] = useState<Event | null>(null);
+
+  useEffect(() => {
+    const onInstall = (event: Event) => { event.preventDefault(); setDeferredInstall(event); };
+    window.addEventListener('beforeinstallprompt', onInstall);
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/onetap-sw.js', { scope: '/' }).catch(() => undefined);
+    }
+    return () => window.removeEventListener('beforeinstallprompt', onInstall);
+  }, []);
+
+  const install = async () => {
+    if (deferredInstall) {
+      try {
+        const prompt = deferredInstall as Event & { prompt: () => Promise<void>; userChoice: Promise<unknown> };
+        await prompt.prompt();
+        await prompt.userChoice;
+        setDeferredInstall(null);
+        return;
+      } catch { /* Manual installation is always available. */ }
+    }
+    setInstallHelp(true);
+  };
+  const ua = navigator.userAgent || '';
+  const help = /iPhone|iPad|iPod/.test(ua) ? c.installIos : /Android/.test(ua) ? c.installAndroid : c.installDesktop;
+
 
   const copyLink = async () => {
     try {
@@ -70,11 +99,25 @@ const OneTapQrPage: React.FC = () => {
             {c.manualCopy}
             <input readOnly value={CARD_URL} dir="ltr" onFocus={(e) => e.currentTarget.select()} aria-label="Card URL" className="mt-2 w-full rounded-lg border border-[#DCE3EF] bg-white p-2" />
           </div>}
+          <button type="button" onClick={install} className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#1D376E] px-4 text-sm font-bold text-white hover:bg-[#294D91] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1D376E]">
+            <Smartphone size={19} aria-hidden /> {c.install}
+          </button>
           <a href="/card" className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl px-4 text-sm font-bold text-[#31478C] hover:bg-[#F4F6FD] focus-visible:outline-2 focus-visible:outline-[#5543CA]">
             {c.viewCard} <ExternalLink size={17} aria-hidden />
           </a>
         </section>
       </div>
+      {installHelp && (
+        <div role="presentation" className="fixed inset-0 z-[100] flex items-center justify-center bg-[#111B3F]/65 p-4" onMouseDown={(e) => { if (e.currentTarget === e.target) setInstallHelp(false); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="onetap-qr-install-heading" className="relative w-full max-w-sm rounded-[26px] bg-white p-6 text-[#1B2945] shadow-2xl">
+            <button type="button" onClick={() => setInstallHelp(false)} autoFocus aria-label={c.close} className="absolute end-3 top-3 grid h-11 w-11 place-items-center rounded-xl text-[#65728A] hover:bg-[#EFF3FA]"><X size={20} aria-hidden /></button>
+            <img src="/favicon.svg" alt="" width="56" height="56" className="h-14 w-14 rounded-xl" />
+            <h2 id="onetap-qr-install-heading" className="mt-4 text-xl font-extrabold">{c.installTitle}</h2>
+            <p className="mt-3 text-sm leading-7 text-[#596782]">{help}</p>
+            <button type="button" onClick={() => setInstallHelp(false)} className="mt-5 min-h-12 w-full rounded-xl bg-[#273D86] text-sm font-bold text-white">{c.close}</button>
+          </section>
+        </div>
+      )}
     </main>
   );
 };
