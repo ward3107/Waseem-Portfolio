@@ -1,7 +1,7 @@
 /* VASIA OneTap — holographic signature card, isolated from portfolio styles.
    All normal controls remain inside one viewport: never scroll the business card. */
 .onetap-screen {
-  --onetap-gap: clamp(5px, .95dvh, 11px);
+  --onetap-gap: clamp(9px, 1.5dvh, 16px);
   --onetap-side: clamp(11px, 3.8vw, 24px);
   position: fixed;
   inset: 0;
@@ -324,7 +324,7 @@
 .onetap-quick-links {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(7px, 2vw, 12px);
+  gap: clamp(12px, 3.2vw, 17px);
   min-width: 0;
 }
 .onetap-quick {
@@ -344,7 +344,7 @@
 .onetap-socials {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(5px, 1.4vw, 10px);
+  gap: clamp(9px, 2.6vw, 14px);
   min-width: 0;
 }
 .onetap-social {
@@ -408,7 +408,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: stretch;
-  gap: 0;
+  gap: clamp(6px, 1.8vw, 11px);
   min-width: 0;
   min-height: 0;
   height: clamp(57px, 9.6dvh, 87px);
@@ -427,9 +427,9 @@
   min-width: 0;
   min-height: 0;
   padding: 2px 1px;
-  border: 0;
-  border-radius: 10px;
-  background: transparent;
+  border: 1px solid rgba(212, 236, 255, .34);
+  border-radius: 12px;
+  background: rgba(40, 91, 191, .25);
   color: #f4f8ff;
   font-size: clamp(8px,1.32dvh,12px);
   line-height: 1.16;
@@ -438,7 +438,7 @@
   text-decoration: none;
   cursor: pointer;
 }
-.onetap-tool:not(:last-child) { border-inline-end: 1px solid rgba(203,224,255,.26); border-radius: 0; }
+.onetap-tool:not(:last-child) { border-inline-end: 1px solid rgba(212,236,255,.34); }
 .onetap-tool svg { flex: none; width: clamp(18px,3.1dvh,27px); height: clamp(18px,3.1dvh,27px); }
 .onetap-tool span { display: block; max-width: 100%; text-wrap: balance; }
 .onetap-tool:hover { background: rgba(220,237,255,.1); }
@@ -538,7 +538,7 @@
   }
 }
 @media (max-height: 700px) {
-  .onetap-screen { --onetap-gap: clamp(4px,.72dvh,6px); }
+  .onetap-screen { --onetap-gap: clamp(8px,1.23dvh,11px); }
   .onetap-glass { padding-top: max(7px,env(safe-area-inset-top)); padding-bottom: max(7px,env(safe-area-inset-bottom)); }
   .onetap-header { min-height: 34px; }
   .onetap-lang button { min-width: 28px; height: 28px; }
@@ -549,7 +549,7 @@
   .onetap-slogan { font-size: 8px; }
 }
 @media (max-height: 570px) {
-  .onetap-glass { --onetap-gap: 4px; }
+  .onetap-glass { --onetap-gap: clamp(5px,1.15dvh,7px); }
   .onetap-header { min-height: 30px; }
   .onetap-wordmark img { width: 29px; height: 29px; }
   .onetap-wordmark-text strong { font-size: 16px; }
@@ -598,8 +598,7 @@
   height: clamp(113px, 21dvh, 188px);
   flex: 0 1 auto;
   min-height: 0;
-  transform-style: preserve-3d;
-  perspective: 450px;
+  /* No 3D stacking context: Android in-app browsers can crop a transformed SVG. */
 }
 .onetap-orbit-system .onetap-orb {
   width: clamp(73px, 15.5dvh, 143px);
@@ -621,7 +620,7 @@
   inset: 0;
   pointer-events: none;
 }
-.onetap-orbit-effects { z-index: 2; }
+.onetap-orbit-effects { z-index: 1; }
 .onetap-orbit-ring {
   border-radius: 50%;
   border: 1px solid rgba(171,250,255,.72);
@@ -644,14 +643,28 @@
   border: 1px dashed rgba(219,193,255,.75);
   animation: onetap-ring-scan 18s linear infinite;
 }
-.onetap--motion .onetap-orb {
-  animation: onetap-v-float 6.6s ease-in-out infinite;
-  transform-style: preserve-3d;
+.onetap-orbit-system .onetap-orb {
+  position: relative;
+  z-index: 2; /* The full V must render above all orbit lines. */
+  isolation: isolate;
+  transform-style: flat;
 }
-.onetap--motion .onetap-orb img {
-  animation: onetap-v-tilt 8.8s ease-in-out infinite;
-  transform-origin: center;
-  backface-visibility: hidden;
+.onetap-orbit-system .onetap-orb img {
+  position: relative;
+  z-index: 3;
+  display: block;
+  width: 76%;
+  height: 76%;
+  max-width: 76%;
+  object-fit: contain;
+  transform: none;
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+  animation: none; /* Never apply 3D transforms directly to an SVG <img>. */
+}
+.onetap--motion .onetap-orb {
+  /* Rotate the entire V disc slightly in 2D to avoid clipped SVGs in webviews. */
+  animation: onetap-v-float 7.2s ease-in-out infinite;
 }
 .onetap--classic .onetap-orb,
 .onetap--classic .onetap-orb img { animation: none; }
@@ -678,12 +691,8 @@
 .onetap-spark--7 { --angle: 292deg; animation-delay: -2.7s; }
 .onetap-spark--8 { --angle: 336deg; animation-delay: -3.5s; }
 @keyframes onetap-v-float {
-  0%,100% { transform: translateY(0) rotateX(0deg) rotateY(-7deg); }
-  50% { transform: translateY(-5px) rotateX(5deg) rotateY(8deg); }
-}
-@keyframes onetap-v-tilt {
-  0%,100% { transform: rotateY(-11deg) rotateZ(-2deg); }
-  50% { transform: rotateY(12deg) rotateZ(2deg); }
+  0%,100% { transform: translateY(0) rotate(-3deg) scale(.99); }
+  50% { transform: translateY(-5px) rotate(3deg) scale(1.015); }
 }
 @keyframes onetap-ring-orbit {
   from { transform: rotate(-27deg) scaleY(.45); }
