@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  ArrowUpRight, Check, UserPlus, Facebook, Github, Globe2,
+  ArrowUpRight, Check, Copy, UserPlus, Facebook, Github, Globe2,
   Instagram, Linkedin, MessageCircle, PhoneCall, QrCode, Share2,
   Smartphone, X, type LucideIcon,
 } from 'lucide-react';
@@ -9,6 +9,7 @@ import { useContact } from '@/features/contact/useContact';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { buildVCard, CARD_URL, digitsOnly, ONETAP_COPY, safeExternalUrl } from '@/features/onetap/cardData';
 import { useOneTapManifest } from '@/features/onetap/useOneTapManifest';
+import { buildOneTapSharePayload } from '@/features/onetap/shareDetails';
 
 interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -24,6 +25,7 @@ const OneTapCardPage: React.FC = () => {
   const [nativePrompt, setNativePrompt] = useState<InstallPromptEvent | null>(null);
   const [installHelp, setInstallHelp] = useState(false);
   const [feedback, setFeedback] = useState<'none' | 'copied' | 'manual'>('none');
+  const [manualText, setManualText] = useState('');
   const phone = digitsOnly(contact.whatsappNumber);
   useDocumentTitle('VASIA OneTap | Waseem Abu Akel');
   useOneTapManifest('/onetap.webmanifest');
@@ -68,21 +70,28 @@ const OneTapCardPage: React.FC = () => {
     window.setTimeout(() => URL.revokeObjectURL(url), 1500);
   };
 
-  const shareCard = async () => {
+  const copyMyInfo = async () => {
     setFeedback('none');
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'VASIA | Waseem Abu Akel', url: CARD_URL });
-        return;
-      } catch (e) {
-        if (e instanceof DOMException && e.name === 'AbortError') return;
-      }
-    }
+    const payload = buildOneTapSharePayload(contact, language);
+    setManualText(payload.plainText);
     try {
-      await navigator.clipboard.writeText(CARD_URL);
+      if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
+        const item = new ClipboardItem({
+          'text/plain': new Blob([payload.plainText], { type: 'text/plain' }),
+          'text/html': new Blob([payload.html], { type: 'text/html' }),
+        });
+        await navigator.clipboard.write([item]);
+      } else {
+        await navigator.clipboard.writeText(payload.plainText);
+      }
       setFeedback('copied');
     } catch {
-      setFeedback('manual');
+      try {
+        await navigator.clipboard.writeText(payload.plainText);
+        setFeedback('copied');
+      } catch {
+        setFeedback('manual');
+      }
     }
   };
 
@@ -176,15 +185,15 @@ const OneTapCardPage: React.FC = () => {
                 </button>
               </div>
               <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-[#4D6089]">
-                <button type="button" onClick={shareCard} className="flex min-h-11 items-center gap-1.5 rounded-lg px-2 hover:bg-[#F1F5FC] focus-visible:outline-2 focus-visible:outline-[#473BB3]">
-                  {feedback === 'copied' ? <Check size={16} aria-hidden /> : <Share2 size={16} aria-hidden />}
-                  {feedback === 'copied' ? c.copied : c.share}
+                <button type="button" onClick={copyMyInfo} className="flex min-h-11 items-center gap-1.5 rounded-lg px-2 hover:bg-[#F1F5FC] focus-visible:outline-2 focus-visible:outline-[#473BB3]">
+                  {feedback === 'copied' ? <Check size={16} aria-hidden /> : <Copy size={16} aria-hidden />}
+                  {feedback === 'copied' ? c.copied : ({ he: 'העתקת כל הפרטים', ar: 'نسخ جميع المعلومات', en: 'Copy My Info' })[language]}
                 </button>
                 <span aria-hidden className="h-4 w-px bg-[#D9E0ED]" />
                 <a href="/qr" className="flex min-h-11 items-center gap-1.5 rounded-lg px-2 hover:bg-[#F1F5FC] focus-visible:outline-2 focus-visible:outline-[#473BB3]"><QrCode size={16} aria-hidden /> {c.showQr}</a>
               </div>
               {feedback === 'manual' && <div role="status" className="mt-2 rounded-xl bg-[#EDF1F8] p-3 text-xs">
-                {c.manualCopy}<input dir="ltr" readOnly value={CARD_URL} onFocus={(e) => e.currentTarget.select()} className="mt-2 w-full rounded-lg border border-[#D2DDEF] bg-white p-2" aria-label="Card URL" />
+                {c.manualCopy}<textarea dir="ltr" readOnly value={manualText} onFocus={(e) => e.currentTarget.select()} rows={5} className="mt-2 w-full rounded-lg border border-[#D2DDEF] bg-white p-2" aria-label="Contact details to copy" />
               </div>}
             </div>
           </div>
