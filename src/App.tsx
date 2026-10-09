@@ -44,6 +44,7 @@ const ShareTestimonialPage = lazy(() => import('./pages/ShareTestimonialPage'));
 // Fully standalone, lazy-loaded OneTap entrypoints.
 const OneTapCardPage = lazy(() => import('./pages/OneTapCardPage'));
 const OneTapQrPage = lazy(() => import('./pages/OneTapQrPage'));
+const OneTapLandingPage = lazy(() => import('./pages/OneTapLandingPage'));
 
 // Skip link component with proper accessibility
 const SkipLink: React.FC = () => {
@@ -116,7 +117,8 @@ const AppContent: React.FC = () => {
             pathname === '/from-gbp' ||
             pathname === '/start' ||
             pathname === '/card' ||
-            pathname === '/qr';
+            pathname === '/qr' ||
+            pathname === '/onetap';
 
           const routes = (
             <Suspense fallback={<SectionSkeleton />}>
@@ -135,6 +137,7 @@ const AppContent: React.FC = () => {
                 <Route path="/start" element={<StartPage />} />
                 <Route path="/card" element={<OneTapCardPage />} />
                 <Route path="/qr" element={<OneTapQrPage />} />
+                <Route path="/onetap" element={<OneTapLandingPage />} />
                 <Route path="/from-gbp" element={<FromGbpPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="/accessibility" element={<AccessibilityPage />} />

@@ -41,7 +41,8 @@ const isStandalone = (pathname: string): boolean =>
   pathname === '/share-testimonial' ||
   pathname === '/from-gbp' ||
   pathname === '/card' ||
-  pathname === '/qr';
+  pathname === '/qr' ||
+  pathname === '/onetap';
 
 const RouteTransition: React.FC<{ children: (location: Location) => React.ReactNode }> = ({
   children,
