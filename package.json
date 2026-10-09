@@ -7,7 +7,7 @@
     "predev": "node scripts/generate-onetap-icons.mjs",
     "dev": "vite",
     "build": "node scripts/generate-onetap-icons.mjs && node scripts/optimize-images.mjs && node scripts/convert-fonts.mjs && node scripts/generate-landing-pages.mjs && node scripts/generate-blog.mjs && node scripts/generate-gallery.mjs && node scripts/generate-review-page.mjs && node scripts/generate-reviews.mjs && vite build",
-    "postbuild": "node scripts/generate-video-ads.mjs",
+    "postbuild": "node scripts/generate-video-ads.mjs && node scripts/generate-onetap-share.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx",
