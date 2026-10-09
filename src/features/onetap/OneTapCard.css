@@ -1,0 +1,588 @@
+/* VASIA OneTap — holographic signature card, isolated from portfolio styles.
+   All normal controls remain inside one viewport: never scroll the business card. */
+.onetap-screen {
+  --onetap-gap: clamp(5px, .95dvh, 11px);
+  --onetap-side: clamp(11px, 3.8vw, 24px);
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  color: #f5faff;
+  color-scheme: dark;
+  background:
+    radial-gradient(ellipse at 6% 12%, rgba(159, 177, 255, .78), transparent 44%),
+    radial-gradient(ellipse at 93% 86%, rgba(109, 236, 249, .7), transparent 43%),
+    linear-gradient(145deg, #a4bdff 0%, #dbe9ff 47%, #a3bdfc 100%);
+  font-family: Inter, Heebo, Cairo, sans-serif;
+}
+.onetap-screen,
+.onetap-screen * { box-sizing: border-box; }
+.onetap-screen button,
+.onetap-screen a { -webkit-tap-highlight-color: transparent; }
+.onetap-screen button:focus-visible,
+.onetap-screen a:focus-visible {
+  outline: 2px solid #fff7a4;
+  outline-offset: 3px;
+}
+.onetap-shell {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100%;
+  max-width: 470px;
+  max-height: 900px;
+}
+.onetap-shell::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: 38px;
+  background: linear-gradient(155deg, #b58aff 5%, #53f5ff 42%, #8493fe 66%, #ffa8fd 100%);
+  filter: blur(13px);
+  opacity: .75;
+}
+.onetap-glass {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto auto auto auto auto;
+  gap: var(--onetap-gap);
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding:
+    max(13px, env(safe-area-inset-top))
+    var(--onetap-side)
+    max(12px, env(safe-area-inset-bottom));
+  border: 1px solid rgba(202, 225, 255, .78);
+  border-radius: 36px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 21% 11%, rgba(84, 168, 255, .7), transparent 42%),
+    radial-gradient(ellipse at 79% 30%, rgba(135, 96, 255, .47), transparent 39%),
+    radial-gradient(ellipse at 51% 97%, rgba(30, 116, 240, .7), transparent 53%),
+    linear-gradient(156deg, #2260ae 0%, #3159be 33%, #263eaf 62%, #204783 100%);
+  box-shadow: inset 0 0 35px rgba(232, 245, 255, .1), 0 30px 76px rgba(26, 54, 121, .32);
+}
+.onetap-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .61;
+  background:
+    radial-gradient(1px 1px at 13% 22%, #fff 95%, transparent 100%),
+    radial-gradient(1px 1px at 88% 28%, #d0eaff 95%, transparent 100%),
+    radial-gradient(2px 2px at 81% 15%, #8aedff 95%, transparent 100%),
+    radial-gradient(1px 1px at 56% 12%, #fff 95%, transparent 100%),
+    radial-gradient(1px 1px at 18% 46%, #d2c6ff 95%, transparent 100%);
+}
+.onetap-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255,255,255,.15), transparent 12%, transparent 87%, rgba(166,220,255,.16));
+}
+.onetap-horizon {
+  position: absolute;
+  z-index: -1;
+  top: 24%;
+  left: -31%;
+  width: 162%;
+  height: 45%;
+  border: 1px solid rgba(137, 245, 255, .38);
+  border-radius: 50% 50% 25% 25%;
+  box-shadow: 0 -3px 13px #5ceaff, 0 -12px 38px rgba(150, 157, 255, .64);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(102,223,255,.55), transparent 45%),
+    radial-gradient(ellipse at 50% 56%, rgba(88, 87, 217, .63), transparent 62%),
+    linear-gradient(180deg, rgba(22,89,198,.42), rgba(43,59,171,.15) 63%, transparent);
+  transform: rotate(-3deg);
+  pointer-events: none;
+}
+.onetap-glow {
+  position: absolute;
+  z-index: -1;
+  inset: auto -15% -24% -15%;
+  height: 40%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(ellipse, rgba(67, 209, 255, .38), rgba(107,102,247,.21) 49%, transparent 73%);
+}
+.onetap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 0;
+  min-height: 40px;
+  gap: 7px;
+}
+.onetap-wordmark {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+}
+.onetap-wordmark img {
+  display: block;
+  width: clamp(31px, 4.4dvh, 44px);
+  height: clamp(31px, 4.4dvh, 44px);
+  filter: drop-shadow(0 0 9px rgba(89,237,255,.75));
+}
+.onetap-wordmark-text { display: flex; flex-direction: column; line-height: 1; }
+.onetap-wordmark-text strong {
+  font-family: 'Space Grotesk', Inter, sans-serif;
+  font-size: clamp(18px, 2.8dvh, 25px);
+  letter-spacing: .22em;
+  font-weight: 700;
+}
+.onetap-wordmark-text span {
+  padding-top: 3px;
+  font-size: clamp(11px, 1.65dvh, 14px);
+  color: #d9e9ff;
+  font-weight: 600;
+}
+.onetap-wordmark-text em { color: #ffcf74; font-style: normal; }
+.onetap-lang {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  direction: ltr;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid rgba(198,234,255,.54);
+  border-radius: 999px;
+  background: rgba(36, 74, 163, .48);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.14);
+  backdrop-filter: blur(10px);
+}
+.onetap-lang button {
+  min-width: 31px;
+  height: 31px;
+  padding: 0 3px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(238, 249, 255, .92);
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 750;
+  cursor: pointer;
+}
+.onetap-lang button[aria-pressed="true"] {
+  color: #163b8e;
+  background: #dcf7ff;
+  box-shadow: 0 1px 6px rgba(3,17,71,.25);
+}
+.onetap-hero {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(3px, .7dvh, 9px);
+  text-align: center;
+  overflow: hidden;
+}
+.onetap-kicker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  max-width: 37%;
+  font-size: clamp(7px, 1.08dvh, 9px);
+  line-height: 1.5;
+  letter-spacing: .16em;
+  color: rgba(229,244,255,.8);
+  text-align: start;
+}
+.onetap-hero-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  max-width: 30%;
+  font-size: clamp(7px, 1.08dvh, 9px);
+  line-height: 1.6;
+  letter-spacing: .12em;
+  color: #d2eaff;
+  text-align: end;
+  opacity: .82;
+}
+.onetap-orb {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 0 1 auto;
+  width: clamp(73px, 15.5dvh, 143px);
+  height: clamp(73px, 15.5dvh, 143px);
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+  border: 2px solid rgba(212, 233, 255, .85);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 24%, #4862cb, #172e81 65%, #0b3a74);
+  box-shadow:
+    0 0 0 5px rgba(178, 145, 255, .36),
+    0 0 0 9px rgba(58, 220, 255, .12),
+    0 0 24px 10px rgba(81, 207, 255, .68),
+    inset 0 0 25px rgba(77, 83, 202, .93),
+    inset 0 1px 11px rgba(247, 246, 255, .47);
+  animation: onetap-orb-pulse 7s ease-in-out infinite;
+}
+.onetap-orb::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  border-top: 2px solid rgba(246,166,255,.85);
+  border-right: 2px solid rgba(67,238,255,.83);
+  border-bottom: 1px solid rgba(70,150,255,.7);
+  pointer-events: none;
+}
+.onetap-orb img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 15px rgba(5,27,91,.25));
+}
+.onetap-service {
+  max-width: 100%;
+  margin: 0;
+  padding: 0 3px;
+  font-size: clamp(10px, 1.6dvh, 14px);
+  line-height: 1.38;
+  font-weight: 550;
+  color: #f3faff;
+  text-wrap: balance;
+  text-shadow: 0 2px 8px rgba(0,28,91,.35);
+}
+.onetap-slogan {
+  max-width: 100%;
+  margin: 0;
+  font-size: clamp(8px, 1.2dvh, 11px);
+  letter-spacing: .17em;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #c3d9ff;
+}
+.onetap-slogan::before,
+.onetap-slogan::after {
+  content: "";
+  display: inline-block;
+  width: clamp(15px, 6vw, 38px);
+  height: 1px;
+  margin: 0 7px 3px;
+  background: linear-gradient(90deg, #2beded, transparent);
+}
+.onetap-slogan::after { transform: scaleX(-1); }
+.onetap-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  gap: 9px;
+  color: #fff;
+  font-weight: 750;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid rgba(245, 253, 255, .84);
+  backdrop-filter: blur(12px);
+  transition: transform .15s ease, filter .18s ease;
+}
+.onetap-action:active, .onetap-tool:active, .onetap-social:active { transform: scale(.985); }
+.onetap-action:hover { filter: brightness(1.06); }
+.onetap-whatsapp {
+  height: clamp(43px, 6.5dvh, 62px);
+  border-radius: clamp(15px, 2.5dvh, 22px);
+  background: linear-gradient(100deg, #0cbc9c, #00b9b8 57%, #07a6c8);
+  box-shadow: inset 0 2px 4px rgba(255,255,255,.38), 0 6px 20px rgba(3,242,215,.38);
+  font-size: clamp(17px, 2.65dvh, 25px);
+  text-shadow: 0 1px 5px rgba(4,58,72,.3);
+}
+.onetap-whatsapp-icon { width: clamp(22px, 3.8dvh, 35px); height: clamp(22px, 3.8dvh, 35px); }
+.onetap-action-end { position: absolute; inset-inline-end: 13px; opacity: .93; width: 18px; height: 18px; }
+.onetap-whatsapp, .onetap-copy { position: relative; }
+.onetap-quick-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(7px, 2vw, 12px);
+  min-width: 0;
+}
+.onetap-quick {
+  position: relative;
+  height: clamp(40px, 5.7dvh, 52px);
+  padding: 0 17px 0 11px;
+  border-radius: clamp(12px, 1.9dvh, 17px);
+  background: linear-gradient(110deg, #287cf9, #2a59db 83%, #578bff);
+  box-shadow: inset 0 1px 6px rgba(255,255,255,.28), 0 4px 12px rgba(42,111,238,.28);
+  font-size: clamp(12px, 1.9dvh, 16px);
+}
+.onetap-quick:last-child {
+  background: linear-gradient(107deg, #4656da, #7758d9 72%, #bd7bf6);
+  box-shadow: inset 0 1px 6px rgba(255,255,255,.31), 0 4px 14px rgba(130,97,243,.28);
+}
+.onetap-quick svg:first-child { flex: none; width: clamp(17px, 2.85dvh, 23px); height: clamp(17px, 2.85dvh, 23px); }
+.onetap-socials {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(5px, 1.4vw, 10px);
+  min-width: 0;
+}
+.onetap-social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(3px, .6dvh, 6px);
+  min-width: 0;
+  height: clamp(53px, 9dvh, 82px);
+  padding: 5px 1px;
+  border: 1px solid rgba(153, 220, 255, .66);
+  border-radius: clamp(12px, 2dvh, 20px);
+  background: linear-gradient(144deg, rgba(79,148,246,.42), rgba(33,64,156,.49));
+  box-shadow: inset 0 2px 12px rgba(214, 238, 255, .12), 0 4px 13px rgba(17,42,126,.15);
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  transition: transform .15s ease, background-color .15s ease;
+}
+.onetap-social:hover { background-color: rgba(179, 210, 255, .14); }
+.onetap-social-glyph {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: clamp(22px, 3.9dvh, 32px);
+  height: clamp(22px, 3.9dvh, 32px);
+  border-radius: 9px;
+  background: #2477c7;
+  box-shadow: 0 3px 8px rgba(18,42,116,.25);
+}
+.onetap-social-glyph svg { width: 69%; height: 69%; }
+.onetap-social--github .onetap-social-glyph { background: #152d5a; }
+.onetap-social--instagram .onetap-social-glyph { background: linear-gradient(140deg,#833bed,#d82c99,#ffa44d); }
+.onetap-social--facebook .onetap-social-glyph { background: #1979ed; }
+.onetap-social-label { max-width: 100%; font-size: clamp(9px, 1.4dvh, 12px); white-space: nowrap; font-weight: 550; }
+.onetap-copy {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+  height: clamp(44px, 7dvh, 64px);
+  gap: clamp(9px,2.5vw,15px);
+  padding: 0 clamp(10px, 3vw, 19px);
+  border: 1px solid rgba(238,249,255,.9);
+  border-radius: clamp(13px,2.1dvh,20px);
+  color: #fff;
+  background: linear-gradient(112deg, rgba(93,91,226,.68), rgba(25,133,213,.62), rgba(68,74,190,.58));
+  box-shadow: inset 0 2px 10px rgba(215,231,255,.25), 0 4px 13px rgba(25,45,157,.18);
+  cursor: pointer;
+  text-align: start;
+}
+.onetap-copy:hover { filter: brightness(1.07); }
+.onetap-copy > svg:first-child { width: clamp(23px,3.7dvh,32px); height: clamp(23px,3.7dvh,32px); flex: none; }
+.onetap-copy-info { display:flex; flex-direction:column; justify-content:center; min-width:0; gap:3px; }
+.onetap-copy-title { font-size: clamp(13px,2.12dvh,19px); font-weight:750; line-height:1.18; }
+.onetap-copy-detail { font-size: clamp(8px,1.31dvh,11px); color: #deebff; opacity: .92; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.onetap-copy-arrow { width: 18px; height: 18px; margin-inline-start: auto; flex: none; }
+.onetap-tools {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 0;
+  min-width: 0;
+  min-height: 0;
+  height: clamp(57px, 9.6dvh, 87px);
+  padding: clamp(4px,.75dvh,8px);
+  border: 1px solid rgba(201,233,255,.8);
+  border-radius: clamp(15px,2.3dvh,23px);
+  background: linear-gradient(116deg,rgba(103,100,225,.51),rgba(46,104,207,.6),rgba(33,126,210,.46));
+  box-shadow: inset 0 2px 11px rgba(199,230,255,.18),0 5px 16px rgba(24,49,122,.18);
+}
+.onetap-tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(2px,.5dvh,5px);
+  min-width: 0;
+  min-height: 0;
+  padding: 2px 1px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #f4f8ff;
+  font-size: clamp(8px,1.32dvh,12px);
+  line-height: 1.16;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+.onetap-tool:not(:last-child) { border-inline-end: 1px solid rgba(203,224,255,.26); border-radius: 0; }
+.onetap-tool svg { flex: none; width: clamp(18px,3.1dvh,27px); height: clamp(18px,3.1dvh,27px); }
+.onetap-tool span { display: block; max-width: 100%; text-wrap: balance; }
+.onetap-tool:hover { background: rgba(220,237,255,.1); }
+.onetap-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px,1.3vw,12px);
+  min-height: 12px;
+  font-size: clamp(7px,1.1dvh,10px);
+  line-height: 1;
+  font-weight: 650;
+  white-space: nowrap;
+  letter-spacing: .12em;
+  text-align: center;
+  color: rgba(224,239,255,.9);
+}
+.onetap-footer > span { color:#ffcb57; }
+/* Dialogs live outside the card grid; normal card never gains scroll height. */
+.onetap-dialog-overlay {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  padding-top: max(20px, env(safe-area-inset-top));
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+  background: rgba(13,39,94,.6);
+  backdrop-filter: blur(13px);
+}
+.onetap-dialog {
+  position: relative;
+  width: min(100%, 385px);
+  max-height: 90dvh;
+  overflow: auto;
+  border: 1px solid rgba(255,255,255,.85);
+  border-radius: 25px;
+  padding: 25px;
+  color: #244271;
+  background: linear-gradient(155deg,#fff,#e9f6ff);
+  box-shadow: 0 19px 70px rgba(13,30,92,.38);
+}
+.onetap-dialog h2 { margin: 9px 0; color: #153978; font-size: 20px; font-weight: 800; }
+.onetap-dialog p { font-size: 14px; line-height: 1.65; }
+.onetap-dialog-close {
+  position: absolute;
+  inset-inline-end: 10px;
+  top: 10px;
+  display: grid;
+  place-items: center;
+  height: 40px;
+  width: 40px;
+  border: 0;
+  border-radius: 12px;
+  background: #e2effa;
+  color: #254575;
+  cursor: pointer;
+}
+.onetap-dialog textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: none;
+  overflow: auto;
+  border: 1px solid #acc4e6;
+  border-radius: 12px;
+  padding: 11px;
+  direction: ltr;
+  text-align: left;
+  color: #19457e;
+  background: white;
+  font-size: 12px;
+}
+.onetap-dialog-confirm {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 13px;
+  border: 0;
+  border-radius: 13px;
+  color: white;
+  background: #2449ac;
+  font-weight: 700;
+  cursor: pointer;
+}
+@keyframes onetap-orb-pulse {
+  0%, 100% { box-shadow: 0 0 0 5px rgba(178,145,255,.36),0 0 0 9px rgba(58,220,255,.12),0 0 22px 9px rgba(81,207,255,.62),inset 0 0 25px rgba(77,83,202,.93); }
+  50% { box-shadow: 0 0 0 5px rgba(178,145,255,.48),0 0 0 9px rgba(58,220,255,.17),0 0 31px 13px rgba(81,207,255,.79),inset 0 0 25px rgba(77,83,202,.93); }
+}
+@media (max-width: 599px) {
+  .onetap-shell { max-width: none; max-height: none; }
+  .onetap-shell::before { display: none; }
+  .onetap-glass {
+    border: 0;
+    border-radius: 0;
+    padding-top: max(9px, env(safe-area-inset-top));
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+}
+@media (max-height: 700px) {
+  .onetap-screen { --onetap-gap: clamp(4px,.72dvh,6px); }
+  .onetap-glass { padding-top: max(7px,env(safe-area-inset-top)); padding-bottom: max(7px,env(safe-area-inset-bottom)); }
+  .onetap-header { min-height: 34px; }
+  .onetap-lang button { min-width: 28px; height: 28px; }
+  .onetap-orb { width: clamp(66px, 13.4dvh, 102px); height: clamp(66px, 13.4dvh, 102px); }
+  .onetap-kicker, .onetap-hero-label { display: none; }
+  .onetap-hero { gap: 3px; }
+  .onetap-social { height: clamp(47px,8dvh,57px); }
+  .onetap-slogan { font-size: 8px; }
+}
+@media (max-height: 570px) {
+  .onetap-glass { --onetap-gap: 4px; }
+  .onetap-header { min-height: 30px; }
+  .onetap-wordmark img { width: 29px; height: 29px; }
+  .onetap-wordmark-text strong { font-size: 16px; }
+  .onetap-wordmark-text span { font-size: 10px; }
+  .onetap-orb { width: clamp(55px,11dvh,73px); height: clamp(55px,11dvh,73px); }
+  .onetap-slogan { display: none; }
+  .onetap-service { font-size: 10px; }
+  .onetap-whatsapp { height: 41px; font-size: 16px; }
+  .onetap-quick { height: 38px; font-size: 12px; }
+  .onetap-social { height: 47px; }
+  .onetap-copy { height: 40px; }
+  .onetap-copy-detail { display: none; }
+  .onetap-tools { height: 55px; }
+  .onetap-footer { display: none; }
+}
+@media (max-height: 445px) {
+  .onetap-orb { display: none; }
+  .onetap-hero { justify-content: center; }
+  .onetap-social-label { display: none; }
+  .onetap-social { height: 35px; }
+  .onetap-social-glyph { width: 21px; height: 21px; }
+  .onetap-tools { height: 46px; }
+  .onetap-whatsapp, .onetap-quick, .onetap-copy { height: 35px; }
+  .onetap-copy-title { font-size: 12px; }
+}
+@media (max-width: 350px) {
+  .onetap-screen { --onetap-side: 9px; }
+  .onetap-wordmark-text strong { font-size: 17px; }
+  .onetap-wordmark-text span { font-size: 10px; }
+  .onetap-lang button { min-width: 28px; height: 29px; }
+  .onetap-social-label { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .onetap-orb { animation: none; }
+  .onetap-action, .onetap-tool, .onetap-social { transition: none; }
+}
