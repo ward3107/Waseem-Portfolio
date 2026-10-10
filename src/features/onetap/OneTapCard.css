@@ -406,7 +406,7 @@
 .onetap-copy-arrow { width: 18px; height: 18px; margin-inline-start: auto; flex: none; }
 .onetap-tools {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: stretch;
   gap: clamp(6px, 1.8vw, 11px);
   min-width: 0;
@@ -724,4 +724,80 @@
   .onetap--motion .onetap-orb img,
   .onetap-orbit-ring,
   .onetap-spark { animation: none !important; }
+}
+
+/* Share stays visible beside the existing save, install and QR actions. */
+.onetap-secondary-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px;
+  gap: clamp(9px, 2.5vw, 14px);
+  min-width: 0;
+}
+.onetap-bit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid rgba(182, 251, 255, .85);
+  border-radius: clamp(13px,2.1dvh,20px);
+  background: #023b43;
+  color: #a3fcff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.onetap-bit-logo {
+  display: block;
+  width: 31px;
+  height: 31px;
+  flex: none;
+  border-radius: 7px;
+  background-image: url('/onetap/bit-payment.png');
+  background-size: 642% 1177%;
+  background-position: 50.16% 12.43%;
+  background-repeat: no-repeat;
+}
+.onetap-bit-qr {
+  display: block;
+  width: min(100%, 280px);
+  height: auto;
+  margin: 10px auto;
+  background: #fff;
+  border-radius: 12px;
+}
+.onetap-payment-number { text-align: center; }
+.onetap-bit-open {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 46px;
+  border-radius: 13px;
+  padding: 10px;
+  background: #003c43;
+  color: #70f6ff;
+  text-decoration: none;
+  font-weight: 700;
+}
+/* The hero reserves the complete logo box so flex shrink cannot crop the V. */
+.onetap-hero { overflow: visible; }
+.onetap-orbit-system, .onetap-orbit-system .onetap-orb { flex-shrink: 0; }
+.onetap-orbit-system .onetap-orb img { flex-shrink: 0; overflow: visible; }
+.onetap-copy-title { font-size: clamp(12px,1.95dvh,17px); }
+.onetap-copy-detail { font-size: clamp(8px,1.18dvh,10px); }
+.onetap-tools { gap: clamp(7px,2vw,11px); }
+.onetap-tool { font-size: clamp(8px,1.2dvh,11px); }
+@media (max-height: 700px) {
+  .onetap-orbit-system { width: clamp(85px,16dvh,112px); height: clamp(85px,16dvh,112px); }
+  .onetap-orbit-system .onetap-orb { width: clamp(62px,11dvh,80px); height: clamp(62px,11dvh,80px); }
+}
+@media (max-height: 570px) {
+  .onetap-orbit-system { width: 68px; height: 68px; }
+  .onetap-orbit-system .onetap-orb { width: 52px; height: 52px; }
+  .onetap-secondary-actions { grid-template-columns: minmax(0,1fr) 66px; }
+  .onetap-bit-logo { width: 25px; height: 25px; }
+  .onetap-tools { height: 60px; }
+}
+@media (max-height: 445px) {
+  .onetap-orbit-system { width: 0; height: 0; overflow: hidden; }
+  .onetap-tools { height: 46px; }
 }

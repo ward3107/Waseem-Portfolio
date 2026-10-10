@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowUpRight, Check, ChevronRight, Copy, Facebook, Github,
   Globe2, Instagram, Linkedin, MessageCircle, PhoneCall, QrCode,
-  Smartphone, UserPlus, X, type LucideIcon,
+  Smartphone, Share2, UserPlus, X, type LucideIcon,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
-import { buildVCard, ONETAP_COPY, safeExternalUrl } from '@/features/onetap/cardData';
+import { buildVCard, CARD_URL, ONETAP_COPY, safeExternalUrl } from '@/features/onetap/cardData';
 import { buildOneTapSharePayload, getWhatsAppLink, normalizeWhatsAppNumber } from '@/features/onetap/shareDetails';
 import { useOneTapManifest } from '@/features/onetap/useOneTapManifest';
 import { resolveOneTapVariant } from '@/features/onetap/variants';
@@ -17,6 +17,14 @@ interface InstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: string; platform: string }>;
 }
+
+// Destination decoded from the owner's supplied Bit QR; never inferred from a phone number.
+const BIT_PAYMENT_URL = 'https://www.bitpay.co.il/app/me/4BA960EA-B2B9-7D9A-76D3-F97DBE45FD731EFE';
+const PAYMENT_COPY = {
+  he: { title: 'תשלום ב־Bit', open: 'פתיחת Bit לתשלום', scan: 'סרקו או פתחו את הקישור לתשלום ב־Bit.', number: 'מספר הטלפון' },
+  ar: { title: 'الدفع عبر Bit', open: 'فتح Bit للدفع', scan: 'امسح الرمز أو افتح الرابط للدفع عبر Bit.', number: 'رقم الهاتف' },
+  en: { title: 'Pay with Bit', open: 'Open Bit to pay', scan: 'Scan or open the link to pay with Bit.', number: 'Phone number' },
+};
 
 const languages = ['he', 'ar', 'en'] as const;
 const UI = {
@@ -33,6 +41,12 @@ const OneTapCardPage: React.FC = () => {
   const ui = UI[language];
   const [nativePrompt, setNativePrompt] = useState<InstallPromptEvent | null>(null);
   const [installHelp, setInstallHelp] = useState(false);
+  const [bitHelp, setBitHelp] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+  const [manualKind, setManualKind] = useState<'info' | 'card'>('info');
+  const payment = PAYMENT_COPY[language];
+  const dialogRef = useRef<HTMLElement>(null);
+  const returnFocus = useRef<HTMLElement | null>(null);
   const [feedback, setFeedback] = useState<'none' | 'copied' | 'manual'>('none');
   const [manualText, setManualText] = useState('');
   const closeButton = useRef<HTMLButtonElement>(null);
@@ -50,23 +64,58 @@ const OneTapCardPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!installHelp && feedback !== 'manual') return;
+    if (!installHelp && !bitHelp && feedback !== 'manual') return;
+    returnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     closeButton.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setInstallHelp(false);
+        setBitHelp(false);
         setFeedback('none');
-        copyButton.current?.focus();
+      }
+      if (e.key === 'Tab') {
+        const elements = dialogRef.current?.querySelectorAll<HTMLElement>('a[href], button, textarea');
+        if (!elements?.length) return;
+        const first = elements[0], last = elements[elements.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     };
     document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [installHelp, feedback]);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      returnFocus.current?.focus();
+    };
+  }, [installHelp, bitHelp, feedback]);
 
   const dismiss = () => {
     setInstallHelp(false);
+    setBitHelp(false);
     setFeedback('none');
-    copyButton.current?.focus();
+  };
+
+  const shareCard = async () => {
+    setLinkCopied(false);
+    const url = new URL(CARD_URL);
+    url.searchParams.set('lang', language);
+    if (variant === 'classic') url.searchParams.set('variant', variant);
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'VASIA OneTap', text: c.eyebrow, url: url.href });
+        return;
+      } catch (error) {
+        // Closing the share sheet is intentional; do not overwrite the clipboard.
+        if (error instanceof Error && error.name === 'AbortError') return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url.href);
+      setLinkCopied(true);
+    } catch {
+      setManualKind('card');
+      setManualText(url.href);
+      setFeedback('manual');
+    }
   };
 
   const addHome = async () => {
@@ -97,6 +146,7 @@ const OneTapCardPage: React.FC = () => {
 
   const copyMyInfo = async () => {
     setFeedback('none');
+    setManualKind('info');
     const payload = buildOneTapSharePayload(contact, language);
     setManualText(payload.plainText);
     try {
@@ -136,10 +186,11 @@ const OneTapCardPage: React.FC = () => {
       ? 'تطوير مواقع وتطبيقات • AI • أتمتة'
       : 'Web & App Development • AI Solutions • Automation';
   const copyDialog = feedback === 'manual';
-  const dialogOpen = installHelp || copyDialog;
+  const dialogOpen = installHelp || copyDialog || bitHelp;
 
   return (
-    <main className={"onetap-screen onetap--" + variant} dir={dir} aria-label="VASIA OneTap Digital Business Card">
+    <>
+    <main className={"onetap-screen onetap--" + variant} dir={dir} aria-label="VASIA OneTap Digital Business Card" {...(dialogOpen ? { inert: '' } : {})}>
       <div className="onetap-shell">
         <article className="onetap-glass">
           <div aria-hidden="true" className="onetap-horizon" />
@@ -219,6 +270,7 @@ const OneTapCardPage: React.FC = () => {
             })}
           </nav>
 
+          <div className="onetap-secondary-actions">
           <button type="button" className="onetap-copy" onClick={copyMyInfo}
             ref={copyButton} aria-label={ui.copy} aria-live="polite">
             {feedback === 'copied' ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
@@ -229,6 +281,12 @@ const OneTapCardPage: React.FC = () => {
             <ChevronRight className="onetap-copy-arrow" aria-hidden="true" />
           </button>
 
+          <button type="button" className="onetap-bit" onClick={() => setBitHelp(true)} aria-label={payment.title}>
+            <span className="onetap-bit-logo" aria-hidden="true" />
+            <span>Bit</span>
+          </button>
+          </div>
+
           <div className="onetap-tools" role="group" aria-label={language === 'en' ? 'Card actions' : language === 'he' ? 'פעולות כרטיס' : 'إجراءات البطاقة'}>
             <button type="button" className="onetap-tool" onClick={downloadVCard}>
               <UserPlus aria-hidden="true" />
@@ -237,6 +295,10 @@ const OneTapCardPage: React.FC = () => {
             <button type="button" className="onetap-tool" onClick={addHome}>
               <Smartphone aria-hidden="true" />
               <span>{c.install}</span>
+            </button>
+            <button type="button" className="onetap-tool" onClick={shareCard} aria-live="polite">
+              {linkCopied ? <Check aria-hidden="true" /> : <Share2 aria-hidden="true" />}
+              <span>{linkCopied ? c.copied : c.share}</span>
             </button>
             <a className="onetap-tool" href="/qr">
               <QrCode aria-hidden="true" />
@@ -249,20 +311,28 @@ const OneTapCardPage: React.FC = () => {
           </footer>
         </article>
       </div>
+    </main>
       {dialogOpen && (
         <div className="onetap-dialog-overlay" role="presentation"
           onMouseDown={e => { if (e.currentTarget === e.target) dismiss(); }}>
-          <section className="onetap-dialog" role="dialog" aria-modal="true"
+          <section ref={dialogRef} dir={dir} className="onetap-dialog" role="dialog" aria-modal="true"
             aria-labelledby="onetap-dialog-title">
             <button ref={closeButton} type="button" className="onetap-dialog-close"
               onClick={dismiss} aria-label={c.close}><X size={21} aria-hidden="true" /></button>
             <img src="/onetap/vasia-v.svg" alt="" width="52" height="52" />
-            <h2 id="onetap-dialog-title">{copyDialog ? ui.copy : c.installTitle}</h2>
-            {copyDialog ? (
+            <h2 id="onetap-dialog-title">{bitHelp ? payment.title : copyDialog ? (manualKind === 'card' ? c.share : ui.copy) : c.installTitle}</h2>
+            {bitHelp ? (
+              <>
+                <p>{payment.scan}</p>
+                <img className="onetap-bit-qr" src="/onetap/bit-qr.svg" alt={payment.title + ' QR'} width="280" height="280" />
+                <p className="onetap-payment-number">{payment.number}: <b dir="ltr">053-4260632</b></p>
+                <a className="onetap-bit-open" href={BIT_PAYMENT_URL} target="_blank" rel="noopener noreferrer">{payment.open}</a>
+              </>
+            ) : copyDialog ? (
               <>
                 <p>{c.manualCopy}</p>
                 <textarea readOnly value={manualText} onFocus={e => e.currentTarget.select()}
-                  aria-label={ui.copy} rows={5} dir="ltr" />
+                  aria-label={manualKind === 'card' ? c.share : ui.copy} rows={5} dir="ltr" />
               </>
             ) : <p>{help}</p>}
             <button type="button" onClick={dismiss} className="onetap-dialog-confirm">
@@ -271,7 +341,7 @@ const OneTapCardPage: React.FC = () => {
           </section>
         </div>
       )}
-    </main>
+    </>
   );
 };
 

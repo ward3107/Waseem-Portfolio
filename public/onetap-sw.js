@@ -1,7 +1,7 @@
 /* VASIA OneTap: opt-in offline cache. Other portfolio routes are network-only. */
-const CACHE = 'vasia-onetap-v3';
+const CACHE = 'vasia-onetap-v4';
 const PAGES = ['/card', '/qr'];
-const STATIC = ['/favicon.svg', '/brand/vasia-profile.png', '/onetap/vasia-qr.svg', '/onetap/vasia-v.svg'];
+const STATIC = ['/favicon.svg', '/brand/vasia-profile.png', '/onetap/vasia-qr.svg', '/onetap/vasia-v.svg', '/onetap/bit-payment.png', '/onetap/bit-qr.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE)
