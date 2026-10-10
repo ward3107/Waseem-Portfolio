@@ -18,7 +18,7 @@ import { useContact } from '@/features/contact/useContact';
 // benefits from being reviewable in-full context, and the copy rarely churns.
 // Effective date: bump `LAST_UPDATED` when the policy substantively changes.
 
-const LAST_UPDATED = '2026-09-05';
+const LAST_UPDATED = '2026-10-10';
 
 const PrivacyPage: React.FC = () => {
   const { language, t } = useLanguage();
@@ -104,6 +104,11 @@ const PrivacyPage: React.FC = () => {
         <li>
           <b>Google Analytics</b> (רק אם הסכמתם) — לניתוח תעבורה מצטבר. Google
           עשויה לעבד את הנתונים גם בארה"ב.
+        </li>
+        <li>
+          <b>Metricool</b> (רק לאחר אישור מדידה) — למדידת ביקורים באתר, ללא עוגיות.
+          הסקריפט שולח את כתובת העמוד, כתובת העמוד המפנה אם קיימת ומידות חלון הדפדפן.
+          השירות מקבל את כתובת ה־IP בעת החיבור לצורך זיהוי המדינה.
         </li>
         <li>רשויות אכיפה — רק אם הדבר נדרש על פי חוק (למשל צו שיפוטי).</li>
       </ul>
@@ -250,6 +255,11 @@ const PrivacyPage: React.FC = () => {
         <li>
           <b>Google Analytics</b> (فقط إذا وافقتم) — لتحليل الزيارات المجمّع. قد تعالج
           Google البيانات في الولايات المتحدة أيضًا.
+        </li>
+        <li>
+          <b>Metricool</b> (بعد الموافقة على القياس فقط) — لقياس زيارات الموقع، دون كوكيز.
+          يرسل الكود عنوان الصفحة وعنوان الصفحة المُحيلة إن وُجد وأبعاد نافذة المتصفح.
+          تتلقى الخدمة عنوان IP أثناء الاتصال لتحديد الدولة.
         </li>
         <li>سلطات إنفاذ القانون — فقط إذا اقتضى القانون ذلك (كأمر قضائي).</li>
       </ul>
@@ -405,6 +415,11 @@ const PrivacyPage: React.FC = () => {
         <li>
           <b>Google Analytics</b> (only if you consent) — aggregate traffic analysis.
           Google may process data in the US as well.
+        </li>
+        <li>
+          <b>Metricool</b> (only after analytics consent) — website visit measurement without cookies.
+          The script sends the page URL, the referring page URL when available, and browser window dimensions.
+          The service receives the IP address during the connection to identify the country.
         </li>
         <li>Law enforcement — only when legally required (e.g. court order).</li>
       </ul>
