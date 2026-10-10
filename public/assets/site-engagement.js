@@ -1,6 +1,7 @@
-/* One consent-aware analytics integration for the SPA and static pages.
- * Contact intent != lead received. No names, phone numbers, message text,
- * query strings, free-form search terms, or form values are sent. */
+/* Consent-aware analytics for the SPA and static pages.
+ * Contact intent != lead received. Vercel events exclude names, phone numbers,
+ * message text, query strings, search terms, and form values.
+ * Metricool's visit tracker receives the page URL and referrer after consent. */
 (() => {
   if (window.vasiaTrack) return;
   const allowed = () => {
@@ -8,8 +9,17 @@
     catch { return false; }
   };
   let started = false;
+  let metricoolSent = false;
+  const trackMetricool = () => {
+    if (!allowed() || metricoolSent || /^\/admin(?:\/|$)/.test(location.pathname)) return;
+    if (typeof window.beTracker?.t !== 'function') return;
+    metricoolSent = true;
+    window.beTracker.t({hash:'e5a3aeddb5585d10c71503ff25220e45'});
+  };
   const start = () => {
-    if (!allowed() || started) return;
+    if (!allowed()) return;
+    trackMetricool();
+    if (started) return;
     started = true;
     window.va = window.va || function (...args) { (window.vaq = window.vaq || []).push(args); };
     window.va('beforeSend', event => {
@@ -21,6 +31,13 @@
     script.src = '/_vercel/insights/script.js'; script.defer = true;
     script.dataset.sdkn = 'vasia-consent';
     document.head.append(script);
+    if (!/^\/admin(?:\/|$)/.test(location.pathname)) {
+      const metricool = document.createElement('script');
+      metricool.src = 'https://tracker.metricool.com/resources/be.js';
+      metricool.async = true;
+      metricool.onload = trackMetricool;
+      document.head.append(metricool);
+    }
   };
   const eventNames = new Set(['contact_intent','lead_submitted','testimonial_submitted','gallery_open','project_story_open']);
   const sources = new Set(['page','header','footer','article','project_story','whatsapp_dock','exit_intent','discount_game','project_wizard']);
