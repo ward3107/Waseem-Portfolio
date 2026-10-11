@@ -16,7 +16,7 @@ const copy = {
     price: 'תשלום חד־פעמי על יצירת הכרטיס', from: 'החל מ־',
     demo: 'צפייה בהדגמה', ask: 'לקבלת הצעת מחיר', order: 'הזמינו דרך WhatsApp',
     benefits: ['QR אישי', 'WhatsApp ישיר', 'אתר ורשתות', 'שמירת איש קשר', 'מותאם לטלפון'],
-    note: 'מחירי יצירה בלבד. דומיין פרטי, פיתוחים מיוחדים, תנאי אחסון ותחזוקה יוגדרו בהצעה לפני תשלום.',
+    note: 'המחיר כולל יצירת כרטיס ואחסון. דומיין ותחזוקה בתשלום נוסף. פיתוחים מיוחדים יתומחרו בהצעה לפני תשלום.',
     caption: 'VASIA OneTap • Digital Cards',
   },
   ar: {
@@ -30,7 +30,7 @@ const copy = {
     price: 'دفعة واحدة مقابل إنشاء البطاقة', from: 'ابتداءً من ',
     demo: 'شاهد المثال', ask: 'اطلب عرض سعر', order: 'اطلب عبر واتساب',
     benefits: ['رمز QR خاص', 'واتساب مباشر', 'موقع وسوشيال', 'حفظ جهة الاتصال', 'ملائم للموبايل'],
-    note: 'الأسعار لإنشاء البطاقة. الاستضافة والصيانة والدومين الخاص أو التطوير الإضافي تحدد في العرض قبل الدفع.',
+    note: 'السعر يشمل إنشاء البطاقة والاستضافة. الدومين والصيانة بتكلفة إضافية. يتم تسعير التطوير الإضافي في العرض قبل الدفع.',
     caption: 'VASIA OneTap • Digital Cards',
   },
   en: {
@@ -44,7 +44,7 @@ const copy = {
     price: 'One-time card creation fee', from: 'From ',
     demo: 'View live demo', ask: 'Request a quote', order: 'Order on WhatsApp',
     benefits: ['Personal QR', 'Direct WhatsApp', 'Website + social', 'Save contact', 'Mobile-ready'],
-    note: 'Creation pricing only. Hosting, maintenance, private domains and custom work are quoted before payment.',
+    note: 'Pricing includes card creation and hosting. Domain and maintenance cost extra. Custom work is quoted before payment.',
     caption: 'VASIA OneTap • Digital Cards',
   },
 };
