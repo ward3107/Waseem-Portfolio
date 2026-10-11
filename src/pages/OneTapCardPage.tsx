@@ -11,6 +11,7 @@ import { buildVCard, CARD_URL, ONETAP_COPY, safeExternalUrl } from '@/features/o
 import { buildOneTapSharePayload, getWhatsAppLink, normalizeWhatsAppNumber } from '@/features/onetap/shareDetails';
 import { useOneTapManifest } from '@/features/onetap/useOneTapManifest';
 import { resolveOneTapVariant } from '@/features/onetap/variants';
+import { PromotionShareButtons } from '@/features/onetap/PromotionShareButtons';
 import '@/features/onetap/OneTapCard.css';
 
 interface InstallPromptEvent extends Event {
@@ -305,6 +306,8 @@ const OneTapCardPage: React.FC = () => {
               <span>{c.showQr}</span>
             </a>
           </div>
+
+          <PromotionShareButtons language={language} />
 
           <footer className="onetap-footer" dir="ltr">
             CONNECT <span>•</span> COLLABORATE <span>•</span> CREATE <span>•</span> GROW
