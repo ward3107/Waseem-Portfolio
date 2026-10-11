@@ -484,7 +484,7 @@
 .onetap-promo-button svg { width: 14px; height: 14px; flex: none; }
 .onetap-promo-button:disabled { opacity: .65; cursor: wait; }
 .onetap-promo-dialog { margin: auto; padding: 22px; }
-.onetap-promo-dialog h2 { padding-inline-end: 30px; }
+.onetap-promo-dialog h2 { padding-inline: 30px; }
 .onetap-promo-image { display: block; width: 100%; height: auto; border-radius: 12px; margin-top: 16px; }
 .onetap-promo-download {
   display: flex;
