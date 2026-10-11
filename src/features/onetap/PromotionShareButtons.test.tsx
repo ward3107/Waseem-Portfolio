@@ -17,8 +17,6 @@ beforeEach(() => {
   Object.defineProperty(navigator, 'share', { configurable: true, value: share });
   Object.defineProperty(navigator, 'canShare', { configurable: true, value: () => true });
   Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: clipboard } });
-  HTMLDialogElement.prototype.showModal = function () { this.setAttribute('open', ''); };
-  HTMLDialogElement.prototype.close = function () { this.removeAttribute('open'); };
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
@@ -28,6 +26,20 @@ async function ready() {
 }
 
 describe('OneTap promotion sharing', () => {
+  it('keeps the download fallback usable without native dialog APIs and restores focus on Escape', async () => {
+    Object.defineProperty(navigator, 'canShare', { configurable: true, value: () => false });
+    render(<PromotionShareButtons language="he" />);
+    const button = screen.getByRole('button', { name: 'מבצע בעברית' });
+    button.focus();
+    fireEvent.click(button);
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'סגירה' })).toHaveFocus();
+    expect(screen.getByRole('link', { name: 'שמירת התמונה' })).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(button).toHaveFocus();
+  });
+
   it('sends the selected image and caption independently of the card UI language', async () => {
     render(<PromotionShareButtons language="en" />);
     await ready();

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Download, Share2, X } from 'lucide-react';
 
 type OfferLanguage = 'he' | 'ar';
@@ -27,7 +28,7 @@ const COPY = {
 
 export function PromotionShareButtons({ language }: { language: Language }) {
   const ui = COPY[language];
-  const dialog = useRef<HTMLDialogElement>(null);
+  const dialog = useRef<HTMLElement>(null);
   const files = useRef<Partial<Record<OfferLanguage, File>>>({});
   const requests = useRef<Partial<Record<OfferLanguage, Promise<File>>>>({});
   const sharing = useRef(false);
@@ -69,13 +70,36 @@ export function PromotionShareButtons({ language }: { language: Language }) {
     setLoadError(false);
     setReady(Boolean(files.current[selected]));
     setLoading(!files.current[selected]);
-    dialog.current?.showModal();
+    const returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const background = document.querySelector<HTMLElement>('.onetap-screen');
+    const previousHidden = background?.getAttribute('aria-hidden');
+    const previousInert = background?.hasAttribute('inert');
+    background?.setAttribute('aria-hidden', 'true');
+    background?.setAttribute('inert', '');
+    dialog.current?.querySelector<HTMLButtonElement>('button')?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { event.preventDefault(); setSelected(null); }
+      if (event.key !== 'Tab') return;
+      const controls = dialog.current?.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], textarea');
+      if (!controls?.length) return;
+      const first = controls[0], last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener('keydown', onKey);
     void loadFile(selected).then(() => {
       if (active) { setReady(true); setLoading(false); }
     }).catch(() => {
       if (active) { setLoadError(true); setLoading(false); }
     });
-    return () => { active = false; dialog.current?.close(); };
+    return () => {
+      active = false;
+      document.removeEventListener('keydown', onKey);
+      if (previousHidden == null) background?.removeAttribute('aria-hidden');
+      else background?.setAttribute('aria-hidden', previousHidden);
+      if (!previousInert) background?.removeAttribute('inert');
+      returnFocus?.focus();
+    };
   }, [selected]);
 
   function canShare(file: File | undefined) {
@@ -127,9 +151,10 @@ export function PromotionShareButtons({ language }: { language: Language }) {
         </button>
       ))}
     </div>
-    {offer && <dialog ref={dialog} className="onetap-dialog onetap-promo-dialog"
-      dir={language === 'en' ? 'ltr' : 'rtl'} aria-labelledby="onetap-promo-title"
-      onCancel={() => setSelected(null)} onClose={() => setSelected(null)}>
+    {offer && createPortal(<div className="onetap-dialog-overlay" role="presentation"
+      onMouseDown={event => { if (event.target === event.currentTarget) setSelected(null); }}>
+      <section ref={dialog} className="onetap-dialog onetap-promo-dialog" role="dialog" aria-modal="true"
+      dir={language === 'en' ? 'ltr' : 'rtl'} aria-labelledby="onetap-promo-title">
       <button type="button" className="onetap-dialog-close" aria-label={ui.close} onClick={() => setSelected(null)}><X aria-hidden="true" /></button>
       <h2 id="onetap-promo-title" lang={selected!} dir="rtl">{offer.label}</h2>
       <img className="onetap-promo-image" src={offer.image} alt={offer.title} />
@@ -144,6 +169,6 @@ export function PromotionShareButtons({ language }: { language: Language }) {
         {copyStatus === 'copied' ? ui.copied : ui.copy}
       </button>
       {copyStatus === 'manual' && <p role="status">{ui.manual}</p>}
-    </dialog>}
+    </section></div>, document.body)}
   </>;
 }
