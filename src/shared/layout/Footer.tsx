@@ -61,9 +61,6 @@ const Footer: React.FC = () => {
           {/* Brand Column */}
           <div className="space-y-6">
             <VasiaSignature />
-            <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
-              {t('footer_desc')}
-            </p>
           </div>
 
           {/* Quick Links */}
