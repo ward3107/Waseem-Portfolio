@@ -7,8 +7,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '@/shared/hooks/useFocusTrap';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
-import BrandLogo from '@/shared/brand/BrandLogo';
-import SocialLinks from '@/shared/ui/SocialLinks';
+import VasiaSignature from './VasiaSignature';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -61,17 +60,10 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
           {/* Brand Column */}
           <div className="space-y-6">
-            <Link
-              to="/brand"
-              aria-label="vasia.dev brand kit"
-              className="block w-56 text-slate-950 transition-colors hover:text-brand-purple focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple dark:text-white dark:hover:text-brand-purpleLighter rounded"
-            >
-              <BrandLogo className="h-auto w-full" />
-            </Link>
+            <VasiaSignature />
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
               {t('footer_desc')}
             </p>
-            <SocialLinks />
           </div>
 
           {/* Quick Links */}
