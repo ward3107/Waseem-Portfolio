@@ -2,21 +2,31 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Download, Share2, X } from 'lucide-react';
 
-type OfferLanguage = 'he' | 'ar';
-type Language = OfferLanguage | 'en';
+type OfferLanguage = 'he' | 'ar' | 'en';
+type Language = OfferLanguage;
+const OFFER_LANGUAGES = ['he', 'ar', 'en'] as const;
 
 const OFFERS = {
   he: {
     label: 'מבצע בעברית',
+    shortLabel: 'עברית',
     title: 'VASIA OneTap — מבצע כרטיס ביקור דיגיטלי',
-    image: '/onetap/promotions/vasia-offer-he-20261010.jpg',
-    text: 'כרטיס ביקור דיגיטלי של VASIA — פרטי העסק ודרכי הקשר במקום אחד.\nClassic: 199 ₪ | Motion: 399 ₪ | עיצוב לפי בקשת הלקוח: החל מ־499 ₪.\nתשלום חד־פעמי על יצירת הכרטיס. אחסון, דומיין ותחזוקה לפי תנאי ההצעה.\nלפרטים: https://wa.me/972534260632',
+    image: '/onetap/promotions/vasia-offer-he-20261011.jpg',
+    text: 'כרטיס ביקור דיגיטלי של VASIA — פרטי העסק ודרכי הקשר במקום אחד.\nClassic: 199 ₪ | Motion: 399 ₪ | עיצוב לפי בקשת הלקוח: החל מ־499 ₪.\nתשלום חד־פעמי על יצירת הכרטיס. האחסון כלול במחיר. דומיין ותחזוקה בתשלום נוסף.\nלפרטים: https://wa.me/972534260632',
   },
   ar: {
     label: 'العرض بالعربية',
+    shortLabel: 'العربية',
     title: 'VASIA OneTap — عرض بطاقة أعمال رقمية',
-    image: '/onetap/promotions/vasia-offer-ar-20261010.jpg',
-    text: 'بطاقة أعمال رقمية من VASIA — تفاصيل مصلحتك وطرق التواصل في مكان واحد.\nClassic: ‏199 ₪ | Motion: ‏399 ₪ | تصميم حسب طلبك: ابتداءً من 499 ₪.\nدفعة واحدة لإنشاء البطاقة. الاستضافة والدومين والصيانة حسب شروط العرض.\nللتفاصيل: https://wa.me/972534260632',
+    image: '/onetap/promotions/vasia-offer-ar-20261011.jpg',
+    text: 'بطاقة أعمال رقمية من VASIA — تفاصيل مصلحتك وطرق التواصل في مكان واحد.\nClassic: ‏199 ₪ | Motion: ‏399 ₪ | تصميم حسب طلبك: ابتداءً من 499 ₪.\nدفعة واحدة لإنشاء البطاقة. الاستضافة مشمولة بالسعر. الدومين والصيانة بتكلفة إضافية.\nللتفاصيل: https://wa.me/972534260632',
+  },
+  en: {
+    label: 'Offer in English',
+    shortLabel: 'English',
+    title: 'VASIA OneTap — Digital Business Card Offer',
+    image: '/onetap/promotions/vasia-offer-en-20261011.jpg',
+    text: 'A VASIA digital business card — your business details and contact options in one place.\nClassic: ₪199 | Motion: ₪399 | Custom design: from ₪499.\nOne-time payment for card creation. Hosting included. Domain and maintenance cost extra.\nGet in touch: https://wa.me/972534260632',
   },
 };
 
@@ -60,7 +70,7 @@ export function PromotionShareButtons({ language }: { language: Language }) {
 
   useEffect(() => {
     // Prepare the files ahead of the tap so native sharing retains user activation.
-    for (const lang of ['he', 'ar'] as const) void loadFile(lang).catch(() => undefined);
+    for (const lang of OFFER_LANGUAGES) void loadFile(lang).catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -144,10 +154,11 @@ export function PromotionShareButtons({ language }: { language: Language }) {
   const offer = selected ? OFFERS[selected] : null;
   return <>
     <div className="onetap-promotions" role="group" aria-label={ui.group}>
-      {(['he', 'ar'] as const).map(lang => (
-        <button key={lang} type="button" className="onetap-promo-button" lang={lang} dir="rtl"
+      {OFFER_LANGUAGES.map(lang => (
+        <button key={lang} type="button" className="onetap-promo-button" lang={lang} dir={lang === 'en' ? 'ltr' : 'rtl'}
+          aria-label={OFFERS[lang].label} title={OFFERS[lang].label}
           disabled={busy} onClick={() => void shareOffer(lang)}>
-          <Share2 aria-hidden="true" /> <span>{OFFERS[lang].label}</span>
+          <Share2 aria-hidden="true" /> <span>{OFFERS[lang].shortLabel}</span>
         </button>
       ))}
     </div>
@@ -156,14 +167,14 @@ export function PromotionShareButtons({ language }: { language: Language }) {
       <section ref={dialog} className="onetap-dialog onetap-promo-dialog" role="dialog" aria-modal="true"
       dir={language === 'en' ? 'ltr' : 'rtl'} aria-labelledby="onetap-promo-title">
       <button type="button" className="onetap-dialog-close" aria-label={ui.close} onClick={() => setSelected(null)}><X aria-hidden="true" /></button>
-      <h2 id="onetap-promo-title" lang={selected!} dir="rtl">{offer.label}</h2>
+      <h2 id="onetap-promo-title" lang={selected!} dir={selected === 'en' ? 'ltr' : 'rtl'}>{offer.label}</h2>
       <img className="onetap-promo-image" src={offer.image} alt={offer.title} />
       <p role="status">{loading ? ui.loading : loadError ? ui.loadError : ui.fallback}</p>
       {loadError && <button type="button" className="onetap-dialog-confirm" onClick={() => void retryLoad()}>{ui.retry}</button>}
       {ready && canShare(files.current[selected!]) && <button type="button" className="onetap-dialog-confirm"
         disabled={busy} onClick={() => void shareOffer(selected!)}><Share2 aria-hidden="true" /> {ui.share}</button>}
       <a className="onetap-promo-download" href={offer.image} download={`VASIA-OneTap-${selected}.jpg`}><Download aria-hidden="true" /> {ui.download}</a>
-      <textarea ref={caption} value={offer.text} readOnly lang={selected!} dir="rtl"
+      <textarea ref={caption} value={offer.text} readOnly lang={selected!} dir={selected === 'en' ? 'ltr' : 'rtl'}
         aria-label={ui.caption} rows={4} onFocus={event => event.currentTarget.select()} />
       <button type="button" className="onetap-dialog-confirm" onClick={() => void copyCaption()}>
         {copyStatus === 'copied' ? ui.copied : ui.copy}

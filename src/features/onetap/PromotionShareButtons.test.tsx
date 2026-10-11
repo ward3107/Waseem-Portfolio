@@ -47,11 +47,18 @@ describe('OneTap promotion sharing', () => {
     await waitFor(() => expect(share).toHaveBeenCalledTimes(1));
     expect(share.mock.calls[0][0].files[0].name).toBe('VASIA-OneTap-ar.jpg');
     expect(share.mock.calls[0][0].text).toContain('بطاقة أعمال رقمية');
+    expect(share.mock.calls[0][0].text).toContain('الاستضافة مشمولة بالسعر');
     await waitFor(() => expect(screen.getByRole('button', { name: 'מבצע בעברית' })).not.toBeDisabled());
     fireEvent.click(screen.getByRole('button', { name: 'מבצע בעברית' }));
     await waitFor(() => expect(share).toHaveBeenCalledTimes(2));
     expect(share.mock.calls[1][0].files[0].name).toBe('VASIA-OneTap-he.jpg');
     expect(share.mock.calls[1][0].text).toContain('כרטיס ביקור דיגיטלי');
+    expect(share.mock.calls[1][0].text).toContain('האחסון כלול במחיר');
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Offer in English' })).not.toBeDisabled());
+    fireEvent.click(screen.getByRole('button', { name: 'Offer in English' }));
+    await waitFor(() => expect(share).toHaveBeenCalledTimes(3));
+    expect(share.mock.calls[2][0].files[0].name).toBe('VASIA-OneTap-en.jpg');
+    expect(share.mock.calls[2][0].text).toContain('Hosting included. Domain and maintenance cost extra.');
   });
 
   it('does nothing else when the user cancels native sharing', async () => {

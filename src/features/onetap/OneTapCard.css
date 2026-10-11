@@ -459,29 +459,29 @@
 .onetap-footer > span { color:#ffcb57; }
 .onetap-promotions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 9px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
   min-width: 0;
 }
 .onetap-promo-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  min-height: 44px;
+  gap: 5px;
+  min-height: 36px;
   min-width: 0;
-  padding: 7px 6px;
+  padding: 5px 6px;
   border: 1px solid rgba(207, 241, 255, .7);
-  border-radius: 13px;
+  border-radius: 11px;
   background: rgba(18, 42, 113, .68);
   color: #f4faff;
   font-family: inherit;
-  font-size: clamp(12px, 1.7dvh, 14px);
+  font-size: 12px;
   font-weight: 650;
   cursor: pointer;
 }
 .onetap-promo-button:hover { background: rgba(47, 71, 161, .9); }
-.onetap-promo-button svg { width: 16px; height: 16px; flex: none; }
+.onetap-promo-button svg { width: 14px; height: 14px; flex: none; }
 .onetap-promo-button:disabled { opacity: .65; cursor: wait; }
 .onetap-promo-dialog { margin: auto; padding: 22px; }
 .onetap-promo-dialog h2 { padding-inline-end: 30px; }
@@ -502,6 +502,7 @@
 }
 .onetap-promo-dialog .onetap-dialog-confirm { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .onetap-dialog.onetap-promo-dialog textarea { direction: rtl; text-align: start; }
+.onetap-dialog.onetap-promo-dialog textarea[dir="ltr"] { direction: ltr; }
 .onetap-promo-dialog :is(button, a, textarea):focus-visible { outline: 3px solid #2b58b8; outline-offset: 3px; }
 .onetap-promo-dialog svg { width: 19px; height: 19px; }
 /* Dialogs live outside the card grid; normal card never gains scroll height. */
