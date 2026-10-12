@@ -20,7 +20,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const publicDir = resolve(__dirname, '..', 'public');
 
 const SITE = 'https://www.vasia.dev';
-const WHATSAPP = '972534260632';
+const WHATSAPP = '972544513141';
 const LASTMOD = '2026-07-07';
 const LANGS = ['he', 'ar'];
 

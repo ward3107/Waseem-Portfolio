@@ -34,7 +34,7 @@ test('reading tools change text size and preserve native checklist state',()=>{
  w.document.querySelector('input[type=checkbox]').click();assert.equal(w.document.querySelector('input[type=checkbox]').checked,true);dom.window.close();
 });
 test('tracking honours consent and sends no contact/query text; one event per click',()=>{
- const dom=new JSDOM('<div id="root"></div><a href="https://wa.me/972534260632?text=PRIVATE">Contact</a>',{url:'https://www.vasia.dev/?email=PRIVATE',runScripts:'outside-only'}),w=dom.window;
+ const dom=new JSDOM('<div id="root"></div><a href="https://wa.me/972544513141?text=PRIVATE">Contact</a>',{url:'https://www.vasia.dev/?email=PRIVATE',runScripts:'outside-only'}),w=dom.window;
  const sent=[];w.va=(...args)=>sent.push(args);w.eval(read('public/assets/site-engagement.js'));
  const click=()=>w.document.querySelector('a').dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));
  // Prevent navigation while preserving the delegated capture listener.

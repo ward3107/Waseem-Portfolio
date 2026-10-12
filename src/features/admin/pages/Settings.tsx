@@ -180,7 +180,7 @@ const Settings: React.FC = () => {
               <input
                 value={form.whatsapp ?? ''}
                 onChange={(e) => patch('whatsapp', e.target.value)}
-                placeholder="972534260632"
+                placeholder="972544513141"
                 className="mt-1 w-full px-3 py-2 text-sm rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-brand-purple"
               />
             </label>

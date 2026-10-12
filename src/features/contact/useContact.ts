@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { CONTACT } from '@/constants';
 import { useSiteSettings } from '@/shared/hooks/useSiteSettings';
+import { resolveBusinessPhone } from './businessPhone';
 
 /**
  * Resolved contact + social links for the whole public site. Prefers whatever
@@ -27,7 +28,7 @@ export interface ContactInfo {
 const prefer = (setting: string | null | undefined, fallback: string): string =>
   setting && setting.trim() ? setting.trim() : fallback;
 
-/** Format a bare number like "972534260632" into "+972 53 426 0632". */
+/** Format a bare number like "972544513141" into "+972 54 451 3141". */
 const formatWhatsapp = (n: string): string =>
   `+${n.slice(0, 3)} ${n.slice(3, 5)} ${n.slice(5, 8)} ${n.slice(8)}`;
 
@@ -35,7 +36,7 @@ export function useContact(): ContactInfo {
   const { settings } = useSiteSettings();
 
   return useMemo(() => {
-    const whatsappNumber = prefer(settings?.whatsapp, CONTACT.whatsappNumber);
+    const whatsappNumber = resolveBusinessPhone(prefer(settings?.whatsapp, CONTACT.whatsappNumber));
     return {
       email: prefer(settings?.contact_email, CONTACT.email),
       whatsappNumber,

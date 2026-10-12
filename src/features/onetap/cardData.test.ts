@@ -4,9 +4,9 @@ import { buildVCard, CARD_URL, digitsOnly, escapeVCard, safeExternalUrl } from '
 
 const contact: ContactInfo = {
   email: 'hello@vasia.dev',
-  whatsappNumber: '972534260632',
-  whatsappUrl: 'https://wa.me/972534260632',
-  whatsappDisplay: '+972 53 426 0632',
+  whatsappNumber: '972544513141',
+  whatsappUrl: 'https://wa.me/972544513141',
+  whatsappDisplay: '+972 54 451 3141',
   github: 'https://github.com/ward3107',
   linkedin: 'https://www.linkedin.com/in/waseem-abu-akel-334486374/',
   instagram: 'https://www.instagram.com/vasia.dev/',
@@ -23,14 +23,14 @@ describe('VASIA OneTap contact card', () => {
     const file = buildVCard(contact);
     expect(file.startsWith('BEGIN:VCARD\r\nVERSION:3.0\r\n')).toBe(true);
     expect(file).toContain('FN:Waseem Abu Akel\r\n');
-    expect(file).toContain('TEL;TYPE=CELL:+972534260632\r\n');
+    expect(file).toContain('TEL;TYPE=CELL:+972544513141\r\n');
     expect(file).toContain('EMAIL;TYPE=INTERNET:hello@vasia.dev\r\n');
     expect(file).toContain('URL:https://www.vasia.dev/card\r\n');
     expect(file.endsWith('END:VCARD\r\n')).toBe(true);
   });
 
   it('normalizes phone numbers, escapes text, and rejects unsafe schemes', () => {
-    expect(digitsOnly('+972 (53) 426-0632')).toBe('972534260632');
+    expect(digitsOnly('+972 (54) 451-3141')).toBe('972544513141');
     expect(escapeVCard('one,two;three\nfour')).toBe('one\\,two\\;three\\nfour');
     expect(safeExternalUrl('https://github.com/ward3107')).toBe('https://github.com/ward3107');
     expect(safeExternalUrl('http://example.org')).toBeNull();

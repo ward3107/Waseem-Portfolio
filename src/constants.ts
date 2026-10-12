@@ -1,9 +1,10 @@
 import { NavLink, TechItem, Language } from './types';
+import { resolveBusinessPhone } from './features/contact/businessPhone';
 
 // ==========================================================================
 // Contact — single source of truth. Override via .env.local when needed.
 // ==========================================================================
-const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER ?? '972534260632';
+const WHATSAPP_NUMBER = resolveBusinessPhone(import.meta.env.VITE_WHATSAPP_NUMBER);
 
 export const CONTACT = {
   email: import.meta.env.VITE_CONTACT_EMAIL ?? 'wasya92@gmail.com',

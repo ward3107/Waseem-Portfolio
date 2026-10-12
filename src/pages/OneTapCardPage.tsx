@@ -328,7 +328,6 @@ const OneTapCardPage: React.FC = () => {
               <>
                 <p>{payment.scan}</p>
                 <img className="onetap-bit-qr" src="/onetap/bit-qr.svg" alt={payment.title + ' QR'} width="280" height="280" />
-                <p className="onetap-payment-number">{payment.number}: <b dir="ltr">053-4260632</b></p>
                 <a className="onetap-bit-open" href={BIT_PAYMENT_URL} target="_blank" rel="noopener noreferrer">{payment.open}</a>
               </>
             ) : copyDialog ? (

@@ -30,8 +30,8 @@ export default {
       country: 'IL',
     },
     // Phone: E.164 form + local form. The script normalizes before comparing,
-    // so "+972-53-426-0632" and "0534260632" both match.
-    phone: '+972534260632',
+    // so "+972-54-451-3141" and "0544513141" both match.
+    phone: '+972544513141',
   },
 
   // Every public profile page that carries your NAP. The script fetches each,

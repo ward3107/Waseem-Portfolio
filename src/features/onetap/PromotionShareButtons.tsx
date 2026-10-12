@@ -11,22 +11,22 @@ const OFFERS = {
     label: 'מבצע בעברית',
     shortLabel: 'עברית',
     title: 'VASIA OneTap — מבצע כרטיס ביקור דיגיטלי',
-    image: '/onetap/promotions/vasia-offer-he-20261011.jpg',
-    text: 'כרטיס ביקור דיגיטלי של VASIA — פרטי העסק ודרכי הקשר במקום אחד.\nClassic: 199 ₪ | Motion: 399 ₪ | עיצוב לפי בקשת הלקוח: החל מ־499 ₪.\nתשלום חד־פעמי על יצירת הכרטיס. האחסון כלול במחיר. דומיין ותחזוקה בתשלום נוסף.\nלפרטים: https://wa.me/972534260632',
+    image: '/onetap/promotions/vasia-offer-he-20261012.jpg',
+    text: 'כרטיס ביקור דיגיטלי של VASIA — פרטי העסק ודרכי הקשר במקום אחד.\nClassic: 199 ₪ | Motion: 399 ₪ | עיצוב לפי בקשת הלקוח: החל מ־499 ₪.\nתשלום חד־פעמי על יצירת הכרטיס. האחסון כלול במחיר. דומיין ותחזוקה בתשלום נוסף.\nלפרטים: https://wa.me/972544513141',
   },
   ar: {
     label: 'العرض بالعربية',
     shortLabel: 'العربية',
     title: 'VASIA OneTap — عرض بطاقة أعمال رقمية',
-    image: '/onetap/promotions/vasia-offer-ar-20261011.jpg',
-    text: 'بطاقة أعمال رقمية من VASIA — تفاصيل مصلحتك وطرق التواصل في مكان واحد.\nClassic: ‏199 ₪ | Motion: ‏399 ₪ | تصميم حسب طلبك: ابتداءً من 499 ₪.\nدفعة واحدة لإنشاء البطاقة. الاستضافة مشمولة بالسعر. الدومين والصيانة بتكلفة إضافية.\nللتفاصيل: https://wa.me/972534260632',
+    image: '/onetap/promotions/vasia-offer-ar-20261012.jpg',
+    text: 'بطاقة أعمال رقمية من VASIA — تفاصيل مصلحتك وطرق التواصل في مكان واحد.\nClassic: ‏199 ₪ | Motion: ‏399 ₪ | تصميم حسب طلبك: ابتداءً من 499 ₪.\nدفعة واحدة لإنشاء البطاقة. الاستضافة مشمولة بالسعر. الدومين والصيانة بتكلفة إضافية.\nللتفاصيل: https://wa.me/972544513141',
   },
   en: {
     label: 'Offer in English',
     shortLabel: 'English',
     title: 'VASIA OneTap — Digital Business Card Offer',
-    image: '/onetap/promotions/vasia-offer-en-20261011.jpg',
-    text: 'A VASIA digital business card — your business details and contact options in one place.\nClassic: ₪199 | Motion: ₪399 | Custom design: from ₪499.\nOne-time payment for card creation. Hosting included. Domain and maintenance cost extra.\nGet in touch: https://wa.me/972534260632',
+    image: '/onetap/promotions/vasia-offer-en-20261012.jpg',
+    text: 'A VASIA digital business card — your business details and contact options in one place.\nClassic: ₪199 | Motion: ₪399 | Custom design: from ₪499.\nOne-time payment for card creation. Hosting included. Domain and maintenance cost extra.\nGet in touch: https://wa.me/972544513141',
   },
 };
 

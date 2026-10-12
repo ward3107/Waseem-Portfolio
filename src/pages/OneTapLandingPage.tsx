@@ -56,7 +56,7 @@ const Landing: React.FC = () => {
   const message = language === 'he' ? 'היי, אני רוצה להזמין VASIA OneTap'
     : language === 'ar' ? 'مرحباً، أريد طلب بطاقة VASIA OneTap'
       : 'Hi, I would like to order a VASIA OneTap card';
-  const wa = 'https://wa.me/972534260632?text=' + encodeURIComponent(message);
+  const wa = 'https://wa.me/972544513141?text=' + encodeURIComponent(message);
   const plans = [
     {name:c.first, price:'199', description:c.classic, href:demoUrl('classic',language), glow:'#3AAFEA', icon:UserPlus},
     {name:c.second, price:'399', description:c.motion, href:demoUrl('motion',language), glow:'#8871FD', icon:Zap},
@@ -109,7 +109,7 @@ const Landing: React.FC = () => {
           <a href={wa} target="_blank" rel="noopener noreferrer" className="mx-auto mt-4 flex w-fit min-h-12 items-center gap-2 rounded-full bg-[#138868] px-6 text-sm font-bold text-white">
             <MessageCircle size={19} aria-hidden="true" />{c.order}<ArrowUpRight size={17} aria-hidden="true"/>
           </a>
-          <p dir="ltr" className="mt-4 text-xs text-[#60779d]">053-4260632 • vasia.dev</p>
+          <p dir="ltr" className="mt-4 text-xs text-[#60779d]">054-4513141 • vasia.dev</p>
         </div>
       </div>
     </main>
