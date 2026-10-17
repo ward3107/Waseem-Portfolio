@@ -34,8 +34,10 @@ describe('portfolio content loading', () => {
     expect(result.current.projects[1].description).toBe(translations.he.project_softec_desc);
     act(() => result.current.setLanguage('ar'));
     expect(result.current.projects[1].description).toBe(translations.ar.project_softec_desc);
-    expect(result.current.featuredProjects.map((project) => project.id)).toEqual([
-      'mova-motion-store', 'softec-vision', 'biznix',
+    expect(result.current.projects.map((project) => project.id)).toEqual([
+      'mova-motion-store', 'softec-vision', 'biznix', 'kiwi',
+      'shayish-kfar-yassif', 'ninnyo-flowers', 'vocabagrut',
+      'souvlaki', 'seatai', 'law-office', 'shokha', 'vocaband',
     ]);
     expect(mocks.listProjectRows).not.toHaveBeenCalled();
   });

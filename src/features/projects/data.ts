@@ -134,17 +134,6 @@ export const getRequiredPortfolioProjects = (
   },
 ];
 
-export const FEATURED_PROJECT_IDS = ['mova-motion-store', 'softec-vision', 'biznix'] as const;
-
-/** Explicit homepage selection, independent of CMS sort order. */
-export function getFeaturedProjects(projects: Project[]): Project[] {
-  const byId = new Map(projects.map((project) => [project.id, project]));
-  return FEATURED_PROJECT_IDS.flatMap((id) => {
-    const project = byId.get(id);
-    return project ? [project] : [];
-  });
-}
-
 // Suppress retired demos even if older CMS rows use a different slug.
 const retiredProjectIds = new Set(['wordpress-studio-demo', 'wordpress-shop-demo']);
 const retiredProjectHosts = new Set([

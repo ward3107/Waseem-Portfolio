@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import {
-  FEATURED_PROJECT_IDS,
-  getFeaturedProjects,
   getLocalizedProjects,
   getRequiredPortfolioProjects,
   mergeRequiredPortfolioProjects,
@@ -30,14 +28,6 @@ describe('curated portfolio projects', () => {
     ]);
     expect(projects.find((project) => project.id === 'biznix')?.github).toBeUndefined();
     expect(projects.find((project) => project.id === 'vocabagrut')?.github).toBeUndefined();
-  });
-
-  it('keeps the three homepage projects in editorial order regardless of CMS ordering', () => {
-    const all = getLocalizedProjects(t).reverse();
-    expect(getFeaturedProjects(all).map((project) => project.id)).toEqual(FEATURED_PROJECT_IDS);
-    expect(getFeaturedProjects(all).map((project) => project.title)).toEqual([
-      'MOVA — Motion Store', 'Softec Vision', 'BizNix',
-    ]);
   });
 
   it('pins approved entries while preserving unrelated CMS projects', () => {

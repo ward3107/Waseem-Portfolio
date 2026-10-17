@@ -12,8 +12,8 @@ import { GhostNavButton } from './actions';
 /**
  * Chapter 4 — Projects. The visual is the 3D turntable (ProjectsScene, in the
  * canvas): every project's screenshot rides a slowly rotating ring and the one
- * at the front enlarges and opens on click. This DOM layer keeps the centre clear
- * clear for the three featured projects — the heading is pinned to the top and an accessible
+ * at the front enlarges and opens on click. This DOM layer keeps the centre
+ * clear for the full portfolio — the heading is pinned to the top and an accessible
  * link index + CTA to the bottom. Those links keep every project
  * keyboard-reachable and crawlable even though the canvas is aria-hidden, and
  * they double as a tap target on touch. Same on every device.
@@ -27,7 +27,7 @@ const reveal = {
 const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
   const { t, language } = useLanguage();
   const draftLabel = language === 'he' ? 'פרטים · הדמו טרם פורסם' : language === 'ar' ? 'التفاصيل · العرض لم يُنشر بعد' : 'Details · demo not published';
-  const { featuredProjects: projects } = useProjects();
+  const { projects } = useProjects();
   const leading = useHeadingLeading();
 
   return (

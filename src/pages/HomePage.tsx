@@ -6,7 +6,7 @@ import Services from '@/features/services';
 import Process from '@/features/home/Process';
 import AISection from '@/features/ai/AISection';
 import VibeCoding from '@/features/ai/VibeCoding';
-import FeaturedProjects from '@/features/projects/FeaturedProjects';
+import Projects from '@/features/projects/Projects';
 import VideoAdsPreview from '@/features/video-ads/VideoAdsPreview';
 import Reviews from '@/features/reviews/Reviews';
 import SocialMediaSection from '@/features/social-media/SocialMediaSection';
@@ -44,8 +44,8 @@ const [ACT_IDENTITY, ACT_SERVICES, ACT_AI, ACT_WORK, ACT_CONTACT] = JOURNEY_ACTS
 // and ?classic all resolve to the classic path below.
 const Experience = lazy(() => import('@/experience/Experience'));
 
-/** The homepage is a continuous colour journey, with a compact selection of
- *  work and a link to the complete /projects portfolio. The other former routes
+/** The homepage is a continuous colour journey, with the complete portfolio
+ *  including both existing work and approved additions. The other former routes
  *  redirect to the matching anchor (see App.tsx). This is
  *  also the guaranteed fallback for the 3D experience (reduced-motion /
  *  no-WebGL / crawler / opt-out).
@@ -72,7 +72,7 @@ const ClassicHome: React.FC = () => (
     </Act>
     {/* Work — the projects gallery and social proof. */}
     <Act act={ACT_WORK}>
-      <FeaturedProjects />
+      <Projects />
       <VideoAdsPreview />
       <SocialMediaSection />
       <Reviews />

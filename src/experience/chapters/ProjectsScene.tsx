@@ -45,8 +45,8 @@ const openInNewTab = (url: string) => {
 };
 
 /**
- * Chapter 4 showpiece — a spaced, draggable rail of the three featured projects.
- * The complete portfolio is available through the overlay's all-projects link.
+ * Chapter 4 showpiece — a spaced, draggable rail of the complete portfolio.
+ * Existing CMS projects and approved additions all remain on the homepage.
  * The rail advances on its own, bringing
  * each project to front-centre in turn; the reader can also grab it — drag with
  * the mouse or swipe with a finger to spin left/right — and on release it snaps
@@ -58,10 +58,10 @@ const openInNewTab = (url: string) => {
  * pointer-events-none, so a click on empty space falls through to the canvas —
  * gating by focus keeps drags/taps meaningful only on the projects beat and
  * stops a stray click elsewhere from opening a random project. The DOM link
- * index (ProjectsOverlay) lists the same featured selection for keyboard access.
+ * index (ProjectsOverlay) lists the same full portfolio for keyboard access.
  */
 const ProjectsScene: React.FC = () => {
-  const { featuredProjects: projects } = useProjects();
+  const { projects } = useProjects();
   const images = useMemo(() => projects.map((p) => p.image), [projects]);
   const textures = useTexture(images);
   useMemo(() => {

@@ -1,9 +1,10 @@
 # Portfolio selection and artwork
 
-`src/features/projects/data.ts` contains the approved portfolio additions and the
-explicit homepage selection: MOVA, Softec Vision, and BizNix. The classic homepage
-and the immersive 3D rail use that same selection. `/projects` displays the full
-portfolio, including unrelated CMS entries. The all-projects link opens this page.
+`src/features/projects/data.ts` contains the approved portfolio additions. The
+classic homepage, the immersive 3D rail and its accessible link index all display
+the complete project collection, including the existing CMS entries and the new
+projects. No three-project homepage limit is applied. `/projects` provides an
+additional view of the same full portfolio.
 
 VocaBagrut already exists in the CMS. Entries merge by slug, live URL, and public
 repository URL, so older CMS slugs do not create duplicate cards. The retired

@@ -104,7 +104,7 @@ const FeaturedProjects: React.FC = () => {
   const { t, language } = useLanguage();
   const isRtl = language === 'he' || language === 'ar';
   const prefersReducedMotion = usePrefersReducedMotion();
-  const { featuredProjects: projects } = useProjects();
+  const { projects } = useProjects();
 
   return (
     <section id="projects" className="py-16 sm:py-20 md:py-24 bg-slate-50 dark:bg-slate-950 relative transition-colors duration-300">
