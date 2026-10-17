@@ -59,31 +59,38 @@ export const getLocalizedProjects = (
 
 /**
  * Portfolio entries that must remain visible even when Supabase is configured.
- * Remote rows are editorial content; they must not be allowed to replace the
- * two WordPress case studies that prove Waseem's platform experience.
+ * Keep MOVA first so its current preview and links also lead Featured Projects.
  */
 export const getRequiredPortfolioProjects = (
   t: (key: string) => string
 ): Project[] => [
   {
-    id: 'wordpress-studio-demo',
-    title: 'Waseem Studio — WordPress Portfolio',
+    id: 'mova-motion-store',
+    title: 'MOVA — Motion Store',
     category: 'WordPress',
-    description: t('project_wordpress_portfolio_desc'),
-    image: '/assets/wordpress-portfolio.svg',
-    tech: ['WordPress.com', 'Gutenberg', 'Responsive Design'],
-    link: 'https://waseemstudiodemo.wordpress.com/',
-  },
-  {
-    id: 'wordpress-shop-demo',
-    title: 'Waseem Shop — WordPress Store',
-    category: 'WordPress',
-    description: t('project_wordpress_shop_desc'),
-    image: '/assets/wordpress-shop.svg',
-    tech: ['WordPress.com', 'Gutenberg', 'E-commerce UX'],
-    link: 'https://waseemshopdemo.wordpress.com/',
+    description: t('project_mova_desc'),
+    image: '/assets/projects/mova/cover.jpg',
+    tech: ['WordPress', 'WooCommerce', 'JavaScript', 'Three.js'],
+    link: 'https://wordpress-woocommerce-mova.vercel.app/',
+    github: 'https://github.com/ward3107/WordPress-WooCommerce-MOVA',
   },
 ];
+
+// Suppress retired demos even if older CMS rows use a different slug.
+const retiredProjectIds = new Set(['wordpress-studio-demo', 'wordpress-shop-demo']);
+const retiredProjectHosts = new Set([
+  'waseemstudiodemo.wordpress.com',
+  'waseemshopdemo.wordpress.com',
+]);
+
+function isRetiredProject(project: Project): boolean {
+  if (retiredProjectIds.has(project.id)) return true;
+  try {
+    return retiredProjectHosts.has(new URL(project.link ?? '').hostname);
+  } catch {
+    return false;
+  }
+}
 
 export const mergeRequiredPortfolioProjects = (
   remoteProjects: Project[],
@@ -92,6 +99,8 @@ export const mergeRequiredPortfolioProjects = (
   const requiredIds = new Set(requiredProjects.map((project) => project.id));
   return [
     ...requiredProjects,
-    ...remoteProjects.filter((project) => !requiredIds.has(project.id)),
+    ...remoteProjects.filter(
+      (project) => !requiredIds.has(project.id) && !isRetiredProject(project)
+    ),
   ];
 };

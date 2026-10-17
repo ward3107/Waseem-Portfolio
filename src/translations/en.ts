@@ -139,8 +139,7 @@ export const en: Record<string, string> = {
     project_5_desc: "Gamified vocabulary learning app for EFL students.",
     project_6_desc: "Aluminum and steel design solutions company website.",
     project_7_desc: "Professional medical website for Dr. Maya Khalil.",
-    project_wordpress_portfolio_desc: "A modern multilingual portfolio built in WordPress with Gutenberg, responsive layouts, clear service positioning, and conversion-focused sections.",
-    project_wordpress_shop_desc: "A polished WordPress storefront concept for digital products, with product discovery, brand consistency, and a mobile-first shopping experience.",
+    project_mova_desc: "An interactive concept store with a cinematic opening, 360° product views and a shoe anatomy lab. Includes a separate WordPress and WooCommerce theme.",
 
     // Process
     process_step_1_title: "🧭 Discovery & Strategy",
