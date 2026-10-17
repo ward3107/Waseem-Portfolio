@@ -10,8 +10,6 @@ import { useProjects } from '@/features/projects/useProjects';
 import { safeHref } from '@/lib/safe';
 import type { Project } from '@/types';
 
-const FEATURED_COUNT = 3;
-
 // Per-card scroll-linked reveal: opacity is bound directly to the card's own
 // scroll position so it can never lag behind a fast scroll and pop in. When
 // the card is below the fold it is opacity 0; it fades to 1 as it scrolls
@@ -45,7 +43,7 @@ const FeaturedProjectCard: React.FC<FeaturedProjectCardProps> = ({
       <div className="relative h-48 overflow-hidden">
         <img
           src={project.image}
-          alt={`${project.title} — ${project.category} project screenshot`}
+          alt={project.title}
           loading="lazy"
           decoding="async"
           width="600"
@@ -106,11 +104,10 @@ const FeaturedProjects: React.FC = () => {
   const { t, language } = useLanguage();
   const isRtl = language === 'he' || language === 'ar';
   const prefersReducedMotion = usePrefersReducedMotion();
-  const { projects: all } = useProjects();
-  const projects = all.slice(0, FEATURED_COUNT);
+  const { featuredProjects: projects } = useProjects();
 
   return (
-    <section className="py-16 sm:py-20 md:py-24 bg-slate-50 dark:bg-slate-950 relative transition-colors duration-300">
+    <section id="projects" className="py-16 sm:py-20 md:py-24 bg-slate-50 dark:bg-slate-950 relative transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="text-center mb-12 md:mb-16">
           <motion.span

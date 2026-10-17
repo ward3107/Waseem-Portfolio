@@ -140,6 +140,12 @@ export const en: Record<string, string> = {
     project_6_desc: "Aluminum and steel design solutions company website.",
     project_7_desc: "Professional medical website for Dr. Maya Khalil.",
     project_mova_desc: "An interactive concept store with a cinematic opening, 360° product views and a shoe anatomy lab. Includes a separate WordPress and WooCommerce theme.",
+    project_softec_desc: "A professional product catalog for custom technology furniture, with clear categories, product specifications and direct inquiries.",
+    project_biznix_desc: "A multilingual directory connecting visitors with local businesses, professionals and services through search and business profiles.",
+    project_kiwi_desc: "A conversational 3D robot with voice, captions, facial expressions and body motion. Explore a sample conversation in the public demo.",
+    project_shayish_desc: "A marble and porcelain showroom website combining an immersive visual presentation, a product catalog and multilingual content.",
+    project_ninnyo_desc: "A flower-delivery website with a bouquet showcase, delivery information and direct ordering through WhatsApp.",
+    project_vocabagrut_desc: "An English teaching tool for building Bagrut practice exams and vocabulary activities, with multilingual support and printable materials.",
 
     // Process
     process_step_1_title: "🧭 Discovery & Strategy",

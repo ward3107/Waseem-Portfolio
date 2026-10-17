@@ -59,7 +59,7 @@ export const getLocalizedProjects = (
 
 /**
  * Portfolio entries that must remain visible even when Supabase is configured.
- * Keep MOVA first so its current preview and links also lead Featured Projects.
+ * Curated projects stay available alongside the editable CMS portfolio.
  */
 export const getRequiredPortfolioProjects = (
   t: (key: string) => string
@@ -74,7 +74,76 @@ export const getRequiredPortfolioProjects = (
     link: 'https://wordpress-woocommerce-mova.vercel.app/',
     github: 'https://github.com/ward3107/WordPress-WooCommerce-MOVA',
   },
+  {
+    id: 'softec-vision',
+    title: 'Softec Vision',
+    category: 'Web',
+    description: t('project_softec_desc'),
+    image: '/assets/projects/softec/cover.png',
+    tech: ['Next.js', 'TypeScript', 'Supabase'],
+    link: 'https://www.softec.co.il/',
+    github: 'https://github.com/ward3107/softec-vision',
+  },
+  {
+    id: 'biznix',
+    title: 'BizNix',
+    category: 'Web',
+    description: t('project_biznix_desc'),
+    image: '/assets/projects/biznix/cover.svg',
+    tech: ['React', 'TypeScript', 'Supabase'],
+    link: 'https://biznix.app/',
+  },
+  {
+    id: 'kiwi',
+    title: 'Kiwi — Talking Robot',
+    category: 'AI',
+    description: t('project_kiwi_desc'),
+    image: '/assets/projects/kiwi/cover.svg',
+    tech: ['React', 'Three.js', 'OpenAI Realtime'],
+    link: 'https://kidfin-three.vercel.app/#demo',
+    github: 'https://github.com/ward3107/KIDFIN',
+  },
+  {
+    id: 'shayish-kfar-yassif',
+    title: 'Shayish Kfar Yassif',
+    category: 'Web',
+    description: t('project_shayish_desc'),
+    image: '/assets/projects/shayish/cover.jpg',
+    tech: ['React', 'TypeScript', 'Three.js'],
+    link: 'https://shayish-kfar-yassif.vercel.app/',
+    github: 'https://github.com/ward3107/Shayish-Kfar-Yassif',
+  },
+  {
+    id: 'ninnyo-flowers',
+    title: 'NINNYO Flowers',
+    category: 'Web',
+    description: t('project_ninnyo_desc'),
+    image: '/assets/projects/ninnyo/cover.jpg',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    link: 'https://ninnyo.vercel.app/',
+    github: 'https://github.com/ward3107/NINNYO-FLOWERS',
+  },
+  {
+    id: 'vocabagrut',
+    title: 'VocaBagrut',
+    category: 'AI',
+    description: t('project_vocabagrut_desc'),
+    image: '/assets/projects/vocabagrut/cover.svg',
+    tech: ['React', 'TypeScript', 'Supabase'],
+    link: 'https://voca-bagrut.vercel.app/',
+  },
 ];
+
+export const FEATURED_PROJECT_IDS = ['mova-motion-store', 'softec-vision', 'biznix'] as const;
+
+/** Explicit homepage selection, independent of CMS sort order. */
+export function getFeaturedProjects(projects: Project[]): Project[] {
+  const byId = new Map(projects.map((project) => [project.id, project]));
+  return FEATURED_PROJECT_IDS.flatMap((id) => {
+    const project = byId.get(id);
+    return project ? [project] : [];
+  });
+}
 
 // Suppress retired demos even if older CMS rows use a different slug.
 const retiredProjectIds = new Set(['wordpress-studio-demo', 'wordpress-shop-demo']);
@@ -92,15 +161,32 @@ function isRetiredProject(project: Project): boolean {
   }
 }
 
+function projectIdentityKeys(project: Project): string[] {
+  const keys = [`id:${project.id}`];
+  for (const href of [project.link, project.github]) {
+    if (!href) continue;
+    try {
+      const url = new URL(href);
+      const hostname = url.hostname.toLowerCase().replace(/^www\./, '');
+      const pathname = url.pathname.replace(/\/$/, '').replace(/\.git$/, '');
+      keys.push(`url:${hostname}${pathname}`);
+    } catch { /* Missing or invalid URLs must not hide an unrelated draft. */ }
+  }
+  return keys;
+}
+
 export const mergeRequiredPortfolioProjects = (
   remoteProjects: Project[],
   requiredProjects: Project[]
 ): Project[] => {
-  const requiredIds = new Set(requiredProjects.map((project) => project.id));
+  const seen = new Set(requiredProjects.flatMap(projectIdentityKeys));
   return [
     ...requiredProjects,
-    ...remoteProjects.filter(
-      (project) => !requiredIds.has(project.id) && !isRetiredProject(project)
-    ),
+    ...remoteProjects.filter((project) => {
+      const keys = projectIdentityKeys(project);
+      if (isRetiredProject(project) || keys.some((key) => seen.has(key))) return false;
+      keys.forEach((key) => seen.add(key));
+      return true;
+    }),
   ];
 };

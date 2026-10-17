@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1e40af"/>
+      <stop offset="0.5" stop-color="#3730a3"/>
+      <stop offset="1" stop-color="#6d28d9"/>
+    </linearGradient>
+    <linearGradient id="capIcon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <!-- Decorative blur circles -->
+  <circle cx="1050" cy="120" r="220" fill="#ffffff" opacity="0.08"/>
+  <circle cx="120" cy="510" r="180" fill="#ffffff" opacity="0.06"/>
+  <!-- Graduation cap icon -->
+  <g transform="translate(80,90)">
+    <rect x="0" y="0" width="120" height="120" rx="30" fill="url(#capIcon)"/>
+    <path d="M20 55 L60 40 L100 55 L60 70 Z" fill="white" opacity="0.95"/>
+    <path d="M45 68 L45 85 Q60 92 75 85 L75 68" stroke="white" stroke-width="4" fill="none" opacity="0.9"/>
+    <circle cx="98" cy="58" r="3" fill="white"/>
+    <line x1="98" y1="60" x2="98" y2="80" stroke="white" stroke-width="2"/>
+  </g>
+  <text x="220" y="175" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="66" font-weight="900" fill="white" letter-spacing="-1">VocaBagrut</text>
+  <text x="80" y="330" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="64" font-weight="800" fill="white" letter-spacing="-1.5">Build English Bagrut exams</text>
+  <text x="80" y="405" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="64" font-weight="800" fill="#c7d2fe" letter-spacing="-1.5">in minutes, not hours.</text>
+  <text x="80" y="490" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="30" font-weight="500" fill="#e0e7ff" opacity="0.9">AI-powered · Aligned with MoE curriculum · 3, 4, and 5 units</text>
+  <!-- Trust bar -->
+  <g transform="translate(80,545)">
+    <rect x="0" y="0" width="280" height="42" rx="21" fill="white" opacity="0.15"/>
+    <text x="140" y="28" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="white">✓ Free to start</text>
+  </g>
+  <g transform="translate(380,545)">
+    <rect x="0" y="0" width="320" height="42" rx="21" fill="white" opacity="0.15"/>
+    <text x="160" y="28" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="white">✓ Print-ready papers</text>
+  </g>
+</svg>

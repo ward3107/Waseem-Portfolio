@@ -6,7 +6,7 @@ import Services from '@/features/services';
 import Process from '@/features/home/Process';
 import AISection from '@/features/ai/AISection';
 import VibeCoding from '@/features/ai/VibeCoding';
-import Projects from '@/features/projects/Projects';
+import FeaturedProjects from '@/features/projects/FeaturedProjects';
 import VideoAdsPreview from '@/features/video-ads/VideoAdsPreview';
 import Reviews from '@/features/reviews/Reviews';
 import SocialMediaSection from '@/features/social-media/SocialMediaSection';
@@ -44,10 +44,9 @@ const [ACT_IDENTITY, ACT_SERVICES, ACT_AI, ACT_WORK, ACT_CONTACT] = JOURNEY_ACTS
 // and ?classic all resolve to the classic path below.
 const Experience = lazy(() => import('@/experience/Experience'));
 
-/** The whole site on one page — a single continuous colour journey. What used
- *  to be separate /about, /services, /projects and /contact routes now live
- *  here as five colour acts, in scroll order, so the visitor never leaves the
- *  page. The old routes redirect to the matching anchor (see App.tsx). This is
+/** The homepage is a continuous colour journey, with a compact selection of
+ *  work and a link to the complete /projects portfolio. The other former routes
+ *  redirect to the matching anchor (see App.tsx). This is
  *  also the guaranteed fallback for the 3D experience (reduced-motion /
  *  no-WebGL / crawler / opt-out).
  *
@@ -73,7 +72,7 @@ const ClassicHome: React.FC = () => (
     </Act>
     {/* Work — the projects gallery and social proof. */}
     <Act act={ACT_WORK}>
-      <Projects />
+      <FeaturedProjects />
       <VideoAdsPreview />
       <SocialMediaSection />
       <Reviews />
