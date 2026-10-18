@@ -1,24 +1,13 @@
-# Safe updates and publication
+# Dependency update policy
 
-All dependency updates should remain pull requests until the relevant checks pass.
-Do not use `npm audit fix --force` as a routine maintenance command.
+Dependabot patch and minor updates are automatically merged only after the required checks and existing branch rules pass. Major and unclassified updates remain for owner review. Grouped updates use the highest semantic version change reported by the verified Dependabot metadata action.
 
-## Required GitHub settings
+The default branch is `main`. Required GitHub Actions checks:
 
-The workflow file alone does not enforce merging rules. Configure the production
-branch (`main`) to require pull requests and the exact check
-`Typecheck, Lint, Build`, with an up-to-date branch and no administrator bypass.
-Confirm the intended Vercel preview check before adding it as a required check.
-Keep automatic merging disabled until browser coverage is established.
+- `Typecheck, Lint, Build`
 
-## Validation and recovery
+Repository auto-merge must be enabled and an active ruleset must require these exact checks from GitHub Actions, an up-to-date branch and a pull request. The workflow verifies that configuration and refuses to enable auto-merge when it is missing. Existing checks, security scans and review requirements still apply.
 
-CI installs from `package-lock.json`, checks types and lint, runs existing tests,
-and creates the production build on Node 22. A failed check must be investigated.
-The pre-existing production dependency audit is advisory; this PR does not
-resolve or hide that security backlog.
+The automation never checks out or runs pull-request code with write permissions. It uses the built-in repository token, pins the metadata action and matches the current PR commit when enabling auto-merge. No personal access token or administrator bypass is used.
 
-Before publishing, verify the contact form, WhatsApp destination and primary
-navigation on a preview. After publishing, verify the same routes on the live
-domain. Retain the previous deployment for rollback. Application rollback does
-not restore database changes.
+A failed or missing required check blocks merging. Resolve the failure and rerun the affected check; do not remove the requirement to make an update pass. Build/test results do not certify external integrations or production user journeys.
