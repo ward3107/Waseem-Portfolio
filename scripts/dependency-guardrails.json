@@ -1,0 +1,280 @@
+[
+  {
+    "repository": "ward3107/Waseem-Portfolio",
+    "branch": "main",
+    "pull_request": 181,
+    "checks": [
+      "Typecheck, Lint, Build"
+    ]
+  },
+  {
+    "repository": "ward3107/barbershop-website",
+    "branch": "main",
+    "pull_request": 18,
+    "checks": [
+      "Quality checks"
+    ]
+  },
+  {
+    "repository": "ward3107/metaline-design",
+    "branch": "main",
+    "pull_request": 5,
+    "checks": [
+      "Quality checks"
+    ]
+  },
+  {
+    "repository": "ward3107/Eiad-",
+    "branch": "main",
+    "pull_request": 2,
+    "checks": [
+      "Quality checks"
+    ]
+  },
+  {
+    "repository": "ward3107/adan",
+    "branch": "main",
+    "pull_request": 42,
+    "checks": [
+      "Quality checks"
+    ]
+  },
+  {
+    "repository": "ward3107/habib",
+    "branch": "main",
+    "pull_request": 21,
+    "checks": [
+      "Quality checks"
+    ]
+  },
+  {
+    "repository": "ward3107/waseem-business-template",
+    "branch": "claude/untitled-session-rpvx1i",
+    "pull_request": 5,
+    "checks": [
+      "Quality checks"
+    ]
+  },
+  {
+    "repository": "ward3107/optiJalal",
+    "branch": "claude/website-build-optimal-tktomw",
+    "pull_request": 9,
+    "checks": [
+      "Quality checks"
+    ]
+  },
+  {
+    "repository": "ward3107/kamanisharle",
+    "branch": "main",
+    "pull_request": 93,
+    "checks": [
+      "Quality checks"
+    ]
+  },
+  {
+    "repository": "ward3107/officelaw",
+    "branch": "main",
+    "pull_request": 13,
+    "checks": [
+      "Quality checks",
+      "test",
+      "audit"
+    ]
+  },
+  {
+    "repository": "ward3107/suncabins",
+    "branch": "main",
+    "pull_request": 94,
+    "checks": [
+      "Lint",
+      "Type Check",
+      "Test",
+      "Build"
+    ]
+  },
+  {
+    "repository": "ward3107/KIDFIN",
+    "branch": "main",
+    "pull_request": 32,
+    "checks": [
+      "check"
+    ]
+  },
+  {
+    "repository": "ward3107/seatai1",
+    "branch": "main",
+    "pull_request": 101,
+    "checks": [
+      "Lint",
+      "Test",
+      "Dependency audit",
+      "Build",
+      "E2E (chromium)",
+      "E2E (firefox)",
+      "E2E (webkit)",
+      "E2E (mobile-chrome)",
+      "PWA offline reload"
+    ]
+  },
+  {
+    "repository": "ward3107/careerconnect",
+    "branch": "main",
+    "pull_request": 466,
+    "checks": [
+      "Typecheck, lint, build"
+    ]
+  },
+  {
+    "repository": "ward3107/VocaBagrut",
+    "branch": "main",
+    "pull_request": 103,
+    "checks": [
+      "check"
+    ]
+  },
+  {
+    "repository": "ward3107/biznix",
+    "branch": "main",
+    "pull_request": 69,
+    "checks": [
+      "ios-preflight",
+      "test-and-build"
+    ]
+  },
+  {
+    "repository": "ward3107/Sybersecurity-course",
+    "branch": "main",
+    "pull_request": 5,
+    "checks": [
+      "HTML well-formedness + relative links",
+      "End-to-end browser smoke test"
+    ]
+  },
+  {
+    "repository": "ward3107/softec-vision",
+    "branch": "main",
+    "pull_request": 62,
+    "checks": [
+      "Web app — typecheck · lint · test · build",
+      "Static-site & data-contract tests"
+    ]
+  },
+  {
+    "repository": "ward3107/liman-hadha",
+    "branch": "main",
+    "pull_request": 27,
+    "checks": [
+      "test-and-build"
+    ]
+  },
+  {
+    "repository": "ward3107/Souvlaki",
+    "branch": "main",
+    "pull_request": 214,
+    "checks": [
+      "Lint",
+      "Type Check",
+      "Test",
+      "E2E Tests",
+      "Build"
+    ]
+  },
+  {
+    "repository": "ward3107/seo-guide-astro",
+    "branch": "main",
+    "pull_request": 3,
+    "checks": [
+      "build"
+    ]
+  },
+  {
+    "repository": "ward3107/ragadkindergarten",
+    "branch": "main",
+    "pull_request": 5,
+    "checks": [
+      "Static site checks"
+    ]
+  },
+  {
+    "repository": "ward3107/NINNYO-FLOWERS",
+    "branch": "main",
+    "pull_request": 13,
+    "checks": [
+      "Static site checks"
+    ]
+  },
+  {
+    "repository": "ward3107/ward3107-",
+    "branch": "main",
+    "pull_request": 2,
+    "checks": [
+      "Static site checks"
+    ]
+  },
+  {
+    "repository": "ward3107/bathline",
+    "branch": "main",
+    "pull_request": 3,
+    "checks": [
+      "Static site checks"
+    ]
+  },
+  {
+    "repository": "ward3107/2d-ai-character-engine",
+    "branch": "main",
+    "pull_request": 3,
+    "checks": [
+      "Character mapping contracts"
+    ]
+  },
+  {
+    "repository": "ward3107/Land-of-Jesus",
+    "branch": "main",
+    "pull_request": 9,
+    "checks": [
+      "Quality checks"
+    ]
+  },
+  {
+    "repository": "ward3107/Vocaband",
+    "branch": "main",
+    "pull_request": 1425,
+    "checks": [
+      "Typecheck + tests + build",
+      "Playwright smoke",
+      "Playwright auth suite",
+      "Quick Play projector + WebKit",
+      "Browser test gate"
+    ]
+  },
+  {
+    "repository": "ward3107/Shayish-Kfar-Yassif",
+    "branch": "main",
+    "pull_request": 37,
+    "checks": [
+      "Quality checks",
+      "Catalog PDF"
+    ]
+  },
+  {
+    "repository": "ward3107/web-compliance-prompts",
+    "branch": "main",
+    "pull_request": 40,
+    "checks": [
+      "validate",
+      "browser",
+      "dependencies",
+      "codeql (javascript-typescript)",
+      "codeql (python)"
+    ]
+  },
+  {
+    "repository": "ward3107/WordPress-WooCommerce-MOVA",
+    "branch": "main",
+    "pull_request": 2,
+    "checks": [
+      "Storefront contracts",
+      "WordPress PHP syntax"
+    ]
+  }
+]

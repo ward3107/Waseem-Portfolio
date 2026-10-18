@@ -5,7 +5,7 @@ describe('published business contact migration', () => {
   it.each([undefined, '', '053-4260632', '+972 53 426 0632', '00972534260632'])(
     'resolves empty or retired settings to the current business number: %s', (value) => {
       expect(resolveBusinessPhone(value)).toBe('972544513141');
-    }
+    },
   );
 
   it('normalizes the new local number and preserves future admin changes', () => {
