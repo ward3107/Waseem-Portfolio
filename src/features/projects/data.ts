@@ -59,39 +59,123 @@ export const getLocalizedProjects = (
 
 /**
  * Portfolio entries that must remain visible even when Supabase is configured.
- * Remote rows are editorial content; they must not be allowed to replace the
- * two WordPress case studies that prove Waseem's platform experience.
+ * Curated projects stay available alongside the editable CMS portfolio.
  */
 export const getRequiredPortfolioProjects = (
   t: (key: string) => string
 ): Project[] => [
   {
-    id: 'wordpress-studio-demo',
-    title: 'Waseem Studio — WordPress Portfolio',
+    id: 'mova-motion-store',
+    title: 'MOVA — Motion Store',
     category: 'WordPress',
-    description: t('project_wordpress_portfolio_desc'),
-    image: '/assets/wordpress-portfolio.svg',
-    tech: ['WordPress.com', 'Gutenberg', 'Responsive Design'],
-    link: 'https://waseemstudiodemo.wordpress.com/',
+    description: t('project_mova_desc'),
+    image: '/assets/projects/mova/cover.jpg',
+    tech: ['WordPress', 'WooCommerce', 'JavaScript', 'Three.js'],
+    link: 'https://wordpress-woocommerce-mova.vercel.app/',
+    github: 'https://github.com/ward3107/WordPress-WooCommerce-MOVA',
   },
   {
-    id: 'wordpress-shop-demo',
-    title: 'Waseem Shop — WordPress Store',
-    category: 'WordPress',
-    description: t('project_wordpress_shop_desc'),
-    image: '/assets/wordpress-shop.svg',
-    tech: ['WordPress.com', 'Gutenberg', 'E-commerce UX'],
-    link: 'https://waseemshopdemo.wordpress.com/',
+    id: 'softec-vision',
+    title: 'Softec Vision',
+    category: 'Web',
+    description: t('project_softec_desc'),
+    image: '/assets/projects/softec/cover.png',
+    tech: ['Next.js', 'TypeScript', 'Supabase'],
+    link: 'https://www.softec.co.il/',
+    github: 'https://github.com/ward3107/softec-vision',
+  },
+  {
+    id: 'biznix',
+    title: 'BizNix',
+    category: 'Web',
+    description: t('project_biznix_desc'),
+    image: '/assets/projects/biznix/cover.svg',
+    tech: ['React', 'TypeScript', 'Supabase'],
+    link: 'https://biznix.app/',
+  },
+  {
+    id: 'kiwi',
+    title: 'Kiwi — Talking Robot',
+    category: 'AI',
+    description: t('project_kiwi_desc'),
+    image: '/assets/projects/kiwi/cover.svg',
+    tech: ['React', 'Three.js', 'OpenAI Realtime'],
+    link: 'https://kidfin-three.vercel.app/#demo',
+    github: 'https://github.com/ward3107/KIDFIN',
+  },
+  {
+    id: 'shayish-kfar-yassif',
+    title: 'Shayish Kfar Yassif',
+    category: 'Web',
+    description: t('project_shayish_desc'),
+    image: '/assets/projects/shayish/cover.jpg',
+    tech: ['React', 'TypeScript', 'Three.js'],
+    link: 'https://shayish-kfar-yassif.vercel.app/',
+    github: 'https://github.com/ward3107/Shayish-Kfar-Yassif',
+  },
+  {
+    id: 'ninnyo-flowers',
+    title: 'NINNYO Flowers',
+    category: 'Web',
+    description: t('project_ninnyo_desc'),
+    image: '/assets/projects/ninnyo/cover.jpg',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    link: 'https://ninnyo.vercel.app/',
+    github: 'https://github.com/ward3107/NINNYO-FLOWERS',
+  },
+  {
+    id: 'vocabagrut',
+    title: 'VocaBagrut',
+    category: 'AI',
+    description: t('project_vocabagrut_desc'),
+    image: '/assets/projects/vocabagrut/cover.svg',
+    tech: ['React', 'TypeScript', 'Supabase'],
+    link: 'https://voca-bagrut.vercel.app/',
   },
 ];
+
+// Suppress retired demos even if older CMS rows use a different slug.
+const retiredProjectIds = new Set(['wordpress-studio-demo', 'wordpress-shop-demo']);
+const retiredProjectHosts = new Set([
+  'waseemstudiodemo.wordpress.com',
+  'waseemshopdemo.wordpress.com',
+]);
+
+function isRetiredProject(project: Project): boolean {
+  if (retiredProjectIds.has(project.id)) return true;
+  try {
+    return retiredProjectHosts.has(new URL(project.link ?? '').hostname);
+  } catch {
+    return false;
+  }
+}
+
+function projectIdentityKeys(project: Project): string[] {
+  const keys = [`id:${project.id}`];
+  for (const href of [project.link, project.github]) {
+    if (!href) continue;
+    try {
+      const url = new URL(href);
+      const hostname = url.hostname.toLowerCase().replace(/^www\./, '');
+      const pathname = url.pathname.replace(/\/$/, '').replace(/\.git$/, '');
+      keys.push(`url:${hostname}${pathname}`);
+    } catch { /* Missing or invalid URLs must not hide an unrelated draft. */ }
+  }
+  return keys;
+}
 
 export const mergeRequiredPortfolioProjects = (
   remoteProjects: Project[],
   requiredProjects: Project[]
 ): Project[] => {
-  const requiredIds = new Set(requiredProjects.map((project) => project.id));
+  const seen = new Set(requiredProjects.flatMap(projectIdentityKeys));
   return [
     ...requiredProjects,
-    ...remoteProjects.filter((project) => !requiredIds.has(project.id)),
+    ...remoteProjects.filter((project) => {
+      const keys = projectIdentityKeys(project);
+      if (isRetiredProject(project) || keys.some((key) => seen.has(key))) return false;
+      keys.forEach((key) => seen.add(key));
+      return true;
+    }),
   ];
 };

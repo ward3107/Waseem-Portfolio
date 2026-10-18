@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+<title>BizNix — local businesses, professionals and services</title>
+<defs><linearGradient id="cover-bg" x2="1" y2="1"><stop stop-color="#050d24"/><stop offset="1" stop-color="#10285a"/></linearGradient><radialGradient id="cover-glow"><stop stop-color="#e6a820" stop-opacity=".22"/><stop offset="1" stop-color="#e6a820" stop-opacity="0"/></radialGradient></defs>
+<rect width="1200" height="750" fill="url(#cover-bg)"/>
+<circle cx="920" cy="350" r="360" fill="url(#cover-glow)"/>
+<circle cx="926" cy="344" r="188" fill="none" stroke="#e6a820" stroke-opacity=".24"/>
+<circle cx="926" cy="344" r="235" fill="none" stroke="#e6a820" stroke-opacity=".1"/>
+<g transform="translate(742 160) scale(2.875)">
+  <rect width="128" height="128" rx="26" fill="#040e2a"/>
+  <g transform="translate(20,20) scale(0.73)">
+      <defs><linearGradient id="bolt" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#e6a820"/><stop offset="100%" stop-color="#c8890a"/></linearGradient></defs>
+      <text x="6" y="88" font-family="Arial, Helvetica, sans-serif" font-size="92" font-weight="900" fill="#FFFFFF" letter-spacing="-4">B</text>
+      <text x="60" y="88" font-family="Arial, Helvetica, sans-serif" font-size="92" font-weight="900" fill="#FFFFFF" letter-spacing="-4">Z</text>
+      <polygon points="70,10 44,64 60,64 50,110 82,52 64,52 82,10" fill="url(#bolt)" stroke="#040e2a" stroke-width="2" stroke-linejoin="round"/></g>
+</g>
+<g font-family="Arial,Helvetica,sans-serif"><text x="76" y="166" fill="#e6a820" font-size="18" font-weight="700" letter-spacing="4">BUSINESSES. PEOPLE. CONNECTIONS.</text>
+<text x="70" y="348" font-size="122" font-weight="900" letter-spacing="-5"><tspan fill="#fff">Biz</tspan><tspan fill="#e6a820">Nix</tspan></text>
+<text x="76" y="421" fill="#cbd5e1" font-size="32">The right service.</text><text x="76" y="469" fill="#cbd5e1" font-size="32">Closer than you think.</text>
+<rect x="76" y="566" width="304" height="58" rx="29" fill="#fff" fill-opacity=".07" stroke="#fff" stroke-opacity=".15"/><text x="228" y="603" text-anchor="middle" fill="#fff" font-size="20">Discover · Search · Connect</text>
+<text x="76" y="700" fill="#8e9cb7" font-size="18" letter-spacing="3">BIZNIX.APP</text></g></svg>

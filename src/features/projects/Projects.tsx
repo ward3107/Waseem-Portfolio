@@ -46,18 +46,18 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           toggleFlip();
         }
       }}
-      className="group h-96 w-full [perspective:1000px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded-3xl"
+      className="group h-[28rem] w-full [perspective:1000px] cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2 rounded-3xl"
     >
       <div className={`relative h-full w-full [transform-style:preserve-3d] ${prefersReducedMotion ? '' : 'transition-transform duration-700'} ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}>
         {/* Front */}
-        <div className="absolute inset-0 h-full w-full rounded-3xl bg-white dark:bg-slate-900 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden [backface-visibility:hidden]">
+        <div className="absolute inset-0 flex h-full w-full flex-col rounded-3xl bg-white dark:bg-slate-900 shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden [backface-visibility:hidden]">
 
           {/* Image Container */}
-          <div className="relative h-56 w-full">
+          <div className="relative h-48 w-full shrink-0">
             <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-transparent transition-colors z-10"></div>
             <img
               src={project.image}
-              alt={`${project.title} — ${project.category} project screenshot`}
+              alt={project.title}
               loading="lazy"
               decoding="async"
               width="600"
@@ -78,7 +78,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
           </div>
 
-          <div className="p-6 relative h-full flex flex-col">
+          <div className="p-6 relative min-h-0 flex flex-1 flex-col">
             <div className="flex justify-between items-start mb-2">
               <span className="text-xs font-bold text-brand-purple bg-brand-purple/5 border border-brand-purple/10 px-3 py-1 rounded-full uppercase tracking-wide">
                 {project.category}

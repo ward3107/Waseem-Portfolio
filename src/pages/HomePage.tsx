@@ -44,10 +44,9 @@ const [ACT_IDENTITY, ACT_SERVICES, ACT_AI, ACT_WORK, ACT_CONTACT] = JOURNEY_ACTS
 // and ?classic all resolve to the classic path below.
 const Experience = lazy(() => import('@/experience/Experience'));
 
-/** The whole site on one page — a single continuous colour journey. What used
- *  to be separate /about, /services, /projects and /contact routes now live
- *  here as five colour acts, in scroll order, so the visitor never leaves the
- *  page. The old routes redirect to the matching anchor (see App.tsx). This is
+/** The homepage is a continuous colour journey, with the complete portfolio
+ *  including both existing work and approved additions. The other former routes
+ *  redirect to the matching anchor (see App.tsx). This is
  *  also the guaranteed fallback for the 3D experience (reduced-motion /
  *  no-WebGL / crawler / opt-out).
  *

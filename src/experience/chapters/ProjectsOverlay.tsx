@@ -12,8 +12,8 @@ import { GhostNavButton } from './actions';
 /**
  * Chapter 4 — Projects. The visual is the 3D turntable (ProjectsScene, in the
  * canvas): every project's screenshot rides a slowly rotating ring and the one
- * at the front enlarges and opens on click. This DOM layer keeps the centre clear
- * clear for that gallery — the heading is pinned to the top and an accessible
+ * at the front enlarges and opens on click. This DOM layer keeps the centre
+ * clear for the full portfolio — the heading is pinned to the top and an accessible
  * link index + CTA to the bottom. Those links keep every project
  * keyboard-reachable and crawlable even though the canvas is aria-hidden, and
  * they double as a tap target on touch. Same on every device.

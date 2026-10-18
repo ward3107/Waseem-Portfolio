@@ -45,9 +45,9 @@ const openInNewTab = (url: string) => {
 };
 
 /**
- * Chapter 4 showpiece — a spaced, draggable rail of the real projects. Every project the
- * site knows about (Supabase-backed via useProjects — the full list, not a
- * hard-coded five) rides a rail the camera faces. It advances on its own, bringing
+ * Chapter 4 showpiece — a spaced, draggable rail of the complete portfolio.
+ * Existing CMS projects and approved additions all remain on the homepage.
+ * The rail advances on its own, bringing
  * each project to front-centre in turn; the reader can also grab it — drag with
  * the mouse or swipe with a finger to spin left/right — and on release it snaps
  * the nearest project back to centre, so the front screen is always a clean tap
@@ -58,7 +58,7 @@ const openInNewTab = (url: string) => {
  * pointer-events-none, so a click on empty space falls through to the canvas —
  * gating by focus keeps drags/taps meaningful only on the projects beat and
  * stops a stray click elsewhere from opening a random project. The DOM link
- * index (ProjectsOverlay) still lists every project for keyboard/crawler access.
+ * index (ProjectsOverlay) lists the same full portfolio for keyboard access.
  */
 const ProjectsScene: React.FC = () => {
   const { projects } = useProjects();

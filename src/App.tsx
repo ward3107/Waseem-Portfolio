@@ -13,6 +13,7 @@ import RouteTransition from '@/shared/ui/RouteTransition';
 import SectionSkeleton from '@/shared/ui/SectionSkeleton';
 import ErrorBoundary from '@/shared/ui/ErrorBoundary';
 import HomePage from './pages/HomePage';
+import ProjectsPage from './pages/ProjectsPage';
 import VideoAdsPage from './pages/VideoAdsPage';
 import BrandAssetsPage from './pages/BrandAssetsPage';
 import FromGbpPage from './pages/FromGbpPage';
@@ -125,12 +126,12 @@ const AppContent: React.FC = () => {
               {/* location={display} so the exchange happens under the curtain. */}
               <Routes location={display}>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/projects" element={<ProjectsPage />} />
                 <Route path="/video-ads" element={<VideoAdsPage />} />
                 <Route path="/brand" element={<BrandAssetsPage />} />
                 {/* The site is one page now — these former routes redirect to
                     their section on the home journey. Kept so bookmarks, deep
                     links and search results still land in the right place. */}
-                <Route path="/projects" element={<Navigate to="/#projects" replace />} />
                 <Route path="/services" element={<Navigate to="/#what-i-do" replace />} />
                 <Route path="/about" element={<Navigate to="/#about" replace />} />
                 <Route path="/contact" element={<Navigate to="/#contact" replace />} />
