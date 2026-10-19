@@ -26,10 +26,29 @@ describe('VideoAdsPage project navigation', () => {
 
     fireEvent.click(
       screen.getByRole('link', {
-        name: /NINNYO FLOWERS — שישי ב־12 שניות12s/,
+        name: /NINNYO FLOWERS20s/,
       })
     );
 
     expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
+  });
+
+  it('does not reintroduce alternate versions in the case studies or restaurant section', () => {
+    const { container } = render(
+      <MemoryRouter initialEntries={['/video-ads?lang=he']}>
+        <LanguageProvider>
+          <VideoAdsPage />
+        </LanguageProvider>
+      </MemoryRouter>
+    );
+    expect(
+      [...container.querySelectorAll('video')].map((video) => video.getAttribute('src'))
+    ).toEqual([
+      '/assets/video-ads/greentouch-house.mp4',
+      '/assets/video-ads/ninnyo-friday-wow.mp4',
+      '/assets/video-ads/souvlaki/1000333189.mp4',
+    ]);
+    expect(container.querySelector('#ninnyo-friday-12')).toBeNull();
+    expect(container.querySelector('#ninnyo-red-roses')).toBeNull();
   });
 });

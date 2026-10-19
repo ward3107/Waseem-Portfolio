@@ -20,6 +20,9 @@ const categories: VideoCategory[] = [
   'education',
   'presenter',
 ];
+const availableCategories = categories.filter((category) =>
+  VIDEO_PORTFOLIO.some((video) => video.category === category)
+);
 
 export default function VideoPortfolioGallery() {
   const { language } = useLanguage();
@@ -57,7 +60,7 @@ export default function VideoPortfolioGallery() {
           >
             {copy.all}
           </button>
-          {categories.map((item) => (
+          {availableCategories.map((item) => (
             <button
               type="button"
               key={item}

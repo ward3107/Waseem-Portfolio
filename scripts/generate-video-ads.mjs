@@ -6,8 +6,10 @@ const output = new URL('../dist/video-ads/', import.meta.url);
 const site = 'https://www.vasia.dev';
 const url = `${site}/video-ads`;
 const title = 'Video Editing & Motion Portfolio | VASIA';
-const description =
-  'Watch 35 video works: brand films, food, fashion, automotive edits, education, motion design and AI presenters in Hebrew, Arabic and English.';
+const selectedCount = JSON.parse(
+  readFileSync(new URL('../src/features/video-ads/curation.json', import.meta.url), 'utf8')
+).length;
+const description = `Watch ${selectedCount} selected video works for brands, food, fashion and education. One chosen version of each project.`;
 let html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
 html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${title}</title>`);
 const values = {

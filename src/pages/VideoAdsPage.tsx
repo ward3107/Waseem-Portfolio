@@ -5,14 +5,13 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
-import {
-  SOUVLAKI_REELS,
-  VIDEO_ADS,
-  type VideoAd,
-  videoAdsCopy,
-} from '@/features/video-ads/content';
+import { type VideoAd, videoAdsCopy } from '@/features/video-ads/content';
 import VideoPortfolioGallery from '@/features/video-ads/VideoPortfolioGallery';
-import { videoLibraryCopy } from '@/features/video-ads/portfolio';
+import {
+  CURATED_CASE_STUDIES as VIDEO_ADS,
+  CURATED_SOUVLAKI_REELS as SOUVLAKI_REELS,
+  videoLibraryCopy,
+} from '@/features/video-ads/portfolio';
 import '@/features/video-ads/video-ads.css';
 
 type Copy = (typeof videoAdsCopy)[keyof typeof videoAdsCopy];
@@ -201,7 +200,7 @@ export default function VideoAdsPage() {
             <img src={SOUVLAKI_REELS[0].poster} alt="" width={168} height={168} />
             <span>
               <bdi>{copy.souvlakiTitle}</bdi>
-              <small>5 reels</small>
+              <small>{copy.souvlakiWatch}</small>
             </span>
           </a>
         </nav>
@@ -227,14 +226,12 @@ export default function VideoAdsPage() {
                     preload="none"
                     poster={reel.poster}
                     src={reel.src}
-                    width={540}
-                    height={960}
-                    aria-label={`${copy.souvlakiWatch} ${reel.number}`}
+                    width={reel.width}
+                    height={reel.height}
+                    aria-label={copy.souvlakiWatch}
                   />
                 </div>
-                <figcaption>
-                  {copy.souvlakiWatch} {reel.number}
-                </figcaption>
+                <figcaption>{copy.souvlakiWatch}</figcaption>
               </figure>
             ))}
           </div>
