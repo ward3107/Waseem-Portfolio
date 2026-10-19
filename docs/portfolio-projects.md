@@ -16,6 +16,7 @@ Artwork is self-hosted under `public/assets/projects/`:
 
 | Project | Source |
 | --- | --- |
+| NACRE — Ocean Atelier | Published Site preview (`cover.webp`) and the project’s own static product illustration (`product.svg`). Public design demonstration, with an English/Hebrew ocean journey. |
 | MOVA | Original social cover in `ward3107/WordPress-WooCommerce-MOVA`, `dist/assets/social-cover.jpg` |
 | Softec Vision | The site's `/he/opengraph-image` artwork |
 | BizNix | Vector portfolio cover composed with the existing public `/favicon.svg` brand mark |

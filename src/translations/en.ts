@@ -139,6 +139,7 @@ export const en: Record<string, string> = {
     project_5_desc: "Gamified vocabulary learning app for EFL students.",
     project_6_desc: "Aluminum and steel design solutions company website.",
     project_7_desc: "Professional medical website for Dr. Maya Khalil.",
+    project_nacre_desc: "An immersive fragrance concept with a sculpted 3D shell, emerald water and a continuous scroll journey beneath the sea. Explore the bottle and six fragrance notes in English or Hebrew.",
     project_mova_desc: "An interactive concept store with a cinematic opening, 360° product views and a shoe anatomy lab. Includes a separate WordPress and WooCommerce theme.",
     project_softec_desc: "A professional product catalog for custom technology furniture, with clear categories, product specifications and direct inquiries.",
     project_biznix_desc: "A multilingual directory connecting visitors with local businesses, professionals and services through search and business profiles.",

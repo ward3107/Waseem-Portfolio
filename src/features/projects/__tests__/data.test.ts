@@ -9,7 +9,7 @@ import type { Project } from '@/types';
 
 const t = (key: string) => key;
 const curatedIds = [
-  'mova-motion-store', 'softec-vision', 'biznix', 'kiwi',
+  'mova-motion-store', 'nacre-ocean-atelier', 'softec-vision', 'biznix', 'kiwi',
   'shayish-kfar-yassif', 'ninnyo-flowers', 'vocabagrut',
 ];
 const remoteProject: Project = {
@@ -18,7 +18,7 @@ const remoteProject: Project = {
 };
 
 describe('curated portfolio projects', () => {
-  it('includes MOVA and the six approved projects while preserving the original portfolio', () => {
+  it('includes the approved projects while preserving the original portfolio', () => {
     const projects = getRequiredPortfolioProjects(t);
     expect(projects.map((project) => project.id)).toEqual(curatedIds);
     expect(projects[0].link).toBe('https://wordpress-woocommerce-mova.vercel.app/');
