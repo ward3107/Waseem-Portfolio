@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import VideoPortfolioGallery from '../VideoPortfolioGallery';
+import VideoReels from '../VideoReels';
 import { VIDEO_PORTFOLIO } from '../portfolio';
 
 beforeEach(() => {
@@ -37,6 +38,20 @@ const mount = () =>
   );
 
 describe('the complete video collection', () => {
+  it('keeps the original home reels visible alongside every new film', () => {
+    const { container } = render(
+      <LanguageProvider>
+        <VideoReels />
+      </LanguageProvider>
+    );
+    const cards = screen.getAllByRole('button', { name: /^Watch video:/ });
+    expect(cards).toHaveLength(VIDEO_PORTFOLIO.length);
+    expect(cards[0]).toHaveAccessibleName('Watch video: GreenTouch');
+    expect(screen.getByRole('button', { name: 'Watch video: NINNYO FLOWERS' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Watch video: English 4 All/ })).toBeInTheDocument();
+    expect(container.querySelector('video')).toBeNull();
+  });
+
   it('shows every unique finished film without downloading any video before selection', () => {
     const { container } = mount();
     const cards = screen.getAllByRole('button', { name: /^Watch video:/ });

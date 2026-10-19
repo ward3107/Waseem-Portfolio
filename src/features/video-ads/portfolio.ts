@@ -27,7 +27,6 @@ export type PortfolioVideo = {
 const languages: Language[] = ['en', 'he', 'ar'];
 
 export const VIDEO_PORTFOLIO: PortfolioVideo[] = [
-  ...(additions as PortfolioVideo[]),
   ...VIDEO_ADS.map(
     (video): PortfolioVideo => ({
       ...video,
@@ -40,6 +39,7 @@ export const VIDEO_PORTFOLIO: PortfolioVideo[] = [
       height: 1920,
     })
   ),
+  ...(additions as PortfolioVideo[]),
   ...SOUVLAKI_REELS.map(
     (video): PortfolioVideo => ({
       ...video,
@@ -57,8 +57,9 @@ export const VIDEO_PORTFOLIO: PortfolioVideo[] = [
   ),
 ];
 
-// A compact selection also keeps the homepage's scroll chapter within its frame.
-export const FEATURED_VIDEOS = VIDEO_PORTFOLIO.slice(0, 4);
+// Keep the original reels first and make every addition reachable from home.
+// VideoReels stays one horizontally scrollable row within the scroll chapter.
+export const FEATURED_VIDEOS = VIDEO_PORTFOLIO;
 
 export function formatVideoDuration(duration: number): string {
   const seconds = Math.round(duration);
@@ -70,6 +71,8 @@ export const videoLibraryCopy = {
     heading: 'כל עבודות הווידאו',
     intro: 'פרסומות, רילים, מושן ופרזנטורים דיגיטליים. בחרו סרטון וצפו בו עם סאונד ובמסך מלא.',
     videos: 'סרטונים',
+    previous: 'הסרטונים הקודמים',
+    next: 'הסרטונים הבאים',
     all: 'הכול',
     language: 'שפת הסרטון',
     allLanguages: 'כל השפות',
@@ -100,6 +103,8 @@ export const videoLibraryCopy = {
     intro:
       'Brand films, reels, motion design and digital presenters. Pick a film to watch with sound and fullscreen controls.',
     videos: 'videos',
+    previous: 'Previous videos',
+    next: 'Next videos',
     all: 'All work',
     language: 'Video language',
     allLanguages: 'All languages',
@@ -129,6 +134,8 @@ export const videoLibraryCopy = {
     heading: 'كل أعمال الفيديو',
     intro: 'إعلانات وريلز وموشن ومقدّمون افتراضيون. اختاروا فيديو للمشاهدة بالصوت وبملء الشاشة.',
     videos: 'فيديو',
+    previous: 'الفيديوهات السابقة',
+    next: 'الفيديوهات التالية',
     all: 'كل الأعمال',
     language: 'لغة الفيديو',
     allLanguages: 'كل اللغات',
