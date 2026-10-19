@@ -5,7 +5,14 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
-import { SOUVLAKI_REELS, VIDEO_ADS, type VideoAd, videoAdsCopy } from '@/features/video-ads/content';
+import {
+  SOUVLAKI_REELS,
+  VIDEO_ADS,
+  type VideoAd,
+  videoAdsCopy,
+} from '@/features/video-ads/content';
+import VideoPortfolioGallery from '@/features/video-ads/VideoPortfolioGallery';
+import { videoLibraryCopy } from '@/features/video-ads/portfolio';
 import '@/features/video-ads/video-ads.css';
 
 type Copy = (typeof videoAdsCopy)[keyof typeof videoAdsCopy];
@@ -29,30 +36,74 @@ function VideoCaseStudy({ project, copy }: { project: VideoAd; copy: Copy }) {
     <article id={project.id} className={`va-case va-case-${project.id}`}>
       <div className="va-case-copy">
         <header className="va-case-heading">
-          <h2><bdi>{projectCopy.project}</bdi></h2>
+          <h2>
+            <bdi>{projectCopy.project}</bdi>
+          </h2>
           <p>{projectCopy.tagline}</p>
         </header>
         <dl className="va-facts">
-          <div><dt>{copy.audienceLabel}</dt><dd>{projectCopy.audience}</dd></div>
-          <div><dt>{copy.purposeLabel}</dt><dd>{projectCopy.purpose}</dd></div>
-          <div><dt>{copy.sourceLabel}</dt><dd>{projectCopy.source}</dd></div>
-          <div><dt>{copy.editLabel}</dt><dd>{projectCopy.edit}</dd></div>
-          <div><dt>{copy.deliveryLabel}</dt><dd>{projectCopy.format}<br />{projectCopy.platforms}</dd></div>
-          <div><dt>{copy.musicLabel}</dt><dd>{projectCopy.music}</dd></div>
+          <div>
+            <dt>{copy.audienceLabel}</dt>
+            <dd>{projectCopy.audience}</dd>
+          </div>
+          <div>
+            <dt>{copy.purposeLabel}</dt>
+            <dd>{projectCopy.purpose}</dd>
+          </div>
+          <div>
+            <dt>{copy.sourceLabel}</dt>
+            <dd>{projectCopy.source}</dd>
+          </div>
+          <div>
+            <dt>{copy.editLabel}</dt>
+            <dd>{projectCopy.edit}</dd>
+          </div>
+          <div>
+            <dt>{copy.deliveryLabel}</dt>
+            <dd>
+              {projectCopy.format}
+              <br />
+              {projectCopy.platforms}
+            </dd>
+          </div>
+          <div>
+            <dt>{copy.musicLabel}</dt>
+            <dd>{projectCopy.music}</dd>
+          </div>
         </dl>
         <p className="va-disclosure">{projectCopy.disclosure}</p>
         <details className="va-transcript">
           <summary>{copy.transcript}</summary>
-          <ol>{projectCopy.lines.map((line) => <li key={line}>{line}</li>)}</ol>
+          <ol>
+            {projectCopy.lines.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ol>
         </details>
       </div>
       <figure className="va-screen">
         <div className="va-player">
-          <video ref={video} controls playsInline preload="metadata" poster={project.poster}
-            src={project.src} aria-label={projectCopy.watch} width={1080} height={1920}
-            onPlay={() => setStarted(true)} onError={() => setFailed(true)}>
+          <video
+            ref={video}
+            controls
+            playsInline
+            preload="none"
+            poster={project.poster}
+            src={project.src}
+            aria-label={projectCopy.watch}
+            width={1080}
+            height={1920}
+            onPlay={() => setStarted(true)}
+            onError={() => setFailed(true)}
+          >
             {project.tracks?.map((track) => (
-              <track key={track.srcLang} kind="subtitles" src={track.src} srcLang={track.srcLang} label={track.label} />
+              <track
+                key={track.srcLang}
+                kind="subtitles"
+                src={track.src}
+                srcLang={track.srcLang}
+                label={track.label}
+              />
             ))}
             <a href={project.src}>{copy.direct}</a>
           </video>
@@ -63,8 +114,14 @@ function VideoCaseStudy({ project, copy }: { project: VideoAd; copy: Copy }) {
           )}
         </div>
         <figcaption>{copy.sound}</figcaption>
-        {failed && <p role="alert" className="va-error">{copy.unavailable}</p>}
-        <a className="va-direct" href={project.src} target="_blank" rel="noopener noreferrer">{copy.direct}</a>
+        {failed && (
+          <p role="alert" className="va-error">
+            {copy.unavailable}
+          </p>
+        )}
+        <a className="va-direct" href={project.src} target="_blank" rel="noopener noreferrer">
+          {copy.direct}
+        </a>
       </figure>
     </article>
   );
@@ -101,16 +158,22 @@ export default function VideoAdsPage() {
   return (
     <div className="video-ads-page">
       <div className="va-wrap">
-        <Link to="/" className="va-back">{copy.back}</Link>
+        <Link to="/" className="va-back">
+          {copy.back}
+        </Link>
         <header className="va-gallery-intro">
           <p className="va-category">{copy.category}</p>
           <h1>{copy.heading}</h1>
           <p className="va-description">{copy.intro}</p>
           <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="va-button">
-            <MessageCircle size={19} aria-hidden="true" />{copy.cta}
+            <MessageCircle size={19} aria-hidden="true" />
+            {copy.cta}
           </a>
         </header>
 
+        <VideoPortfolioGallery />
+
+        <h2 className="va-stories-heading">{videoLibraryCopy[language].stories}</h2>
         <nav className="va-project-jump" aria-label={copy.category}>
           {VIDEO_ADS.map((project) => (
             <a
@@ -122,17 +185,31 @@ export default function VideoAdsPage() {
               }}
             >
               <img src={project.thumbnail} alt="" width={168} height={168} />
-              <span><bdi>{copy.projects[project.id].project}</bdi><small>{project.duration}s</small></span>
+              <span>
+                <bdi>{copy.projects[project.id].project}</bdi>
+                <small>{project.duration}s</small>
+              </span>
             </a>
           ))}
-          <a href="#souvlaki" onClick={(event) => { event.preventDefault(); navigateToSection('/video-ads#souvlaki'); }}>
+          <a
+            href="#souvlaki"
+            onClick={(event) => {
+              event.preventDefault();
+              navigateToSection('/video-ads#souvlaki');
+            }}
+          >
             <img src={SOUVLAKI_REELS[0].poster} alt="" width={168} height={168} />
-            <span><bdi>{copy.souvlakiTitle}</bdi><small>5 reels</small></span>
+            <span>
+              <bdi>{copy.souvlakiTitle}</bdi>
+              <small>5 reels</small>
+            </span>
           </a>
         </nav>
 
         <section className="va-cases" aria-label={copy.category}>
-          {VIDEO_ADS.map((project) => <VideoCaseStudy key={project.id} project={project} copy={copy} />)}
+          {VIDEO_ADS.map((project) => (
+            <VideoCaseStudy key={project.id} project={project} copy={copy} />
+          ))}
         </section>
 
         <section id="souvlaki" className="va-souvlaki" aria-labelledby="va-souvlaki-title">
@@ -144,19 +221,33 @@ export default function VideoAdsPage() {
             {SOUVLAKI_REELS.map((reel) => (
               <figure key={reel.src} className="va-souvlaki-reel">
                 <div className="va-player">
-                  <video controls playsInline preload="none" poster={reel.poster} src={reel.src}
-                    width={540} height={960} aria-label={`${copy.souvlakiWatch} ${reel.number}`} />
+                  <video
+                    controls
+                    playsInline
+                    preload="none"
+                    poster={reel.poster}
+                    src={reel.src}
+                    width={540}
+                    height={960}
+                    aria-label={`${copy.souvlakiWatch} ${reel.number}`}
+                  />
                 </div>
-                <figcaption>{copy.souvlakiWatch} {reel.number}</figcaption>
+                <figcaption>
+                  {copy.souvlakiWatch} {reel.number}
+                </figcaption>
               </figure>
             ))}
           </div>
         </section>
 
         <section className="va-enquiry" aria-labelledby="va-enquiry-title">
-          <div><h2 id="va-enquiry-title">{copy.ask}</h2><p>{copy.askText}</p></div>
+          <div>
+            <h2 id="va-enquiry-title">{copy.ask}</h2>
+            <p>{copy.askText}</p>
+          </div>
           <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="va-button">
-            <MessageCircle size={19} aria-hidden="true" />{copy.cta}
+            <MessageCircle size={19} aria-hidden="true" />
+            {copy.cta}
           </a>
         </section>
       </div>
