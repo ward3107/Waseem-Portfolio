@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import { Play } from 'lucide-react';
+import { useCallback, useId, useRef, useState } from 'react';
+import { ArrowLeft, ArrowRight, Play } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import {
   FEATURED_VIDEOS,
@@ -12,21 +12,31 @@ import './video-ads.css';
 
 /** Only posters load on the homepage; a video mounts after a deliberate click. */
 export default function VideoReels({ className = '' }: { className?: string }) {
-  const { language } = useLanguage();
+  const { language, dir } = useLanguage();
   const copy = videoLibraryCopy[language];
   const [open, setOpen] = useState<PortfolioVideo | null>(null);
   const close = useCallback(() => setOpen(null), []);
+  const strip = useRef<HTMLUListElement>(null);
+  const stripId = useId();
+  const move = (direction: number) => {
+    const list = strip.current;
+    if (!list) return;
+    list.scrollBy({
+      left: direction * (dir === 'rtl' ? -1 : 1) * list.clientWidth * 0.8,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  };
 
   return (
     <>
       <ul
-        className={`pointer-events-auto -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-4 sm:gap-4 sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden ${className}`}
+        ref={strip}
+        id={stripId}
+        aria-label={copy.heading}
+        className={`pointer-events-auto -mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:gap-4 sm:px-0 [&::-webkit-scrollbar]:hidden ${className}`}
       >
         {FEATURED_VIDEOS.map((video) => (
-          <li
-            key={video.id}
-            className="w-[38vw] max-w-[168px] shrink-0 snap-start sm:w-auto sm:max-w-none"
-          >
+          <li key={video.id} className="w-[38vw] max-w-[168px] shrink-0 snap-start sm:w-[168px]">
             <button
               type="button"
               onClick={() => setOpen(video)}
@@ -66,6 +76,39 @@ export default function VideoReels({ className = '' }: { className?: string }) {
           </li>
         ))}
       </ul>
+      <div className="pointer-events-auto mt-3 flex items-center justify-between gap-4">
+        <span className="text-xs font-medium text-slate-500 dark:text-slate-300">
+          {FEATURED_VIDEOS.length} {copy.videos}
+        </span>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => move(-1)}
+            aria-label={copy.previous}
+            aria-controls={stripId}
+            className="grid h-10 w-10 place-items-center rounded-full border border-slate-400/50 text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-cyan dark:text-white"
+          >
+            {dir === 'rtl' ? (
+              <ArrowRight size={18} aria-hidden="true" />
+            ) : (
+              <ArrowLeft size={18} aria-hidden="true" />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => move(1)}
+            aria-label={copy.next}
+            aria-controls={stripId}
+            className="grid h-10 w-10 place-items-center rounded-full border border-slate-400/50 text-slate-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-cyan dark:text-white"
+          >
+            {dir === 'rtl' ? (
+              <ArrowLeft size={18} aria-hidden="true" />
+            ) : (
+              <ArrowRight size={18} aria-hidden="true" />
+            )}
+          </button>
+        </div>
+      </div>
       {open && <PortfolioPlayer key={open.id} video={open} onClose={close} />}
     </>
   );
