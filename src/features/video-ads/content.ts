@@ -102,11 +102,11 @@ type PageCopy = {
 
 export const videoAdsCopy: Record<Language, PageCopy> = {
   en: {
-    title: 'Social Video Portfolio | Waseem',
-    heading: 'Real products.\nStories made for the feed.',
+    title: 'Video Editing & Motion Portfolio | VASIA',
+    heading: 'Ideas into motion.\nWork you can watch.',
     intro:
-      'Social-video work for GreenTouch, NINNYO FLOWERS and Souvlaki, made for mobile viewing.',
-    category: 'Video editing for brands',
+      'Explore the complete video collection: brand films, food, fashion, automotive edits, education, motion design and AI presenters.',
+    category: 'Video editing · Motion design · AI',
     cta: 'Get a video for your business',
     prefill: 'Hi Waseem, I saw your social-video portfolio and would like a reel for my business.',
     sound: 'Music on. Press play to watch with sound.',
@@ -123,9 +123,9 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     ask: 'Have the photos? Let’s make them move.',
     askText:
       'Send your product photos and the message people should remember. I’ll shape the pacing, captions, music and final call to action around your business.',
-    previewTitle: 'Social video made for the phone.',
+    previewTitle: 'Watch the work. Feel the motion.',
     previewText:
-      'Watch GreenTouch, NINNYO FLOWERS and five Souvlaki restaurant reels.',
+      'Explore 35 videos, from cinematic food and fashion to brand motion, education and AI presenters.',
     explore: 'View the video work',
     souvlakiTitle: 'Souvlaki',
     souvlakiIntro: 'Five vertical reels for the Greek restaurant in Kafr Yasif.',
@@ -233,11 +233,11 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     },
   },
   he: {
-    title: 'תיק עבודות וידאו לסושיאל | Waseem',
-    heading: 'מוצרים אמיתיים.\nסיפורים שנועדו לפיד.',
+    title: 'עריכת וידאו ומושן · תיק עבודות | VASIA',
+    heading: 'רעיונות שהופכים לתנועה.\nעבודות שאפשר לראות.',
     intro:
-      'עבודות וידאו אנכיות ל־GreenTouch, ל־NINNYO FLOWERS ולמסעדת סופלאקי, מותאמות לצפייה בטלפון.',
-    category: 'עריכת וידאו למותגים',
+      'כל עבודות הווידאו במקום אחד: פרסומות, אוכל, אופנה, רכב, חינוך, מושן ופרזנטורים דיגיטליים.',
+    category: 'עריכת וידאו · מושן · AI',
     cta: 'רוצים סרטון לעסק שלכם?',
     prefill: 'היי ואסים, ראיתי את עבודות הווידאו שלך ואשמח לריל עבור העסק שלי.',
     sound: 'כולל מוזיקה. לחצו להפעלה עם סאונד.',
@@ -254,9 +254,8 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     ask: 'יש לכם תמונות? בואו ניתן להן תנועה.',
     askText:
       'שלחו את תמונות המוצרים ואת המסר שחשוב שיזכרו. אתאים לעסק את הקצב, הכיתובים, המוזיקה וההנעה לפעולה.',
-    previewTitle: 'סרטוני סושיאל שנועדו למסך הטלפון.',
-    previewText:
-      'GreenTouch, ‏NINNYO FLOWERS וחמישה רילים למסעדת סופלאקי.',
+    previewTitle: 'צפו בעבודות. תרגישו את התנועה.',
+    previewText: '35 סרטונים: מאוכל ואופנה קולנועיים ועד מושן למותגים, חינוך ופרזנטורים דיגיטליים.',
     explore: 'לצפייה בעבודות הווידאו',
     souvlakiTitle: 'סופלאקי',
     souvlakiIntro: 'חמישה רילים אנכיים למסעדת סופלאקי בכפר יאסיף.',
@@ -350,11 +349,11 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     },
   },
   ar: {
-    title: 'معرض فيديو للسوشيال | Waseem',
-    heading: 'منتجات حقيقية.\nقصص صُممت للمنشورات.',
+    title: 'مونتاج وموشن · معرض الأعمال | VASIA',
+    heading: 'أفكار تتحوّل لحركة.\nأعمال يمكن مشاهدتها.',
     intro:
-      'أعمال فيديو عمودية لـGreenTouch وNINNYO FLOWERS ومطعم سوفلاكي، مناسبة للمشاهدة على الهاتف.',
-    category: 'مونتاج فيديو للعلامات التجارية',
+      'كل أعمال الفيديو بمكان واحد: إعلانات وطعام وأزياء وسيارات وتعليم وموشن ومقدّمون افتراضيون.',
+    category: 'مونتاج · موشن · AI',
     cta: 'تريدون فيديو لمشروعكم؟',
     prefill: 'مرحباً وسيم، شاهدت أعمال الفيديو وأرغب بريل لمشروعي.',
     sound: 'مع موسيقى. اضغط للتشغيل بالصوت.',
@@ -371,9 +370,9 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     ask: 'لديكم الصور؟ لنمنحها الحركة.',
     askText:
       'أرسلوا صور المنتجات والرسالة التي تريدون أن يتذكّرها الناس. سأبني الإيقاع والنصوص والموسيقى والدعوة للتواصل بما يناسب مشروعكم.',
-    previewTitle: 'فيديوهات للسوشيال صُممت للهاتف.',
+    previewTitle: 'شاهد الأعمال. حسّ بالحركة.',
     previewText:
-      'GreenTouch وNINNYO FLOWERS وخمسة ريلز لمطعم سوفلاكي.',
+      '35 فيديو: من الطعام والأزياء السينمائية إلى موشن للعلامات التجارية وتعليم ومقدّمين افتراضيين.',
     explore: 'شاهد أعمال الفيديو',
     souvlakiTitle: 'سوفلاكي',
     souvlakiIntro: 'خمسة ريلز عمودية لمطعم سوفلاكي في كفر ياسيف.',
