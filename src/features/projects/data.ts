@@ -75,6 +75,16 @@ export const getRequiredPortfolioProjects = (
     github: 'https://github.com/ward3107/WordPress-WooCommerce-MOVA',
   },
   {
+    id: 'nacre-ocean-atelier',
+    title: 'NACRE — Ocean Atelier',
+    category: 'Web',
+    description: t('project_nacre_desc'),
+    image: '/assets/projects/nacre/cover.webp',
+    screenshots: ['/assets/projects/nacre/cover.webp', '/assets/projects/nacre/product.svg'],
+    tech: ['Three.js', 'WebGL', 'JavaScript'],
+    link: 'https://nacre-ocean-atelier.vasele66.chatgpt.site/',
+  },
+  {
     id: 'softec-vision',
     title: 'Softec Vision',
     category: 'Web',

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="820" viewBox="0 0 720 820">
+  <defs>
+    <radialGradient id="o"><stop stop-color="#547f6c"/><stop offset="1" stop-color="#064437"/></radialGradient>
+    <radialGradient id="s" cx=".5" cy=".82" r=".85"><stop stop-color="#efd1bd"/><stop offset=".5" stop-color="#dca6a9"/><stop offset=".85" stop-color="#bc7a84"/><stop offset="1" stop-color="#8e5260"/></radialGradient>
+    <linearGradient id="b" x2="0" y2="1"><stop stop-color="#d4a59e"/><stop offset=".5" stop-color="#b77b7e"/><stop offset="1" stop-color="#8e596a"/></linearGradient>
+    <linearGradient id="g"><stop stop-color="#d8e8ce" stop-opacity=".8"/><stop offset=".12" stop-color="#f6ffe5" stop-opacity=".28"/><stop offset=".65" stop-color="#ced8b8" stop-opacity=".45"/><stop offset=".9" stop-color="#e8efcf" stop-opacity=".7"/><stop offset="1" stop-color="#9db99e" stop-opacity=".2"/></linearGradient>
+    <radialGradient id="cap" cx=".35" cy=".25"><stop stop-color="#fff7e8"/><stop offset=".55" stop-color="#f1d5d6"/><stop offset="1" stop-color="#c593a8"/></radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="paper"><feTurbulence baseFrequency=".6" numOctaves="3" seed="4" result="noise"/><feComposite in="noise" in2="SourceGraphic" operator="in" result="texture"/><feBlend in="SourceGraphic" in2="texture" mode="soft-light"/></filter>
+  </defs>
+  <rect width="720" height="820" fill="url(#o)"/>
+  <g fill="none" stroke="#c4d3b5" opacity=".18"><ellipse cx="360" cy="607" rx="290" ry="72"/><ellipse cx="360" cy="607" rx="318" ry="82"/><ellipse cx="360" cy="607" rx="335" ry="92"/></g>
+  <ellipse cx="360" cy="613" rx="210" ry="30" fill="#001e15" opacity=".5" filter="url(#blur)"/>
+  <path d="M359 491C316 465 132 372 112 281Q86 247 107 225Q92 188 122 170Q117 134 149 122Q150 88 186 88Q200 59 234 70Q257 41 287 58Q318 36 345 59Q374 35 403 59Q433 43 457 68Q491 57 506 87Q542 86 547 121Q579 133 574 168Q604 188 589 219Q611 247 591 278C572 374 405 465 359 491Z" fill="url(#s)" stroke="#f5c0cc" stroke-width="3"/>
+  <g fill="none" stroke="#b8708f" stroke-width="2" opacity=".38"><path d="M359 480C327 372 155 255 149 123M359 480C325 328 199 181 186 89M359 480C333 309 244 170 234 70M359 480C346 269 296 161 287 58M359 480 345 59M359 480C376 272 396 159 403 59M359 480C390 307 447 172 457 68M359 480C402 327 494 179 506 87M359 480C409 349 542 215 547 122M359 480C436 365 568 246 589 219M359 480C282 365 139 245 107 225"/></g>
+  <g fill="none" stroke="#ffe4dc" stroke-width="3" opacity=".45"><path d="M359 480C338 350 226 210 207 79M359 480C352 291 319 152 318 54M359 480C368 290 424 149 433 61M359 480C395 332 520 205 530 107"/></g>
+  <path d="M115 526Q154 463 359 448Q560 460 604 526C601 577 474 652 359 652S125 576 115 526Z" fill="url(#b)" stroke="#efb1c3" stroke-width="3"/>
+  <ellipse cx="360" cy="520" rx="242" ry="78" fill="url(#s)" stroke="#f5c3cb" stroke-width="3"/>
+  <g stroke="#b9718c" opacity=".45" fill="none"><path d="M128 538q58 68 232 111M169 563q75 65 191 86M221 582q67 52 139 67M282 594l78 55M598 538q-58 68-238 111M551 563q-75 65-191 86M499 582q-67 52-139 67M438 594l-78 55"/></g>
+  <ellipse cx="360" cy="553" rx="90" ry="16" opacity=".19" fill="#422d22" filter="url(#blur)"/>
+  <rect x="275" y="318" width="170" height="239" rx="39" fill="url(#g)" stroke="#e7f1ce" stroke-opacity=".7" stroke-width="3"/>
+  <rect x="287" y="371" width="145" height="168" rx="28" fill="#cfbe83" opacity=".16"/>
+  <rect x="286" y="528" width="148" height="18" rx="9" fill="#e9f1c9" opacity=".38"/>
+  <path d="M301 336q-13 4-14 28v133" fill="none" stroke="#ffffec" stroke-width="3" opacity=".8"/>
+  <path d="M429 340v172q0 20-14 22" fill="none" stroke="#ffffec" stroke-width="2" opacity=".5"/>
+  <rect x="337" y="288" width="46" height="34" rx="9" fill="#bed2b5" opacity=".8" stroke="#dce7c6"/>
+  <rect x="333" y="283" width="54" height="15" rx="4" fill="#b8b09b"/>
+  <path d="M309 266C309 230 333 220 366 222S416 235 414 263Q401 286 358 286T309 266Z" fill="url(#cap)" stroke="#edd8d2"/>
+  <g stroke="#b98b9c" fill="none" opacity=".3"><path d="M325 272q-5-27 14-43M344 279q-6-28 6-54M367 280l-2-55M387 276q9-27-5-48"/></g>
+  <rect x="306" y="375" width="108" height="113" fill="#f4eddd" stroke="#aeaa91" stroke-width=".7"/>
+  <rect x="311" y="380" width="98" height="103" fill="none" stroke="#b9b09b" stroke-width=".5"/>
+  <text x="360" y="422" text-anchor="middle" font-family="Georgia,serif" fill="#334033" font-size="21">NACRE</text>
+  <path d="M346 435h28" stroke="#a69e86" stroke-width=".6"/>
+  <g text-anchor="middle" font-family="Arial,sans-serif" fill="#53604d" font-size="3.7" letter-spacing=".8"><text x="360" y="450">L’EAU DE NACRE</text><text x="360" y="471">EAU DE PARFUM · 50 ML</text></g>
+</svg>

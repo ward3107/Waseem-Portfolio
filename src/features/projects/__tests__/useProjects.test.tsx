@@ -29,13 +29,13 @@ describe('portfolio content loading', () => {
 
   it('translates the fallback immediately when a visitor switches language', () => {
     const { result } = renderHook(usePortfolio, { wrapper });
-    expect(result.current.projects[1].description).toBe(translations.en.project_softec_desc);
+    expect(result.current.projects.find((project) => project.id === 'softec-vision')?.description).toBe(translations.en.project_softec_desc);
     act(() => result.current.setLanguage('he'));
-    expect(result.current.projects[1].description).toBe(translations.he.project_softec_desc);
+    expect(result.current.projects.find((project) => project.id === 'softec-vision')?.description).toBe(translations.he.project_softec_desc);
     act(() => result.current.setLanguage('ar'));
-    expect(result.current.projects[1].description).toBe(translations.ar.project_softec_desc);
+    expect(result.current.projects.find((project) => project.id === 'softec-vision')?.description).toBe(translations.ar.project_softec_desc);
     expect(result.current.projects.map((project) => project.id)).toEqual([
-      'mova-motion-store', 'softec-vision', 'biznix', 'kiwi',
+      'mova-motion-store', 'nacre-ocean-atelier', 'softec-vision', 'biznix', 'kiwi',
       'shayish-kfar-yassif', 'ninnyo-flowers', 'vocabagrut',
       'souvlaki', 'seatai', 'law-office', 'shokha', 'vocaband',
     ]);
