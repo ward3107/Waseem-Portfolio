@@ -16,10 +16,8 @@ const works=[
  ['ninnyo-friday','NINNYO FLOWERS','video','/assets/video-ads/ninnyo-friday-thumbnail.webp','ninnyo-friday'],
  ['greentouch','GreenTouch','video','/assets/video-ads/greentouch-thumbnail.webp','greentouch'],
  ['wordpress-studio','Waseem Studio','web','/assets/wordpress-portfolio.svg','wordpress-studio'],
- ['ninnyo-roses','NINNYO · Red roses','video','/assets/video-ads/ninnyo-red-roses-thumbnail.webp','ninnyo-friday'],
  ['souvlaki','Souvlaki','web','/assets/souvlaki.webp',null],
  ['vocaband','Vocaband','web','/assets/vocaband.webp',null],
- ['ninnyo-12','NINNYO · Friday 12s','video','/assets/video-ads/ninnyo-friday-12s-thumbnail.webp','ninnyo-friday'],
  ['vasia','Vasia','brand','/brand/vasia-share.png',null],
  ['wordpress-shop','Waseem Shop','web','/assets/wordpress-shop.svg','wordpress-studio'],
 ];

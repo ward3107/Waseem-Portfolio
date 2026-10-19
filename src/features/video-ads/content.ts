@@ -105,7 +105,7 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     title: 'Video Editing & Motion Portfolio | VASIA',
     heading: 'Ideas into motion.\nWork you can watch.',
     intro:
-      'Explore the complete video collection: brand films, food, fashion, automotive edits, education, motion design and AI presenters.',
+      'Selected video work for brands, food, fashion and education. One chosen version of each project.',
     category: 'Video editing · Motion design · AI',
     cta: 'Get a video for your business',
     prefill: 'Hi Waseem, I saw your social-video portfolio and would like a reel for my business.',
@@ -125,10 +125,10 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
       'Send your product photos and the message people should remember. I’ll shape the pacing, captions, music and final call to action around your business.',
     previewTitle: 'Watch the work. Feel the motion.',
     previewText:
-      'Explore 35 videos, from cinematic food and fashion to brand motion, education and AI presenters.',
+      'Selected work for brands, food, fashion and education. One chosen version of each project.',
     explore: 'View the video work',
     souvlakiTitle: 'Souvlaki',
-    souvlakiIntro: 'Five vertical reels for the Greek restaurant in Kafr Yasif.',
+    souvlakiIntro: 'A selected reel for the Greek restaurant in Kafr Yasif.',
     souvlakiWatch: 'Watch Souvlaki reel',
     projects: {
       greentouch: {
@@ -235,8 +235,7 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
   he: {
     title: 'עריכת וידאו ומושן · תיק עבודות | VASIA',
     heading: 'רעיונות שהופכים לתנועה.\nעבודות שאפשר לראות.',
-    intro:
-      'כל עבודות הווידאו במקום אחד: פרסומות, אוכל, אופנה, רכב, חינוך, מושן ופרזנטורים דיגיטליים.',
+    intro: 'עבודות וידאו נבחרות למותגים, אוכל, אופנה וחינוך. גרסה נבחרת אחת מכל עבודה.',
     category: 'עריכת וידאו · מושן · AI',
     cta: 'רוצים סרטון לעסק שלכם?',
     prefill: 'היי ואסים, ראיתי את עבודות הווידאו שלך ואשמח לריל עבור העסק שלי.',
@@ -255,10 +254,10 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     askText:
       'שלחו את תמונות המוצרים ואת המסר שחשוב שיזכרו. אתאים לעסק את הקצב, הכיתובים, המוזיקה וההנעה לפעולה.',
     previewTitle: 'צפו בעבודות. תרגישו את התנועה.',
-    previewText: '35 סרטונים: מאוכל ואופנה קולנועיים ועד מושן למותגים, חינוך ופרזנטורים דיגיטליים.',
+    previewText: 'עבודות נבחרות במיתוג, אוכל, אופנה וחינוך. גרסה אחת מכל פרויקט.',
     explore: 'לצפייה בעבודות הווידאו',
     souvlakiTitle: 'סופלאקי',
-    souvlakiIntro: 'חמישה רילים אנכיים למסעדת סופלאקי בכפר יאסיף.',
+    souvlakiIntro: 'ריל נבחר למסעדת סופלאקי בכפר יאסיף.',
     souvlakiWatch: 'צפייה בריל של סופלאקי',
     projects: {
       greentouch: {
@@ -352,7 +351,7 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     title: 'مونتاج وموشن · معرض الأعمال | VASIA',
     heading: 'أفكار تتحوّل لحركة.\nأعمال يمكن مشاهدتها.',
     intro:
-      'كل أعمال الفيديو بمكان واحد: إعلانات وطعام وأزياء وسيارات وتعليم وموشن ومقدّمون افتراضيون.',
+      'أعمال فيديو مختارة للعلامات التجارية والطعام والأزياء والتعليم. نسخة واحدة مختارة من كل عمل.',
     category: 'مونتاج · موشن · AI',
     cta: 'تريدون فيديو لمشروعكم؟',
     prefill: 'مرحباً وسيم، شاهدت أعمال الفيديو وأرغب بريل لمشروعي.',
@@ -371,11 +370,10 @@ export const videoAdsCopy: Record<Language, PageCopy> = {
     askText:
       'أرسلوا صور المنتجات والرسالة التي تريدون أن يتذكّرها الناس. سأبني الإيقاع والنصوص والموسيقى والدعوة للتواصل بما يناسب مشروعكم.',
     previewTitle: 'شاهد الأعمال. حسّ بالحركة.',
-    previewText:
-      '35 فيديو: من الطعام والأزياء السينمائية إلى موشن للعلامات التجارية وتعليم ومقدّمين افتراضيين.',
+    previewText: 'أعمال مختارة للعلامات التجارية والطعام والأزياء والتعليم. نسخة واحدة من كل عمل.',
     explore: 'شاهد أعمال الفيديو',
     souvlakiTitle: 'سوفلاكي',
-    souvlakiIntro: 'خمسة ريلز عمودية لمطعم سوفلاكي في كفر ياسيف.',
+    souvlakiIntro: 'ريل مختار لمطعم سوفلاكي في كفر ياسيف.',
     souvlakiWatch: 'شاهد ريل سوفلاكي',
     projects: {
       greentouch: {

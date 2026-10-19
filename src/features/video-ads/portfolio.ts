@@ -1,6 +1,7 @@
 import type { Language } from '@/types';
 import { SOUVLAKI_REELS, VIDEO_ADS, videoAdsCopy } from './content';
 import additions from './portfolio.json';
+import curatedIds from './curation.json';
 
 export type VideoCategory =
   | 'social'
@@ -26,7 +27,7 @@ export type PortfolioVideo = {
 
 const languages: Language[] = ['en', 'he', 'ar'];
 
-export const VIDEO_PORTFOLIO: PortfolioVideo[] = [
+const studioVideos: PortfolioVideo[] = [
   ...VIDEO_ADS.map(
     (video): PortfolioVideo => ({
       ...video,
@@ -45,21 +46,31 @@ export const VIDEO_PORTFOLIO: PortfolioVideo[] = [
       ...video,
       id: `souvlaki-${video.number}`,
       title: {
-        en: `Souvlaki · Reel ${video.number}`,
-        he: `סופלאקי · ריל ${video.number}`,
-        ar: `سوفلاكي · ريل ${video.number}`,
+        en: 'Souvlaki · Made fresh',
+        he: 'סופלאקי · טריות בעבודת יד',
+        ar: 'سوفلاكي · طازج وبإيدينا',
       },
       category: 'food',
-      language: null,
-      width: 540,
-      height: 960,
+      language: video.number === 1 ? null : 'en',
+      width: video.number === 1 ? 540 : 478,
+      height: video.number === 1 ? 960 : 850,
     })
   ),
 ];
 
-// Keep the original reels first and make every addition reachable from home.
-// VideoReels stays one horizontally scrollable row within the scroll chapter.
+// Publication is an explicit selection, independent of the retained studio inventory.
+// New files and alternate renders remain unpublished until deliberately selected.
+const selectedIds = new Set(curatedIds);
+export const VIDEO_PORTFOLIO = studioVideos.filter((video) => selectedIds.has(video.id));
 export const FEATURED_VIDEOS = VIDEO_PORTFOLIO;
+export const CURATED_CASE_STUDIES = VIDEO_ADS.filter((video) => selectedIds.has(video.id));
+export const CURATED_SOUVLAKI_REELS = SOUVLAKI_REELS.filter((video) =>
+  selectedIds.has(`souvlaki-${video.number}`)
+).map((video) => ({
+  ...video,
+  width: video.number === 1 ? 540 : 478,
+  height: video.number === 1 ? 960 : 850,
+}));
 
 export function formatVideoDuration(duration: number): string {
   const seconds = Math.round(duration);
@@ -68,8 +79,8 @@ export function formatVideoDuration(duration: number): string {
 
 export const videoLibraryCopy = {
   he: {
-    heading: 'כל עבודות הווידאו',
-    intro: 'פרסומות, רילים, מושן ופרזנטורים דיגיטליים. בחרו סרטון וצפו בו עם סאונד ובמסך מלא.',
+    heading: 'עבודות וידאו נבחרות',
+    intro: 'מותגים, אוכל, אופנה וחינוך. גרסה נבחרת אחת מכל עבודה, לצפייה עם סאונד ובמסך מלא.',
     videos: 'סרטונים',
     previous: 'הסרטונים הקודמים',
     next: 'הסרטונים הבאים',
@@ -99,9 +110,9 @@ export const videoLibraryCopy = {
     languages: { he: 'עברית', ar: 'ערבית', en: 'אנגלית' },
   },
   en: {
-    heading: 'The video collection',
+    heading: 'Selected video work',
     intro:
-      'Brand films, reels, motion design and digital presenters. Pick a film to watch with sound and fullscreen controls.',
+      'Brands, food, fashion and education. One selected version of each project, with sound and fullscreen controls.',
     videos: 'videos',
     previous: 'Previous videos',
     next: 'Next videos',
@@ -131,8 +142,8 @@ export const videoLibraryCopy = {
     languages: { he: 'Hebrew', ar: 'Arabic', en: 'English' },
   },
   ar: {
-    heading: 'كل أعمال الفيديو',
-    intro: 'إعلانات وريلز وموشن ومقدّمون افتراضيون. اختاروا فيديو للمشاهدة بالصوت وبملء الشاشة.',
+    heading: 'أعمال فيديو مختارة',
+    intro: 'علامات تجارية وطعام وأزياء وتعليم. نسخة مختارة واحدة من كل عمل، بالصوت وبملء الشاشة.',
     videos: 'فيديو',
     previous: 'الفيديوهات السابقة',
     next: 'الفيديوهات التالية',
