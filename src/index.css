@@ -9,19 +9,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Self-hosted Hebrew/Arabic webfonts (assets already ship in /public/fonts and
-   are used by the 3D word). `unicode-range` scopes each file to its script, so
-   an English visitor downloads neither — only Hebrew text pulls Heebo and only
-   Arabic text pulls Cairo. Previously Hebrew/Arabic body copy fell back to
-   whatever system font the OS happened to have, since the Inter/Space Grotesk
-   webfonts cover Latin only. font-display: swap avoids blocking first paint. */
+/* Self-hosted Hebrew/Arabic webfonts. Use the existing Fontsource Hebrew
+   subset for visible text (about 12 KB instead of the full 64 KB Heebo file).
+   The full TTF remains available separately for the 3D text geometry.
+   `unicode-range` avoids loading these fonts for other languages, and swap
+   keeps first paint independent of font download. */
 @font-face {
   font-family: 'Heebo';
-  src: url('/fonts/heebo.woff2') format('woff2');
+  src: url('@fontsource-variable/heebo/files/heebo-hebrew-wght-normal.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
-  unicode-range: U+0590-05FF, U+200F, U+FB1D-FB4F;
+  unicode-range: U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
 }
 @font-face {
   font-family: 'Cairo';
