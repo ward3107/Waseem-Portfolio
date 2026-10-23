@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Blocks,
   BookOpen,
@@ -21,6 +21,7 @@ import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { useContact } from '@/features/contact/useContact';
 import AudioHeaderControl from '@/experience/components/AudioHeaderControl';
 import BrandLogo from '@/shared/brand/BrandLogo';
+import { useLocation } from 'react-router-dom';
 
 const NAV_ICONS: Record<string, LucideIcon> = {
   '/#what-i-do': Blocks,
@@ -42,6 +43,10 @@ const NAV_ICONS: Record<string, LucideIcon> = {
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
+  const firstMenuLinkRef = useRef<HTMLAnchorElement>(null);
+  const location = useLocation();
 
   const [scrolled, setScrolled] = useState(false);
 
@@ -51,6 +56,10 @@ const Navbar: React.FC = () => {
   const contact = useContact();
   const homeHref = language === 'he' ? '/' : `/${language}/`;
   const localizedHref = (href: string) => href.startsWith('/#') ? `${homeHref}${href.slice(1)}` : href;
+
+  // A route change can happen while the drawer is open (for example from
+  // another in-app control). Never leave the new page scroll locked.
+  useEffect(() => setIsOpen(false), [location.pathname, location.hash]);
 
   useEffect(() => {
     let rafId = 0;
@@ -76,11 +85,29 @@ const Navbar: React.FC = () => {
     if (!isOpen) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    const focusFrame = requestAnimationFrame(() => firstMenuLinkRef.current?.focus());
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsOpen(false);
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        menuToggleRef.current?.focus();
+      }
+      if (e.key !== 'Tab') return;
+      const items = Array.from(navRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([tabindex="-1"])') ?? [])
+        .filter((item) => item.getClientRects().length > 0);
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (!first || !last) return;
+      if (e.shiftKey && (document.activeElement === first || !navRef.current?.contains(document.activeElement))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (document.activeElement === last || !navRef.current?.contains(document.activeElement))) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener('keydown', onKey);
     return () => {
+      cancelAnimationFrame(focusFrame);
       document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', onKey);
     };
@@ -88,9 +115,10 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-sm border-b border-brand-gold/20 dark:border-slate-800' : 'bg-transparent'}`}
+      ref={navRef}
+      className={`fixed top-0 left-0 right-0 ${isOpen ? 'z-[60]' : 'z-50'} transition-all duration-300 ${scrolled || isOpen ? `bg-white/90 dark:bg-slate-900/90 shadow-sm border-b border-brand-gold/20 dark:border-slate-800 ${isOpen ? '' : 'backdrop-blur-sm'}` : 'bg-transparent'}`}
     >
-      <div className="max-w-7xl mx-auto px-6 sm:px-10">
+      <div className="relative z-50 max-w-7xl mx-auto px-6 sm:px-10">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Name — single instance, scales with viewport */}
           <a
@@ -183,6 +211,7 @@ const Navbar: React.FC = () => {
             </button>
 
             <button
+              ref={menuToggleRef}
               onClick={() => setIsOpen(!isOpen)}
               aria-label={isOpen ? t('aria_menu_close') : t('aria_menu_open')}
               aria-expanded={isOpen}
@@ -204,28 +233,30 @@ const Navbar: React.FC = () => {
           <>
             <motion.button
               type="button"
-              aria-label={t('aria_menu_close')}
+              aria-hidden="true"
+              tabIndex={-1}
               onClick={() => setIsOpen(false)}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="xl:hidden fixed inset-0 bg-black/50 z-40 cursor-default"
+              className="xl:hidden fixed inset-x-0 top-16 bottom-0 bg-black/50 z-40 cursor-default"
             />
             <motion.div
               id="mobile-menu"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="xl:hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 overflow-hidden relative z-50"
+              className="xl:hidden relative z-50 max-h-[calc(100dvh-4rem)] overflow-x-hidden overflow-y-auto overscroll-contain border-b border-gray-100 bg-white dark:border-slate-800 dark:bg-slate-900"
               role="navigation"
               aria-label="Main navigation menu"
             >
-              <div className="px-6 pt-4 pb-8 space-y-4 flex flex-col">
-                {NAV_LINKS[language].map((link) => {
+              <div className="flex flex-col gap-1 px-6 pt-3 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+                {NAV_LINKS[language].map((link, index) => {
                   const Icon = NAV_ICONS[link.href] ?? Blocks;
                   return (
                     <a
                       key={link.name}
+                      ref={index === 0 ? firstMenuLinkRef : undefined}
                       href={localizedHref(link.href)}
                       onClick={(e) => {
                         if (/\/(blog|gallery|stories)\/$/.test(link.href)) return;
@@ -233,7 +264,7 @@ const Navbar: React.FC = () => {
                         setIsOpen(false);
                         setTimeout(() => navigateToSection(link.href), 100);
                       }}
-                      className="flex min-h-12 items-center gap-4 rounded-xl px-3 py-2 text-lg font-medium text-slate-600 hover:bg-brand-purple/10 hover:text-brand-purple focus:outline-none focus:ring-2 focus:ring-brand-purple dark:text-slate-300"
+                      className="flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-base font-medium text-slate-600 hover:bg-brand-purple/10 hover:text-brand-purple focus:outline-none focus:ring-2 focus:ring-brand-purple dark:text-slate-300"
                     >
                       <Icon size={22} strokeWidth={1.9} aria-hidden="true" />
                       <span>{link.name}</span>
@@ -245,7 +276,7 @@ const Navbar: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsOpen(false)}
-                  className="w-full text-center py-3 rounded-xl bg-brand-purple text-white font-medium shadow-md focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 cursor-pointer"
+                  className="mt-2 flex min-h-11 w-full items-center justify-center rounded-xl bg-brand-purple px-3 py-2 text-center font-medium text-white shadow-md focus:outline-none focus:ring-2 focus:ring-brand-purple focus:ring-offset-2 cursor-pointer"
                 >
                   {t('letsTalk')}
                 </a>
