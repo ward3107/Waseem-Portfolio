@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 /**
  * Probe once whether the browser can give us a WebGL context at all. Some
@@ -28,15 +28,13 @@ function detectWebGL(): boolean {
 }
 
 /**
- * `true` once we've confirmed WebGL is usable. Starts `false` and flips after
- * mount, so the first paint never assumes the 3D layer will succeed — the
- * classic DOM fallback shows until the probe passes.
+ * Probe in the lazy state initializer so the first render selects the correct
+ * homepage. Waiting for an effect briefly mounted the entire classic page,
+ * including its large profile image, before replacing it with the experience.
+ * That also delayed the experience chunk and its hero text by another render.
  */
 export function useWebGLSupport(): boolean {
-  const [supported, setSupported] = useState<boolean>(false);
-  useEffect(() => {
-    setSupported(detectWebGL());
-  }, []);
+  const [supported] = useState<boolean>(detectWebGL);
   return supported;
 }
 
