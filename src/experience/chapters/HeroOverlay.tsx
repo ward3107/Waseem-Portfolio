@@ -26,10 +26,10 @@ const HeroOverlay: React.FC = () => {
   return (
     <div className="pointer-events-none relative flex flex-col items-center text-center">
       <img
-        src="/assets/waseem-mobile-avatar.webp"
+        src="/assets/waseem-mobile-avatar-256.webp"
         alt={t('hero_profile_alt')}
-        width="512"
-        height="512"
+        width="256"
+        height="256"
         loading="eager"
         decoding="async"
         className="mb-4 h-20 w-20 self-end rounded-full border-2 border-white/80 object-cover shadow-lg ring-1 ring-cyan-300/40 sm:hidden"
