@@ -34,7 +34,7 @@ const Stars: React.FC<{ rating: number }> = ({ rating }) => (
  */
 const ReviewCarousel: React.FC = () => {
   const { t } = useLanguage();
-  const { reviews } = useReviews();
+  const { reviews } = useReviews('reviews');
 
   if (!reviews.length) return null;
 
