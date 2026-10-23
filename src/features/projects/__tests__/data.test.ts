@@ -58,6 +58,21 @@ describe('curated portfolio projects', () => {
       .toBe('https://www.greeksouflaki.com/');
   });
 
+  it('keeps former Netlify projects visible without their dead demo links', () => {
+    const fallback = getLocalizedProjects(t);
+    expect(fallback.find((project) => project.id === 'law-office')?.link).toBeUndefined();
+    expect(fallback.find((project) => project.id === 'shokha')?.link).toBeUndefined();
+
+    const merged = mergeRequiredPortfolioProjects([
+      { ...remoteProject, id: 'law-office', link: 'https://lawofice.netlify.app/' },
+      { ...remoteProject, id: 'shokha', link: 'https://shokha1.netlify.app/' },
+    ], getRequiredPortfolioProjects(t));
+    expect(merged.find((project) => project.id === 'law-office')?.link).toBeUndefined();
+    expect(merged.find((project) => project.id === 'law-office')?.github)
+      .toBe('https://github.com/ward3107/officelaw');
+    expect(merged.find((project) => project.id === 'shokha')?.link).toBeUndefined();
+  });
+
   it('keeps retired demos hidden without hiding unrelated WordPress work or drafts', () => {
     const required = getRequiredPortfolioProjects(t);
     const merged = mergeRequiredPortfolioProjects([

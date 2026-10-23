@@ -33,8 +33,9 @@ export const getLocalizedProjects = (
     category: 'Web',
     description: t('project_3_desc'),
     image: '/assets/law-office.webp',
-    tech: ['React', 'Vite', 'Tailwind CSS'],
-    link: 'https://lawofice.netlify.app/',
+    tech: ['Next.js', 'Tailwind CSS', 'Firebase'],
+    // The former Netlify demo now returns Netlify's "Site not found" page.
+    github: 'https://github.com/ward3107/officelaw',
   },
   {
     id: 'shokha',
@@ -43,7 +44,7 @@ export const getLocalizedProjects = (
     description: t('project_4_desc'),
     image: '/assets/barbershop.webp',
     tech: ['React', 'Node.js', 'MongoDB'],
-    link: 'https://shokha1.netlify.app/',
+    // The former Netlify demo now returns Netlify's "Site not found" page.
   },
   {
     id: 'vocaband',
@@ -181,10 +182,23 @@ export const mergeRequiredPortfolioProjects = (
   const seen = new Set(requiredProjects.flatMap(projectIdentityKeys));
   return [
     ...requiredProjects,
-    ...remoteProjects.map((project) => project.id === 'souvlaki'
-      ? { ...project, link: 'https://www.greeksouflaki.com/' }
-      : project
-    ).filter((project) => {
+    ...remoteProjects.map((project) => {
+      if (project.id === 'souvlaki') return { ...project, link: 'https://www.greeksouflaki.com/' };
+      // Older CMS rows still contain these retired Netlify URLs. Keep the
+      // portfolio work visible without sending visitors to a 404.
+      if (project.id === 'law-office' || project.link?.includes('lawofice.netlify.app')) {
+        return {
+          ...project,
+          link: undefined,
+          github: 'https://github.com/ward3107/officelaw',
+          tech: ['Next.js', 'Tailwind CSS', 'Firebase'],
+        };
+      }
+      if (project.id === 'shokha' || project.link?.includes('shokha1.netlify.app')) {
+        return { ...project, link: undefined };
+      }
+      return project;
+    }).filter((project) => {
       const keys = projectIdentityKeys(project);
       if (isRetiredProject(project) || keys.some((key) => seen.has(key))) return false;
       keys.forEach((key) => seen.add(key));
