@@ -40,7 +40,9 @@ describe('portfolio content loading', () => {
     act(() => result.current.setLanguage('ar'));
     expect(result.current.projects.find((project) => project.id === 'softec-vision')?.description).toBe(translations.ar.project_softec_desc);
     expect(result.current.projects.map((project) => project.id)).toEqual([
-      'mova-motion-store', 'nacre-ocean-atelier', 'softec-vision', 'biznix', 'kiwi',
+      'mova-motion-store', 'nacre-ocean-atelier', 'frame-video-learning',
+      'luma-video-library', 'mova-storefront-concept', 'flora-botanical-journey',
+      'softec-vision', 'biznix', 'kiwi',
       'shayish-kfar-yassif', 'ninnyo-flowers', 'vocabagrut',
       'souvlaki', 'seatai', 'law-office', 'shokha', 'vocaband',
     ]);

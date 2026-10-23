@@ -9,7 +9,9 @@ import type { Project } from '@/types';
 
 const t = (key: string) => key;
 const curatedIds = [
-  'mova-motion-store', 'nacre-ocean-atelier', 'softec-vision', 'biznix', 'kiwi',
+  'mova-motion-store', 'nacre-ocean-atelier', 'frame-video-learning',
+  'luma-video-library', 'mova-storefront-concept', 'flora-botanical-journey',
+  'softec-vision', 'biznix', 'kiwi',
   'shayish-kfar-yassif', 'ninnyo-flowers', 'vocabagrut',
 ];
 const remoteProject: Project = {
@@ -37,6 +39,25 @@ describe('curated portfolio projects', () => {
     ], required);
     expect(merged.map((project) => project.id)).toEqual([...curatedIds, 'remote-project']);
     expect(merged[0].title).toBe('MOVA — Motion Store');
+  });
+
+  it('lists verified public Netlify demos without replacing the separate WordPress project', () => {
+    const projects = getRequiredPortfolioProjects(t);
+    expect(projects[0].link).toBe('https://wordpress-woocommerce-mova.vercel.app/');
+    for (const [id, host] of [
+      ['nacre-ocean-atelier', 'nacre-ocean-atelier'],
+      ['frame-video-learning', 'lucky-licorice-86816e'],
+      ['luma-video-library', 'velvety-dango-eacc11'],
+      ['mova-storefront-concept', 'mova-motion-store'],
+      ['flora-botanical-journey', 'flora-botanical-journey'],
+    ]) {
+      const project = projects.find((entry) => entry.id === id);
+      expect(project?.link).toBe(`https://${host}.netlify.app/`);
+      expect(project?.title).toContain('Demo');
+    }
+    expect(projects.some((project) => project.link?.includes('drwebsit.netlify.app'))).toBe(false);
+    expect(projects.some((project) => project.link?.includes('nothing22.netlify.app'))).toBe(false);
+    expect(projects.some((project) => project.link?.includes('dancer-motion-preview-waseem.netlify.app'))).toBe(false);
   });
 
   it('merges existing CMS entries by live URL or repository even if the slug differs', () => {

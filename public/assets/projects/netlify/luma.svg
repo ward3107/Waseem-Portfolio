@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">LUMA short film platform concept</title>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#061f25"/><stop offset="1" stop-color="#123e48"/></linearGradient><linearGradient id="light" x2="1" y2="1"><stop stop-color="#cfb688"/><stop offset="1" stop-color="#e9ddbd"/></linearGradient></defs>
+  <rect width="600" height="400" fill="url(#bg)"/>
+  <path d="M354 0h176L392 400H219z" fill="url(#light)" opacity=".2"/>
+  <circle cx="436" cy="174" r="94" fill="#decba6" opacity=".25"/>
+  <circle cx="436" cy="174" r="63" fill="#efe2c6" opacity=".86"/>
+  <path d="m423 147 46 27-46 27z" fill="#0d343b"/>
+  <text x="48" y="194" fill="#faf7ef" font-family="Arial,sans-serif" font-size="82" font-weight="700" letter-spacing="5">LUMA</text>
+  <text x="52" y="228" fill="#dcccae" font-family="Arial,sans-serif" font-size="18" letter-spacing="3">STORIES WORTH STAYING FOR</text>
+  <path d="M48 328h504" stroke="#dcccae" opacity=".55"/>
+  <text x="50" y="359" fill="#faf7ef" font-family="Arial,sans-serif" font-size="15" letter-spacing="3">SHORT FILM PLATFORM DEMO</text>
+</svg>
