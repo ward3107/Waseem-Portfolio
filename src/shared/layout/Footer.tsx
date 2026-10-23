@@ -13,6 +13,8 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   const { language, t } = useLanguage();
   const navigateToSection = useSectionNavigate();
+  const homeHref = language === 'he' ? '/' : `/${language}/`;
+  const localizedHref = (href: string) => href.startsWith('/#') ? `${homeHref}${href.slice(1)}` : href;
   const [legalModal, setLegalModal] = useState<'privacy' | 'terms' | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
@@ -72,7 +74,7 @@ const Footer: React.FC = () => {
               {NAV_LINKS[language].map((link) => (
                 <li key={link.name}>
                   <a
-                    href={link.href}
+                    href={localizedHref(link.href)}
                     onClick={(e) => {
                       e.preventDefault();
                       navigateToSection(link.href);
@@ -89,7 +91,7 @@ const Footer: React.FC = () => {
               ))}
               <li>
                 <a
-                  href="/blog/"
+                  href={language === 'he' ? '/blog/' : `/${language}/blog/`}
                   className="hover:text-brand-purple transition-colors flex items-center gap-2 group py-1.5"
                 >
                   <ArrowRight
@@ -150,7 +152,7 @@ const Footer: React.FC = () => {
               {[1, 2, 3, 4, 5].map((i) => (
                 <li key={i}>
                   <a
-                    href="/#what-i-do"
+                    href={`${homeHref}#what-i-do`}
                     onClick={(e) => {
                       e.preventDefault();
                       navigateToSection('/#what-i-do');
