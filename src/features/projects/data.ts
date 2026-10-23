@@ -29,22 +29,22 @@ export const getLocalizedProjects = (
   },
   {
     id: 'law-office',
-    title: 'Law Office Template',
+    title: 'Cohen & Co. — Law Office Demo',
     category: 'Web',
     description: t('project_3_desc'),
     image: '/assets/law-office.webp',
     tech: ['Next.js', 'Tailwind CSS', 'Firebase'],
-    // The former Netlify demo now returns Netlify's "Site not found" page.
+    link: 'https://officelaw.vercel.app/',
     github: 'https://github.com/ward3107/officelaw',
   },
   {
     id: 'shokha',
-    title: 'Shokha Barbershop',
+    title: 'Fade & Co. — Barbershop Demo',
     category: 'Web',
     description: t('project_4_desc'),
     image: '/assets/barbershop.webp',
-    tech: ['React', 'Node.js', 'MongoDB'],
-    // The former Netlify demo now returns Netlify's "Site not found" page.
+    tech: ['React', 'Vite', 'Supabase'],
+    link: 'https://barbershop-website-indol.vercel.app/',
   },
   {
     id: 'vocaband',
@@ -184,18 +184,28 @@ export const mergeRequiredPortfolioProjects = (
     ...requiredProjects,
     ...remoteProjects.map((project) => {
       if (project.id === 'souvlaki') return { ...project, link: 'https://www.greeksouflaki.com/' };
-      // Older CMS rows still contain these retired Netlify URLs. Keep the
-      // portfolio work visible without sending visitors to a 404.
-      if (project.id === 'law-office' || project.link?.includes('lawofice.netlify.app')) {
+      // Both old Netlify hosts are gone. The already-published CMS uses these
+      // verified Vercel demos; keep those links available to every visitor.
+      if (project.id === 'law-office' ||
+          project.link?.includes('lawofice.netlify.app') ||
+          project.link?.includes('officelaw.vercel.app')) {
         return {
           ...project,
-          link: undefined,
+          title: 'Cohen & Co. — Law Office Demo',
+          link: 'https://officelaw.vercel.app/',
           github: 'https://github.com/ward3107/officelaw',
           tech: ['Next.js', 'Tailwind CSS', 'Firebase'],
         };
       }
-      if (project.id === 'shokha' || project.link?.includes('shokha1.netlify.app')) {
-        return { ...project, link: undefined };
+      if (project.id === 'shokha' ||
+          project.link?.includes('shokha1.netlify.app') ||
+          project.link?.includes('barbershop-website-indol.vercel.app')) {
+        return {
+          ...project,
+          title: 'Fade & Co. — Barbershop Demo',
+          link: 'https://barbershop-website-indol.vercel.app/',
+          tech: ['React', 'Vite', 'Supabase'],
+        };
       }
       return project;
     }).filter((project) => {

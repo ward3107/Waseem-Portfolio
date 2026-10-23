@@ -44,7 +44,7 @@ values
   ),
   (
     'law-office',
-    'Law Office Template',
+    'Cohen & Co. — Law Office Demo',
     'Web',
     jsonb_build_object(
       'en', 'Professional law office template with appointment booking and service showcase.',
@@ -53,14 +53,14 @@ values
     ),
     '/assets/law-office.webp',
     array['Next.js','Tailwind CSS','Firebase'],
-    null,
+    'https://officelaw.vercel.app/',
     'https://github.com/ward3107/officelaw',
     array[]::text[],
     12
   ),
   (
     'shokha',
-    'Shokha Barbershop',
+    'Fade & Co. — Barbershop Demo',
     'Web',
     jsonb_build_object(
       'en', 'Modern barbershop booking app with appointment scheduling and service management.',
@@ -68,8 +68,8 @@ values
       'ar', 'تطبيق حديث لحجز مواعيد صالون الحلاقة مع إدارة الخدمات وجدولة المواعيد.'
     ),
     '/assets/barbershop.webp',
-    array['React','Node.js','MongoDB'],
-    null,
+    array['React','Vite','Supabase'],
+    'https://barbershop-website-indol.vercel.app/',
     null,
     array[]::text[],
     13
