@@ -649,9 +649,9 @@ ${langs.map((x) => `    <xhtml:link rel="alternate" hreflang="${x}" href="${blog
   );
 }).join('\n');
 
-const simpleEntry = (loc, priority) => `  <url>
+const simpleEntry = (loc, priority, lastmod = LASTMOD) => `  <url>
     <loc>${loc}</loc>
-    <lastmod>${LASTMOD}</lastmod>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${priority}</priority>
   </url>`;
@@ -691,7 +691,7 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 
 ${['he', 'en', 'ar'].map(homeEntry).join('\n')}
 
-${simpleEntry(`${SITE}/projects`, '0.9')}
+${simpleEntry(`${SITE}/projects`, '0.9', '2026-10-23')}
 ${simpleEntry(`${SITE}/video-ads`, '0.9')}
 ${simpleEntry(`${SITE}/brand`, '0.5')}
 ${simpleEntry(`${SITE}/privacy`, '0.3')}
