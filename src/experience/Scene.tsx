@@ -1,4 +1,4 @@
-import React, { Suspense, useMemo, useRef } from 'react';
+import React, { Suspense, useMemo, useRef, useSyncExternalStore } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Sparkles } from '@react-three/drei';
 import { Vector3, MathUtils, type Group } from 'three';
@@ -25,6 +25,14 @@ const BRAND_CYAN = '#00E5FF';
  * behind its own <Suspense> so an asset load never blanks the whole canvas.
  */
 const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
+  // Textures for the gallery are large and unnecessary during the hero. Mount
+  // them only as the reader approaches the projects chapter.
+  const chapter = useSyncExternalStore(
+    scrollStore.subscribe,
+    () => scrollStore.get().chapter,
+    () => 0
+  );
+  const projectsChapter = CHAPTERS.findIndex((item) => item.id === 'projects');
   const camera = useThree((s) => s.camera);
   // The morphing field rides the camera's focus point. Left at the world
   // origin it slid out of frame as the per-chapter camera moves panned away,
@@ -94,9 +102,11 @@ const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
           beat, so it now runs on every device rather than desktop-only. The
           gallery fades in only around the projects chapter, so it costs nothing
           elsewhere; Suspense isolates its texture load. */}
-      <Suspense fallback={null}>
-        <ProjectsScene />
-      </Suspense>
+      {Math.abs(chapter - projectsChapter) <= 1 && (
+        <Suspense fallback={null}>
+          <ProjectsScene />
+        </Suspense>
+      )}
 
       {/* Ambient dust, well behind the morphing field so it reads as depth. */}
       <Sparkles

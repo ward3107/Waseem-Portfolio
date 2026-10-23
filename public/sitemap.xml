@@ -4,20 +4,35 @@
 
   <url>
     <loc>https://www.vasia.dev/</loc>
-    <lastmod>2026-07-07</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.vasia.dev/" />
-    <xhtml:link rel="alternate" hreflang="he" href="https://www.vasia.dev/?lang=he" />
-    <xhtml:link rel="alternate" hreflang="ar" href="https://www.vasia.dev/?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://www.vasia.dev/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vasia.dev/en/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.vasia.dev/ar/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vasia.dev/" />
+  </url>
+  <url>
+    <loc>https://www.vasia.dev/en/</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://www.vasia.dev/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vasia.dev/en/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.vasia.dev/ar/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vasia.dev/" />
+  </url>
+  <url>
+    <loc>https://www.vasia.dev/ar/</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="https://www.vasia.dev/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.vasia.dev/en/" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://www.vasia.dev/ar/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.vasia.dev/" />
   </url>
 
-  <url>
-    <loc>https://www.vasia.dev/services</loc>
-    <lastmod>2026-07-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-  </url>
   <url>
     <loc>https://www.vasia.dev/projects</loc>
     <lastmod>2026-07-07</lastmod>
@@ -35,18 +50,6 @@
     <lastmod>2026-07-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.vasia.dev/about</loc>
-    <lastmod>2026-07-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.vasia.dev/contact</loc>
-    <lastmod>2026-07-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.vasia.dev/privacy</loc>

@@ -29,7 +29,9 @@ export const useSectionNavigate = () => {
         return;
       }
       const [path, hash] = href.split('#');
-      const targetPath = path || '/';
+      const homePath = location.pathname.startsWith('/en/') ? '/en/'
+        : location.pathname.startsWith('/ar/') ? '/ar/' : '/';
+      const targetPath = (path || '/') === '/' ? homePath : path;
 
       if (location.pathname === targetPath) {
         if (hash) {

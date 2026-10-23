@@ -126,6 +126,8 @@ const AppContent: React.FC = () => {
               {/* location={display} so the exchange happens under the curtain. */}
               <Routes location={display}>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/en/" element={<HomePage />} />
+                <Route path="/ar/" element={<HomePage />} />
                 <Route path="/projects" element={<ProjectsPage />} />
                 <Route path="/video-ads" element={<VideoAdsPage />} />
                 <Route path="/brand" element={<BrandAssetsPage />} />

@@ -13,16 +13,15 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>(() => {
-    // Highest priority: an explicit ?lang= query param. The hreflang alternates
-    // in index.html and sitemap.xml advertise ?lang=he / ?lang=ar, so a visitor
-    // arriving from a localized search result must actually land in that
-    // language (previously this param was ignored entirely).
+  const [language, updateLanguage] = useState<Language>(() => {
     try {
       const urlLang = new URLSearchParams(window.location.search).get('lang');
       if (urlLang === 'en' || urlLang === 'he' || urlLang === 'ar') {
         return urlLang as Language;
       }
+      if (window.location.pathname.startsWith('/en/')) return 'en';
+      if (window.location.pathname.startsWith('/ar/')) return 'ar';
+      if (window.location.pathname === '/') return 'he';
     } catch {
       // window/URLSearchParams unavailable — fall through to the other sources.
     }
@@ -31,8 +30,16 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
       return saved;
     }
     const browserLang = navigator.language.split('-')[0];
-    return (browserLang === 'he' || browserLang === 'ar') ? (browserLang as Language) : 'en';
+    return (browserLang === 'he' || browserLang === 'ar') ? (browserLang as Language) : 'he';
   });
+
+  const setLanguage = (lang: Language) => {
+    updateLanguage(lang);
+    if (/^\/(?:en\/|ar\/)?$/.test(window.location.pathname)) {
+      window.history.pushState(null, '', (lang === 'he' ? '/' : `/${lang}/`) + window.location.hash);
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    }
+  };
 
   const dir = language === 'en' ? 'ltr' : 'rtl';
 
@@ -40,6 +47,18 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     safeSetItem('vibe_lang', language);
     document.documentElement.lang = language;
     document.documentElement.dir = dir;
+    if (/^\/(?:en\/|ar\/)?$/.test(window.location.pathname)) {
+      const url = `https://www.vasia.dev${language === 'he' ? '/' : `/${language}/`}`;
+      const description = {
+        he: 'ואסים בונה אתרי Wix ו-WordPress, חנויות ואפליקציות מותאמות לעסקים. פתרונות AI ואוטומציה, עם תמיכה בעברית, בערבית ובאנגלית.',
+        en: 'Waseem builds Wix and WordPress sites, online stores and custom web apps for businesses. AI automation and support in English, Hebrew and Arabic.',
+        ar: 'يبني وسيم مواقع Wix وWordPress ومتاجر وتطبيقات ويب مخصصة للأعمال، مع حلول الذكاء الاصطناعي والأتمتة وخدمة بالعربية والعبرية والإنجليزية.',
+      }[language];
+      document.querySelector('link[rel="canonical"]')?.setAttribute('href', url);
+      document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+      document.querySelector('meta[property="og:url"]')?.setAttribute('content', url);
+      document.querySelector('meta[name="twitter:url"]')?.setAttribute('content', url);
+    }
   }, [language, dir]);
 
   const t = (key: string) => {

@@ -656,6 +656,20 @@ const simpleEntry = (loc, priority) => `  <url>
     <priority>${priority}</priority>
   </url>`;
 
+const homeEntry = (lang) => {
+  const home = (locale) => `${SITE}${locale === 'he' ? '/' : `/${locale}/`}`;
+  return `  <url>
+    <loc>${home(lang)}</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="he" href="${home('he')}" />
+    <xhtml:link rel="alternate" hreflang="en" href="${home('en')}" />
+    <xhtml:link rel="alternate" hreflang="ar" href="${home('ar')}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${home('he')}" />
+  </url>`;
+};
+
 // A city page entry with hreflang alternates to its other-language twin.
 const cityEntry = (city, lang) => `  <url>
     <loc>${cityUrl(city, lang)}</loc>
@@ -675,22 +689,11 @@ const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-  <url>
-    <loc>${SITE}/</loc>
-    <lastmod>${LASTMOD}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="${SITE}/" />
-    <xhtml:link rel="alternate" hreflang="he" href="${SITE}/?lang=he" />
-    <xhtml:link rel="alternate" hreflang="ar" href="${SITE}/?lang=ar" />
-  </url>
+${['he', 'en', 'ar'].map(homeEntry).join('\n')}
 
-${simpleEntry(`${SITE}/services`, '0.95')}
 ${simpleEntry(`${SITE}/projects`, '0.9')}
 ${simpleEntry(`${SITE}/video-ads`, '0.9')}
 ${simpleEntry(`${SITE}/brand`, '0.5')}
-${simpleEntry(`${SITE}/about`, '0.9')}
-${simpleEntry(`${SITE}/contact`, '0.9')}
 ${simpleEntry(`${SITE}/privacy`, '0.3')}
 ${simpleEntry(`${SITE}/accessibility`, '0.3')}
 
