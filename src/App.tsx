@@ -14,20 +14,20 @@ import SectionSkeleton from '@/shared/ui/SectionSkeleton';
 import ErrorBoundary from '@/shared/ui/ErrorBoundary';
 import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
-import VideoAdsPage from './pages/VideoAdsPage';
-import BrandAssetsPage from './pages/BrandAssetsPage';
-import FromGbpPage from './pages/FromGbpPage';
-import PrivacyPage from './pages/PrivacyPage';
-import AccessibilityPage from './pages/AccessibilityPage';
-import NotFoundPage from './pages/NotFoundPage';
-import StartPage from './pages/StartPage';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { WidgetProvider } from './contexts/WidgetContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 
-// The public pages are bundled eagerly. Each is small (a few kB after gzip),
-// and lazy-loading them caused a visible flash of the previous page's paint
-// while React Router waited for the chunk to arrive after a nav click.
+// Keep the home and projects pages eager for smooth primary navigation. Less
+// visited public pages load only when opened, so their assets and content do
+// not slow the homepage's first paint.
+const VideoAdsPage = lazy(() => import('./pages/VideoAdsPage'));
+const BrandAssetsPage = lazy(() => import('./pages/BrandAssetsPage'));
+const FromGbpPage = lazy(() => import('./pages/FromGbpPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const AccessibilityPage = lazy(() => import('./pages/AccessibilityPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const StartPage = lazy(() => import('./pages/StartPage'));
 //
 // The entire /admin tree — including its Supabase-backed auth provider —
 // stays behind this one lazy import. It is the only thing keeping

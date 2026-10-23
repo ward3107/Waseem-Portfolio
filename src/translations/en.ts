@@ -148,6 +148,11 @@ export const en: Record<string, string> = {
     project_ninnyo_desc: "A flower-delivery website with a bouquet showcase, delivery information and direct ordering through WhatsApp.",
     project_vocabagrut_desc: "An English teaching tool for building Bagrut practice exams and vocabulary activities, with multilingual support and printable materials.",
 
+    project_frame_desc: "A video learning interface demo with sample lessons, search, filters and saved content. No active purchases or subscriptions.",
+    project_luma_desc: "A short film platform design demo with filtered browsing, trailer previews and a personal watchlist. No purchases or subscriptions.",
+    project_mova_storefront_desc: "An interactive concept store demo with 360-degree product views and live brand customization. Orders are demonstrations only.",
+    project_flora_desc: "An interactive scroll journey for a concept fragrance brand, from flower and extract to fragrance notes.",
+
     // Process
     process_step_1_title: "🧭 Discovery & Strategy",
     process_step_1_desc: "We start by mapping the unknown 🗺️. I dive deep into your business goals 🎯, target audience 👥, and market positioning to define a clear roadmap for success.\n\nResearch 🔍, competitor analysis 📊, and measurable KPIs 📈 ensure strategic alignment before any design or code begins.",
