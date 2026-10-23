@@ -13,8 +13,8 @@ vi.mock('@/lib/supabaseConfig', () => ({
   },
 }));
 
-vi.mock('@/lib/content/settings', () => ({
-  getSettings: mocks.getSettings,
+vi.mock('@/lib/content/publicSettings', () => ({
+  getPublicSettings: mocks.getSettings,
 }));
 
 import { useSiteSettings, __resetSiteSettingsCache } from '@/shared/hooks/useSiteSettings';

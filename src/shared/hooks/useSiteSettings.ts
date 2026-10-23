@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
-import { getSettings } from '@/lib/content/settings';
+import { getPublicSettings } from '@/lib/content/publicSettings';
 import type { SiteSettingsRow } from '@/types';
 
 /**
@@ -11,7 +11,7 @@ import type { SiteSettingsRow } from '@/types';
  * The fetch is deduplicated at module scope. `useContact()` (the only
  * consumer) is called from ~10 components — Hero, Footer, WhatsAppFloat,
  * ExitIntent, FAQ, ServiceModal, Contact … — and six of them mount on the
- * home page alone. Without this cache each one ran its own `getSettings()`,
+ * home page alone. Without this cache each one ran its own settings request,
  * so a single page load fired six identical requests for the same one-row
  * table. Now the first caller starts the request and everyone else awaits
  * the same promise.
@@ -28,9 +28,9 @@ let settled = false;
 
 function loadSettings(): Promise<Settings> {
   if (!settingsPromise) {
-    // `getSettings` resolves the Supabase client lazily via lib/content/db,
-    // so importing it here does not put supabase-js on the critical path.
-    settingsPromise = getSettings()
+    // Public reads need only one JSON row; the lightweight request keeps the
+    // full Supabase SDK out of the homepage's first-load JavaScript.
+    settingsPromise = getPublicSettings()
       .catch(() => null) // keep null; consumers use their defaults
       .then((s) => {
         settingsCache = s;
