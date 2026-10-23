@@ -58,19 +58,33 @@ describe('curated portfolio projects', () => {
       .toBe('https://www.greeksouflaki.com/');
   });
 
-  it('keeps former Netlify projects visible without their dead demo links', () => {
+  it('keeps former Netlify projects visible through verified live demos', () => {
     const fallback = getLocalizedProjects(t);
-    expect(fallback.find((project) => project.id === 'law-office')?.link).toBeUndefined();
-    expect(fallback.find((project) => project.id === 'shokha')?.link).toBeUndefined();
+    expect(fallback.find((project) => project.id === 'law-office')?.link)
+      .toBe('https://officelaw.vercel.app/');
+    expect(fallback.find((project) => project.id === 'shokha')?.link)
+      .toBe('https://barbershop-website-indol.vercel.app/');
 
     const merged = mergeRequiredPortfolioProjects([
       { ...remoteProject, id: 'law-office', link: 'https://lawofice.netlify.app/' },
       { ...remoteProject, id: 'shokha', link: 'https://shokha1.netlify.app/' },
     ], getRequiredPortfolioProjects(t));
-    expect(merged.find((project) => project.id === 'law-office')?.link).toBeUndefined();
+    expect(merged.find((project) => project.id === 'law-office')?.link)
+      .toBe('https://officelaw.vercel.app/');
     expect(merged.find((project) => project.id === 'law-office')?.github)
       .toBe('https://github.com/ward3107/officelaw');
-    expect(merged.find((project) => project.id === 'shokha')?.link).toBeUndefined();
+    expect(merged.find((project) => project.id === 'shokha')?.link)
+      .toBe('https://barbershop-website-indol.vercel.app/');
+    expect(merged.find((project) => project.id === 'shokha')?.title).toContain('Demo');
+
+    const currentRows = mergeRequiredPortfolioProjects([
+      { ...remoteProject, id: 'law-office', link: 'https://officelaw.vercel.app/' },
+      { ...remoteProject, id: 'shokha', link: 'https://barbershop-website-indol.vercel.app/' },
+    ], getRequiredPortfolioProjects(t));
+    expect(currentRows.find((project) => project.id === 'law-office')?.link)
+      .toBe('https://officelaw.vercel.app/');
+    expect(currentRows.find((project) => project.id === 'shokha')?.link)
+      .toBe('https://barbershop-website-indol.vercel.app/');
   });
 
   it('keeps retired demos hidden without hiding unrelated WordPress work or drafts', () => {
