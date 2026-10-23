@@ -20,6 +20,11 @@ dist-ssr
 /public/en/
 /public/blog/
 /public/review/
+/public/assets/video-ads/**/*-thumb.webp
+/public/assets/video-ads/*-thumb.webp
+/public/certifications/*-thumb.webp
+/public/onetap/icon-192.png
+/public/onetap/icon-512.png
 
 # Environment variables
 .env

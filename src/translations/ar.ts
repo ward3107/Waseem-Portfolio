@@ -18,7 +18,7 @@ export const ar: Record<string, string> = {
     hero_title_2: "رقمية",
     hero_title_3: "تشعر بأنها ",
     hero_title_4: "حية.",
-    hero_subtitle: "أصمم وأبني مواقع Wix وWordPress سريعة، إلى جانب حلول مخصصة تجمع بين تجربة مستخدم واضحة وتطوير شامل وقدرات الذكاء الاصطناعي.",
+    hero_subtitle: "أبني مواقع Wix وWordPress ومتاجر وتطبيقات ويب وحلول أتمتة بالذكاء الاصطناعي للأعمال، بالعربية والعبرية والإنجليزية. شاهد أعمالاً حقيقية ثم أخبرني بما تحتاجه.",
     hero_platforms: "Wix · WordPress · WooCommerce · تطوير مخصص",
     hero_cta_start: "ابدأ مشروعاً",
     hero_cta_view: "شاهد أعمالي",
@@ -306,7 +306,7 @@ export const ar: Record<string, string> = {
     contact_avail: "متاح لمشاريع جديدة",
     contact_title_1: "لنبدأ بناء شيء ",
     contact_title_2: "استثنائي.",
-    contact_desc: "لديك الرؤية، ولدي الأدوات. راسلني، ولنحول أفكارك المجردة إلى واقع رقمي ملموس وعالي الأداء.",
+    contact_desc: "أخبرني بما يحتاجه عملك وما هو موجود بالفعل. نحدد معاً نطاق الموقع أو المتجر أو التطبيق أو الأتمتة ونعد عرضاً مناسباً للعمل.",
     contact_email_btn: "راسلني 📧",
     contact_whatsapp_btn: "تحدث عبر واتساب 💬",
 

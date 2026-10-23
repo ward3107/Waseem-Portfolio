@@ -49,20 +49,31 @@ const HeroFilm: React.FC = () => {
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
-  // Blob fetch, once.
+  // Keep the poster on the initial load. The film is only needed once someone
+  // scrolls into the scrub sequence, so its multi-megabyte download waits for
+  // that intent rather than competing with the headline and controls.
   useEffect(() => {
     let revoke: string | null = null;
     const ctrl = new AbortController();
-    fetch(pickFilmSrc(), { signal: ctrl.signal })
-      .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
-      .then((b) => {
-        revoke = URL.createObjectURL(b);
-        setBlobUrl(revoke);
-      })
-      .catch(() => {
-        /* poster carries the hero; nothing else to do */
-      });
+    let requested = false;
+    const requestFilm = () => {
+      if (requested || scrollStore.get().journey < 0.005) return;
+      requested = true;
+      unsubscribe();
+      fetch(pickFilmSrc(), { signal: ctrl.signal })
+        .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
+        .then((b) => {
+          revoke = URL.createObjectURL(b);
+          setBlobUrl(revoke);
+        })
+        .catch(() => {
+          /* poster carries the hero; nothing else to do */
+        });
+    };
+    const unsubscribe = scrollStore.subscribe(requestFilm);
+    requestFilm();
     return () => {
+      unsubscribe();
       ctrl.abort();
       if (revoke) URL.revokeObjectURL(revoke);
     };

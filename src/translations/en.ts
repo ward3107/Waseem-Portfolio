@@ -18,7 +18,7 @@ export const en: Record<string, string> = {
     hero_title_2: "experiences",
     hero_title_3: "that ",
     hero_title_4: "feel alive.",
-    hero_subtitle: "I design and build fast Wix, WordPress, and custom web experiences—combining clear UX with full-stack and AI capabilities.",
+    hero_subtitle: "I build Wix and WordPress sites, online stores, web apps and AI automations for businesses in English, Hebrew and Arabic. See real work, then tell me what you need.",
     hero_platforms: "Wix · WordPress · WooCommerce · Custom Development",
     hero_cta_start: "Start a Project",
     hero_cta_view: "View Work",
@@ -306,7 +306,7 @@ export const en: Record<string, string> = {
     contact_avail: "Available for new projects",
     contact_title_1: "Let’s build something ",
     contact_title_2: "extraordinary.",
-    contact_desc: "You have the vision, I have the stack. Drop me a line, and let's turn your abstract ideas into a tangible, high-performance digital reality.",
+    contact_desc: "Tell me what your business needs and what you already have. We can scope the right site, store, app or automation and prepare a quote for the work.",
     contact_email_btn: "Email Me 📧",
     contact_whatsapp_btn: "Chat on WhatsApp 💬",
 

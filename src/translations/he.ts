@@ -18,7 +18,7 @@ export const he: Record<string, string> = {
     hero_title_2: "דיגיטליות",
     hero_title_3: "שמרגישות ",
     hero_title_4: "חיות.",
-    hero_subtitle: "אני מעצב ובונה אתרי Wix ו-WordPress מהירים, לצד פתרונות מותאמים שמשלבים UX ברור, פיתוח פול-סטאק ו-AI.",
+    hero_subtitle: "אני בונה אתרי Wix ו-WordPress, חנויות, אפליקציות ווב ואוטומציות AI לעסקים — בעברית, בערבית ובאנגלית. אפשר לראות עבודות אמיתיות ולהתחיל בשיחה קצרה.",
     hero_platforms: "Wix · WordPress · WooCommerce · פיתוח מותאם",
     hero_cta_start: "התחל פרויקט",
     hero_cta_view: "צפה בעבודות",
@@ -306,7 +306,7 @@ export const he: Record<string, string> = {
     contact_avail: "פנוי לפרויקטים חדשים",
     contact_title_1: "בוא נבנה משהו ",
     contact_title_2: "יוצא דופן.",
-    contact_desc: "לך יש את החזון, לי יש את הכלים. שלח הודעה ונהפוך את הרעיונות למציאות דיגיטלית.",
+    contact_desc: "ספרו לי מה העסק צריך ומה כבר קיים. נבחן יחד אתר, חנות, אפליקציה או אוטומציה מתאימים, ונמשיך להצעה לפי היקף העבודה.",
     contact_email_btn: "שלח אימייל 📧",
     contact_whatsapp_btn: "דבר איתי בווטסאפ 💬",
 

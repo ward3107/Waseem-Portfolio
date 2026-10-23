@@ -14,7 +14,7 @@ export const getLocalizedProjects = (
     description: t('project_1_desc'),
     image: '/assets/souvlaki.webp',
     tech: ['Next.js', 'Tailwind CSS', 'Vercel'],
-    link: 'https://souvlaki-kfaryasif.vercel.app/',
+    link: 'https://www.greeksouflaki.com/',
     github: 'https://github.com/ward3107/Souvlaki',
   },
   {

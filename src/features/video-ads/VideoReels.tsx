@@ -44,7 +44,7 @@ export default function VideoReels({ className = '' }: { className?: string }) {
               className="group relative block aspect-[4/5] w-full overflow-hidden rounded-2xl bg-slate-900 text-start ring-1 ring-white/15 transition hover:-translate-y-0.5 hover:ring-brand-cyan/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
             >
               <img
-                src={video.poster}
+                src={video.poster.replace(/\.webp$/, '-thumb.webp')}
                 alt=""
                 width={video.width}
                 height={video.height}

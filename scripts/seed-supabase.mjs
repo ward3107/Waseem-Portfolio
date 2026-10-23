@@ -15,7 +15,7 @@ const projects = [
   { slug: 'souvlaki', title: 'Authentic Greek Restaurant', category: 'Web',
     description: { en: 'A modern site for an authentic Greek restaurant.' },
     image_url: '/assets/souvlaki.webp', tech: ['Next.js', 'Tailwind CSS', 'Vercel'],
-    link: 'https://souvlaki-kfaryasif.vercel.app/', github: 'https://github.com/ward3107/Souvlaki',
+    link: 'https://www.greeksouflaki.com/', github: 'https://github.com/ward3107/Souvlaki',
     screenshots: [], sort_order: 1 },
   { slug: 'seatai', title: 'SeatAi', category: 'AI',
     description: { en: 'An AI-powered seating application.' },

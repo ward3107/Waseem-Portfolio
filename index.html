@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark" style="color-scheme: dark;">
+<html lang="he" dir="rtl" class="dark" style="color-scheme: dark;">
   <head>
     <meta charset="UTF-8" />
     <!-- Resolve locale before paint. Dark is the only site theme. -->
@@ -7,15 +7,13 @@
       (function () {
         try {
           var urlLang = new URLSearchParams(window.location.search).get('lang');
-          var saved = localStorage.getItem('vibe_lang');
-          var lang = (urlLang === 'he' || urlLang === 'ar' || urlLang === 'en')
-            ? urlLang
-            : (saved === 'he' || saved === 'ar' || saved === 'en')
-              ? saved
-              : (function () {
-                  var b = (navigator.language || 'en').split('-')[0];
-                  return (b === 'he' || b === 'ar') ? b : 'en';
-                })();
+          if (urlLang === 'he' || urlLang === 'ar' || urlLang === 'en') {
+            var destination = urlLang === 'he' ? '/' : '/' + urlLang + '/';
+            window.location.replace(destination + window.location.hash);
+            return;
+          }
+          var lang = window.location.pathname.startsWith('/en/') ? 'en'
+            : window.location.pathname.startsWith('/ar/') ? 'ar' : 'he';
           document.documentElement.lang = lang;
           document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
         } catch (e) {}
@@ -67,9 +65,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Primary Meta Tags -->
-    <title>Vasia by Waseem | Wix, WordPress & Custom Web Developer · North Israel</title>
-    <meta name="title" content="Vasia by Waseem | Wix, WordPress & Custom Web Developer · North Israel" />
-    <meta name="description" content="Wix, WordPress, WooCommerce and custom web development for businesses in northern Israel. Fast, multilingual websites with clear UX and AI automation." />
+    <title>ואסים — פיתוח אתרי Wix, WordPress ופתרונות מותאמים</title>
+    <meta name="title" content="ואסים — פיתוח אתרי Wix, WordPress ופתרונות מותאמים" />
+    <meta name="description" content="ואסים בונה אתרי Wix ו-WordPress, חנויות ואפליקציות מותאמות לעסקים. פתרונות AI ואוטומציה, עם תמיכה בעברית, בערבית ובאנגלית." />
     <meta name="keywords" content="Wix developer Israel, WordPress developer Israel, WooCommerce developer, website designer Kfar Yasif, web developer North Israel, בניית אתרי Wix, בניית אתרי WordPress, בניית חנות WooCommerce, מפתח אתרים בצפון, مطور Wix, مطور WordPress, React developer, AI automation, UI/UX" />
     <meta name="author" content="Waseem" />
     <meta name="robots" content="index, follow" />
@@ -81,13 +79,13 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.vasia.dev/" />
-    <meta property="og:title" content="Vasia by Waseem | Web Design, Development & Motion" />
-    <meta property="og:description" content="Fast Wix, WordPress, WooCommerce and custom web experiences built for businesses in northern Israel." />
+    <meta property="og:title" content="ואסים — פיתוח אתרים ופתרונות דיגיטליים" />
+    <meta property="og:description" content="אתרי Wix ו-WordPress, פיתוח מותאם, AI ואוטומציה לעסקים. שירות בעברית, בערבית ובאנגלית." />
     <meta property="og:image" content="https://www.vasia.dev/brand/vasia-share.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="vasia.dev — design, development and motion by Waseem" />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content="he_IL" />
     <meta property="og:locale:alternate" content="he_IL" />
     <meta property="og:locale:alternate" content="ar_AR" />
     <meta property="og:site_name" content="vasia.dev" />
@@ -95,8 +93,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://www.vasia.dev/" />
-    <meta name="twitter:title" content="Vasia by Waseem | Web Design, Development & Motion" />
-    <meta name="twitter:description" content="Fast Wix, WordPress, WooCommerce and custom web experiences built for businesses in northern Israel." />
+    <meta name="twitter:title" content="ואסים — פיתוח אתרים ופתרונות דיגיטליים" />
+    <meta name="twitter:description" content="אתרי Wix ו-WordPress, פיתוח מותאם, AI ואוטומציה לעסקים. שירות בעברית, בערבית ובאנגלית." />
     <meta name="twitter:image" content="https://www.vasia.dev/brand/vasia-share.png" />
     <meta name="twitter:image:alt" content="vasia.dev — design, development and motion by Waseem" />
     <meta name="twitter:creator" content="@ward3107" />
@@ -105,9 +103,9 @@
     <link rel="canonical" href="https://www.vasia.dev/" />
 
     <!-- Alternate Languages -->
-    <link rel="alternate" hreflang="en" href="https://www.vasia.dev/" />
-    <link rel="alternate" hreflang="he" href="https://www.vasia.dev/?lang=he" />
-    <link rel="alternate" hreflang="ar" href="https://www.vasia.dev/?lang=ar" />
+    <link rel="alternate" hreflang="en" href="https://www.vasia.dev/en/" />
+    <link rel="alternate" hreflang="he" href="https://www.vasia.dev/" />
+    <link rel="alternate" hreflang="ar" href="https://www.vasia.dev/ar/" />
     <link rel="alternate" hreflang="x-default" href="https://www.vasia.dev/" />
 
     <!-- Preconnect for Performance -->
