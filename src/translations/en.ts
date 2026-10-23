@@ -130,7 +130,7 @@ export const en: Record<string, string> = {
     projects_filter_wordpress: "WordPress",
     projects_hint: "Tap to Flip",
     projects_details: "Details",
-    projects_demo: "Live Demo",
+    projects_demo: "View site",
     projects_code: "Code",
     project_1_desc: "Authentic Greek restaurant site with menu, gallery, and online ordering — built on Next.js.",
     project_2_desc: "AI-powered classroom seating optimizer that balances academic levels, behavior, and accessibility needs.",
@@ -152,6 +152,17 @@ export const en: Record<string, string> = {
     project_luma_desc: "A short film platform design demo with filtered browsing, trailer previews and a personal watchlist. No purchases or subscriptions.",
     project_mova_storefront_desc: "An interactive concept store demo with 360-degree product views and live brand customization. Orders are demonstrations only.",
     project_flora_desc: "An interactive scroll journey for a concept fragrance brand, from flower and extract to fragrance notes.",
+
+    project_liman_desc: "An interactive Arabic learning site with word building, guided practice and games.",
+    project_land_of_jesus_desc: "A multilingual heritage site with an illustrated journey, places to explore and stories.",
+    project_classflow_desc: "A workshop board app with timers, group activities and multilingual controls.",
+    project_opti_desc: "An optometry website presenting services, frames, a gallery and contact options.",
+    project_bathline_desc: "A multilingual shower renovation site with a guided estimate calculator and contact flow.",
+    project_ragad_desc: "A multilingual kindergarten website covering its daily routine, programs, team and contact details.",
+    project_cyber_course_desc: "An Arabic cybersecurity learning site with a course map and interactive lessons. Some modules are still in progress.",
+    project_careerconnect_desc: "A career exploration experience with guided discovery and multilingual content.",
+    project_habeeb_farah_desc: "A multilingual website presenting educational programs, the organization and contact options.",
+    project_adan_desc: "A child development center website presenting services, its approach, team and frequently asked questions.",
 
     // Process
     process_step_1_title: "🧭 Discovery & Strategy",
