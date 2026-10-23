@@ -52,9 +52,9 @@ values
       'ar', 'قالب احترافي لمكتب محاماة يشمل حجز المواعيد وعرض الخدمات.'
     ),
     '/assets/law-office.webp',
-    array['React','Vite','Tailwind CSS'],
-    'https://lawofice.netlify.app/',
+    array['Next.js','Tailwind CSS','Firebase'],
     null,
+    'https://github.com/ward3107/officelaw',
     array[]::text[],
     12
   ),
@@ -69,7 +69,7 @@ values
     ),
     '/assets/barbershop.webp',
     array['React','Node.js','MongoDB'],
-    'https://shokha1.netlify.app/',
+    null,
     null,
     array[]::text[],
     13
