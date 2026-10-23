@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
 import { useProjects } from '@/features/projects/useProjects';
 import { translations } from '@/translations';
@@ -20,6 +20,11 @@ function usePortfolio() {
 }
 
 describe('portfolio content loading', () => {
+  afterEach(() => {
+    document.getElementById('projects')?.remove();
+    vi.unstubAllGlobals();
+  });
+
   beforeEach(() => {
     mocks.configured = false;
     mocks.listProjectRows.mockReset();
@@ -59,5 +64,28 @@ describe('portfolio content loading', () => {
     act(() => result.current.setLanguage('ar'));
     expect(result.current.projects.find((project) => project.id === 'cms-only')?.description).toBe('وصف بالعربية');
     expect(mocks.listProjectRows).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows curated work before requesting below-the-fold CMS projects', async () => {
+    mocks.configured = true;
+    mocks.listProjectRows.mockResolvedValue([]);
+    const section = document.createElement('section');
+    section.id = 'projects';
+    document.body.append(section);
+    let reveal: (() => void) | undefined;
+    vi.stubGlobal('IntersectionObserver', class {
+      constructor(callback: IntersectionObserverCallback) {
+        reveal = () => callback([{ isIntersecting: true } as IntersectionObserverEntry], this as unknown as IntersectionObserver);
+      }
+      observe() { /* observed until the section enters the viewport */ }
+      disconnect() { /* the query only needs one trigger */ }
+    });
+
+    const { result } = renderHook(() => useProjects('projects'), { wrapper });
+    expect(result.current.projects.find((project) => project.id === 'law-office')?.link)
+      .toBe('https://officelaw.vercel.app/');
+    expect(mocks.listProjectRows).not.toHaveBeenCalled();
+    act(() => reveal?.());
+    await waitFor(() => expect(mocks.listProjectRows).toHaveBeenCalledTimes(1));
   });
 });

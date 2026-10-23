@@ -53,26 +53,20 @@ const HeroOverlay: React.FC = () => {
         {t('hero_badge')}
       </motion.div>
 
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
+      <h1
         className={`max-w-4xl font-heading text-4xl font-black tracking-tight sm:text-6xl md:text-7xl ${leading}`}
       >
         <span className="text-white">{t('hero_title_1')}</span>
         <HeadingAccent tone="purple">{t('hero_title_2')}</HeadingAccent>{' '}
         <span className="text-white">{t('hero_title_3')}</span>
         <HeadingAccent tone="gold" fancy>{t('hero_title_4')}</HeadingAccent>
-      </motion.h1>
+      </h1>
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35, duration: 0.6 }}
+      <p
         className="mt-6 max-w-xl text-base font-medium leading-relaxed text-slate-300 sm:text-lg"
       >
         {t('hero_subtitle')}
-      </motion.p>
+      </p>
 
       <motion.p
         initial={{ opacity: 0, y: 16 }}

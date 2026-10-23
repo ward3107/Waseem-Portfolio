@@ -31,7 +31,7 @@ const formatDate = (iso: string | null | undefined, locale: string): string => {
 const CertCarousel: React.FC = () => {
   const { t, language } = useLanguage();
   const locale = language === 'he' ? 'he-IL' : language === 'ar' ? 'ar' : 'en-US';
-  const { certifications } = useCertifications();
+  const { certifications } = useCertifications('reviews');
 
   if (!certifications.length) return null;
 
