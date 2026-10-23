@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { useLenisScroll } from './useLenisScroll';
 import { CHAPTERS } from './storyboard';
 import { useQualityTier } from './useQualityTier';
@@ -14,6 +14,7 @@ import TrustOverlay from './chapters/TrustOverlay';
 import VideosOverlay from './chapters/VideosOverlay';
 import ContactOverlay from './chapters/ContactOverlay';
 import SocialMediaSection from '@/features/social-media/SocialMediaSection';
+import { scrollStore } from './scrollStore';
 
 // Maps a storyboard chapter id to its DOM overlay. Handled separately: chapter
 // 1 (hero) owns the page's single <h1>; projects takes the quality tier (it
@@ -62,10 +63,24 @@ const ConversationAgent = lazy(() => import('./components/ConversationAgent'));
  */
 const Experience: React.FC = () => {
   const [canvasFailed, setCanvasFailed] = useState(false);
+  const [canvasStarted, setCanvasStarted] = useState(() => scrollStore.get().journey > 0.002);
   const tier = useQualityTier();
 
   // Smooth scrolling + progress publishing, live for as long as we're mounted.
   useLenisScroll(true);
+
+  // The static hero art and all real DOM content render immediately. Start
+  // WebGL only when the visitor moves into the scroll story; otherwise its
+  // large Three.js bundle and render loop compete with first paint and input.
+  useEffect(() => {
+    if (canvasStarted) return;
+    const startOnJourney = () => {
+      if (scrollStore.get().journey > 0.002) setCanvasStarted(true);
+    };
+    const unsubscribe = scrollStore.subscribe(startOnJourney);
+    startOnJourney();
+    return unsubscribe;
+  }, [canvasStarted]);
 
   return (
     // overflow-x-clip: decorative layers (text scrims, CTA glows) bleed past
@@ -83,7 +98,15 @@ const Experience: React.FC = () => {
         {/* The Forge — scroll-scrubbed hero film, behind the 3D canvas so the
             live monogram can take over from the footage. Desktop only. */}
         {tier === 'high' && <HeroFilm />}
-        {!canvasFailed && (
+        {tier !== 'high' && (
+          <img
+            src="/assets/forge-hero-poster.webp"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+        {canvasStarted && !canvasFailed && (
           <Suspense fallback={null}>
             <ExperienceCanvas tier={tier} onContextLost={() => setCanvasFailed(true)} />
           </Suspense>

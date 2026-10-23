@@ -181,7 +181,10 @@ export const mergeRequiredPortfolioProjects = (
   const seen = new Set(requiredProjects.flatMap(projectIdentityKeys));
   return [
     ...requiredProjects,
-    ...remoteProjects.filter((project) => {
+    ...remoteProjects.map((project) => project.id === 'souvlaki'
+      ? { ...project, link: 'https://www.greeksouflaki.com/' }
+      : project
+    ).filter((project) => {
       const keys = projectIdentityKeys(project);
       if (isRetiredProject(project) || keys.some((key) => seen.has(key))) return false;
       keys.forEach((key) => seen.add(key));

@@ -50,6 +50,14 @@ describe('curated portfolio projects', () => {
     expect(merged.map((project) => project.id)).toEqual([...curatedIds, 'remote-project']);
   });
 
+  it('uses the verified live Greek Souvlaki site for an older CMS row', () => {
+    const merged = mergeRequiredPortfolioProjects([
+      { ...remoteProject, id: 'souvlaki', link: 'https://souvlaki-kfaryasif.vercel.app/' },
+    ], getRequiredPortfolioProjects(t));
+    expect(merged.find((project) => project.id === 'souvlaki')?.link)
+      .toBe('https://www.greeksouflaki.com/');
+  });
+
   it('keeps retired demos hidden without hiding unrelated WordPress work or drafts', () => {
     const required = getRequiredPortfolioProjects(t);
     const merged = mergeRequiredPortfolioProjects([

@@ -49,6 +49,8 @@ const Navbar: React.FC = () => {
   const { scrollYProgress } = useScroll();
   const navigateToSection = useSectionNavigate();
   const contact = useContact();
+  const homeHref = language === 'he' ? '/' : `/${language}/`;
+  const localizedHref = (href: string) => href.startsWith('/#') ? `${homeHref}${href.slice(1)}` : href;
 
   useEffect(() => {
     let rafId = 0;
@@ -92,7 +94,7 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo/Name — single instance, scales with viewport */}
           <a
-            href="/"
+            href={homeHref}
             onClick={(e) => {
               e.preventDefault();
               setIsOpen(false);
@@ -111,7 +113,7 @@ const Navbar: React.FC = () => {
               return (
                 <a
                   key={link.name}
-                  href={link.href}
+                  href={localizedHref(link.href)}
                   title={link.name}
                   aria-label={link.name}
                   onClick={(e) => {
@@ -224,7 +226,7 @@ const Navbar: React.FC = () => {
                   return (
                     <a
                       key={link.name}
-                      href={link.href}
+                      href={localizedHref(link.href)}
                       onClick={(e) => {
                         if (/\/(blog|gallery|stories)\/$/.test(link.href)) return;
                         e.preventDefault();
