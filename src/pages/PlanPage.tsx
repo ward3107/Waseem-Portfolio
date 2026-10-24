@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import QuoteCalculator from '@/features/quote/QuoteCalculator';
+import AccessibilityToolbar from '@/shared/widgets/AccessibilityToolbar';
 
 const copy = {
   he: { back: 'חזרה לאתר', title: 'תכנון פרויקט | vasia.dev' },
@@ -42,6 +43,7 @@ export default function PlanPage() {
         </header>
         <QuoteCalculator />
       </div>
+      <AccessibilityToolbar />
     </main>
   );
 }
