@@ -18,6 +18,8 @@ const fixture: QuoteCatalogue = {
   publishedPrices: true,
   categories: [{ id: 'websites', label, options: [{
     id: 'landing', label: landing, price: { mode: 'fixed_package', amountIls: 1000, approved: true },
+  }] }, { id: 'cards', label: { he: 'כרטיסים', en: 'Cards', ar: 'بطاقات' }, options: [{
+    id: 'card_classic', label: { he: 'כרטיס קלאסי', en: 'Classic card', ar: 'بطاقة كلاسيكية' }, price: { mode: 'pending' },
   }] }],
   scope: {
     ...draftScopeConfig,
@@ -39,12 +41,23 @@ describe('configurable quote flow', () => {
     render(<LanguageProvider><QuoteCalculator catalogue={fixture} inline /></LanguageProvider>);
     expect(screen.getByRole('heading', { name: 'Build your project' })).toBeTruthy();
     expect(screen.getByRole('combobox', { name: 'Service area' })).toBeTruthy();
-    fireEvent.click(screen.getByRole('checkbox', { name: 'Landing page' }));
+    expect(screen.getAllByText(/Estimated total:.*1,000/)).toHaveLength(2);
+    expect(screen.getByRole('checkbox', { name: /Landing page.*1,000/ })).toBeTruthy();
     fireEvent.change(screen.getByLabelText(/Number of pages/), { target: { value: '3' } });
     expect(screen.getAllByText(/Estimated total:.*1,180/)).toHaveLength(2);
     const href = screen.getByRole('link', { name: 'Open summary in WhatsApp' }).getAttribute('href')!;
     expect(decodeURIComponent(href)).toContain('1,180');
     expect(decodeURIComponent(href)).toContain('Number of pages: 3');
+  });
+
+  it('drops an untouched starter when switching to an unpriced service area', () => {
+    window.history.replaceState(null, '', '/?lang=en');
+    render(<LanguageProvider><QuoteCalculator catalogue={fixture} inline /></LanguageProvider>);
+    fireEvent.change(screen.getByRole('combobox', { name: 'Service area' }), { target: { value: 'cards' } });
+    expect(screen.queryByText(/Estimated total:.*1,000/)).toBeNull();
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Classic card' }));
+    expect(screen.getByText(/Only approved priced items/)).toBeTruthy();
+    expect(screen.queryByRole('link', { name: 'Open summary in WhatsApp' })?.getAttribute('href')).not.toContain('Landing page');
   });
 
   it('recalculates while editing and sends the same scope and total to WhatsApp', () => {

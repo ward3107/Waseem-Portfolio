@@ -127,6 +127,7 @@ const inlineCopy = {
     category: 'תחום השירות',
     pending: 'רק רכיבים עם מחיר מאושר נכללים בסכום. יתר הבחירות ייבדקו להצעה אישית.',
     websiteTerms: 'לאתר: תוכן מהלקוח, שני סבבי תיקונים. אחסון, דומיין ורישיונות בתשלום אינם כלולים.',
+    starter: 'דוגמה התחלתית: דף נחיתה עם עמוד ושפה אחת. אפשר לשנות או להסיר.',
   },
   en: {
     heading: 'Build your project',
@@ -135,6 +136,7 @@ const inlineCopy = {
     category: 'Service area',
     pending: 'Only approved priced items count toward the subtotal. Other selections need a personal quote.',
     websiteTerms: 'Website: client-supplied content and two revision rounds. Hosting, domain and paid licenses are excluded.',
+    starter: 'Starting example: a one-page, one-language landing page. Change or remove it anytime.',
   },
   ar: {
     heading: 'كوّن مشروعك',
@@ -143,6 +145,7 @@ const inlineCopy = {
     category: 'مجال الخدمة',
     pending: 'يشمل المجموع فقط العناصر ذات الأسعار المعتمدة. تتطلب الاختيارات الأخرى عرضًا شخصيًا.',
     websiteTerms: 'الموقع: المحتوى من العميل وجولتا تعديل. الاستضافة والنطاق والتراخيص المدفوعة غير مشمولة.',
+    starter: 'مثال للبدء: صفحة هبوط بصفحة ولغة واحدة. يمكنك تعديلها أو إزالتها.',
   },
 } as const;
 
@@ -152,7 +155,11 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
   const t = copy[language];
   const [stage, setStage] = useState<Stage>('categories');
   const [categoryIds, setCategoryIds] = useState<string[]>([]);
-  const [optionIds, setOptionIds] = useState<string[]>([]);
+  const starterOption = inline && catalogue.publishedPrices
+    ? catalogue.categories[0]?.options.find((item) => item.price.mode === 'fixed_package' && item.price.approved)?.id
+    : undefined;
+  const [optionIds, setOptionIds] = useState<string[]>(() => starterOption ? [starterOption] : []);
+  const starterUntouched = useRef(!!starterOption);
   const [scope, setScope] = useState<QuoteScope>({});
   const [unsureCategoryIds, setUnsureCategoryIds] = useState<string[]>([]);
   const [unsureOverall, setUnsureOverall] = useState(false);
@@ -210,6 +217,7 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
   };
 
   const chooseOption = (id: string, category: QuoteCategory) => {
+    starterUntouched.current = false;
     const next = toggleOption(catalogue, optionIds, id);
     setOptionIds(next);
     setScope((previous) => Object.fromEntries(Object.entries(previous).filter(([item]) => next.includes(item))));
@@ -217,10 +225,12 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
   };
 
   const updateScope = (id: string, value: ScopeValues) => {
+    starterUntouched.current = false;
     setScope((previous) => ({ ...previous, [id]: value }));
   };
 
   const toggleUnsureCategory = (category: QuoteCategory) => {
+    starterUntouched.current = false;
     const wasUnsure = unsureCategoryIds.includes(category.id);
     setUnsureCategoryIds((previous) => wasUnsure ? previous.filter((item) => item !== category.id) : [...previous, category.id]);
     if (!wasUnsure) {
@@ -262,12 +272,26 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
 
   if (inline) {
     const text = inlineCopy[language];
+    const onInlineCategoryChange = (id: string) => {
+      if (starterUntouched.current && starterOption && !catalogue.categories.find((category) => category.id === id)?.options.some((item) => item.id === starterOption)) {
+        setOptionIds((previous) => previous.filter((item) => item !== starterOption));
+        starterUntouched.current = false;
+      }
+      setInlineCategoryId(id);
+    };
+    const approvedOptionAmount = (item: QuoteCategory['options'][number]) => {
+      if (!catalogue.publishedPrices || (item.price.mode !== 'fixed_package' && item.price.mode !== 'estimate_range')) return null;
+      return item.price.mode === 'fixed_package'
+        ? formatQuoteAmount(language, item.price.amountIls, item.price.amountIls)
+        : formatQuoteAmount(language, item.price.minIls, item.price.maxIls);
+    };
     return (
       <section dir={dir} aria-labelledby="inline-quote-heading" className="rounded-[1.75rem] border border-violet-400/25 bg-slate-900/95 p-5 text-white shadow-[0_28px_70px_-35px_rgba(0,0,0,.75)] sm:p-7 lg:p-8">
         <header className="max-w-3xl">
           <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">{t.heading}</p>
           <h2 id="inline-quote-heading" className="mt-2 text-2xl font-black leading-tight sm:text-3xl">{text.heading}</h2>
           <p className="mt-2 text-sm leading-6 text-slate-300">{text.intro}</p>
+          {starterUntouched.current && starterOption && <p className="mt-2 text-xs text-cyan-200">{text.starter}</p>}
         </header>
         <div className="sticky top-16 z-20 mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-violet-400/30 bg-slate-800/95 px-4 py-2 text-sm text-white shadow-lg backdrop-blur lg:hidden" aria-live="polite">
           <span>{t.selected}: {optionIds.length}</span>
@@ -276,7 +300,7 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
         <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(300px,1fr)]">
           <div className="rounded-2xl border border-slate-700 bg-slate-950/60 p-4 sm:p-5">
             <label className="block text-sm font-semibold text-slate-200">{text.category}
-              <select value={inlineCategoryId} onChange={(event) => setInlineCategoryId(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-slate-600 bg-slate-800 px-4 text-base text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">
+              <select value={inlineCategoryId} onChange={(event) => onInlineCategoryChange(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-slate-600 bg-slate-800 px-4 text-base text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">
                 {catalogue.categories.map((category) => <option key={category.id} value={category.id}>{category.label[language]}</option>)}
               </select>
             </label>
@@ -290,6 +314,7 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
                       <label className={'flex min-h-12 items-center gap-3 rounded-xl border px-3 py-2 text-sm ' + (available ? 'cursor-pointer' : 'cursor-not-allowed text-slate-500') + (checked ? ' border-violet-400 bg-violet-500/20' : ' border-slate-700 bg-slate-800/70')}>
                         <input type="checkbox" checked={checked} disabled={!available} onChange={() => chooseOption(item.id, inlineCategory)} className="h-5 w-5 shrink-0 accent-violet-400" />
                         <span className="font-medium">{item.label[language]}{!available && <span className="mt-1 block text-xs font-normal">{t.prerequisite}</span>}</span>
+                        {approvedOptionAmount(item) && <span className="ms-auto shrink-0 font-bold text-cyan-300">{approvedOptionAmount(item)}</span>}
                       </label>
                       {checked && catalogue.scope?.profiles[item.id] && <div className="mt-3">
                         <ScopeEditor language={language} profile={catalogue.scope.profiles[item.id]} value={scope[item.id] ?? {}} onChange={(value) => updateScope(item.id, value)} tone="dark" />
