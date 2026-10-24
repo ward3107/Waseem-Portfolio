@@ -104,6 +104,10 @@ const HeroOverlay: React.FC = () => {
         </a>
       </motion.div>
 
+      <a href="/plan" className="pointer-events-auto mt-4 rounded px-2 py-1 text-sm font-semibold text-brand-cyan underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-cyan">
+        {{ he: 'בחרו שירותים ובקשו הצעה', en: 'Choose services and request a quote', ar: 'اختر الخدمات واطلب عرض سعر' }[language]}
+      </a>
+
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}

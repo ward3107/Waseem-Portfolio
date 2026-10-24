@@ -7,16 +7,16 @@ const site = 'https://www.vasia.dev';
 
 const locales = {
   en: {
-    title: 'Waseem — Wix, WordPress & Custom Web Developer',
-    description: 'Waseem builds Wix and WordPress sites, online stores and custom web apps for businesses. AI automation and support in English, Hebrew and Arabic.',
-    socialTitle: 'Waseem — Websites and digital solutions',
+    title: 'vasia — Wix, WordPress & Custom Web Developer',
+    description: 'vasia builds Wix and WordPress sites, online stores and custom web apps for businesses. AI automation and support in English, Hebrew and Arabic.',
+    socialTitle: 'vasia — Websites and digital solutions',
     socialDescription: 'Wix and WordPress sites, custom development and AI automation for businesses. Work in English, Hebrew and Arabic.',
     ogLocale: 'en_US',
   },
   ar: {
-    title: 'وسيم — مواقع Wix وWordPress وحلول ويب مخصصة',
+    title: 'vasia — مواقع Wix وWordPress وحلول ويب مخصصة',
     description: 'يبني وسيم مواقع Wix وWordPress ومتاجر وتطبيقات ويب مخصصة للأعمال، مع حلول الذكاء الاصطناعي والأتمتة وخدمة بالعربية والعبرية والإنجليزية.',
-    socialTitle: 'وسيم — تطوير مواقع وحلول رقمية',
+    socialTitle: 'vasia — تطوير مواقع وحلول رقمية',
     socialDescription: 'مواقع Wix وWordPress وتطوير مخصص وأتمتة للأعمال بالعربية والعبرية والإنجليزية.',
     ogLocale: 'ar_AR',
   },

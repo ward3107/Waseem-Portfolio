@@ -34,7 +34,7 @@ export const socialMediaCopy: Record<Language, SocialCopy> = {
     ],
     formats: ['פוסטים מעוצבים', 'סטוריז', 'רילס', 'לוח תוכן'],
     cta: 'בואו נבנה תוכן לעסק שלכם',
-    prefill: 'היי ואסים, אני מעוניין בתוכן ובניהול סושיאל מדיה לעסק שלי.',
+    prefill: 'היי ואסיה, אני מעוניין בתוכן ובניהול סושיאל מדיה לעסק שלי.',
   },
   en: {
     eyebrow: 'Social media management',
@@ -58,7 +58,7 @@ export const socialMediaCopy: Record<Language, SocialCopy> = {
     ],
     formats: ['Designed posts', 'Stories', 'Reels', 'Content calendar'],
     cta: 'Let’s create content for your business',
-    prefill: 'Hi Waseem, I am interested in content and social media management for my business.',
+    prefill: 'Hi vasia, I am interested in content and social media management for my business.',
   },
   ar: {
     eyebrow: 'إدارة السوشيال ميديا',
