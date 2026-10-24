@@ -12,36 +12,26 @@ export default defineConfig({
     },
   },
   build: {
-    minify: 'esbuild',
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-framer': ['framer-motion'],
-          'vendor-lucide': ['lucide-react'],
-          // Split the WebGL stack into its own cacheable chunk. Only pulled
-          // in by the 3D logo scene (src/shared/three/*) — no reason for it
-          // to bloat the main bundle.
-          'vendor-three': ['three'],
-          // Let Rollup place React Three Fiber and drei with the lazy canvas.
-          // Forcing them into a manual chunk made the entry import that chunk
-          // (and Three.js) even before visitors entered the scroll experience.
-          // supabase-js (GoTrue + Realtime + PostgREST) is imported only from
-          // lazy chunks: the /admin tree and /share-testimonial. Because two
-          // separate async chunks share it, Rollup would otherwise hoist it
-          // into their nearest common ancestor — the entry chunk — putting
-          // ~110 KB of auth/websocket code in front of every public visitor.
-          // Naming it here keeps it a sibling chunk that only those routes
-          // pull in.
-          'vendor-supabase': ['@supabase/supabase-js'],
+        codeSplitting: {
+          groups: [
+            { name: 'vendor-react', test: /[/\\]node_modules[/\\](?:react|react-dom|react-router-dom)[/\\]/ },
+            { name: 'vendor-framer', test: /[/\\]node_modules[/\\]framer-motion[/\\]/ },
+            { name: 'vendor-lucide', test: /[/\\]node_modules[/\\]lucide-react[/\\]/ },
+            // WebGL and Supabase are reached only from lazy public/admin routes.
+            { name: 'vendor-three', test: /[/\\]node_modules[/\\]three[/\\]/ },
+            { name: 'vendor-supabase', test: /[/\\]node_modules[/\\]@supabase[/\\]supabase-js[/\\]/ },
+          ],
+        },
+        minify: {
+          compress: {
+            treeshake: { manualPureFunctions: ['console.log', 'console.debug', 'console.info'] },
+          },
         },
       },
     },
     chunkSizeWarningLimit: 500,
-  },
-  esbuild: {
-    // Strip noisy logs from production, preserve error/warn for debugging.
-    pure: ['console.log', 'console.debug', 'console.info'],
   },
   preview: {
     headers: {
