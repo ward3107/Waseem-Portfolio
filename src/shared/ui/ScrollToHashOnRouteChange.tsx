@@ -67,6 +67,11 @@ const ScrollToHashOnRouteChange: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // A shared calculator link must land in the new homepage section even
+    // after a hard refresh. Other initial hashes retain the existing reset
+    // behavior until their loading paths are reviewed separately.
+    const initialQuoteLink =
+      prevPathname.current === null && location.hash === '#quote-builder';
     const changedPage =
       prevPathname.current !== null && prevPathname.current !== location.pathname;
     prevPathname.current = location.pathname;
@@ -85,7 +90,7 @@ const ScrollToHashOnRouteChange: React.FC = () => {
 
     // Cross-page navigation that landed on a hash → scroll to that section once
     // it exists, then re-assert as content above it finishes lazy-loading.
-    if (location.hash && changedPage) {
+    if (location.hash && (changedPage || initialQuoteLink)) {
       const id = location.hash.slice(1);
       // Whitelist plain HTML-id characters only — rejects anything a caller
       // could weaponize through the URL hash before a DOM lookup.
