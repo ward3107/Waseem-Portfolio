@@ -191,7 +191,7 @@ const OneTapCardPage: React.FC = () => {
 
   return (
     <>
-    <main className={"onetap-screen onetap--" + variant} dir={dir} aria-label="VASIA OneTap Digital Business Card" {...(dialogOpen ? { inert: '' } : {})}>
+    <main className={"onetap-screen onetap--" + variant} dir={dir} aria-label="VASIA OneTap Digital Business Card" inert={dialogOpen}>
       <div className="onetap-shell">
         <article className="onetap-glass">
           <div aria-hidden="true" className="onetap-horizon" />

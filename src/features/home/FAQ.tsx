@@ -153,7 +153,7 @@ const FAQ: React.FC = () => {
                                 >
                                     <h3>
                                         <button
-                                            ref={(el) => (buttonRefs.current[index] = el)}
+                                            ref={(el) => { buttonRefs.current[index] = el; }}
                                             id={buttonId}
                                             onClick={() => setOpenIndex(isOpen ? null : index)}
                                             onKeyDown={(e) => handleKeyDown(e, index)}
