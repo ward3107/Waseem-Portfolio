@@ -4,7 +4,7 @@ import { CHAPTERS } from './storyboard';
 import { useQualityTier } from './useQualityTier';
 import ScrollProgress from './components/ScrollProgress';
 import AudioTour from './components/AudioTour';
-import HeroFilm from './chapters/HeroFilm';
+import HeroBackdrop from './chapters/HeroBackdrop';
 import HeroOverlay from './chapters/HeroOverlay';
 import AboutOverlay from './chapters/AboutOverlay';
 import ServicesOverlay from './chapters/ServicesOverlay';
@@ -95,12 +95,12 @@ const Experience: React.FC = () => {
           layer above is pointer-events-none except for real interactive
           elements, so clicks still reach links/buttons. */}
       <div className="fixed inset-0 z-0">
-        {/* The Forge — scroll-scrubbed hero film, behind the 3D canvas so the
-            live monogram can take over from the footage. Desktop only. */}
-        {tier === 'high' && <HeroFilm />}
+        {/* The V backdrop follows the opening scroll, then gives way to the
+            live 3D V. The old film had a baked-in W and is never requested. */}
+        {tier === 'high' && <HeroBackdrop />}
         {tier !== 'high' && (
           <img
-            src="/assets/forge-hero-poster.webp"
+            src="/assets/forge-hero-v.webp"
             alt=""
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover"
