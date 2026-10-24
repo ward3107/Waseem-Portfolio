@@ -22,17 +22,14 @@
         } catch (e) {}
       })();
     </script>
-    <!-- Always open at the top. Runs before React/the router so there's no
-         fragment for the browser to scroll to: strip any leftover section
-         hash (e.g. /#what-i-do from a previous nav click) and take scroll
-         restoration away from the browser so it can't reapply a scrolled-down
-         position across SPA navigation. In-app section navigation is handled
-         client-side by the router after load, so this doesn't affect it. -->
+    <!-- Most old section hashes still reset to the top. Keep the new quote
+         builder hash for shared links: the router waits for its lazy homepage
+         section, then scrolls there. Restore position manually meanwhile. -->
     <script>
       (function () {
         try {
           if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-          if (window.location.hash) {
+          if (window.location.hash && window.location.hash !== '#quote-builder') {
             history.replaceState(null, '', window.location.pathname + window.location.search);
           }
         } catch (e) {}
