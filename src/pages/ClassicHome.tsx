@@ -15,6 +15,7 @@ import FAQ from '@/features/home/FAQ';
 import ScrollJourney from '@/features/journey/ScrollJourney';
 import Act from '@/features/journey/Act';
 import { JOURNEY_ACTS } from '@/features/journey/journeyConfig';
+import InlineQuoteSection from '@/features/quote/InlineQuoteSection';
 
 // Acts, in scroll order, mapping the existing sections onto the five-colour
 // journey: Identity (purple) → Services (blue) → AI (cyan) → Work (gold) →
@@ -68,6 +69,7 @@ const ClassicHome: React.FC = () => (
     {/* Contact — answer the last questions, then the one clear action. */}
     <Act act={ACT_CONTACT}>
       <FAQ />
+      <InlineQuoteSection />
       <Contact />
     </Act>
   </ScrollJourney>

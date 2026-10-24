@@ -34,6 +34,19 @@ const fixture: QuoteCatalogue = {
 afterEach(() => { cleanup(); window.localStorage.clear(); });
 
 describe('configurable quote flow', () => {
+  it('shows inline choices and a live matching itemized summary', () => {
+    window.history.replaceState(null, '', '/?lang=en');
+    render(<LanguageProvider><QuoteCalculator catalogue={fixture} inline /></LanguageProvider>);
+    expect(screen.getByRole('heading', { name: 'Build your project' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Websites & landing pages' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Landing page' }));
+    fireEvent.change(screen.getByLabelText(/Number of pages/), { target: { value: '3' } });
+    expect(screen.getAllByText(/Estimated total:.*1,180/)).toHaveLength(2);
+    const href = screen.getByRole('link', { name: 'Open summary in WhatsApp' }).getAttribute('href')!;
+    expect(decodeURIComponent(href)).toContain('1,180');
+    expect(decodeURIComponent(href)).toContain('Number of pages: 3');
+  });
+
   it('recalculates while editing and sends the same scope and total to WhatsApp', () => {
     window.history.replaceState(null, '', '/plan?lang=en');
     render(<LanguageProvider><QuoteCalculator catalogue={fixture} /></LanguageProvider>);

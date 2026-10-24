@@ -40,7 +40,7 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
   // for bookmarks, deep links and search results.
   en: [
     { name: 'Services', href: '/#what-i-do' },
-    { name: 'Build a quote request', href: '/plan' },
+    { name: 'Build a quote request', href: '/#quote-builder' },
     { name: 'AI Solutions', href: '/#ai-automation' },
     { name: 'About', href: '/#about' },
     { name: 'Projects', href: '/#projects' },
@@ -53,7 +53,7 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
   ],
   he: [
     { name: 'שירותים', href: '/#what-i-do' },
-    { name: 'בניית הצעת מחיר', href: '/plan' },
+    { name: 'בניית הצעת מחיר', href: '/#quote-builder' },
     { name: 'פתרונות AI', href: '/#ai-automation' },
     { name: 'אודות', href: '/#about' },
     { name: 'פרויקטים', href: '/#projects' },
@@ -66,7 +66,7 @@ export const NAV_LINKS: Record<Language, NavLink[]> = {
   ],
   ar: [
     { name: 'خدمات', href: '/#what-i-do' },
-    { name: 'إنشاء طلب عرض سعر', href: '/plan' },
+    { name: 'إنشاء طلب عرض سعر', href: '/#quote-builder' },
     { name: 'حلول AI', href: '/#ai-automation' },
     { name: 'من أنا', href: '/#about' },
     { name: 'مشاريع', href: '/#projects' },
