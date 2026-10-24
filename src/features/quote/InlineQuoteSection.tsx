@@ -24,10 +24,10 @@ export default function InlineQuoteSection() {
   }, [nearby]);
 
   return (
-    <section id="quote-builder" ref={sectionRef} className="pointer-events-auto relative z-10 scroll-mt-16 bg-[#edf0f8] px-4 py-16 text-[#18203a] sm:px-6 sm:py-24">
-      <div className="mx-auto max-w-7xl">
+    <section id="quote-builder" ref={sectionRef} className="pointer-events-auto relative z-10 scroll-mt-16 bg-slate-950 px-4 py-12 text-white sm:px-6 sm:py-16">
+      <div className="mx-auto max-w-6xl">
         {nearby ? (
-          <Suspense fallback={<div className="min-h-[560px] animate-pulse rounded-[2rem] bg-white/80" aria-hidden="true" />}>
+          <Suspense fallback={<div className="min-h-[560px] animate-pulse rounded-[2rem] bg-slate-900" aria-hidden="true" />}>
             <QuoteCalculator inline />
           </Suspense>
         ) : <div className="min-h-[560px]" aria-hidden="true" />}

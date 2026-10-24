@@ -21,7 +21,7 @@ function fixture(): QuoteCatalogue {
       ...draftScopeConfig,
       prices: {
         ...draftScopeConfig.prices,
-        extra_page: rate(90), extra_language: rate(200), product_batch: rate(190), extra_reel: rate(250),
+        extra_page: rate(90), website_extra_language: rate(200), product_batch: rate(190), extra_reel: rate(250),
         enhanced_design: rate(300), blog_cms: rate(400), captions: rate(50),
       },
     },
@@ -35,7 +35,7 @@ describe('composable quote scope', () => {
     const result = quoteBreakdown(catalogue, ['landing'], scope);
     expect(result.pricedItems.map((item) => [item.id, item.quantity, item.minIls])).toEqual([
       ['landing', 1, 1000], ['landing:extra_page', 2, 180],
-      ['landing:extra_language', 1, 200], ['landing:design:enhanced', 1, 300],
+      ['landing:website_extra_language', 1, 200], ['landing:design:enhanced', 1, 300],
     ]);
     expect(result.total).toEqual({ mode: 'fixed_package', amountIls: 1680 });
     expect(quoteBreakdown(catalogue, ['landing'], { landing: { quantities: { pages: 1, languages: 1 } } }).total)
@@ -61,7 +61,7 @@ describe('composable quote scope', () => {
     expect(selected).toEqual(['business_site']);
     const stale: QuoteScope = { landing: { quantities: { pages: 10 } }, business_site: { quantities: { pages: 5 } } };
     expect(scopeRows(catalogue, selected, stale).some((row) => row.optionId === 'landing')).toBe(false);
-    expect(quoteBreakdown(catalogue, selected, stale).total).toEqual({ mode: 'fixed_package', amountIls: 2090 });
+    expect(quoteBreakdown(catalogue, selected, stale).total).toEqual({ mode: 'fixed_package', amountIls: 2360 });
   });
 
   it('marks custom costs as partial and sends matching scope in Hebrew, Arabic and English', () => {

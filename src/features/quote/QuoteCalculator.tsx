@@ -122,18 +122,27 @@ type Stage = 'categories' | 'options' | 'review';
 const inlineCopy = {
   he: {
     heading: 'הרכיבו את הפרויקט שלכם',
-    intro: 'בחרו שירותים והתאימו את היקף העבודה. הבחירות מתעדכנות כאן בזמן אמת; מחיר ייקבע אחרי בדיקת הפרטים.',
+    intro: 'בחרו תחום, שירות והיקף. הסיכום מתעדכן בכל בחירה.',
     empty: 'בחרו שירות כדי להתחיל להרכיב את הבקשה.',
+    category: 'תחום השירות',
+    pending: 'רק רכיבים עם מחיר מאושר נכללים בסכום. יתר הבחירות ייבדקו להצעה אישית.',
+    websiteTerms: 'לאתר: תוכן מהלקוח, שני סבבי תיקונים. אחסון, דומיין ורישיונות בתשלום אינם כלולים.',
   },
   en: {
     heading: 'Build your project',
-    intro: 'Choose services and adjust the scope. Your selections update live; we will confirm a price after reviewing the details.',
+    intro: 'Choose an area, service and scope. The summary updates with every selection.',
     empty: 'Choose a service area to start building your request.',
+    category: 'Service area',
+    pending: 'Only approved priced items count toward the subtotal. Other selections need a personal quote.',
+    websiteTerms: 'Website: client-supplied content and two revision rounds. Hosting, domain and paid licenses are excluded.',
   },
   ar: {
     heading: 'كوّن مشروعك',
-    intro: 'اختر الخدمات وحدد نطاق العمل. تتحدث اختياراتك مباشرة، ونؤكد السعر بعد مراجعة التفاصيل.',
+    intro: 'اختر المجال والخدمة ونطاق العمل. يتحدث الملخص مع كل اختيار.',
     empty: 'اختر مجال خدمة للبدء في إعداد طلبك.',
+    category: 'مجال الخدمة',
+    pending: 'يشمل المجموع فقط العناصر ذات الأسعار المعتمدة. تتطلب الاختيارات الأخرى عرضًا شخصيًا.',
+    websiteTerms: 'الموقع: المحتوى من العميل وجولتا تعديل. الاستضافة والنطاق والتراخيص المدفوعة غير مشمولة.',
   },
 } as const;
 
@@ -148,13 +157,20 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
   const [unsureCategoryIds, setUnsureCategoryIds] = useState<string[]>([]);
   const [unsureOverall, setUnsureOverall] = useState(false);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
+  const [inlineCategoryId, setInlineCategoryId] = useState(catalogue.categories[0]?.id ?? '');
   const [projectStage, setProjectStage] = useState<'new' | 'existing' | 'unsure'>('unsure');
   const [businessName, setBusinessName] = useState('');
   const [notes, setNotes] = useState('');
   const stageHeadingRef = useRef<HTMLHeadingElement>(null);
   const firstRender = useRef(true);
 
-  const selectedCategories = catalogue.categories.filter((category) => categoryIds.includes(category.id));
+  const effectiveCategoryIds = inline
+    ? catalogue.categories.filter((category) =>
+        category.options.some((item) => optionIds.includes(item.id)) || unsureCategoryIds.includes(category.id)
+      ).map((category) => category.id)
+    : categoryIds;
+  const selectedCategories = catalogue.categories.filter((category) => effectiveCategoryIds.includes(category.id));
+  const inlineCategory = catalogue.categories.find((category) => category.id === inlineCategoryId);
   const currentCategory = selectedCategories[activeCategoryIndex];
   const breakdown = quoteBreakdown(catalogue, optionIds, scope);
   const detailRows = scopeRows(catalogue, optionIds, scope);
@@ -169,7 +185,7 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
   };
 
   const message = buildRequestMessage(catalogue, {
-    language, categoryIds, optionIds, scope, unsureCategoryIds, unsureOverall, projectStage, businessName, notes,
+    language, categoryIds: effectiveCategoryIds, optionIds, scope, unsureCategoryIds, unsureOverall, projectStage, businessName, notes,
   });
 
   useEffect(() => {
@@ -247,75 +263,66 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
   if (inline) {
     const text = inlineCopy[language];
     return (
-      <section dir={dir} aria-labelledby="inline-quote-heading" className="rounded-[2rem] border border-[#dce3f1] bg-[#f8f9fd] p-5 text-[#18203a] shadow-[0_32px_80px_-40px_rgba(20,28,77,.45)] sm:p-8 lg:p-10">
+      <section dir={dir} aria-labelledby="inline-quote-heading" className="rounded-[1.75rem] border border-violet-400/25 bg-slate-900/95 p-5 text-white shadow-[0_28px_70px_-35px_rgba(0,0,0,.75)] sm:p-7 lg:p-8">
         <header className="max-w-3xl">
-          <p className="text-sm font-bold uppercase tracking-widest text-[#6257ae]">{t.heading}</p>
-          <h2 id="inline-quote-heading" className="mt-2 text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">{text.heading}</h2>
-          <p className="mt-4 text-base leading-7 text-[#4f5870]">{text.intro}</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-cyan-300">{t.heading}</p>
+          <h2 id="inline-quote-heading" className="mt-2 text-2xl font-black leading-tight sm:text-3xl">{text.heading}</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-300">{text.intro}</p>
         </header>
-        <div className="sticky top-16 z-20 mt-5 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#dce3f1] bg-white/95 px-4 py-3 text-sm shadow-sm backdrop-blur lg:hidden" aria-live="polite">
+        <div className="sticky top-16 z-20 mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-violet-400/30 bg-slate-800/95 px-4 py-2 text-sm text-white shadow-lg backdrop-blur lg:hidden" aria-live="polite">
           <span>{t.selected}: {optionIds.length}</span>
-          <strong className="text-[#342880]">{estimateLabel}</strong>
+          <strong className="text-cyan-300">{breakdown.knownSubtotal ? estimateLabel : '—'}</strong>
         </div>
-        <div className="mt-9 grid items-start gap-7 lg:grid-cols-[minmax(0,1.5fr)_minmax(300px,1fr)]">
-          <div className="space-y-8">
-            <div>
-              <h3 className="text-xl font-bold">{t.categoryTitle}</h3>
-              <p className="mt-1 text-sm text-[#59647c]">{t.categoryHint}</p>
-              <div role="group" aria-label={t.categoryTitle} className="mt-5 grid gap-2 sm:grid-cols-2">
-                {catalogue.categories.map((category) => {
-                  const selected = categoryIds.includes(category.id);
-                  return <button key={category.id} type="button" aria-pressed={selected} onClick={() => toggleCategory(category.id)}
-                    className={'flex min-h-14 items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-start font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5448a9] ' + (selected ? 'border-[#675abb] bg-[#eeecfb] text-[#342880]' : 'border-[#dfe4ef] bg-white text-[#26304a] hover:border-[#978bcc]')}>
-                    <span>{category.label[language]}</span><span aria-hidden="true">{selected ? '✓' : '+'}</span>
-                  </button>;
-                })}
-              </div>
-              <label className="mt-4 flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border border-[#dfe4ef] bg-white px-4 py-3 text-sm font-medium">
-                <input type="checkbox" checked={unsureOverall} onChange={(event) => setUnsureOverall(event.target.checked)} className="h-5 w-5 accent-[#5448a9]" />
-                {t.unsureOverall}
-              </label>
-            </div>
-            {selectedCategories.map((category) => (
-              <fieldset key={category.id} className="rounded-3xl border border-[#dfe4ef] bg-white p-4 sm:p-6">
-                <legend className="px-2 text-lg font-bold text-[#342880]">{category.label[language]}</legend>
-                <div className="space-y-4">
-                  {category.options.map((item) => {
+        <div className="mt-5 grid items-start gap-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(300px,1fr)]">
+          <div className="rounded-2xl border border-slate-700 bg-slate-950/60 p-4 sm:p-5">
+            <label className="block text-sm font-semibold text-slate-200">{text.category}
+              <select value={inlineCategoryId} onChange={(event) => setInlineCategoryId(event.target.value)} className="mt-2 min-h-12 w-full rounded-xl border border-slate-600 bg-slate-800 px-4 text-base text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">
+                {catalogue.categories.map((category) => <option key={category.id} value={category.id}>{category.label[language]}</option>)}
+              </select>
+            </label>
+            {inlineCategory && <fieldset className="mt-4">
+              <legend className="text-base font-bold text-white">{inlineCategory.label[language]}</legend>
+              <div className="mt-3 max-h-[55vh] space-y-3 overflow-y-auto pe-1 sm:max-h-[520px]">
+                  {inlineCategory.options.map((item) => {
                     const checked = optionIds.includes(item.id);
                     const available = checked || canSelectOption(catalogue, optionIds, item.id);
                     return <div key={item.id}>
-                      <label className={'flex min-h-14 items-center gap-3 rounded-2xl border px-4 py-3 ' + (available ? 'cursor-pointer' : 'cursor-not-allowed bg-[#f0f2f7] text-[#667088]') + (checked ? ' border-[#675abb] bg-[#f6f4ff]' : ' border-[#dfe4ef]')}>
-                        <input type="checkbox" checked={checked} disabled={!available} onChange={() => chooseOption(item.id, category)} className="h-5 w-5 shrink-0 accent-[#5448a9]" />
+                      <label className={'flex min-h-12 items-center gap-3 rounded-xl border px-3 py-2 text-sm ' + (available ? 'cursor-pointer' : 'cursor-not-allowed text-slate-500') + (checked ? ' border-violet-400 bg-violet-500/20' : ' border-slate-700 bg-slate-800/70')}>
+                        <input type="checkbox" checked={checked} disabled={!available} onChange={() => chooseOption(item.id, inlineCategory)} className="h-5 w-5 shrink-0 accent-violet-400" />
                         <span className="font-medium">{item.label[language]}{!available && <span className="mt-1 block text-xs font-normal">{t.prerequisite}</span>}</span>
                       </label>
                       {checked && catalogue.scope?.profiles[item.id] && <div className="mt-3">
-                        <ScopeEditor language={language} profile={catalogue.scope.profiles[item.id]} value={scope[item.id] ?? {}} onChange={(value) => updateScope(item.id, value)} />
+                        <ScopeEditor language={language} profile={catalogue.scope.profiles[item.id]} value={scope[item.id] ?? {}} onChange={(value) => updateScope(item.id, value)} tone="dark" />
                       </div>}
                     </div>;
                   })}
-                  <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border border-[#dfe4ef] px-4 py-3 text-sm font-medium">
-                    <input type="checkbox" checked={unsureCategoryIds.includes(category.id)} onChange={() => toggleUnsureCategory(category)} className="h-5 w-5 accent-[#5448a9]" />
+                  <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-slate-700 px-3 py-2 text-sm">
+                    <input type="checkbox" checked={unsureCategoryIds.includes(inlineCategory.id)} onChange={() => toggleUnsureCategory(inlineCategory)} className="h-5 w-5 accent-violet-400" />
                     {t.unsureCategory}
                   </label>
-                </div>
-              </fieldset>
-            ))}
+              </div>
+            </fieldset>}
+            <label className="mt-4 flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-slate-700 px-3 py-2 text-sm">
+              <input type="checkbox" checked={unsureOverall} onChange={(event) => setUnsureOverall(event.target.checked)} className="h-5 w-5 accent-violet-400" />
+              {t.unsureOverall}
+            </label>
           </div>
-          <aside aria-label={t.reviewTitle} className="rounded-3xl border border-[#dfe4ef] bg-white p-5 shadow-sm lg:sticky lg:top-24 sm:p-6">
-            <h3 className="text-xl font-bold">{t.reviewTitle}</h3>
-            <p className="mt-2 rounded-xl bg-[#eeecfb] p-3 font-bold text-[#342880]" aria-live="polite">{estimateLabel}</p>
-            {!optionIds.length && !unsureOverall && <p className="mt-4 text-sm text-[#59647c]">{text.empty}</p>}
-            <ul className="mt-5 space-y-4" aria-live="polite">
+          <aside aria-label={t.reviewTitle} className="rounded-2xl border border-violet-400/25 bg-slate-800/80 p-4 shadow-xl lg:sticky lg:top-24 sm:p-5">
+            <h3 className="text-lg font-bold">{t.reviewTitle}</h3>
+            <p className="mt-3 rounded-xl border border-cyan-300/20 bg-slate-950 px-4 py-3 text-xl font-black text-cyan-300" aria-live="polite">{breakdown.knownSubtotal ? estimateLabel : '—'}</p>
+            {!optionIds.length && !unsureOverall && <p className="mt-3 text-sm text-slate-300">{text.empty}</p>}
+            {!!breakdown.unpricedIds.length && <p className="mt-3 text-xs leading-5 text-slate-300">{text.pending}</p>}
+            <ul className="mt-4 max-h-48 space-y-3 overflow-y-auto pe-1 text-sm" aria-live="polite">
               {selectedCategories.map((category) => (
-                <li key={category.id} className="border-b border-[#edf0f6] pb-4 last:border-0">
+                <li key={category.id} className="border-b border-slate-600 pb-3 last:border-0">
                   <strong className="block">{category.label[language]}</strong>
                   {category.options.filter((item) => optionIds.includes(item.id)).map((item) => (
                     <div key={item.id} className="mt-2 text-sm">
-                      <div className="flex justify-between gap-2"><span>{item.label[language]}</span><span className="shrink-0 font-semibold">{optionAmount(item.id)}</span></div>
+                      <div className="flex justify-between gap-2"><span>{item.label[language]}</span>{breakdown.pricedItems.some((priced) => priced.id === item.id) && <span className="shrink-0 font-semibold text-cyan-300">{optionAmount(item.id)}</span>}</div>
                       {detailRows.filter((row) => row.optionId === item.id).map((row) => (
-                        <div key={row.id} className="mt-1 flex justify-between gap-2 ps-3 text-xs text-[#59647c]">
+                        <div key={row.id} className="mt-1 flex justify-between gap-2 ps-3 text-xs text-slate-300">
                           <span>{row.label[language]}{row.quantity > 1 ? ` × ${row.quantity}` : ''}</span>
-                          {row.price && <span>{optionAmount(row.id)}</span>}
+                          {breakdown.pricedItems.some((priced) => priced.id === row.id) && <span className="text-cyan-300">{optionAmount(row.id)}</span>}
                         </div>
                       ))}
                     </div>
@@ -324,20 +331,20 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
                 </li>
               ))}
             </ul>
-            <p className="mt-5 text-xs leading-5 text-[#59647c]">{t.quoteNote}</p>
+            {optionIds.some((id) => id === 'landing' || id === 'business_site') && <p className="mt-3 text-xs leading-5 text-slate-300">{text.websiteTerms}</p>}
             <label className="mt-5 block text-sm font-semibold">{t.business}
-              <input value={businessName} maxLength={120} onChange={(event) => setBusinessName(event.target.value)} placeholder={t.businessPlaceholder} className="mt-2 min-h-12 w-full rounded-xl border border-[#cfd6e5] px-4 text-base font-normal" />
+              <input value={businessName} maxLength={120} onChange={(event) => setBusinessName(event.target.value)} placeholder={t.businessPlaceholder} className="mt-2 min-h-11 w-full rounded-lg border border-slate-600 bg-slate-900 px-3 text-base text-white placeholder:text-slate-400" />
             </label>
             <label className="mt-4 block text-sm font-semibold">{t.stage}
-              <select value={projectStage} onChange={(event) => setProjectStage(event.target.value as 'new' | 'existing' | 'unsure')} className="mt-2 min-h-12 w-full rounded-xl border border-[#cfd6e5] px-4 text-base font-normal">
+              <select value={projectStage} onChange={(event) => setProjectStage(event.target.value as 'new' | 'existing' | 'unsure')} className="mt-2 min-h-11 w-full rounded-lg border border-slate-600 bg-slate-900 px-3 text-base text-white">
                 <option value="unsure">{t.stageUnsure}</option><option value="new">{t.new}</option><option value="existing">{t.existing}</option>
               </select>
             </label>
             <label className="mt-4 block text-sm font-semibold">{t.notes}
-              <textarea value={notes} maxLength={700} rows={3} onChange={(event) => setNotes(event.target.value)} placeholder={t.notesPlaceholder} className="mt-2 w-full rounded-xl border border-[#cfd6e5] px-4 py-3 text-base font-normal" />
+              <textarea value={notes} maxLength={700} rows={2} onChange={(event) => setNotes(event.target.value)} placeholder={t.notesPlaceholder} className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-base font-normal text-white placeholder:text-slate-400" />
             </label>
-            {message && <a href={'https://wa.me/' + contact.whatsappNumber + '?text=' + encodeURIComponent(message)} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#176d49] px-5 text-center font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176d49]">{t.whatsapp}</a>}
-            <p className="mt-2 text-xs text-[#59647c]">{t.handoff}</p>
+            {message && <a href={'https://wa.me/' + contact.whatsappNumber + '?text=' + encodeURIComponent(message)} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#20bd75] px-5 text-center font-bold text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{t.whatsapp}</a>}
+            <p className="mt-2 text-xs text-slate-300">{t.handoff}</p>
           </aside>
         </div>
       </section>

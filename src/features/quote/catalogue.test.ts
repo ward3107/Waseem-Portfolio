@@ -7,11 +7,33 @@ import { buildRequestMessage } from './request';
 import { scopeRows } from './scope';
 
 describe('service request catalogue', () => {
-  it('covers twelve areas without publishing unapproved numbers', () => {
+  it('publishes only owner-approved website rates across twelve areas', () => {
     expect(quoteCatalogue.categories).toHaveLength(12);
     expect(new Set(allOptions(quoteCatalogue).map((item) => item.id)).size).toBe(allOptions(quoteCatalogue).length);
-    expect(quoteCatalogue.publishedPrices).toBe(false);
-    expect(quoteEstimate(quoteCatalogue, ['landing'])).toEqual({ mode: 'manual_quote' });
+    expect(quoteCatalogue.publishedPrices).toBe(true);
+    expect(quoteEstimate(quoteCatalogue, ['landing'])).toEqual({ mode: 'fixed_package', amountIls: 990 });
+    expect(quoteEstimate(quoteCatalogue, ['business_site'])).toEqual({ mode: 'fixed_package', amountIls: 990 });
+    expect(quoteEstimate(quoteCatalogue, ['starter_store'])).toEqual({ mode: 'manual_quote' });
+    expect(quoteBreakdown(quoteCatalogue, ['landing'], { landing: {
+      quantities: { pages: 3, languages: 2 }, features: ['motion_hero'],
+    } }).total).toEqual({ mode: 'fixed_package', amountIls: 2010 });
+    expect(quoteBreakdown(quoteCatalogue, ['business_site'], { business_site: {
+      quantities: { pages: 4 }, features: ['blog_cms'],
+    } }).total).toEqual({ mode: 'fixed_package', amountIls: 1950 });
+  });
+
+  it('sends the approved website scope, itemized prices and exclusions to WhatsApp', () => {
+    const message = buildRequestMessage(quoteCatalogue, {
+      language: 'en', categoryIds: ['websites'], optionIds: ['landing'],
+      scope: { landing: { quantities: { pages: 3, languages: 2 }, features: ['motion_hero'] } },
+      unsureCategoryIds: [], unsureOverall: false, projectStage: 'new', businessName: '', notes: '',
+    });
+    expect(message).toContain('Landing page — ₪990');
+    expect(message).toContain('Additional pages ×2 — ₪380');
+    expect(message).toContain('Additional languages — ₪350');
+    expect(message).toContain('Estimated total: ₪2,010');
+    expect(message).toContain('two revision rounds');
+    expect(message).toContain('Hosting, domain and paid licenses are excluded');
   });
 
   it('keeps competing web packages and card levels out of one request', () => {
@@ -96,6 +118,9 @@ describe('service request catalogue', () => {
     expect(message).toContain('דוגמה');
     expect(message).toContain('אתר בעברית');
     expect(message).not.toContain('unknown');
-    expect(message).not.toMatch(/₪|0 ₪/);
+    expect(message).toContain('990');
+    expect(message).toContain('סכום ביניים');
+    expect(message).toContain('שני סבבי תיקונים');
+    expect(message).not.toContain('0 ₪');
   });
 });

@@ -12,8 +12,8 @@ vi.mock('@/features/contact/useContact', () => ({
 const label = { he: 'אתרים ודפי נחיתה', en: 'Websites & landing pages', ar: 'مواقع وصفحات هبوط' };
 const landing = { he: 'דף נחיתה', en: 'Landing page', ar: 'صفحة هبوط' };
 
-// Only this test imports the artificial values. Production imports the
-// unpublished catalogue with no numeric prices.
+// These artificial values exercise calculations independently of the
+// separately approved production website rates.
 const fixture: QuoteCatalogue = {
   publishedPrices: true,
   categories: [{ id: 'websites', label, options: [{
@@ -25,7 +25,7 @@ const fixture: QuoteCatalogue = {
     prices: {
       ...draftScopeConfig.prices,
       extra_page: { mode: 'fixed_package', amountIls: 90, approved: true },
-      extra_language: { mode: 'fixed_package', amountIls: 200, approved: true },
+      website_extra_language: { mode: 'fixed_package', amountIls: 200, approved: true },
       enhanced_design: { mode: 'fixed_package', amountIls: 300, approved: true },
     },
   },
@@ -38,7 +38,7 @@ describe('configurable quote flow', () => {
     window.history.replaceState(null, '', '/?lang=en');
     render(<LanguageProvider><QuoteCalculator catalogue={fixture} inline /></LanguageProvider>);
     expect(screen.getByRole('heading', { name: 'Build your project' })).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: 'Websites & landing pages' }));
+    expect(screen.getByRole('combobox', { name: 'Service area' })).toBeTruthy();
     fireEvent.click(screen.getByRole('checkbox', { name: 'Landing page' }));
     fireEvent.change(screen.getByLabelText(/Number of pages/), { target: { value: '3' } });
     expect(screen.getAllByText(/Estimated total:.*1,180/)).toHaveLength(2);
