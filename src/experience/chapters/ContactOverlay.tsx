@@ -32,6 +32,9 @@ const ContactOverlay: React.FC<{ index: number; total: number }> = ({ index, tot
             className="absolute -inset-x-4 -inset-y-6 -z-10 rounded-full bg-[radial-gradient(closest-side,rgba(37,211,102,0.28),rgba(121,101,193,0.18),transparent)] blur-2xl sm:-inset-x-10"
           />
           <StartProjectButton />
+          <a href="/plan" className="pointer-events-auto rounded-full border border-brand-cyan/60 bg-slate-950/50 px-5 py-3 text-sm font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-cyan">
+            {{ he: 'בחירת שירותים והצעת מחיר', en: 'Choose services & request a quote', ar: 'اختر الخدمات واطلب عرض سعر' }[language]}
+          </a>
           <a
             href={`tel:+${contact.whatsappNumber}`}
             className="pointer-events-auto rounded-full border border-white/30 px-5 py-3 text-sm font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-cyan"
