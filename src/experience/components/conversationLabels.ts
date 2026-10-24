@@ -34,7 +34,7 @@ export interface ConvoLabels {
 
 export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
   en: {
-    talk: 'Talk to Waseem',
+    talk: 'Talk to vasia',
     connecting: 'Connecting…',
     listening: 'Listening…',
     speaking: 'Speaking…',
@@ -42,17 +42,17 @@ export const CONVO_LABELS: Record<ConvoLang, ConvoLabels> = {
     mute: 'Mute microphone',
     unmute: 'Unmute microphone',
     micError: 'Microphone access is needed to talk. Please allow it and try again.',
-    title: "Waseem's AI assistant",
-    chat: 'Chat with Waseem',
+    title: "vasia's AI assistant",
+    chat: 'Chat with vasia',
     typeInstead: 'Prefer to type?',
-    chatTitle: "Chat with Waseem's assistant",
+    chatTitle: "Chat with vasia's assistant",
     placeholder: 'Type your message…',
     send: 'Send',
     close: 'Close chat',
     chatError: 'The chat could not connect. Please try again.',
     assistant: 'Automated assistant',
     human: 'Talk to a human',
-    humanHandoff: 'Prefer a person? Message Waseem directly on WhatsApp and he’ll get back to you.',
+    humanHandoff: 'Prefer a person? Message vasia directly on WhatsApp and he’ll get back to you.',
     quickReplies: ['What do you offer?', 'Build me a website', 'What does it cost?', 'AI automation & bots'],
   },
   he: {

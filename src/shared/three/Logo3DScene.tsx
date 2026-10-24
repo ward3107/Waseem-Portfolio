@@ -13,7 +13,7 @@ import { FontLoader, type Font } from 'three/examples/jsm/loaders/FontLoader.js'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 /**
- * Brand "W" logo rendered in raw three.js — deliberately NOT using
+ * Brand "V" logo rendered in raw three.js - deliberately NOT using
  * @react-three/fiber or drei. Those pull the whole drei barrel (~220 KB gz)
  * for one static letter; hand-writing the ~90 lines here keeps the lazy chunk
  * to three-core only. Still code-split out of the main bundle via Logo3D's
@@ -33,7 +33,7 @@ const Logo3DScene: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
   const [font, setFont] = useState<Font | null>(null);
 
-  // Load the subsetted "W"-only typeface once.
+  // Load the subsetted "V"-only typeface once.
   useEffect(() => {
     let active = true;
     new FontLoader().load('/fonts/logo-font.json', (f) => {
@@ -46,7 +46,7 @@ const Logo3DScene: React.FC = () => {
 
   const geometry = useMemo(() => {
     if (!font) return null;
-    const geo = new TextGeometry('W', {
+    const geo = new TextGeometry('V', {
       font,
       size: 1.6,
       depth: 0.5,

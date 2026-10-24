@@ -15,7 +15,7 @@ const ShareWidget: React.FC = () => {
   // — otherwise every share targets whatever page was first loaded.
   useLocation();
   const url = typeof window !== 'undefined' ? window.location.href : '';
-  const text = "Check out Waseem's Portfolio!";
+  const text = "Check out vasia's Portfolio!";
 
   if (!widgets.share) return null;
 
@@ -50,7 +50,7 @@ const ShareWidget: React.FC = () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Waseem Portfolio',
+          title: 'vasia Portfolio',
           text: text,
           url: url,
         });

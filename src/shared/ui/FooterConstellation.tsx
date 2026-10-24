@@ -89,7 +89,7 @@ const FooterConstellation: React.FC = () => {
       octx.textAlign = 'center';
       octx.textBaseline = 'middle';
       octx.font = `900 ${SH * 1.02}px "Space Grotesk", Inter, system-ui, sans-serif`;
-      octx.fillText('W', SW / 2, SH / 2);
+      octx.fillText('V', SW / 2, SH / 2);
       const data = octx.getImageData(0, 0, SW, SH).data;
 
       const raw: { x: number; y: number }[] = [];

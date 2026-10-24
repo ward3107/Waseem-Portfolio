@@ -518,15 +518,15 @@ export const ar: Record<string, string> = {
     a11y_persist: "الإعدادات محفوظة عبر الجلسات",
 
     // Per-page document titles
-    page_title_home: "وسيم — مطور Wix وWordPress وحلول ويب مخصصة",
-    page_title_about: "معلومات وعملية العمل — وسيم",
-    page_title_projects: "المشاريع والمهارات — وسيم",
-    page_title_contact: "تواصل معي — وسيم",
-    page_title_services: "خدمات — وسيم",
-    page_title_privacy: "سياسة الخصوصية — وسيم",
-    page_title_accessibility: "بيان إمكانية الوصول — وسيم",
+    page_title_home: "vasia — مطور Wix وWordPress وحلول ويب مخصصة",
+    page_title_about: "معلومات وعملية العمل — vasia",
+    page_title_projects: "المشاريع والمهارات — vasia",
+    page_title_contact: "تواصل معي — vasia",
+    page_title_services: "خدمات — vasia",
+    page_title_privacy: "سياسة الخصوصية — vasia",
+    page_title_accessibility: "بيان إمكانية الوصول — vasia",
     footer_accessibility: "إمكانية الوصول",
-    page_title_404: "الصفحة غير موجودة — وسيم",
+    page_title_404: "الصفحة غير موجودة — vasia",
 
     // Share widget toasts
     share_copy_failed: "تعذّر نسخ الرابط. يرجى نسخه من شريط العنوان.",

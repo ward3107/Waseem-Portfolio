@@ -8,13 +8,13 @@ const copy = {
     heading: 'בנו הערכת מחיר לפרויקט', service: 'מה תרצו לבנות?', addOns: 'מה להוסיף?',
     estimate: 'הערכת מחיר ראשונית', note: 'אירוח, רישיונות ושירותי API חיצוניים אינם כלולים. פרויקט מורכב יתומחר בהצעה אישית.',
     action: 'המשיכו לוואטסאפ', handoff: 'הבחירה תפתח הודעה מוכנה בוואטסאפ. אתם מחליטים אם לשלוח אותה.',
-    message: 'שלום ואסים, אשמח להצעת מחיר על', extras: 'תוספות', total: 'הערכה',
+    message: 'שלום ואסיה, אשמח להצעת מחיר על', extras: 'תוספות', total: 'הערכה',
   },
   en: {
     heading: 'Build a project estimate', service: 'What are you building?', addOns: 'Add to the project',
     estimate: 'Initial estimate', note: 'External hosting, licences and API services are separate. Complex projects need a tailored quote.',
     action: 'Continue to WhatsApp', handoff: 'Your choices open a prepared WhatsApp message. You decide whether to send it.',
-    message: 'Hi Waseem, I would like a quote for', extras: 'Add-ons', total: 'Estimate',
+    message: 'Hi vasia, I would like a quote for', extras: 'Add-ons', total: 'Estimate',
   },
   ar: {
     heading: 'احسب تقديراً أولياً لمشروعك', service: 'ماذا تريد أن تبني؟', addOns: 'إضافات المشروع',

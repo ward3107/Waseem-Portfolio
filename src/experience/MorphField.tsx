@@ -50,9 +50,9 @@ function rng(seed: number) {
 }
 
 /** Points sampled evenly over the brand "W" letterform. */
-function buildW(count: number, font: unknown): Float32Array {
+function buildV(count: number, font: unknown): Float32Array {
   const out = new Float32Array(count * 3);
-  const geo = new TextGeometry('W', {
+  const geo = new TextGeometry('V', {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     font: font as any,
     size: 3.2,
@@ -156,7 +156,7 @@ const MorphField: React.FC<{ tier: QualityTier }> = ({ tier }) => {
   const lastMorph = useRef({ geometry: null as BufferGeometry | null, journey: -1 });
 
   const { shapes, geometry, material, swirl } = useMemo(() => {
-    const w = buildW(count, font);
+    const w = buildV(count, font);
     const list = [w, buildRings(count), buildLattice(count), buildPanels(count), buildGlobe(count), w];
 
     const geo = new BufferGeometry();
