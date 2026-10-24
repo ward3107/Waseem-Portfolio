@@ -41,7 +41,7 @@ describe('configurable quote flow', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Websites & landing pages' }));
     fireEvent.click(screen.getByRole('checkbox', { name: 'Landing page' }));
     fireEvent.change(screen.getByLabelText(/Number of pages/), { target: { value: '3' } });
-    expect(screen.getByText(/Estimated total:.*1,180/)).toBeTruthy();
+    expect(screen.getAllByText(/Estimated total:.*1,180/)).toHaveLength(2);
     const href = screen.getByRole('link', { name: 'Open summary in WhatsApp' }).getAttribute('href')!;
     expect(decodeURIComponent(href)).toContain('1,180');
     expect(decodeURIComponent(href)).toContain('Number of pages: 3');
