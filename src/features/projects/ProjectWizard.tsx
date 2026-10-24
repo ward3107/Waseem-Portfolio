@@ -6,9 +6,7 @@ import { trackEvent } from '@/lib/browser';
 import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { getAttribution } from '@/lib/attribution';
 
-interface ProjectWizardProps {}
-
-const ProjectWizard: React.FC<ProjectWizardProps> = () => {
+const ProjectWizard: React.FC = () => {
     const { t, language } = useLanguage();
     const [step, setStep] = useState(0);
     const [selections, setSelections] = useState({
