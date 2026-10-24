@@ -90,18 +90,6 @@ const Footer: React.FC = () => {
                 </li>
               ))}
               <li>
-                <a
-                  href={language === 'he' ? '/blog/' : `/${language}/blog/`}
-                  className="hover:text-brand-purple transition-colors flex items-center gap-2 group py-1.5"
-                >
-                  <ArrowRight
-                    size={14}
-                    className="opacity-0 -ms-4 rtl:rotate-180 group-hover:opacity-100 group-hover:ms-0 transition-all duration-300 text-brand-purple"
-                  />
-                  {{ ar: 'مدونة', en: 'Blog', he: 'בלוג' }[language]}
-                </a>
-              </li>
-              <li>
                 <Link
                   to="/brand"
                   className="hover:text-brand-purple transition-colors flex items-center gap-2 group py-1.5"
