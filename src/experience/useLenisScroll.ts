@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
 import { scrollStore } from './scrollStore';
+import { A11Y_DIALOG_EVENT } from '@/shared/widgets/accessibilitySettings';
 import { CHAPTERS, resolveChapter } from './storyboard';
 
 /**
@@ -29,7 +30,16 @@ export function useLenisScroll(enabled: boolean): void {
       easing: (t: number) => 1 - Math.pow(1 - t, 4),
       smoothWheel: true,
       syncTouch: false,
+      // Dialogs and nested calculator lists keep native wheel/touch scrolling.
+      prevent: (node) => !!node.closest('dialog, [role="dialog"], [data-native-scroll]'),
     });
+
+    const dialogChanged = (event: Event) => {
+      if ((event as CustomEvent<boolean>).detail) lenis.stop();
+      else lenis.start();
+    };
+    window.addEventListener(A11Y_DIALOG_EVENT, dialogChanged);
+    if (document.documentElement.hasAttribute('data-a11y-dialog-open')) lenis.stop();
 
     // Document offsets of the first and last chapter sections. Measured from
     // the DOM rather than assumed, because chapters are not equal heights once
@@ -89,6 +99,7 @@ export function useLenisScroll(enabled: boolean): void {
       quoteResize?.disconnect();
       document.removeEventListener('visibilitychange', visibilityChanged);
       cancelAnimationFrame(frame);
+      window.removeEventListener(A11Y_DIALOG_EVENT, dialogChanged);
       lenis.destroy();
       scrollStore.reset();
     };

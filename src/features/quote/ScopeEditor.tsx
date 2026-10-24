@@ -1,5 +1,7 @@
+import { useId } from 'react';
+import { formatPriceRule } from './catalogue';
 import type { Language } from '@/types';
-import { scopeCopy, type ScopeFeature, type ScopeProfile, type ScopeQuantity, type ScopeValues } from './scope';
+import { scopeCopy, type ScopeFeature, type ScopeProfile, type ScopeQuantity, type ScopeValues, type ScopeConfig } from './scope';
 
 const quantityOrder: ScopeQuantity[] = ['pages', 'languages', 'products', 'reels'];
 const copy = {
@@ -14,10 +16,12 @@ type Props = {
   value: ScopeValues;
   onChange: (value: ScopeValues) => void;
   tone?: 'light' | 'dark';
+  prices?: ScopeConfig['prices'];
 };
 
-export default function ScopeEditor({ language, profile, value, onChange, tone = 'light' }: Props) {
+export default function ScopeEditor({ language, profile, value, onChange, tone = 'light', prices }: Props) {
   const t = copy[language];
+  const groupId = useId();
   const dark = tone === 'dark';
   const changeQuantity = (kind: ScopeQuantity, next: number) => {
     if (!Number.isSafeInteger(next)) return;
@@ -41,7 +45,7 @@ export default function ScopeEditor({ language, profile, value, onChange, tone =
             <input type="number" inputMode="numeric" min={rule.included} max={rule.max} step="1"
               value={chosen} onChange={(event) => changeQuantity(kind, event.currentTarget.valueAsNumber)}
               className={dark ? 'mt-2 min-h-11 w-full rounded-lg border border-slate-600 bg-slate-800 px-3 text-base text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300' : 'mt-2 min-h-12 w-full rounded-xl border border-[#cfd6e5] bg-white px-4 text-base text-[#18203a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#5448a9]'} />
-            <span className={dark ? 'mt-1 block text-xs font-normal text-slate-400' : 'mt-1 block text-xs font-normal text-[#59647c]'}>{t.included}: {rule.included}</span>
+            <span className={dark ? 'mt-1 block text-xs font-normal text-slate-400' : 'mt-1 block text-xs font-normal text-[#59647c]'}>{t.included}: {rule.included}{prices && <> · +<bdi>{formatPriceRule(language, prices[rule.priceKey])}</bdi> / {rule.perCharge}</>}</span>
           </label>;
         })}
       </div>
@@ -49,9 +53,9 @@ export default function ScopeEditor({ language, profile, value, onChange, tone =
         <legend className="text-sm font-semibold">{scopeCopy.design.heading[language]}</legend>
         <div className="mt-2 grid gap-2 sm:grid-cols-3">
           {(['standard', 'enhanced', 'custom'] as const).map((design) => <label key={design} className={dark ? 'flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm' : 'flex min-h-12 cursor-pointer items-center gap-2 rounded-xl border border-[#dfe4ef] bg-white px-3 text-sm'}>
-            <input type="radio" name="design-level" checked={(value.design ?? 'standard') === design}
+            <input type="radio" name={groupId} checked={(value.design ?? 'standard') === design}
               onChange={() => onChange({ ...value, design })} className={dark ? 'h-4 w-4 accent-violet-400' : 'h-4 w-4 accent-[#5448a9]'} />
-            {scopeCopy.design[design][language]}
+            <span>{scopeCopy.design[design][language]}{design !== 'standard' && prices && <bdi className="block text-xs">+{formatPriceRule(language, prices[design === 'enhanced' ? 'enhanced_design' : 'custom_design'])}</bdi>}</span>
           </label>)}
         </div>
       </fieldset>}
@@ -61,7 +65,7 @@ export default function ScopeEditor({ language, profile, value, onChange, tone =
           {profile.features.map((feature) => <label key={feature} className={dark ? 'flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-3 text-sm' : 'flex min-h-12 cursor-pointer items-center gap-2 rounded-xl border border-[#dfe4ef] bg-white px-3 text-sm'}>
             <input type="checkbox" checked={value.features?.includes(feature) ?? false}
               onChange={(event) => changeFeature(feature, event.currentTarget.checked)} className={dark ? 'h-4 w-4 accent-violet-400' : 'h-4 w-4 accent-[#5448a9]'} />
-            {scopeCopy.features[feature][language]}
+            <span>{scopeCopy.features[feature][language]}{prices && <bdi className="block text-xs">+{formatPriceRule(language, prices[feature])}</bdi>}</span>
           </label>)}
         </div>
       </fieldset>}

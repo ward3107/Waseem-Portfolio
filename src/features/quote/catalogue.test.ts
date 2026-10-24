@@ -7,19 +7,21 @@ import { buildRequestMessage } from './request';
 import { scopeRows } from './scope';
 
 describe('service request catalogue', () => {
-  it('publishes only owner-approved website rates across twelve areas', () => {
+  it('publishes prices for all services and correctly totals the raised website rates', () => {
     expect(quoteCatalogue.categories).toHaveLength(12);
     expect(new Set(allOptions(quoteCatalogue).map((item) => item.id)).size).toBe(allOptions(quoteCatalogue).length);
     expect(quoteCatalogue.publishedPrices).toBe(true);
-    expect(quoteEstimate(quoteCatalogue, ['landing'])).toEqual({ mode: 'fixed_package', amountIls: 990 });
-    expect(quoteEstimate(quoteCatalogue, ['business_site'])).toEqual({ mode: 'fixed_package', amountIls: 990 });
-    expect(quoteEstimate(quoteCatalogue, ['starter_store'])).toEqual({ mode: 'manual_quote' });
+    expect(quoteEstimate(quoteCatalogue, ['landing'])).toEqual({ mode: 'fixed_package', amountIls: 1150 });
+    expect(quoteEstimate(quoteCatalogue, ['business_site'])).toEqual({ mode: 'fixed_package', amountIls: 1150 });
+    expect(quoteEstimate(quoteCatalogue, ['starter_store'])).toEqual({ mode: 'fixed_package', amountIls: 4000 });
+    for (const item of allOptions(quoteCatalogue)) expect(['fixed_package', 'estimate_range']).toContain(item.price.mode);
+    for (const price of Object.values(quoteCatalogue.scope!.prices)) expect(['fixed_package', 'estimate_range']).toContain(price.mode);
     expect(quoteBreakdown(quoteCatalogue, ['landing'], { landing: {
       quantities: { pages: 3, languages: 2 }, features: ['motion_hero'],
-    } }).total).toEqual({ mode: 'fixed_package', amountIls: 2010 });
+    } }).total).toEqual({ mode: 'fixed_package', amountIls: 2330 });
     expect(quoteBreakdown(quoteCatalogue, ['business_site'], { business_site: {
       quantities: { pages: 4 }, features: ['blog_cms'],
-    } }).total).toEqual({ mode: 'fixed_package', amountIls: 1950 });
+    } }).total).toEqual({ mode: 'fixed_package', amountIls: 2260 });
   });
 
   it('sends the approved website scope, itemized prices and exclusions to WhatsApp', () => {
@@ -28,10 +30,10 @@ describe('service request catalogue', () => {
       scope: { landing: { quantities: { pages: 3, languages: 2 }, features: ['motion_hero'] } },
       unsureCategoryIds: [], unsureOverall: false, projectStage: 'new', businessName: '', notes: '',
     });
-    expect(message).toContain('Landing page — ₪990');
-    expect(message).toContain('Additional pages ×2 — ₪380');
-    expect(message).toContain('Additional languages — ₪350');
-    expect(message).toContain('Estimated total: ₪2,010');
+    expect(message).toContain('Landing page — ₪1,150');
+    expect(message).toContain('Additional pages ×2 — ₪440');
+    expect(message).toContain('Additional languages — ₪400');
+    expect(message).toContain('Estimated total: ₪2,330');
     expect(message).toContain('two revision rounds');
     expect(message).toContain('Hosting, domain and paid licenses are excluded');
   });
@@ -118,8 +120,8 @@ describe('service request catalogue', () => {
     expect(message).toContain('דוגמה');
     expect(message).toContain('אתר בעברית');
     expect(message).not.toContain('unknown');
-    expect(message).toContain('990');
-    expect(message).toContain('סכום ביניים');
+    expect(message).toContain('1,150');
+    expect(message).toContain('סה״כ משוער');
     expect(message).toContain('שני סבבי תיקונים');
     expect(message).not.toContain('0 ₪');
   });

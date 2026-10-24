@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import {
-  allOptions, canSelectOption, formatQuoteAmount, quoteBreakdown, quoteCatalogue, toggleOption,
+  allOptions, canSelectOption, formatPriceRule, formatQuoteAmount, quoteBreakdown, quoteCatalogue, toggleOption,
   type QuoteCategory, type QuoteCatalogue,
 } from './catalogue';
 import { buildRequestMessage } from './request';
 import ScopeEditor from './ScopeEditor';
+import PriceList from './PriceList';
 import { scopeRows, type QuoteScope, type ScopeValues } from './scope';
 
 const copy = {
@@ -125,8 +126,8 @@ const inlineCopy = {
     intro: 'בחרו תחום, שירות והיקף. הסיכום מתעדכן בכל בחירה.',
     empty: 'בחרו שירות כדי להתחיל להרכיב את הבקשה.',
     category: 'תחום השירות',
-    pending: 'רק רכיבים עם מחיר מאושר נכללים בסכום. יתר הבחירות ייבדקו להצעה אישית.',
-    websiteTerms: 'לאתר: תוכן מהלקוח, שני סבבי תיקונים. אחסון, דומיין ורישיונות בתשלום אינם כלולים.',
+    pending: 'המחירים כוללים את ההיקף שנבחר. היקף חריג נבדק בנפרד.',
+    websiteTerms: 'מחיר הבסיס לאתר כולל עמוד אחד ושפה אחת, תוכן מהלקוח ושני סבבי תיקונים. אחסון, דומיין, רישיונות ומנויים אינם כלולים.',
     starter: 'דוגמה התחלתית: דף נחיתה עם עמוד ושפה אחת. אפשר לשנות או להסיר.',
   },
   en: {
@@ -134,8 +135,8 @@ const inlineCopy = {
     intro: 'Choose an area, service and scope. The summary updates with every selection.',
     empty: 'Choose a service area to start building your request.',
     category: 'Service area',
-    pending: 'Only approved priced items count toward the subtotal. Other selections need a personal quote.',
-    websiteTerms: 'Website: client-supplied content and two revision rounds. Hosting, domain and paid licenses are excluded.',
+    pending: 'Prices reflect the selected scope. Work outside that scope is reviewed separately.',
+    websiteTerms: 'Website base: one page, one language, client-supplied content and two revision rounds. Hosting, domain, licenses and subscriptions are excluded.',
     starter: 'Starting example: a one-page, one-language landing page. Change or remove it anytime.',
   },
   ar: {
@@ -143,8 +144,8 @@ const inlineCopy = {
     intro: 'اختر المجال والخدمة ونطاق العمل. يتحدث الملخص مع كل اختيار.',
     empty: 'اختر مجال خدمة للبدء في إعداد طلبك.',
     category: 'مجال الخدمة',
-    pending: 'يشمل المجموع فقط العناصر ذات الأسعار المعتمدة. تتطلب الاختيارات الأخرى عرضًا شخصيًا.',
-    websiteTerms: 'الموقع: المحتوى من العميل وجولتا تعديل. الاستضافة والنطاق والتراخيص المدفوعة غير مشمولة.',
+    pending: 'تعكس الأسعار النطاق المختار. يُراجع العمل خارج النطاق بشكل منفصل.',
+    websiteTerms: 'أساس الموقع: صفحة ولغة واحدة، المحتوى من العميل وجولتا تعديل. الاستضافة والنطاق والتراخيص والاشتراكات غير مشمولة.',
     starter: 'مثال للبدء: صفحة هبوط بصفحة ولغة واحدة. يمكنك تعديلها أو إزالتها.',
   },
 } as const;
@@ -293,6 +294,7 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
           <p className="mt-2 text-sm leading-6 text-slate-300">{text.intro}</p>
           {starterUntouched.current && starterOption && <p className="mt-2 text-xs text-cyan-200">{text.starter}</p>}
         </header>
+        <PriceList catalogue={catalogue} />
         <div className="sticky top-16 z-20 mt-4 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-violet-400/30 bg-slate-800/95 px-4 py-2 text-sm text-white shadow-lg backdrop-blur lg:hidden" aria-live="polite">
           <span>{t.selected}: {optionIds.length}</span>
           <strong className="text-cyan-300">{breakdown.knownSubtotal ? estimateLabel : '—'}</strong>
@@ -306,18 +308,18 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
             </label>
             {inlineCategory && <fieldset className="mt-4">
               <legend className="text-base font-bold text-white">{inlineCategory.label[language]}</legend>
-              <div className="mt-3 max-h-[55vh] space-y-3 overflow-y-auto pe-1 sm:max-h-[520px]">
+              <div data-native-scroll="" data-lenis-prevent="" className="mt-3 max-h-[55vh] space-y-3 overflow-y-auto pe-1 sm:max-h-[520px]">
                   {inlineCategory.options.map((item) => {
                     const checked = optionIds.includes(item.id);
                     const available = checked || canSelectOption(catalogue, optionIds, item.id);
                     return <div key={item.id}>
                       <label className={'flex min-h-12 items-center gap-3 rounded-xl border px-3 py-2 text-sm ' + (available ? 'cursor-pointer' : 'cursor-not-allowed text-slate-500') + (checked ? ' border-violet-400 bg-violet-500/20' : ' border-slate-700 bg-slate-800/70')}>
                         <input type="checkbox" checked={checked} disabled={!available} onChange={() => chooseOption(item.id, inlineCategory)} className="h-5 w-5 shrink-0 accent-violet-400" />
-                        <span className="font-medium">{item.label[language]}{!available && <span className="mt-1 block text-xs font-normal">{t.prerequisite}</span>}</span>
-                        {approvedOptionAmount(item) && <span className="ms-auto shrink-0 font-bold text-cyan-300">{approvedOptionAmount(item)}</span>}
+                        <span className="min-w-0 flex-1 font-medium">{item.label[language]}{!available && <span className="mt-1 block text-xs font-normal">{t.prerequisite}</span>}</span>
+                        {approvedOptionAmount(item) && <span className="ms-auto max-w-[45%] text-end font-bold text-cyan-300">{approvedOptionAmount(item)}</span>}
                       </label>
                       {checked && catalogue.scope?.profiles[item.id] && <div className="mt-3">
-                        <ScopeEditor language={language} profile={catalogue.scope.profiles[item.id]} value={scope[item.id] ?? {}} onChange={(value) => updateScope(item.id, value)} tone="dark" />
+                        <ScopeEditor language={language} profile={catalogue.scope.profiles[item.id]} value={scope[item.id] ?? {}} onChange={(value) => updateScope(item.id, value)} prices={catalogue.scope.prices} tone="dark" />
                       </div>}
                     </div>;
                   })}
@@ -337,7 +339,7 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
             <p className="mt-3 rounded-xl border border-cyan-300/20 bg-slate-950 px-4 py-3 text-xl font-black text-cyan-300" aria-live="polite">{breakdown.knownSubtotal ? estimateLabel : '—'}</p>
             {!optionIds.length && !unsureOverall && <p className="mt-3 text-sm text-slate-300">{text.empty}</p>}
             {!!breakdown.unpricedIds.length && <p className="mt-3 text-xs leading-5 text-slate-300">{text.pending}</p>}
-            <ul className="mt-4 max-h-48 space-y-3 overflow-y-auto pe-1 text-sm" aria-live="polite">
+            <ul data-native-scroll="" data-lenis-prevent="" className="mt-4 max-h-48 space-y-3 overflow-y-auto pe-1 text-sm" aria-live="polite">
               {selectedCategories.map((category) => (
                 <li key={category.id} className="border-b border-slate-600 pb-3 last:border-0">
                   <strong className="block">{category.label[language]}</strong>
@@ -368,6 +370,7 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
             <label className="mt-4 block text-sm font-semibold">{t.notes}
               <textarea value={notes} maxLength={700} rows={2} onChange={(event) => setNotes(event.target.value)} placeholder={t.notesPlaceholder} className="mt-2 w-full rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-base font-normal text-white placeholder:text-slate-400" />
             </label>
+            <p className="mt-3 text-xs leading-5 text-slate-300">{t.quoteNote}</p>
             {message && <a href={'https://wa.me/' + contact.whatsappNumber + '?text=' + encodeURIComponent(message)} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#20bd75] px-5 text-center font-bold text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">{t.whatsapp}</a>}
             <p className="mt-2 text-xs text-slate-300">{t.handoff}</p>
           </aside>
@@ -390,6 +393,7 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
       </div>
 
       <div className="px-5 py-6 sm:px-9 sm:py-8">
+        <PriceList catalogue={catalogue} />
         {stage === 'categories' && (
           <>
             <h3 ref={stageHeadingRef} tabIndex={-1} className="text-xl font-bold outline-none sm:text-2xl">{t.categoryTitle}</h3>
@@ -428,10 +432,10 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = f
                   <div key={item.id}>
                     <label className={'flex min-h-14 items-center gap-3 rounded-2xl border px-4 py-3 ' + (available ? 'cursor-pointer bg-white' : 'cursor-not-allowed bg-[#f0f2f7] text-[#667088]') + (checked ? ' border-[#675abb] ring-1 ring-[#675abb]' : ' border-[#dfe4ef]')}>
                       <input type="checkbox" checked={checked} disabled={!available} onChange={() => chooseOption(item.id, currentCategory)} className="h-5 w-5 shrink-0 accent-[#5448a9]" />
-                      <span className="flex-1 font-medium">{item.label[language]}{!available && <span className="mt-1 block text-xs font-normal">{t.prerequisite}</span>}</span>
+                      <span className="min-w-0 flex-1 font-medium">{item.label[language]}{!available && <span className="mt-1 block text-xs font-normal">{t.prerequisite}</span>}</span><bdi className="max-w-[45%] text-end text-sm font-bold">{formatPriceRule(language, item.price)}</bdi>
                     </label>
                     {checked && catalogue.scope?.profiles[item.id] && <div className="mt-3 px-1">
-                      <ScopeEditor language={language} profile={catalogue.scope.profiles[item.id]} value={scope[item.id] ?? {}} onChange={(value) => updateScope(item.id, value)} />
+                      <ScopeEditor language={language} profile={catalogue.scope.profiles[item.id]} value={scope[item.id] ?? {}} onChange={(value) => updateScope(item.id, value)} prices={catalogue.scope.prices} />
                       <ul className="space-y-1 px-2 text-sm text-[#526078]" aria-live="polite">
                         {detailRows.filter((row) => row.optionId === item.id).map((row) => <li key={row.id} className="flex flex-wrap justify-between gap-2">
                           <span>{row.label[language]}{row.quantity > 1 ? ` ×${row.quantity}` : ''}</span>

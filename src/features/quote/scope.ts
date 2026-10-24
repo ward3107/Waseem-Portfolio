@@ -36,7 +36,6 @@ export type ScopeRow = {
 };
 
 const text = (he: string, en: string, ar: string): LocalizedScopeText => ({ he, en, ar });
-const pending = (): PriceRule => ({ mode: 'pending' });
 const manual = (): PriceRule => ({ mode: 'manual_quote' });
 
 export const scopeCopy = {
@@ -57,7 +56,7 @@ export const scopeCopy = {
     heading: text('רמת עיצוב', 'Design level', 'مستوى التصميم'),
     standard: text('עיצוב רגיל', 'Standard design', 'تصميم أساسي'),
     enhanced: text('עיצוב מורחב', 'Enhanced design', 'تصميم موسّع'),
-    custom: text('עיצוב מותאם אישית – הצעת מחיר', 'Custom design – quote required', 'تصميم مخصص – يتطلب عرض سعر'),
+    custom: text('עיצוב מותאם אישית', 'Custom design', 'تصميم مخصص'),
   },
   features: {
     blog_cms: text('בלוג ומערכת תוכן', 'Blog and content management', 'مدونة وإدارة محتوى'),
@@ -73,8 +72,7 @@ export const scopeCopy = {
   included: text('כלול בבחירה', 'Included in selection', 'مشمول في الاختيار'),
 } as const;
 
-// Website scope and the five fixed website rates below are owner-approved.
-// All other components retain pending or manual rules until scoped and approved.
+// Public scope rates, updated with the service catalogue on 2026-10-24.
 export const draftScopeConfig: ScopeConfig = {
   profiles: {
     landing: { quantities: { pages: { included: 1, max: 12, perCharge: 1, priceKey: 'extra_page' }, languages: { included: 1, max: 3, perCharge: 1, priceKey: 'website_extra_language' } }, design: true, features: ['booking', 'custom_form', 'motion_hero'] },
@@ -86,18 +84,87 @@ export const draftScopeConfig: ScopeConfig = {
     reel_edit: { quantities: { reels: { included: 1, max: 10, perCharge: 1, priceKey: 'extra_reel' } }, features: ['captions', 'motion_titles'] },
   },
   prices: {
-    extra_page: { mode: 'fixed_package', amountIls: 190, approved: true },
-    website_extra_language: { mode: 'fixed_package', amountIls: 350, approved: true },
-    extra_language: pending(),
-    product_batch: pending(), extra_reel: pending(),
-    enhanced_design: pending(), custom_design: manual(),
-    blog_cms: { mode: 'fixed_package', amountIls: 390, approved: true },
-    booking: manual(), custom_form: manual(),
-    motion_hero: { mode: 'fixed_package', amountIls: 290, approved: true },
-    member_login: manual(), custom_payment: manual(),
-    captions: pending(), motion_titles: pending(),
-  },
-};
+    "extra_page": {
+        "mode": "fixed_package",
+        "amountIls": 220,
+        "approved": true
+    },
+    "website_extra_language": {
+        "mode": "fixed_package",
+        "amountIls": 400,
+        "approved": true
+    },
+    "extra_language": {
+        "mode": "fixed_package",
+        "amountIls": 200,
+        "approved": true
+    },
+    "product_batch": {
+        "mode": "fixed_package",
+        "amountIls": 220,
+        "approved": true
+    },
+    "extra_reel": {
+        "mode": "fixed_package",
+        "amountIls": 300,
+        "approved": true
+    },
+    "enhanced_design": {
+        "mode": "fixed_package",
+        "amountIls": 650,
+        "approved": true
+    },
+    "custom_design": {
+        "mode": "estimate_range",
+        "minIls": 1150,
+        "maxIls": 2300,
+        "approved": true
+    },
+    "blog_cms": {
+        "mode": "fixed_package",
+        "amountIls": 450,
+        "approved": true
+    },
+    "booking": {
+        "mode": "estimate_range",
+        "minIls": 450,
+        "maxIls": 900,
+        "approved": true
+    },
+    "custom_form": {
+        "mode": "estimate_range",
+        "minIls": 350,
+        "maxIls": 800,
+        "approved": true
+    },
+    "motion_hero": {
+        "mode": "fixed_package",
+        "amountIls": 340,
+        "approved": true
+    },
+    "member_login": {
+        "mode": "estimate_range",
+        "minIls": 900,
+        "maxIls": 1750,
+        "approved": true
+    },
+    "custom_payment": {
+        "mode": "estimate_range",
+        "minIls": 650,
+        "maxIls": 1500,
+        "approved": true
+    },
+    "captions": {
+        "mode": "fixed_package",
+        "amountIls": 90,
+        "approved": true
+    },
+    "motion_titles": {
+        "mode": "fixed_package",
+        "amountIls": 150,
+        "approved": true
+    }
+},};
 
 const quantityOrder: ScopeQuantity[] = ['pages', 'languages', 'products', 'reels'];
 

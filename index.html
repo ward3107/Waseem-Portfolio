@@ -6,13 +6,17 @@
     <script>
       (function () {
         try {
-          var urlLang = new URLSearchParams(window.location.search).get('lang');
-          if (urlLang === 'he' || urlLang === 'ar' || urlLang === 'en') {
+          var localeParams = new URLSearchParams(window.location.search);
+          var urlLang = localeParams.get('lang');
+          var validUrlLang = urlLang === 'he' || urlLang === 'ar' || urlLang === 'en';
+          if (validUrlLang && /^\/(?:en\/|ar\/)?$/.test(window.location.pathname)) {
             var destination = urlLang === 'he' ? '/' : '/' + urlLang + '/';
-            window.location.replace(destination + window.location.hash);
+            localeParams.delete('lang');
+            var remainingQuery = localeParams.toString();
+            window.location.replace(destination + (remainingQuery ? '?' + remainingQuery : '') + window.location.hash);
             return;
           }
-          var lang = window.location.pathname.startsWith('/en/') ? 'en'
+          var lang = validUrlLang ? urlLang : window.location.pathname.startsWith('/en/') ? 'en'
             : window.location.pathname.startsWith('/ar/') ? 'ar' : 'he';
           document.documentElement.lang = lang;
           document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
@@ -270,7 +274,7 @@
     }
     </script>
 
-    <!-- Service #1 — Small-business website launch (the 1,000 ₪ tier). Standalone
+    <!-- Service #1 — Small-business website launch (the 1,150 ₪ base scope). Standalone
          so Google can surface this as its own answer for "בניית אתר לעסק קטן"
          and "بناء موقع لنشاط تجاري صغير". Priced offer gives price rich results. -->
     <script type="application/ld+json">
@@ -280,7 +284,7 @@
       "@id": "https://www.vasia.dev/#service-small-business",
       "serviceType": "Small Business Website Design",
       "name": "Small-Business Website Launch",
-      "description": "Complete small-business website — modern, fast, mobile-first, launched in 1–2 weeks. Includes on-page SEO, LocalBusiness schema, WhatsApp CTA, and Hebrew/Arabic/English support. Ideal for restaurants, salons, clinics, event halls, and family businesses in northern Israel.",
+      "description": "Small-business website base package: one page and one language, client-supplied content and two revision rounds. Includes mobile adaptation, basic on-page SEO and WhatsApp contact. Additional pages and languages are priced in the project calculator. Hosting, domain and paid licenses are excluded.",
       "provider": { "@id": "https://www.vasia.dev/#localbusiness" },
       "areaServed": [
         { "@type": "Country", "name": "Israel" },
@@ -299,11 +303,11 @@
       },
       "offers": {
         "@type": "Offer",
-        "price": "1000",
+        "price": "1150",
         "priceCurrency": "ILS",
         "availability": "https://schema.org/InStock",
         "priceValidUntil": "2026-12-31",
-        "url": "https://www.vasia.dev/#what-i-do"
+        "url": "https://www.vasia.dev/#quote-builder"
       }
     }
     </script>

@@ -21,6 +21,7 @@ function fixture(): QuoteCatalogue {
       ...draftScopeConfig,
       prices: {
         ...draftScopeConfig.prices,
+        booking: { mode: 'manual_quote' },
         extra_page: rate(90), website_extra_language: rate(200), product_batch: rate(190), extra_reel: rate(250),
         enhanced_design: rate(300), blog_cms: rate(400), captions: rate(50),
       },

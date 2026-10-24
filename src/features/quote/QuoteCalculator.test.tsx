@@ -56,7 +56,7 @@ describe('configurable quote flow', () => {
     fireEvent.change(screen.getByRole('combobox', { name: 'Service area' }), { target: { value: 'cards' } });
     expect(screen.queryByText(/Estimated total:.*1,000/)).toBeNull();
     fireEvent.click(screen.getByRole('checkbox', { name: 'Classic card' }));
-    expect(screen.getByText(/Only approved priced items/)).toBeTruthy();
+    expect(screen.getByText(/Work outside that scope/)).toBeTruthy();
     expect(screen.queryByRole('link', { name: 'Open summary in WhatsApp' })?.getAttribute('href')).not.toContain('Landing page');
   });
 
@@ -65,11 +65,11 @@ describe('configurable quote flow', () => {
     render(<LanguageProvider><QuoteCalculator catalogue={fixture} /></LanguageProvider>);
     fireEvent.click(screen.getByRole('button', { name: 'Websites & landing pages' }));
     fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
-    fireEvent.click(screen.getByRole('checkbox', { name: 'Landing page' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: /Landing page/ }));
 
     fireEvent.change(screen.getByLabelText(/Number of pages/), { target: { value: '3' } });
     fireEvent.change(screen.getByLabelText(/Number of languages/), { target: { value: '2' } });
-    fireEvent.click(screen.getByRole('radio', { name: 'Enhanced design' }));
+    fireEvent.click(screen.getByRole('radio', { name: /Enhanced design/ }));
     expect(screen.getByText(/Estimated total:.*1,680/)).toBeTruthy();
 
     fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
