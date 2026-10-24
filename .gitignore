@@ -16,10 +16,16 @@ dist-ssr
 # version control so the templated pages aren't flagged as duplicate source;
 # regenerated into public/ during `npm run build`).
 /public/web-design-*/
+/public/service-areas/
 /public/ar/
 /public/en/
 /public/blog/
 /public/review/
+/public/assets/video-ads/**/*-thumb.webp
+/public/assets/video-ads/*-thumb.webp
+/public/certifications/*-thumb.webp
+/public/onetap/icon-192.png
+/public/onetap/icon-512.png
 
 # Environment variables
 .env
@@ -48,3 +54,4 @@ public/en/gallery/
 public/en/stories/
 public/ar/gallery/
 public/ar/stories/
+.vercel

@@ -107,10 +107,10 @@ const Hero: React.FC = () => {
         <div className="relative z-20">
           <div className="mb-4 flex justify-end sm:hidden">
             <img
-              src="/assets/waseem-mobile-avatar.webp"
+              src="/assets/waseem-mobile-avatar-256.webp"
               alt={t('hero_profile_alt')}
-              width="512"
-              height="512"
+              width="256"
+              height="256"
               loading="eager"
               decoding="async"
               className="h-20 w-20 rounded-full border-2 border-white/80 object-cover shadow-lg ring-1 ring-cyan-300/40"

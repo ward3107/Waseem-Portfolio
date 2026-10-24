@@ -93,7 +93,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
                     <MousePointer2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   </motion.div>
                 </div>
-                <h3 className="text-white text-2xl sm:text-3xl font-heading font-bold">Waseem</h3>
+                <h3 className="text-white text-2xl sm:text-3xl font-heading font-bold">vasia</h3>
                 <p className="text-slate-300 text-xs sm:text-sm">{t('hero_card_desc')}</p>
               </div>
             </div>

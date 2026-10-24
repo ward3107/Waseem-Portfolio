@@ -5,6 +5,7 @@ import { isSupabaseConfigured } from '@/lib/supabaseConfig';
 import { listCertRows } from '@/lib/content/certifications';
 import { certRowToModel } from '@/lib/content/mappers';
 import { CERTIFICATIONS } from '@/features/certifications/data';
+import { useSectionNearViewport } from '@/shared/hooks/useSectionNearViewport';
 
 /**
  * Drop cards that are identical in what a visitor actually sees — same title,
@@ -24,13 +25,14 @@ function dedupeCertifications(list: Certification[]): Certification[] {
   });
 }
 
-export function useCertifications(): { certifications: Certification[]; loading: boolean } {
+export function useCertifications(deferUntilVisible?: string): { certifications: Certification[]; loading: boolean } {
   const { language } = useLanguage();
+  const ready = useSectionNearViewport(deferUntilVisible);
   const [certifications, setCertifications] = useState<Certification[]>(CERTIFICATIONS);
   const [loading, setLoading] = useState<boolean>(isSupabaseConfigured);
 
   useEffect(() => {
-    if (!isSupabaseConfigured) return;
+    if (!isSupabaseConfigured || !ready) return;
     let active = true;
     listCertRows()
       .then((rows) => {
@@ -39,7 +41,7 @@ export function useCertifications(): { certifications: Certification[]; loading:
       .catch(() => {/* keep fallback */})
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [language]);
+  }, [language, ready]);
 
   return { certifications: dedupeCertifications(certifications), loading };
 }

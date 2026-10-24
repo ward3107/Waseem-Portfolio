@@ -96,7 +96,7 @@ const CITIES: readonly City[] = [
 
 // Eight full example testimonials that visitors can tap to insert into
 // the quote textarea. Earlier versions used three sentence-starters
-// ("I worked with Waseem on…") — visitors clicked and submitted them
+// ("I worked with vasia on…") — visitors clicked and submitted them
 // verbatim without finishing the sentence, so the pool of reviews filled
 // with fragments. Full examples give the same "help me start" boost,
 // look natural on the site if sent as-is, and each hits a different
@@ -367,9 +367,9 @@ const ShareTestimonialPage: React.FC = () => {
             href="/"
             className="font-heading font-black text-2xl tracking-tight"
             style={{ color: PAL.accent }}
-            aria-label="Waseem"
+            aria-label="vasia"
           >
-            Waseem
+            vasia
           </a>
         </div>
 
@@ -479,7 +479,7 @@ const ShareTestimonialPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* "Waseem is asking" — small personal attribution card */}
+              {/* "vasia is asking" — small personal attribution card */}
               <div
                 className="rounded-2xl p-4 mb-5 flex items-start gap-3"
                 style={{
@@ -851,7 +851,7 @@ const ShareTestimonialPage: React.FC = () => {
 
                 {/* Reminder escape hatch — for visitors who want to come
                     back later. One tap opens WhatsApp with a pre-filled
-                    "please remind me" message to Waseem. Zero backend. */}
+                    "please remind me" message to vasia. Zero backend. */}
                 <p className="text-center text-[12.5px]" style={{ color: PAL.soft }}>
                   {t('share_reminder_hint')}{' '}
                   <a

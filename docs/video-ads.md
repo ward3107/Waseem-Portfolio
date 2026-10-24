@@ -27,3 +27,30 @@ Update future projects through `src/features/video-ads/content.ts`. Keep publish
 `npm run build` includes a postbuild script that creates `dist/video-ads/index.html` with route-specific sharing metadata. Vercel rewrites the clean route to that HTML; client navigation still uses React Router. The sitemap generator includes the new page.
 
 Validation: typecheck, focused ESLint, production build, automated tests, browser playback and responsive checks. Production publishing is a separate step; local implementation does not change the live website.
+
+## Complete collection · 19 October 2026
+
+The showcase now contains 35 films: the nine existing GreenTouch, NINNYO and
+Souvlaki works plus 26 additions. The new files cover English 4 All, food,
+fashion, automotive edits, VASIA motion, AI presenters, OneTap in Hebrew,
+Arabic and English, website reels and the countdown-app reel.
+
+`portfolio.json` records the additions; `portfolio.ts` combines them with the
+existing case studies. The homepage features four recent works. The full
+collection has category/language filters, native fullscreen and sound controls,
+and share links such as `/video-ads?lang=he&video=english-4-all`. A player only
+mounts after a selection (or a deliberate shared-film link); the page and home
+cards initially load WebP posters, rather than downloading the full collection.
+
+Exports live under the versioned `assets/video-ads/portfolio-20261019/` prefix.
+The publication manifest records source hashes, export hashes, dimensions,
+durations and processing. Five larger files have high-quality H.264 web copies
+with their original resolution, frame rate and audio; other additions are
+stream-copy remuxes. Every export uses a fast-start MP4 layout. Source files
+remain separate. Earlier drafts, lower-resolution duplicates, source-only shots
+and the retired-phone-number version are superseded by the published editions.
+
+The modal uses native `dialog` focus containment and Escape dismissal, restores
+page scrolling on close, and preserves each film's aspect ratio, including the
+wide OneTap three-styles film. All page and collection controls have Hebrew,
+Arabic and English copy. Legacy case-study links and subtitle tracks remain.

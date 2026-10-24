@@ -14,7 +14,7 @@ export const getLocalizedProjects = (
     description: t('project_1_desc'),
     image: '/assets/souvlaki.webp',
     tech: ['Next.js', 'Tailwind CSS', 'Vercel'],
-    link: 'https://souvlaki-kfaryasif.vercel.app/',
+    link: 'https://www.greeksouflaki.com/',
     github: 'https://github.com/ward3107/Souvlaki',
   },
   {
@@ -29,21 +29,22 @@ export const getLocalizedProjects = (
   },
   {
     id: 'law-office',
-    title: 'Law Office Template',
+    title: 'Cohen & Co. — Law Office Demo',
     category: 'Web',
     description: t('project_3_desc'),
     image: '/assets/law-office.webp',
-    tech: ['React', 'Vite', 'Tailwind CSS'],
-    link: 'https://lawofice.netlify.app/',
+    tech: ['Next.js', 'Tailwind CSS', 'Firebase'],
+    link: 'https://officelaw.vercel.app/',
+    github: 'https://github.com/ward3107/officelaw',
   },
   {
     id: 'shokha',
-    title: 'Shokha Barbershop',
+    title: 'Fade & Co. — Barbershop Demo',
     category: 'Web',
     description: t('project_4_desc'),
     image: '/assets/barbershop.webp',
-    tech: ['React', 'Node.js', 'MongoDB'],
-    link: 'https://shokha1.netlify.app/',
+    tech: ['React', 'Vite', 'Supabase'],
+    link: 'https://barbershop-website-indol.vercel.app/',
   },
   {
     id: 'vocaband',
@@ -73,6 +74,142 @@ export const getRequiredPortfolioProjects = (
     tech: ['WordPress', 'WooCommerce', 'JavaScript', 'Three.js'],
     link: 'https://wordpress-woocommerce-mova.vercel.app/',
     github: 'https://github.com/ward3107/WordPress-WooCommerce-MOVA',
+  },
+  {
+    id: 'nacre-ocean-atelier',
+    title: 'NACRE - Ocean Atelier Demo',
+    category: 'Web',
+    description: t('project_nacre_desc'),
+    image: '/assets/projects/nacre/cover.webp',
+    screenshots: ['/assets/projects/nacre/cover.webp', '/assets/projects/nacre/product.svg'],
+    tech: ['Three.js', 'WebGL', 'JavaScript'],
+    link: 'https://nacre-ocean-atelier.netlify.app/',
+  },
+  {
+    id: 'frame-video-learning',
+    title: 'FRAME - Video Learning Demo',
+    category: 'Web',
+    description: t('project_frame_desc'),
+    image: '/assets/projects/netlify/frame.webp',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    link: 'https://lucky-licorice-86816e.netlify.app/',
+  },
+  {
+    id: 'luma-video-library',
+    title: 'LUMA - Video Library Demo',
+    category: 'Web',
+    description: t('project_luma_desc'),
+    image: '/assets/projects/netlify/luma.webp',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    link: 'https://velvety-dango-eacc11.netlify.app/',
+  },
+  {
+    id: 'mova-storefront-concept',
+    title: 'MOVA - Storefront Demo',
+    category: 'Web',
+    description: t('project_mova_storefront_desc'),
+    image: '/assets/projects/netlify/mova.webp',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    link: 'https://mova-motion-store.netlify.app/',
+  },
+  {
+    id: 'flora-botanical-journey',
+    title: 'FLŌRA - Botanical Journey Demo',
+    category: 'Web',
+    description: t('project_flora_desc'),
+    image: '/assets/projects/netlify/flora.webp',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    link: 'https://flora-botanical-journey.netlify.app/',
+  },
+  {
+    id: 'liman-hadha',
+    title: 'Liman Hadha — Arabic Learning',
+    category: 'Web',
+    description: t('project_liman_desc'),
+    image: '/assets/projects/vercel/liman.webp',
+    tech: ['Web', 'Arabic', 'Education'],
+    link: 'https://liman-hadha.vercel.app/',
+  },
+  {
+    id: 'land-of-jesus',
+    title: 'Land of Jesus',
+    category: 'Web',
+    description: t('project_land_of_jesus_desc'),
+    image: '/assets/projects/vercel/land-of-jesus.webp',
+    tech: ['Web', 'Multilingual', 'Interactive'],
+    link: 'https://land-of-jesus.vercel.app/',
+  },
+  {
+    id: 'classflow-studio',
+    title: 'ClassFlow Studio',
+    category: 'Web',
+    description: t('project_classflow_desc'),
+    image: '/assets/projects/vercel/classflow.webp',
+    tech: ['Next.js', 'Multilingual', 'Education'],
+    link: 'https://classflow-studio.vercel.app/',
+  },
+  {
+    id: 'jalal-opticare',
+    title: 'Jalal OptiCare',
+    category: 'Web',
+    description: t('project_opti_desc'),
+    image: '/assets/projects/vercel/opti-jalal.webp',
+    tech: ['Next.js', 'Multilingual', 'Web'],
+    link: 'https://opti-jalal.vercel.app/',
+  },
+  {
+    id: 'bathline',
+    title: 'BATHLINE',
+    category: 'Web',
+    description: t('project_bathline_desc'),
+    image: '/assets/projects/vercel/bathline.webp',
+    tech: ['Web', 'Multilingual', 'Calculator'],
+    link: 'https://bathline.vercel.app/',
+  },
+  {
+    id: 'ragad-kindergarten',
+    title: 'Ragad Kindergarten',
+    category: 'Web',
+    description: t('project_ragad_desc'),
+    image: '/assets/projects/vercel/ragad.webp',
+    tech: ['Web', 'Multilingual'],
+    link: 'https://ragadkindergarten.vercel.app/',
+  },
+  {
+    id: 'cybersecurity-course',
+    title: 'Cybersecurity Course — Work in Progress',
+    category: 'Web',
+    description: t('project_cyber_course_desc'),
+    image: '/assets/projects/vercel/cyber-course.webp',
+    tech: ['Web', 'Arabic', 'Education'],
+    link: 'https://sybersecurity-course.vercel.app/',
+  },
+  {
+    id: 'careerconnect',
+    title: 'CareerConnect by Habeeb',
+    category: 'Web',
+    description: t('project_careerconnect_desc'),
+    image: '/assets/projects/vercel/careerconnect.webp',
+    tech: ['Next.js', 'Multilingual', 'Education'],
+    link: 'https://habeeb1.vercel.app/',
+  },
+  {
+    id: 'habeeb-farah',
+    title: 'Habeeb Farah',
+    category: 'Web',
+    description: t('project_habeeb_farah_desc'),
+    image: '/assets/projects/vercel/habeeb-farah.webp',
+    tech: ['Next.js', 'Multilingual', 'Web'],
+    link: 'https://habeebfarah.vercel.app/',
+  },
+  {
+    id: 'adan-center',
+    title: 'Aden Center',
+    category: 'Web',
+    description: t('project_adan_desc'),
+    image: '/assets/projects/vercel/adan.webp',
+    tech: ['Web', 'Multilingual'],
+    link: 'https://adan-eight.vercel.app/',
   },
   {
     id: 'softec-vision',
@@ -171,7 +308,33 @@ export const mergeRequiredPortfolioProjects = (
   const seen = new Set(requiredProjects.flatMap(projectIdentityKeys));
   return [
     ...requiredProjects,
-    ...remoteProjects.filter((project) => {
+    ...remoteProjects.map((project) => {
+      if (project.id === 'souvlaki') return { ...project, link: 'https://www.greeksouflaki.com/' };
+      // Both old Netlify hosts are gone. The already-published CMS uses these
+      // verified Vercel demos; keep those links available to every visitor.
+      if (project.id === 'law-office' ||
+          project.link?.includes('lawofice.netlify.app') ||
+          project.link?.includes('officelaw.vercel.app')) {
+        return {
+          ...project,
+          title: 'Cohen & Co. — Law Office Demo',
+          link: 'https://officelaw.vercel.app/',
+          github: 'https://github.com/ward3107/officelaw',
+          tech: ['Next.js', 'Tailwind CSS', 'Firebase'],
+        };
+      }
+      if (project.id === 'shokha' ||
+          project.link?.includes('shokha1.netlify.app') ||
+          project.link?.includes('barbershop-website-indol.vercel.app')) {
+        return {
+          ...project,
+          title: 'Fade & Co. — Barbershop Demo',
+          link: 'https://barbershop-website-indol.vercel.app/',
+          tech: ['React', 'Vite', 'Supabase'],
+        };
+      }
+      return project;
+    }).filter((project) => {
       const keys = projectIdentityKeys(project);
       if (isRetiredProject(project) || keys.some((key) => seen.has(key))) return false;
       keys.forEach((key) => seen.add(key));

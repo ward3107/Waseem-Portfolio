@@ -16,7 +16,7 @@ describe('BrandPlatforms', () => {
 
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(1);
-    expect(links[0]).toHaveAccessibleName('Vasia Facebook page');
+    expect(links[0]).toHaveAccessibleName('vasia Facebook page');
     expect(links[0]).toHaveAttribute('href', CONTACT.facebook);
     expect(links[0]).toHaveAttribute('target', '_blank');
     expect(links[0]).toHaveAttribute('rel', 'noopener noreferrer');
@@ -30,7 +30,7 @@ describe('BrandPlatforms', () => {
 
     // Instagram already has a CONTACT URL, but that must not activate its card.
     expect(CONTACT.instagram).toBeTruthy();
-    expect(screen.queryByRole('link', { name: 'Vasia Instagram page' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'vasia Instagram page' })).toBeNull();
   });
 
   it('uses configuration for future connections and ignores enabled cards without a URL', async () => {
@@ -50,11 +50,11 @@ describe('BrandPlatforms', () => {
     render(<ConfiguredPlatforms embedded={false} />);
 
     expect(screen.getAllByRole('link')).toHaveLength(1);
-    expect(screen.getByRole('link', { name: 'Vasia Instagram page' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'vasia Instagram page' })).toHaveAttribute(
       'href',
       CONTACT.instagram
     );
-    expect(screen.queryByRole('link', { name: 'Vasia Facebook page' })).toBeNull();
-    expect(screen.queryByRole('link', { name: 'Vasia TikTok page' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'vasia Facebook page' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'vasia TikTok page' })).toBeNull();
   });
 });

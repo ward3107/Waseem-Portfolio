@@ -6,9 +6,11 @@ import { listReviewRows } from '@/lib/content/reviews';
 import { reviewRowToModel } from '@/lib/content/mappers';
 import { REVIEWS } from '@/features/reviews/data';
 import { GENERATED_REVIEW_ROWS } from '@/features/reviews/generated';
+import { useSectionNearViewport } from '@/shared/hooks/useSectionNearViewport';
 
-export function useReviews(): { reviews: Review[]; loading: boolean } {
+export function useReviews(deferUntilVisible?: string): { reviews: Review[]; loading: boolean } {
   const { language } = useLanguage();
+  const ready = useSectionNearViewport(deferUntilVisible);
 
   // Seeded from the build-time snapshot so the testimonials section renders at
   // its real height in the first paint instead of appearing ~700ms later and
@@ -19,7 +21,7 @@ export function useReviews(): { reviews: Review[]; loading: boolean } {
   const [loading, setLoading] = useState<boolean>(isSupabaseConfigured);
 
   useEffect(() => {
-    if (!isSupabaseConfigured) return;
+    if (!isSupabaseConfigured || !ready) return;
     let active = true;
     listReviewRows()
       .then((live) => {
@@ -37,7 +39,7 @@ export function useReviews(): { reviews: Review[]; loading: boolean } {
     // Deliberately not keyed on `language`: the rows carry all three
     // translations, so switching language re-maps them below rather than
     // re-querying Supabase for identical data.
-  }, []);
+  }, [ready]);
 
   const reviews = useMemo(
     () => (rows ? rows.map((r) => reviewRowToModel(r, language)) : REVIEWS),

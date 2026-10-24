@@ -149,7 +149,7 @@ const HeroChapter: React.FC<{ tier: QualityTier }> = ({ tier }) => {
             onPointerOver={onOver}
             onPointerOut={onOut}
           >
-            W
+            V
             {high ? (
               // Full glass: transmission re-renders the scene each frame — the
               // premium look, but the heaviest material, so desktop only.

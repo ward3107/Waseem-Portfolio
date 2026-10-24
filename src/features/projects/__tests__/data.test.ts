@@ -9,7 +9,12 @@ import type { Project } from '@/types';
 
 const t = (key: string) => key;
 const curatedIds = [
-  'mova-motion-store', 'softec-vision', 'biznix', 'kiwi',
+  'mova-motion-store', 'nacre-ocean-atelier', 'frame-video-learning',
+  'luma-video-library', 'mova-storefront-concept', 'flora-botanical-journey',
+  'liman-hadha', 'land-of-jesus', 'classflow-studio', 'jalal-opticare',
+  'bathline', 'ragad-kindergarten', 'cybersecurity-course', 'careerconnect',
+  'habeeb-farah', 'adan-center',
+  'softec-vision', 'biznix', 'kiwi',
   'shayish-kfar-yassif', 'ninnyo-flowers', 'vocabagrut',
 ];
 const remoteProject: Project = {
@@ -18,7 +23,7 @@ const remoteProject: Project = {
 };
 
 describe('curated portfolio projects', () => {
-  it('includes MOVA and the six approved projects while preserving the original portfolio', () => {
+  it('includes the approved projects while preserving the original portfolio', () => {
     const projects = getRequiredPortfolioProjects(t);
     expect(projects.map((project) => project.id)).toEqual(curatedIds);
     expect(projects[0].link).toBe('https://wordpress-woocommerce-mova.vercel.app/');
@@ -39,6 +44,25 @@ describe('curated portfolio projects', () => {
     expect(merged[0].title).toBe('MOVA — Motion Store');
   });
 
+  it('lists verified public Netlify demos without replacing the separate WordPress project', () => {
+    const projects = getRequiredPortfolioProjects(t);
+    expect(projects[0].link).toBe('https://wordpress-woocommerce-mova.vercel.app/');
+    for (const [id, host] of [
+      ['nacre-ocean-atelier', 'nacre-ocean-atelier'],
+      ['frame-video-learning', 'lucky-licorice-86816e'],
+      ['luma-video-library', 'velvety-dango-eacc11'],
+      ['mova-storefront-concept', 'mova-motion-store'],
+      ['flora-botanical-journey', 'flora-botanical-journey'],
+    ]) {
+      const project = projects.find((entry) => entry.id === id);
+      expect(project?.link).toBe(`https://${host}.netlify.app/`);
+      expect(project?.title).toContain('Demo');
+    }
+    expect(projects.some((project) => project.link?.includes('drwebsit.netlify.app'))).toBe(false);
+    expect(projects.some((project) => project.link?.includes('nothing22.netlify.app'))).toBe(false);
+    expect(projects.some((project) => project.link?.includes('dancer-motion-preview-waseem.netlify.app'))).toBe(false);
+  });
+
   it('merges existing CMS entries by live URL or repository even if the slug differs', () => {
     const required = getRequiredPortfolioProjects(t);
     const merged = mergeRequiredPortfolioProjects([
@@ -48,6 +72,43 @@ describe('curated portfolio projects', () => {
       remoteProject,
     ], required);
     expect(merged.map((project) => project.id)).toEqual([...curatedIds, 'remote-project']);
+  });
+
+  it('uses the verified live Greek Souvlaki site for an older CMS row', () => {
+    const merged = mergeRequiredPortfolioProjects([
+      { ...remoteProject, id: 'souvlaki', link: 'https://souvlaki-kfaryasif.vercel.app/' },
+    ], getRequiredPortfolioProjects(t));
+    expect(merged.find((project) => project.id === 'souvlaki')?.link)
+      .toBe('https://www.greeksouflaki.com/');
+  });
+
+  it('keeps former Netlify projects visible through verified live demos', () => {
+    const fallback = getLocalizedProjects(t);
+    expect(fallback.find((project) => project.id === 'law-office')?.link)
+      .toBe('https://officelaw.vercel.app/');
+    expect(fallback.find((project) => project.id === 'shokha')?.link)
+      .toBe('https://barbershop-website-indol.vercel.app/');
+
+    const merged = mergeRequiredPortfolioProjects([
+      { ...remoteProject, id: 'law-office', link: 'https://lawofice.netlify.app/' },
+      { ...remoteProject, id: 'shokha', link: 'https://shokha1.netlify.app/' },
+    ], getRequiredPortfolioProjects(t));
+    expect(merged.find((project) => project.id === 'law-office')?.link)
+      .toBe('https://officelaw.vercel.app/');
+    expect(merged.find((project) => project.id === 'law-office')?.github)
+      .toBe('https://github.com/ward3107/officelaw');
+    expect(merged.find((project) => project.id === 'shokha')?.link)
+      .toBe('https://barbershop-website-indol.vercel.app/');
+    expect(merged.find((project) => project.id === 'shokha')?.title).toContain('Demo');
+
+    const currentRows = mergeRequiredPortfolioProjects([
+      { ...remoteProject, id: 'law-office', link: 'https://officelaw.vercel.app/' },
+      { ...remoteProject, id: 'shokha', link: 'https://barbershop-website-indol.vercel.app/' },
+    ], getRequiredPortfolioProjects(t));
+    expect(currentRows.find((project) => project.id === 'law-office')?.link)
+      .toBe('https://officelaw.vercel.app/');
+    expect(currentRows.find((project) => project.id === 'shokha')?.link)
+      .toBe('https://barbershop-website-indol.vercel.app/');
   });
 
   it('keeps retired demos hidden without hiding unrelated WordPress work or drafts', () => {
