@@ -50,8 +50,8 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     if (/^\/(?:en\/|ar\/)?$/.test(window.location.pathname)) {
       const url = `https://www.vasia.dev${language === 'he' ? '/' : `/${language}/`}`;
       const description = {
-        he: 'ואסים בונה אתרי Wix ו-WordPress, חנויות ואפליקציות מותאמות לעסקים. פתרונות AI ואוטומציה, עם תמיכה בעברית, בערבית ובאנגלית.',
-        en: 'Waseem builds Wix and WordPress sites, online stores and custom web apps for businesses. AI automation and support in English, Hebrew and Arabic.',
+        he: 'ואסיה בונה אתרי Wix ו-WordPress, חנויות ואפליקציות מותאמות לעסקים. פתרונות AI ואוטומציה, עם תמיכה בעברית, בערבית ובאנגלית.',
+        en: 'vasia builds Wix and WordPress sites, online stores and custom web apps for businesses. AI automation and support in English, Hebrew and Arabic.',
         ar: 'يبني وسيم مواقع Wix وWordPress ومتاجر وتطبيقات ويب مخصصة للأعمال، مع حلول الذكاء الاصطناعي والأتمتة وخدمة بالعربية والعبرية والإنجليزية.',
       }[language];
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', url);

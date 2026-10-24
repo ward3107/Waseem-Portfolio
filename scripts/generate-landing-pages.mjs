@@ -1,6 +1,6 @@
 // Generates static, SEO-optimized local landing pages in Hebrew AND Arabic
-// (one folder per city per language) into /public/, plus regenerates
-// /public/sitemap.xml with hreflang alternates.
+// (one folder per city per language), a three-language nationwide service
+// area hub, and /public/sitemap.xml with hreflang alternates.
 //
 //   Hebrew:  /public/<slug>/index.html        -> /<slug>/
 //   Arabic:  /public/ar/<slug>/index.html     -> /ar/<slug>/
@@ -52,11 +52,11 @@ const T = {
     viewWork: 'צפו בעבודות שלי',
     areasLabel: 'שירות גם באזורים הבאים:',
     sibling: (c) => `בניית אתרים ב${c}`,
-    credit: '© 2026 וסים — בניית אתרים בצפון.',
+    credit: '© 2026 ואסיה — בניית אתרים בצפון.',
     toMain: 'לאתר הראשי',
     whatsapp: 'וואטסאפ',
     contact: 'צור קשר',
-    waText: (c) => `היי וסים, אני מעוניין באתר לעסק שלי ב${c} 🙂`,
+    waText: (c) => `היי ואסיה, אני מעוניין באתר לעסק שלי ב${c} 🙂`,
     otherLang: 'العربية',
   },
   ar: {
@@ -98,7 +98,7 @@ const cities = [
     geo: { lat: 32.9556, lng: 35.1706 },
     name: { he: 'כפר יאסיף', ar: 'كفر ياسيف' },
     he: {
-      lead: 'אני וסים — מפתח ובונה אתרים מכפר יאסיף. אני חי ועובד כאן, מכיר מקרוב את העסקים המקומיים ואת מה שעובד בשטח. אני בונה אתרים מהירים, ברורים וממירים — בעברית, בערבית ובאנגלית — שמביאים לקוחות אמיתיים ולא רק ביקורים.',
+      lead: 'אני ואסיה — מפתח ובונה אתרים מכפר יאסיף. אני חי ועובד כאן, מכיר מקרוב את העסקים המקומיים ואת מה שעובד בשטח. אני בונה אתרים מהירים, ברורים וממירים — בעברית, בערבית ובאנגלית — שמביאים לקוחות אמיתיים ולא רק ביקורים.',
       angle: [
         'בן המקום — פגישות פנים אל פנים, בלי מרחק ובלי מתווכים.',
         'אתר דו-לשוני (עברית + ערבית) שמדבר לכל הקהל בכפר ובסביבה.',
@@ -258,7 +258,7 @@ const cities = [
     geo: { lat: 32.9195, lng: 35.1889 },
     name: { he: "ג'דיידה-מכר", ar: 'جديدة المكر' },
     he: {
-      lead: 'ג\'דיידה-מכר היא מועצה גדולה בגליל המערבי — עם עסקים משפחתיים, אולמות אירועים, בעלי מקצוע ומסעדות שמשרתים את התושבים ואת כל האזור. אני וסים, מכפר יאסיף השכנה, מכיר מקרוב את הדינמיקה המקומית ואת מה שעובד לעסקים בשטח. אני בונה אתרים דו-לשוניים (עברית + ערבית) שנוחים לגלישה מהנייד — כי כך רוב הלקוחות שלכם מחפשים.',
+      lead: 'ג\'דיידה-מכר היא מועצה גדולה בגליל המערבי — עם עסקים משפחתיים, אולמות אירועים, בעלי מקצוע ומסעדות שמשרתים את התושבים ואת כל האזור. אני ואסיה, מכפר יאסיף השכנה, מכיר מקרוב את הדינמיקה המקומית ואת מה שעובד לעסקים בשטח. אני בונה אתרים דו-לשוניים (עברית + ערבית) שנוחים לגלישה מהנייד — כי כך רוב הלקוחות שלכם מחפשים.',
       angle: [
         'שכן מכפר יאסיף — פגישות פנים אל פנים, בלי נסיעה לתל אביב.',
         'אתר בערבית ובעברית מהיום הראשון — לא תרגום מאולתר, אלא בנוי מהיסוד לשני הכיוונים.',
@@ -290,7 +290,7 @@ const cities = [
     geo: { lat: 32.9484, lng: 35.1770 },
     name: { he: 'אבו סנאן', ar: 'أبو سنان' },
     he: {
-      lead: 'אבו סנאן היא כפר דרוזי-נוצרי-מוסלמי מעורב, סמוך לכפר יאסיף — עם רשת עשירה של עסקים משפחתיים, מפעלים קטנים, מסעדות ובעלי מקצוע שמשרתים את הצפון כולו. אני וסים, מהאזור, בונה אתרים אמינים ומהירים שמייצגים כמו שצריך את המורשת של העסק שלכם — ומופיעים בגוגל בדיוק ברגע שלקוח מחפש.',
+      lead: 'אבו סנאן היא כפר דרוזי-נוצרי-מוסלמי מעורב, סמוך לכפר יאסיף — עם רשת עשירה של עסקים משפחתיים, מפעלים קטנים, מסעדות ובעלי מקצוע שמשרתים את הצפון כולו. אני ואסיה, מהאזור, בונה אתרים אמינים ומהירים שמייצגים כמו שצריך את המורשת של העסק שלכם — ומופיעים בגוגל בדיוק ברגע שלקוח מחפש.',
       angle: [
         'מהאזור, לא מלונדון — פגישות פנים אל פנים בכפר או ברדיוס של רבע שעה.',
         'עיצוב מכובד שמתאים לעסק משפחתי עם היסטוריה — לא סטארטאפי מדי.',
@@ -322,7 +322,7 @@ const cities = [
     geo: { lat: 32.9686, lng: 35.2531 },
     name: { he: "ינוח-ג'ת", ar: 'يانوح - جث' },
     he: {
-      lead: 'ינוח-ג\'ת היא מועצה דרוזית בגליל העליון, עם עסקים חקלאיים, בעלי מקצוע, אירוח כפרי ומסעדות שמתחילות למשוך תיירים מכל הצפון. עסק בינוח-ג\'ת חייב אתר שמופיע בגוגל כשמישהו מחפש "אירוח כפרי בצפון" או "מסעדת כפר בגליל". אני וסים — בונה אתרים ממוקדי-תיירות שמביאים הזמנות אמיתיות.',
+      lead: 'ינוח-ג\'ת היא מועצה דרוזית בגליל העליון, עם עסקים חקלאיים, בעלי מקצוע, אירוח כפרי ומסעדות שמתחילות למשוך תיירים מכל הצפון. עסק בינוח-ג\'ת חייב אתר שמופיע בגוגל כשמישהו מחפש "אירוח כפרי בצפון" או "מסעדת כפר בגליל". אני ואסיה — בונה אתרים ממוקדי-תיירות שמביאים הזמנות אמיתיות.',
       angle: [
         'מותאם לתיירות כפרית — גלריות, מפה, זמינות והזמנה בכמה קליקים.',
         'SEO ל-"צפון", "גליל עליון" ו-"דרוזי אותנטי" — לא רק לשם הכפר.',
@@ -354,14 +354,55 @@ const cities = [
 const cityUrl = (city, lang) =>
   lang === 'ar' ? `${SITE}/ar/${city.slug}/` : `${SITE}/${city.slug}/`;
 
+const areaHubUrl = (lang) => `${SITE}${lang === 'he' ? '' : `/${lang}`}/service-areas/`;
+
+const AREA_COPY = {
+  he: {
+    title: 'שירותים דיגיטליים לעסקים בכל הארץ | vasia.dev',
+    description: 'בניית אתרים, חנויות, אפליקציות ואוטומציות לעסקים בכל ישראל. עובדים יחד מרחוק, עם מידע אזורי וקישורים לעמודי הערים הקיימים.',
+    eyebrow: 'שירות בכל הארץ',
+    heading: 'בונים יחד, מכל מקום בארץ.',
+    lead: 'אני עובד עם עסקים ברחבי ישראל על אתרים, חנויות, אפליקציות ופתרונות אוטומציה. אפשר לקיים שיחת היכרות, להגדיר את היקף העבודה ולתאם את הפרויקט מרחוק.',
+    processHeading: 'איך מתחילים לעבוד יחד?',
+    process: 'מספרים לי מה העסק צריך ומה כבר קיים. נבדוק יחד את הפתרון המתאים, את התוכן ואת דרכי העבודה לפני שנכין הצעה לפי היקף הפרויקט.',
+    citiesHeading: 'מידע אזורי קיים',
+    citiesIntro: 'העמודים הבאים מרכזים מידע לעסקים בערים מסוימות. הם אינם מגבילים את השירות לערים האלה: אפשר לפנות גם מכל מקום אחר בישראל. העמודים האזוריים זמינים בעברית ובערבית.',
+    hebrew: 'עברית', arabic: 'العربية',
+    projects: 'צפייה בפרויקטים', contact: 'נדבר על הפרויקט', home: 'חזרה לאתר',
+    footer: 'שירות מרחוק לעסקים בכל הארץ', hub: 'לכל אזורי השירות',
+  },
+  en: {
+    title: 'Digital services for businesses across Israel | vasia.dev',
+    description: 'Websites, online stores, web apps and automation for businesses across Israel. Work remotely with vasia and explore the existing regional guides.',
+    eyebrow: 'Across Israel',
+    heading: 'Build together, wherever you are in Israel.',
+    lead: 'I work with businesses across Israel on websites, online stores, web apps and automation. We can meet, define the scope and coordinate the project remotely.',
+    processHeading: 'How do we get started?',
+    process: 'Tell me what your business needs and what you already have. We can choose an approach, review the content and agree on a working process before a proposal is prepared for the project scope.',
+    citiesHeading: 'Existing regional guides',
+    citiesIntro: 'These pages provide information for businesses in selected cities. They do not limit where I work: businesses elsewhere in Israel are welcome too. The regional pages are available in Hebrew and Arabic.',
+    hebrew: 'Hebrew', arabic: 'Arabic',
+    projects: 'View projects', contact: 'Discuss a project', home: 'Back to website',
+    footer: 'Remote service for businesses across Israel', hub: 'All service areas',
+  },
+  ar: {
+    title: 'خدمات رقمية للشركات في أنحاء إسرائيل | vasia.dev',
+    description: 'مواقع ومتاجر إلكترونية وتطبيقات وأتمتة للشركات في أنحاء إسرائيل. تعاون عن بُعد مع وسيم وتصفّح الصفحات الإقليمية الحالية.',
+    eyebrow: 'خدمة في جميع أنحاء البلاد',
+    heading: 'نبني معًا، أينما كنت في البلاد.',
+    lead: 'أعمل مع شركات في أنحاء إسرائيل على المواقع والمتاجر الإلكترونية وتطبيقات الويب وحلول الأتمتة. يمكننا التعارف وتحديد نطاق المشروع وتنسيق العمل عن بُعد.',
+    processHeading: 'كيف نبدأ العمل معًا؟',
+    process: 'أخبرني بما يحتاجه عملك وما لديك اليوم. نختار الحل المناسب ونراجع المحتوى وطريقة العمل قبل إعداد عرض يتناسب مع نطاق المشروع.',
+    citiesHeading: 'صفحات المناطق الحالية',
+    citiesIntro: 'تقدم هذه الصفحات معلومات للشركات في مدن مختارة، لكنها لا تحصر الخدمة فيها. يمكن للشركات في أماكن أخرى في إسرائيل التواصل أيضًا. الصفحات الإقليمية متاحة بالعبرية والعربية.',
+    hebrew: 'עברית', arabic: 'العربية',
+    projects: 'شاهد المشاريع', contact: 'تحدث عن مشروعك', home: 'العودة للموقع',
+    footer: 'خدمة عن بُعد للشركات في جميع أنحاء البلاد', hub: 'جميع مناطق الخدمة',
+  },
+};
+
 const waLink = (city, lang) =>
   `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(T[lang].waText(city.name[lang]))}`;
-
-const siblingLinks = (current, lang) =>
-  cities
-    .filter((c) => c.slug !== current.slug)
-    .map((c) => `<a href="${cityUrl(c, lang)}">${esc(T[lang].sibling(c.name[lang]))}</a>`)
-    .join('\n          ');
 
 const faqJsonLd = (city, lang) => ({
   '@context': 'https://schema.org',
@@ -377,7 +418,7 @@ const businessJsonLd = (city, lang) => ({
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
   '@id': `${cityUrl(city, lang)}#localbusiness`,
-  name: `${lang === 'ar' ? 'وسيم — بناء مواقع في' : 'וסים — בניית אתרים ב'}${city.name[lang]}`,
+  name: `${lang === 'ar' ? 'وسيم — بناء مواقع في' : 'ואסיה — בניית אתרים ב'}${city.name[lang]}`,
   image: `${SITE}/og-image.png`,
   url: cityUrl(city, lang),
   telephone: `+${WHATSAPP}`,
@@ -472,7 +513,7 @@ const page = (city, lang) => {
   const title =
     lang === 'ar'
       ? `بناء مواقع في ${cityName} | وسيم — مطوّر ومصمّم مواقع في الشمال`
-      : `בניית אתרים ב${cityName} | וסים — מפתח ובונה אתרים בצפון`;
+      : `בניית אתרים ב${cityName} | ואסיה — מפתח ובונה אתרים בצפון`;
   const desc = c.lead.slice(0, 155);
   const keywords =
     lang === 'ar'
@@ -503,7 +544,7 @@ const page = (city, lang) => {
   <meta property="og:description" content="${esc(desc)}" />
   <meta property="og:image" content="${SITE}/og-image.png" />
   <meta property="og:locale" content="${lang === 'ar' ? 'ar_AR' : 'he_IL'}" />
-  <meta property="og:site_name" content="Waseem Portfolio" />
+  <meta property="og:site_name" content="vasia" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(title)}" />
   <meta name="twitter:description" content="${esc(desc)}" />
@@ -524,7 +565,7 @@ ${JSON.stringify(faqJsonLd(city, lang), null, 2)}
 <body>
   <header class="wrap">
     <nav class="nav">
-      <a class="brand" href="${SITE}/">Waseem<span>.</span></a>
+      <a class="brand" href="${SITE}/">vasia<span>.</span></a>
       <div class="right">
         <a class="lang" href="${cityUrl(city, otherLang)}" hreflang="${otherLang}">${esc(s.otherLang)}</a>
         <a class="back" href="${SITE}/">${esc(s.back)}</a>
@@ -580,10 +621,8 @@ ${JSON.stringify(faqJsonLd(city, lang), null, 2)}
   </main>
 
   <footer class="wrap">
-    <strong>${esc(s.areasLabel)}</strong>
-    <div class="areas">
-      ${siblingLinks(city, lang)}
-    </div>
+    <strong>${esc(AREA_COPY[lang].footer)}</strong>
+    <div class="areas"><a href="${areaHubUrl(lang)}">${esc(AREA_COPY[lang].hub)} →</a></div>
     <div class="fine">
       <span>${esc(s.credit)} <a href="${SITE}/" style="color:var(--purple-2)">${esc(s.toMain)}</a></span>
       <span><a href="${wa}" target="_blank" rel="noopener">${esc(s.whatsapp)}</a> · <a href="${SITE}/about#contact">${esc(s.contact)}</a></span>
@@ -592,6 +631,97 @@ ${JSON.stringify(faqJsonLd(city, lang), null, 2)}
 </body>
 </html>
 `;
+};
+
+// One useful hub per language links to every existing city page. The city
+// guides stay at their original URLs; this page makes the wider remote service
+// clear without generating thin pages for places with no local information.
+const areaHubPage = (lang) => {
+  const copy = AREA_COPY[lang];
+  const url = areaHubUrl(lang);
+  const home = `${SITE}${lang === 'he' ? '/' : `/${lang}/`}`;
+  const dir = lang === 'en' ? 'ltr' : 'rtl';
+  const cards = cities.map((city) => `<li class="card area-card">
+      <h3>${esc(lang === 'en' ? city.en : city.name[lang])}</h3>
+      <div class="language-links">
+        <a href="${cityUrl(city, 'he')}" lang="he">${esc(copy.hebrew)}</a>
+        <a href="${cityUrl(city, 'ar')}" lang="ar">${esc(copy.arabic)}</a>
+      </div>
+    </li>`).join('\n');
+  const breadcrumb = {
+    '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'vasia.dev', item: home },
+      { '@type': 'ListItem', position: 2, name: copy.eyebrow, item: url },
+    ],
+  };
+  return `<!doctype html>
+<html lang="${lang}" dir="${dir}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>${esc(copy.title)}</title>
+  <meta name="description" content="${esc(copy.description)}" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#483AA0" />
+  <link rel="canonical" href="${url}" />
+  ${['he', 'en', 'ar'].map((other) => `<link rel="alternate" hreflang="${other}" href="${areaHubUrl(other)}" />`).join('\n  ')}
+  <link rel="alternate" hreflang="x-default" href="${areaHubUrl('he')}" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:title" content="${esc(copy.title)}" />
+  <meta property="og:description" content="${esc(copy.description)}" />
+  <meta property="og:image" content="${SITE}/og-image.png" />
+  <script type="application/ld+json">${JSON.stringify(breadcrumb).replace(/</g, '\\u003c')}</script>
+  <style>${CSS}
+    .skip { position: absolute; transform: translateY(-200%); padding: 8px 12px; background: var(--card); z-index: 10; }
+    .skip:focus { transform: translateY(0); }
+    .area-card { list-style: none; }
+    .language-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+    .language-links a { color: var(--purple-2); text-decoration: underline; text-underline-offset: 3px; font-weight: 700; }
+    .language-links a:focus-visible, a:focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; border-radius: 4px; }
+    .lang-nav { display: flex; flex-wrap: wrap; gap: 8px; }
+    .lang-nav a { border: 1px solid var(--border); border-radius: 999px; padding: 5px 10px; }
+    .lang-nav a[aria-current] { border-color: var(--purple-2); font-weight: 700; }
+    .intro { max-width: 720px; color: var(--muted); margin-bottom: 24px; }
+    @media(max-width:600px) { .nav { align-items: flex-start; } .nav .right { flex-direction: column; align-items: flex-end; gap: 8px; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#content">${esc(lang === 'he' ? 'דלג לתוכן' : lang === 'ar' ? 'انتقل إلى المحتوى' : 'Skip to content')}</a>
+  <header class="wrap">
+    <nav class="nav" aria-label="vasia.dev">
+      <a class="brand" href="${home}">vasia<span>.dev</span></a>
+      <div class="right">
+        <div class="lang-nav" aria-label="Languages">${['he', 'en', 'ar'].map((other) => `<a href="${areaHubUrl(other)}" hreflang="${other}" lang="${other}" ${other === lang ? 'aria-current="page"' : ''}>${{ he: 'עברית', en: 'English', ar: 'العربية' }[other]}</a>`).join('')}</div>
+        <a class="back" href="${home}">${esc(copy.home)}</a>
+      </div>
+    </nav>
+  </header>
+  <main id="content">
+    <section class="hero wrap">
+      <span class="badge">${esc(copy.eyebrow)}</span>
+      <h1>${esc(copy.heading)}</h1>
+      <p class="lead">${esc(copy.lead)}</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="${home}#contact">${esc(copy.contact)}</a>
+        <a class="btn btn-ghost" href="${SITE}/projects">${esc(copy.projects)}</a>
+      </div>
+    </section>
+    <section class="wrap">
+      <h2>${esc(copy.processHeading)}</h2>
+      <p class="intro">${esc(copy.process)}</p>
+    </section>
+    <section class="wrap" aria-labelledby="regional-title">
+      <h2 id="regional-title">${esc(copy.citiesHeading)}</h2>
+      <p class="intro">${esc(copy.citiesIntro)}</p>
+      <ul class="grid">${cards}</ul>
+    </section>
+  </main>
+  <footer class="wrap"><div class="fine"><span>© 2026 vasia.dev</span><a href="${home}">${esc(copy.home)}</a></div></footer>
+</body>
+</html>`;
 };
 
 // ---------------------------------------------------------------------------
@@ -607,6 +737,13 @@ for (const city of cities) {
     writeFileSync(resolve(dir, 'index.html'), page(city, lang), 'utf8');
     console.log(`✓ ${lang === 'ar' ? 'ar/' : ''}${city.slug}/index.html`);
   }
+}
+
+for (const lang of ['he', 'en', 'ar']) {
+  const dir = resolve(publicDir, lang === 'he' ? 'service-areas' : `${lang}/service-areas`);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(resolve(dir, 'index.html'), areaHubPage(lang), 'utf8');
+  console.log(`✓ ${lang === 'he' ? '' : `${lang}/`}service-areas/index.html`);
 }
 
 // ---------------------------------------------------------------------------
@@ -685,6 +822,15 @@ const cityEntries = cities
   .flatMap((c) => LANGS.map((lang) => cityEntry(c, lang)))
   .join('\n');
 
+const areaHubEntries = ['he', 'en', 'ar'].map((lang) => `  <url>
+    <loc>${areaHubUrl(lang)}</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+${['he', 'en', 'ar'].map((other) => `    <xhtml:link rel="alternate" hreflang="${other}" href="${areaHubUrl(other)}" />`).join('\n')}
+    <xhtml:link rel="alternate" hreflang="x-default" href="${areaHubUrl('he')}" />
+  </url>`).join('\n');
+
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
@@ -698,6 +844,7 @@ ${simpleEntry(`${SITE}/privacy`, '0.3')}
 ${simpleEntry(`${SITE}/accessibility`, '0.3')}
 
 ${cityEntries}
+${areaHubEntries}
 
 ${blogIndexEntries}
 ${blogArticleEntries}

@@ -11,6 +11,9 @@ const t = (key: string) => key;
 const curatedIds = [
   'mova-motion-store', 'nacre-ocean-atelier', 'frame-video-learning',
   'luma-video-library', 'mova-storefront-concept', 'flora-botanical-journey',
+  'liman-hadha', 'land-of-jesus', 'classflow-studio', 'jalal-opticare',
+  'bathline', 'ragad-kindergarten', 'cybersecurity-course', 'careerconnect',
+  'habeeb-farah', 'adan-center',
   'softec-vision', 'biznix', 'kiwi',
   'shayish-kfar-yassif', 'ninnyo-flowers', 'vocabagrut',
 ];

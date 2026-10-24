@@ -58,7 +58,7 @@ const Reviews: React.FC = () => {
   const aggregateSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: 'Waseem — Web Development Services',
+    name: 'vasia — Web Development Services',
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: avg,
