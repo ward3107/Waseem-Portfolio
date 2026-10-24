@@ -1,10 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useProjects } from '@/features/projects/useProjects';
-import { safeHref } from '@/lib/safe';
 import HeadingAccent from '../components/HeadingAccent';
 import { useHeadingLeading } from './ChapterOverlay';
 import { GhostNavButton } from './actions';
@@ -12,11 +8,9 @@ import { GhostNavButton } from './actions';
 /**
  * Chapter 4 — Projects. The visual is the 3D turntable (ProjectsScene, in the
  * canvas): every project's screenshot rides a slowly rotating ring and the one
- * at the front enlarges and opens on click. This DOM layer keeps the centre
- * clear for the full portfolio — the heading is pinned to the top and an accessible
- * link index + CTA to the bottom. Those links keep every project
- * keyboard-reachable and crawlable even though the canvas is aria-hidden, and
- * they double as a tap target on touch. Same on every device.
+ * at the front enlarges and opens on click. The heading stays above the visual,
+ * and the full projects page is linked below it. Individual project names and
+ * links remain available on that page without covering the homepage previews.
  */
 const reveal = {
   initial: { opacity: 0.72, y: 12 },
@@ -25,9 +19,7 @@ const reveal = {
 } as const;
 
 const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
-  const { t, language } = useLanguage();
-  const draftLabel = language === 'he' ? 'פרטים · הדמו טרם פורסם' : language === 'ar' ? 'التفاصيل · العرض لم يُنشر بعد' : 'Details · demo not published';
-  const { projects } = useProjects('projects');
+  const { t } = useLanguage();
   const leading = useHeadingLeading();
 
   return (
@@ -57,41 +49,8 @@ const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, to
       <motion.div
         {...reveal}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="flex flex-col items-center gap-5"
+        className="flex flex-col items-center"
       >
-        {/* The per-project link index. On phones the 3D turntable already sits
-            right here and these pills piled on top of it — crowding the screen
-            and covering the screenshot — so they're hidden below `sm` and the
-            single "all projects" CTA carries the section. Desktops keep the full
-            index (room to spare, and it doubles as the keyboard/crawler path). */}
-        <ul className="hidden flex-wrap items-center justify-center gap-2.5 sm:flex">
-          {projects.map((p) => {
-            const href = safeHref(p.link);
-            return (
-              <li key={p.id}>
-                {href ? (
-                <a
-                  href={href}
-                  target={href ? '_blank' : undefined}
-                  rel={href ? 'noopener noreferrer' : undefined}
-                  className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-semibold text-slate-200 backdrop-blur transition-colors hover:border-brand-cyan/50 hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan"
-                >
-                  {p.title}
-                  <ExternalLink className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
-                </a>
-                ) : (
-                  <Link
-                    to="/projects"
-                    className="pointer-events-auto inline-flex flex-col items-center rounded-2xl border border-white/15 bg-slate-900 px-4 py-2 text-sm text-slate-200 hover:border-brand-cyan/50 focus-visible:ring-2 focus-visible:ring-brand-cyan"
-                  >
-                    <span className="font-semibold">{p.title}</span>
-                    <span className="text-xs text-slate-300">{draftLabel}</span>
-                  </Link>
-                )}
-              </li>
-            );
-          })}
-        </ul>
         <GhostNavButton href="/projects">{t('home_projects_cta')}</GhostNavButton>
       </motion.div>
     </div>
