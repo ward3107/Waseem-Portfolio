@@ -37,6 +37,8 @@
     { "source": "/privacy", "destination": "/index.html" },
     { "source": "/accessibility", "destination": "/index.html" },
     { "source": "/start", "destination": "/index.html" },
+    { "source": "/plan", "destination": "/index.html" },
+    { "source": "/plan/", "destination": "/index.html" },
     { "source": "/share-testimonial", "destination": "/index.html" },
     { "source": "/from-gbp", "destination": "/index.html" },
     { "source": "/services", "destination": "/index.html" },
