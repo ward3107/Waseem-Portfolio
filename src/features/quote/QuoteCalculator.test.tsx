@@ -1,0 +1,64 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import QuoteCalculator from './QuoteCalculator';
+import type { QuoteCatalogue } from './catalogue';
+import { draftScopeConfig } from './scope';
+
+vi.mock('@/features/contact/useContact', () => ({
+  useContact: () => ({ whatsappNumber: '972544513141' }),
+}));
+
+const label = { he: 'אתרים ודפי נחיתה', en: 'Websites & landing pages', ar: 'مواقع وصفحات هبوط' };
+const landing = { he: 'דף נחיתה', en: 'Landing page', ar: 'صفحة هبوط' };
+
+// Only this test imports the artificial values. Production imports the
+// unpublished catalogue with no numeric prices.
+const fixture: QuoteCatalogue = {
+  publishedPrices: true,
+  categories: [{ id: 'websites', label, options: [{
+    id: 'landing', label: landing, price: { mode: 'fixed_package', amountIls: 1000, approved: true },
+  }] }],
+  scope: {
+    ...draftScopeConfig,
+    profiles: { landing: draftScopeConfig.profiles.landing },
+    prices: {
+      ...draftScopeConfig.prices,
+      extra_page: { mode: 'fixed_package', amountIls: 90, approved: true },
+      extra_language: { mode: 'fixed_package', amountIls: 200, approved: true },
+      enhanced_design: { mode: 'fixed_package', amountIls: 300, approved: true },
+    },
+  },
+};
+
+afterEach(() => { cleanup(); window.localStorage.clear(); });
+
+describe('configurable quote flow', () => {
+  it('recalculates while editing and sends the same scope and total to WhatsApp', () => {
+    window.history.replaceState(null, '', '/plan?lang=en');
+    render(<LanguageProvider><QuoteCalculator catalogue={fixture} /></LanguageProvider>);
+    fireEvent.click(screen.getByRole('button', { name: 'Websites & landing pages' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Landing page' }));
+
+    fireEvent.change(screen.getByLabelText(/Number of pages/), { target: { value: '3' } });
+    fireEvent.change(screen.getByLabelText(/Number of languages/), { target: { value: '2' } });
+    fireEvent.click(screen.getByRole('radio', { name: 'Enhanced design' }));
+    expect(screen.getByText(/Estimated total:.*1,680/)).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
+    const firstHref = screen.getByRole('link', { name: 'Open summary in WhatsApp' }).getAttribute('href')!;
+    expect(decodeURIComponent(firstHref)).toContain('1,680');
+    expect(decodeURIComponent(firstHref)).toContain('Number of pages: 3');
+    expect(decodeURIComponent(firstHref)).toContain('Additional languages');
+
+    fireEvent.click(screen.getByRole('button', { name: 'Back' }));
+    fireEvent.change(screen.getByLabelText(/Number of pages/), { target: { value: '4' } });
+    expect(screen.getByText(/Estimated total:.*1,770/)).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Continue' }));
+    const updatedHref = screen.getByRole('link', { name: 'Open summary in WhatsApp' }).getAttribute('href')!;
+    expect(decodeURIComponent(updatedHref)).toContain('1,770');
+    expect(decodeURIComponent(updatedHref)).toContain('Number of pages: 4');
+    expect(decodeURIComponent(updatedHref)).not.toContain('Number of pages: 3');
+  });
+});

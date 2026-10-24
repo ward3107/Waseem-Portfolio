@@ -1,4 +1,5 @@
 import type { Language } from '@/types';
+import { draftScopeConfig, scopeRows, type QuoteScope, type ScopeConfig } from './scope';
 
 type Localized = Record<Language, string>;
 
@@ -26,6 +27,7 @@ export type QuoteCatalogue = {
   /** Remains false until the owner approves the entire public numeric catalogue. */
   publishedPrices: boolean;
   categories: QuoteCategory[];
+  scope?: ScopeConfig;
 };
 
 const label = (he: string, en: string, ar: string): Localized => ({ he, en, ar });
@@ -36,26 +38,24 @@ const option = (id: string, he: string, en: string, ar: string, extra: Partial<Q
 });
 
 const primaryWeb = 'primary_web_presence';
-const webBaseIds = ['landing', 'business_site', 'custom_site', 'starter_store', 'custom_store', 'pwa', 'mobile_app'];
 
 // No numeric price is approved. Categories represent work customers can ask
 // about, not commercial commitments. Manual items need individual scoping.
 export const quoteCatalogue: QuoteCatalogue = {
   publishedPrices: false,
+  scope: draftScopeConfig,
   categories: [
     {
       id: 'websites', label: label('אתרים ודפי נחיתה', 'Websites & landing pages', 'مواقع وصفحات هبوط'), options: [
         option('landing', 'דף נחיתה', 'Landing page', 'صفحة هبوط', { exclusiveGroup: primaryWeb }),
         option('business_site', 'אתר עסקי', 'Business website', 'موقع أعمال', { exclusiveGroup: primaryWeb }),
         option('custom_site', 'אתר בהתאמה אישית', 'Custom website', 'موقع مخصص', { exclusiveGroup: primaryWeb, price: manual() }),
-        option('extra_language', 'שפה נוספת לאתר או לאפליקציה', 'Additional site or app language', 'لغة إضافية للموقع أو التطبيق', { requiresAny: webBaseIds }),
       ],
     },
     {
       id: 'commerce', label: label('חנויות ומסחר', 'Online stores', 'متاجر إلكترونية'), options: [
         option('starter_store', 'חנות למוצרים פשוטים', 'Store for standard products', 'متجر لمنتجات عادية', { exclusiveGroup: primaryWeb }),
         option('custom_store', 'חנות עם תהליכים מיוחדים', 'Custom commerce flow', 'متجر بمسارات مخصصة', { exclusiveGroup: primaryWeb, price: manual() }),
-        option('product_entry', 'הזנת מוצרים', 'Product entry', 'إدخال المنتجات', { requiresAny: ['starter_store', 'custom_store'] }),
       ],
     },
     {
@@ -155,48 +155,60 @@ export type QuoteEstimate =
 
 export type QuoteBreakdown = {
   /** Amounts are null while the public price catalogue is unpublished. */
-  pricedItems: Array<{ id: string; minIls: number; maxIls: number }>;
+  pricedItems: Array<{ id: string; quantity: number; minIls: number; maxIls: number }>;
   unpricedIds: string[];
   knownSubtotal: { minIls: number; maxIls: number } | null;
   /** A whole-project number is available only when every selected item is priced. */
   total: QuoteEstimate;
 };
 
-export function quoteBreakdown(catalogue: QuoteCatalogue, selectedIds: string[]): QuoteBreakdown {
+export function quoteBreakdown(catalogue: QuoteCatalogue, selectedIds: string[], scope: QuoteScope = {}): QuoteBreakdown {
   const uniqueIds = [...new Set(selectedIds)];
   const options = allOptions(catalogue);
   const selected = uniqueIds.map((id) => options.find((item) => item.id === id));
+  const components = scopeRows(catalogue, uniqueIds, scope).filter((row) => row.price !== null);
   const groups = selected.map((item) => item?.exclusiveGroup).filter((group): group is string => !!group);
   const validSelection = uniqueIds.length > 0 && selected.every((item) =>
     !!item && canSelectOption(catalogue, uniqueIds, item.id)) && new Set(groups).size === groups.length;
   if (!validSelection || !catalogue.publishedPrices) {
-    return { pricedItems: [], unpricedIds: uniqueIds, knownSubtotal: null, total: { mode: 'manual_quote' } };
+    return { pricedItems: [], unpricedIds: [...uniqueIds, ...components.map((row) => row.id)], knownSubtotal: null, total: { mode: 'manual_quote' } };
   }
 
   const pricedItems: QuoteBreakdown['pricedItems'] = [];
   const unpricedIds: string[] = [];
   let minIls = 0;
   let maxIls = 0;
-  for (const item of selected) {
-    if (!item) continue;
-    if (item.price.mode === 'fixed_package') {
-      if (!Number.isFinite(item.price.amountIls) || item.price.amountIls <= 0) {
-        unpricedIds.push(item.id);
+  const chargeLines = [
+    ...selected.filter((item): item is QuoteOption => !!item).map((item) => ({ id: item.id, price: item.price, quantity: 1 })),
+    ...components.map((row) => ({ id: row.id, price: row.price, quantity: row.quantity })),
+  ];
+  for (const line of chargeLines) {
+    const price = line.price;
+    if (!price || !Number.isSafeInteger(line.quantity) || line.quantity < 1) {
+      unpricedIds.push(line.id);
+      continue;
+    }
+    if (price.mode === 'fixed_package') {
+      if (!Number.isFinite(price.amountIls) || price.amountIls <= 0) {
+        unpricedIds.push(line.id);
         continue;
       }
-      pricedItems.push({ id: item.id, minIls: item.price.amountIls, maxIls: item.price.amountIls });
-      minIls += item.price.amountIls;
-      maxIls += item.price.amountIls;
-    } else if (item.price.mode === 'estimate_range') {
-      if (!Number.isFinite(item.price.minIls) || !Number.isFinite(item.price.maxIls) || item.price.minIls <= 0 || item.price.maxIls < item.price.minIls) {
-        unpricedIds.push(item.id);
+      const amount = price.amountIls * line.quantity;
+      pricedItems.push({ id: line.id, quantity: line.quantity, minIls: amount, maxIls: amount });
+      minIls += amount;
+      maxIls += amount;
+    } else if (price.mode === 'estimate_range') {
+      if (!Number.isFinite(price.minIls) || !Number.isFinite(price.maxIls) || price.minIls <= 0 || price.maxIls < price.minIls) {
+        unpricedIds.push(line.id);
         continue;
       }
-      pricedItems.push({ id: item.id, minIls: item.price.minIls, maxIls: item.price.maxIls });
-      minIls += item.price.minIls;
-      maxIls += item.price.maxIls;
+      const min = price.minIls * line.quantity;
+      const max = price.maxIls * line.quantity;
+      pricedItems.push({ id: line.id, quantity: line.quantity, minIls: min, maxIls: max });
+      minIls += min;
+      maxIls += max;
     } else {
-      unpricedIds.push(item.id);
+      unpricedIds.push(line.id);
     }
   }
   const knownSubtotal = pricedItems.length && Number.isFinite(minIls) && Number.isFinite(maxIls)
@@ -208,8 +220,8 @@ export function quoteBreakdown(catalogue: QuoteCatalogue, selectedIds: string[])
   return { pricedItems, unpricedIds, knownSubtotal, total };
 }
 
-export function quoteEstimate(catalogue: QuoteCatalogue, selectedIds: string[]): QuoteEstimate {
-  return quoteBreakdown(catalogue, selectedIds).total;
+export function quoteEstimate(catalogue: QuoteCatalogue, selectedIds: string[], scope: QuoteScope = {}): QuoteEstimate {
+  return quoteBreakdown(catalogue, selectedIds, scope).total;
 }
 
 export function formatQuoteAmount(language: Language, minIls: number, maxIls: number): string {

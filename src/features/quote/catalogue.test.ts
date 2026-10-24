@@ -4,6 +4,7 @@ import {
   type QuoteCatalogue,
 } from './catalogue';
 import { buildRequestMessage } from './request';
+import { scopeRows } from './scope';
 
 describe('service request catalogue', () => {
   it('covers twelve areas without publishing unapproved numbers', () => {
@@ -15,9 +16,8 @@ describe('service request catalogue', () => {
 
   it('keeps competing web packages and card levels out of one request', () => {
     let selected = toggleOption(quoteCatalogue, [], 'landing');
-    selected = toggleOption(quoteCatalogue, selected, 'extra_language');
     selected = toggleOption(quoteCatalogue, selected, 'starter_store');
-    expect(selected).toEqual(['extra_language', 'starter_store']);
+    expect(selected).toEqual(['starter_store']);
     selected = toggleOption(quoteCatalogue, selected, 'starter_store');
     expect(selected).toEqual([]);
     selected = toggleOption(quoteCatalogue, selected, 'card_classic');
@@ -25,11 +25,15 @@ describe('service request catalogue', () => {
     expect(selected).toEqual(['card_motion']);
   });
 
-  it('requires a store before product entry and blocks unknown IDs', () => {
+  it('uses scoped quantities for products and languages rather than duplicate add-ons', () => {
     expect(canSelectOption(quoteCatalogue, [], 'product_entry')).toBe(false);
     expect(toggleOption(quoteCatalogue, [], 'product_entry')).toEqual([]);
     expect(toggleOption(quoteCatalogue, [], 'unknown')).toEqual([]);
-    expect(canSelectOption(quoteCatalogue, ['starter_store'], 'product_entry')).toBe(true);
+    expect(canSelectOption(quoteCatalogue, ['starter_store'], 'extra_language')).toBe(false);
+    expect(scopeRows(quoteCatalogue, ['starter_store'], { starter_store: { quantities: { products: 21, languages: 2 } } })
+      .filter((row) => row.price).map((row) => [row.id, row.quantity])).toEqual([
+        ['starter_store:extra_language', 1], ['starter_store:product_batch', 2],
+      ]);
   });
 
   it('can total only owner-approved fixed items and treats unknown costs as manual', () => {

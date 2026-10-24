@@ -3,9 +3,11 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import {
   allOptions, canSelectOption, formatQuoteAmount, quoteBreakdown, quoteCatalogue, toggleOption,
-  type QuoteCategory,
+  type QuoteCategory, type QuoteCatalogue,
 } from './catalogue';
 import { buildRequestMessage } from './request';
+import ScopeEditor from './ScopeEditor';
+import { scopeRows, type QuoteScope, type ScopeValues } from './scope';
 
 const copy = {
   he: {
@@ -117,13 +119,14 @@ const copy = {
 
 type Stage = 'categories' | 'options' | 'review';
 
-export default function QuoteCalculator() {
+export default function QuoteCalculator({ catalogue = quoteCatalogue }: { catalogue?: QuoteCatalogue }) {
   const { language, dir } = useLanguage();
   const contact = useContact();
   const t = copy[language];
   const [stage, setStage] = useState<Stage>('categories');
   const [categoryIds, setCategoryIds] = useState<string[]>([]);
   const [optionIds, setOptionIds] = useState<string[]>([]);
+  const [scope, setScope] = useState<QuoteScope>({});
   const [unsureCategoryIds, setUnsureCategoryIds] = useState<string[]>([]);
   const [unsureOverall, setUnsureOverall] = useState(false);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
@@ -133,9 +136,10 @@ export default function QuoteCalculator() {
   const stageHeadingRef = useRef<HTMLHeadingElement>(null);
   const firstRender = useRef(true);
 
-  const selectedCategories = quoteCatalogue.categories.filter((category) => categoryIds.includes(category.id));
+  const selectedCategories = catalogue.categories.filter((category) => categoryIds.includes(category.id));
   const currentCategory = selectedCategories[activeCategoryIndex];
-  const breakdown = quoteBreakdown(quoteCatalogue, optionIds);
+  const breakdown = quoteBreakdown(catalogue, optionIds, scope);
+  const detailRows = scopeRows(catalogue, optionIds, scope);
   const fullyScoped = !unsureOverall && !unsureCategoryIds.length;
   const estimateLabel = breakdown.knownSubtotal
     ? (breakdown.total.mode !== 'manual_quote' && fullyScoped ? t.estimatedTotal : t.partialSubtotal) + ': ' +
@@ -146,8 +150,8 @@ export default function QuoteCalculator() {
     return item ? formatQuoteAmount(language, item.minIls, item.maxIls) : t.itemQuote;
   };
 
-  const message = buildRequestMessage(quoteCatalogue, {
-    language, categoryIds, optionIds, unsureCategoryIds, unsureOverall, projectStage, businessName, notes,
+  const message = buildRequestMessage(catalogue, {
+    language, categoryIds, optionIds, scope, unsureCategoryIds, unsureOverall, projectStage, businessName, notes,
   });
 
   useEffect(() => {
@@ -162,24 +166,34 @@ export default function QuoteCalculator() {
     const next = categoryIds.includes(id) ? categoryIds.filter((item) => item !== id) : [...categoryIds, id];
     setCategoryIds(next);
     setUnsureCategoryIds((previous) => previous.filter((item) => next.includes(item)));
-    setOptionIds((previous) => {
-      const allowed = allOptions(quoteCatalogue)
-        .filter((item) => next.some((categoryId) => quoteCatalogue.categories.find((category) => category.id === categoryId)?.options.includes(item)))
-        .map((item) => item.id);
-      const remaining = previous.filter((item) => allowed.includes(item));
-      return remaining.filter((item) => canSelectOption(quoteCatalogue, remaining, item));
-    });
+    const allowed = allOptions(catalogue)
+      .filter((item) => next.some((categoryId) => catalogue.categories.find((category) => category.id === categoryId)?.options.includes(item)))
+      .map((item) => item.id);
+    const remaining = optionIds.filter((item) => allowed.includes(item));
+    const valid = remaining.filter((item) => canSelectOption(catalogue, remaining, item));
+    setOptionIds(valid);
+    setScope((previous) => Object.fromEntries(Object.entries(previous).filter(([item]) => valid.includes(item))));
   };
 
   const chooseOption = (id: string, category: QuoteCategory) => {
-    setOptionIds((previous) => toggleOption(quoteCatalogue, previous, id));
+    const next = toggleOption(catalogue, optionIds, id);
+    setOptionIds(next);
+    setScope((previous) => Object.fromEntries(Object.entries(previous).filter(([item]) => next.includes(item))));
     setUnsureCategoryIds((previous) => previous.filter((item) => item !== category.id));
+  };
+
+  const updateScope = (id: string, value: ScopeValues) => {
+    setScope((previous) => ({ ...previous, [id]: value }));
   };
 
   const toggleUnsureCategory = (category: QuoteCategory) => {
     const wasUnsure = unsureCategoryIds.includes(category.id);
     setUnsureCategoryIds((previous) => wasUnsure ? previous.filter((item) => item !== category.id) : [...previous, category.id]);
-    if (!wasUnsure) setOptionIds((previous) => previous.filter((id) => !category.options.some((item) => item.id === id)));
+    if (!wasUnsure) {
+      const next = optionIds.filter((id) => !category.options.some((item) => item.id === id));
+      setOptionIds(next);
+      setScope((previous) => Object.fromEntries(Object.entries(previous).filter(([id]) => next.includes(id))));
+    }
   };
 
   const continueFromCategories = () => {
@@ -192,7 +206,7 @@ export default function QuoteCalculator() {
     else {
       // A later package can replace one chosen in an earlier area.
       setCategoryIds((previous) => previous.filter((id) => {
-        const category = quoteCatalogue.categories.find((item) => item.id === id);
+        const category = catalogue.categories.find((item) => item.id === id);
         return unsureCategoryIds.includes(id) || category?.options.some((item) => optionIds.includes(item.id));
       }));
       setStage('review');
@@ -231,7 +245,7 @@ export default function QuoteCalculator() {
             <h3 ref={stageHeadingRef} tabIndex={-1} className="text-xl font-bold outline-none sm:text-2xl">{t.categoryTitle}</h3>
             <p className="mt-1 text-sm leading-6 text-[#59647c]">{t.categoryHint}</p>
             <div role="group" aria-label={t.categoryTitle} className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {quoteCatalogue.categories.map((category) => {
+              {catalogue.categories.map((category) => {
                 const selected = categoryIds.includes(category.id);
                 return (
                   <button key={category.id} type="button" aria-pressed={selected} onClick={() => toggleCategory(category.id)}
@@ -259,15 +273,27 @@ export default function QuoteCalculator() {
             <div role="group" aria-label={t.optionTitle + ' ' + currentCategory.label[language]} className="mt-6 grid gap-2">
               {currentCategory.options.map((item) => {
                 const checked = optionIds.includes(item.id);
-                const available = checked || canSelectOption(quoteCatalogue, optionIds, item.id);
+                const available = checked || canSelectOption(catalogue, optionIds, item.id);
                 return (
-                  <label key={item.id} className={'flex min-h-14 items-center gap-3 rounded-2xl border px-4 py-3 ' + (available ? 'cursor-pointer bg-white' : 'cursor-not-allowed bg-[#f0f2f7] text-[#667088]') + (checked ? ' border-[#675abb] ring-1 ring-[#675abb]' : ' border-[#dfe4ef]')}>
-                    <input type="checkbox" checked={checked} disabled={!available} onChange={() => chooseOption(item.id, currentCategory)} className="h-5 w-5 shrink-0 accent-[#5448a9]" />
-                    <span className="flex-1 font-medium">{item.label[language]}{!available && <span className="mt-1 block text-xs font-normal">{t.prerequisite}</span>}</span>
-                  </label>
+                  <div key={item.id}>
+                    <label className={'flex min-h-14 items-center gap-3 rounded-2xl border px-4 py-3 ' + (available ? 'cursor-pointer bg-white' : 'cursor-not-allowed bg-[#f0f2f7] text-[#667088]') + (checked ? ' border-[#675abb] ring-1 ring-[#675abb]' : ' border-[#dfe4ef]')}>
+                      <input type="checkbox" checked={checked} disabled={!available} onChange={() => chooseOption(item.id, currentCategory)} className="h-5 w-5 shrink-0 accent-[#5448a9]" />
+                      <span className="flex-1 font-medium">{item.label[language]}{!available && <span className="mt-1 block text-xs font-normal">{t.prerequisite}</span>}</span>
+                    </label>
+                    {checked && catalogue.scope?.profiles[item.id] && <div className="mt-3 px-1">
+                      <ScopeEditor language={language} profile={catalogue.scope.profiles[item.id]} value={scope[item.id] ?? {}} onChange={(value) => updateScope(item.id, value)} />
+                      <ul className="space-y-1 px-2 text-sm text-[#526078]" aria-live="polite">
+                        {detailRows.filter((row) => row.optionId === item.id).map((row) => <li key={row.id} className="flex flex-wrap justify-between gap-2">
+                          <span>{row.label[language]}{row.quantity > 1 ? ` ×${row.quantity}` : ''}</span>
+                          {row.price && <span className="font-semibold">{optionAmount(row.id)}</span>}
+                        </li>)}
+                      </ul>
+                    </div>}
+                  </div>
                 );
               })}
             </div>
+            <p className="mt-5 rounded-2xl bg-[#eeecfb] p-4 font-bold text-[#342880]" aria-live="polite">{estimateLabel}</p>
             <label className="mt-5 flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border border-[#dfe4ef] bg-white px-4 py-3 text-sm font-medium">
               <input type="checkbox" checked={unsureCategoryIds.includes(currentCategory.id)} onChange={() => toggleUnsureCategory(currentCategory)} className="h-5 w-5 accent-[#5448a9]" />
               {t.unsureCategory}
@@ -288,7 +314,15 @@ export default function QuoteCalculator() {
                 <div key={category.id} className="border-b border-[#edf0f6] py-3 first:pt-0 last:border-0 last:pb-0">
                   <h4 className="font-bold">{category.label[language]}</h4>
                   <ul className="mt-1 space-y-1 text-sm text-[#526078]">
-                    {category.options.filter((item) => optionIds.includes(item.id)).map((item) => <li key={item.id} className="flex flex-wrap justify-between gap-2"><span>{item.label[language]}</span><span className="font-semibold">{optionAmount(item.id)}</span></li>)}
+                    {category.options.filter((item) => optionIds.includes(item.id)).map((item) => <li key={item.id}>
+                      <div className="flex flex-wrap justify-between gap-2"><span>{item.label[language]}</span><span className="font-semibold">{optionAmount(item.id)}</span></div>
+                      <ul className="mt-1 space-y-1 ps-3 text-xs">
+                        {detailRows.filter((row) => row.optionId === item.id).map((row) => <li key={row.id} className="flex flex-wrap justify-between gap-2">
+                          <span>{row.label[language]}{row.quantity > 1 ? ` ×${row.quantity}` : ''}</span>
+                          {row.price && <span className="font-semibold">{optionAmount(row.id)}</span>}
+                        </li>)}
+                      </ul>
+                    </li>)}
                     {unsureCategoryIds.includes(category.id) && <li>{t.unsureCategory}</li>}
                   </ul>
                 </div>

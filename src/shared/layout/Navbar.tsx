@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Blocks,
+  Calculator,
   BookOpen,
   Images,
   PanelsTopLeft,
@@ -25,6 +26,7 @@ import { useLocation } from 'react-router-dom';
 
 const NAV_ICONS: Record<string, LucideIcon> = {
   '/#what-i-do': Blocks,
+  '/plan': Calculator,
   '/#ai-automation': Bot,
   '/#about': UserRound,
   '/#projects': Briefcase,
@@ -145,7 +147,7 @@ const Navbar: React.FC = () => {
                   title={link.name}
                   aria-label={link.name}
                   onClick={(e) => {
-                    if (/\/(blog|gallery|stories)\/$/.test(link.href)) return;
+                    if (link.href === '/plan' || /\/(blog|gallery|stories)\/$/.test(link.href)) return;
                     e.preventDefault();
                     navigateToSection(link.href);
                   }}
@@ -259,7 +261,10 @@ const Navbar: React.FC = () => {
                       ref={index === 0 ? firstMenuLinkRef : undefined}
                       href={localizedHref(link.href)}
                       onClick={(e) => {
-                        if (/\/(blog|gallery|stories)\/$/.test(link.href)) return;
+                        if (link.href === '/plan' || /\/(blog|gallery|stories)\/$/.test(link.href)) {
+                          setIsOpen(false);
+                          return;
+                        }
                         e.preventDefault();
                         setIsOpen(false);
                         setTimeout(() => navigateToSection(link.href), 100);
