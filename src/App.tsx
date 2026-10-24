@@ -28,6 +28,7 @@ const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const AccessibilityPage = lazy(() => import('./pages/AccessibilityPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const StartPage = lazy(() => import('./pages/StartPage'));
+const PlanPage = lazy(() => import('./pages/PlanPage'));
 //
 // The entire /admin tree — including its Supabase-backed auth provider —
 // stays behind this one lazy import. It is the only thing keeping
@@ -117,6 +118,7 @@ const AppContent: React.FC = () => {
             pathname === '/share-testimonial' ||
             pathname === '/from-gbp' ||
             pathname === '/start' ||
+            pathname === '/plan' ||
             pathname === '/card' ||
             pathname === '/qr' ||
             pathname === '/onetap';
@@ -138,6 +140,7 @@ const AppContent: React.FC = () => {
                 <Route path="/about" element={<Navigate to="/#about" replace />} />
                 <Route path="/contact" element={<Navigate to="/#contact" replace />} />
                 <Route path="/start" element={<StartPage />} />
+                <Route path="/plan" element={<PlanPage />} />
                 <Route path="/card" element={<OneTapCardPage />} />
                 <Route path="/qr" element={<OneTapQrPage />} />
                 <Route path="/onetap" element={<OneTapLandingPage />} />
