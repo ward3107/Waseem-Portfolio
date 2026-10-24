@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import {
-  allOptions, canSelectOption, quoteCatalogue, quoteEstimate, toggleOption,
+  allOptions, canSelectOption, formatQuoteAmount, quoteBreakdown, quoteCatalogue, toggleOption,
   type QuoteCategory,
 } from './catalogue';
 import { buildRequestMessage } from './request';
@@ -25,6 +25,9 @@ const copy = {
     reviewTitle: 'הבקשה שלכם',
     reviewHint: 'בדקו את הבחירות והוסיפו כמה מילים על הפרויקט.',
     quoteStatus: 'בקשת הצעת מחיר',
+    itemQuote: 'לפי הצעת מחיר',
+    estimatedTotal: 'סה״כ משוער',
+    partialSubtotal: 'סכום ביניים לפריטים מתומחרים בלבד',
     quoteNote: 'המחיר הסופי תלוי בהיקף העבודה ובעלויות חיצוניות נדרשות, אם יהיו. נבדוק יחד לפני התחייבות.',
     business: 'שם העסק (לא חובה)',
     businessPlaceholder: 'איך קוראים לעסק?',
@@ -57,6 +60,9 @@ const copy = {
     reviewTitle: 'Your request',
     reviewHint: 'Review your choices and add a few details.',
     quoteStatus: 'Request a quote',
+    itemQuote: 'Request a quote',
+    estimatedTotal: 'Estimated total',
+    partialSubtotal: 'Priced items subtotal only',
     quoteNote: 'Final pricing depends on the work and any required external costs. We will review those before you commit.',
     business: 'Business name (optional)',
     businessPlaceholder: 'Your business name',
@@ -89,6 +95,9 @@ const copy = {
     reviewTitle: 'ملخص طلبك',
     reviewHint: 'راجع اختياراتك وأضف بعض التفاصيل.',
     quoteStatus: 'طلب عرض سعر',
+    itemQuote: 'بحاجة إلى عرض سعر',
+    estimatedTotal: 'الإجمالي التقديري',
+    partialSubtotal: 'مجموع العناصر المسعّرة فقط',
     quoteNote: 'السعر النهائي يعتمد على نطاق العمل وأي تكاليف خارجية مطلوبة. نراجعها معاً قبل الالتزام.',
     business: 'اسم النشاط التجاري (اختياري)',
     businessPlaceholder: 'اسم نشاطك التجاري',
@@ -126,13 +135,16 @@ export default function QuoteCalculator() {
 
   const selectedCategories = quoteCatalogue.categories.filter((category) => categoryIds.includes(category.id));
   const currentCategory = selectedCategories[activeCategoryIndex];
-  const estimate = quoteEstimate(quoteCatalogue, optionIds);
-  const formatter = new Intl.NumberFormat(language === 'he' ? 'he-IL' : language === 'ar' ? 'ar-IL' : 'en-IL', {
-    style: 'currency', currency: 'ILS', maximumFractionDigits: 0,
-  });
-  const estimateLabel = estimate.mode === 'fixed_package' ? formatter.format(estimate.amountIls)
-    : estimate.mode === 'estimate_range' ? formatter.format(estimate.minIls) + '–' + formatter.format(estimate.maxIls)
-      : t.quoteStatus;
+  const breakdown = quoteBreakdown(quoteCatalogue, optionIds);
+  const fullyScoped = !unsureOverall && !unsureCategoryIds.length;
+  const estimateLabel = breakdown.knownSubtotal
+    ? (breakdown.total.mode !== 'manual_quote' && fullyScoped ? t.estimatedTotal : t.partialSubtotal) + ': ' +
+      formatQuoteAmount(language, breakdown.knownSubtotal.minIls, breakdown.knownSubtotal.maxIls)
+    : t.quoteStatus;
+  const optionAmount = (id: string) => {
+    const item = breakdown.pricedItems.find((priced) => priced.id === id);
+    return item ? formatQuoteAmount(language, item.minIls, item.maxIls) : t.itemQuote;
+  };
 
   const message = buildRequestMessage(quoteCatalogue, {
     language, categoryIds, optionIds, unsureCategoryIds, unsureOverall, projectStage, businessName, notes,
@@ -276,7 +288,7 @@ export default function QuoteCalculator() {
                 <div key={category.id} className="border-b border-[#edf0f6] py-3 first:pt-0 last:border-0 last:pb-0">
                   <h4 className="font-bold">{category.label[language]}</h4>
                   <ul className="mt-1 space-y-1 text-sm text-[#526078]">
-                    {category.options.filter((item) => optionIds.includes(item.id)).map((item) => <li key={item.id}>{item.label[language]}</li>)}
+                    {category.options.filter((item) => optionIds.includes(item.id)).map((item) => <li key={item.id} className="flex flex-wrap justify-between gap-2"><span>{item.label[language]}</span><span className="font-semibold">{optionAmount(item.id)}</span></li>)}
                     {unsureCategoryIds.includes(category.id) && <li>{t.unsureCategory}</li>}
                   </ul>
                 </div>
@@ -300,6 +312,8 @@ export default function QuoteCalculator() {
             </label>
             <div className="mt-6 rounded-2xl bg-[#eeecfb] p-5">
               <p className="text-lg font-bold text-[#342880]">{estimateLabel}</p>
+              {breakdown.knownSubtotal && (breakdown.total.mode === 'manual_quote' || !fullyScoped) &&
+                <p className="mt-1 text-sm font-semibold text-[#4f5870]">{t.quoteStatus}</p>}
               <p className="mt-2 text-sm leading-6 text-[#4f5870]">{t.quoteNote}</p>
             </div>
             <div className="mt-7 flex flex-wrap gap-3">
