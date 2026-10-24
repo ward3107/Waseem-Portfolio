@@ -24,7 +24,7 @@ export type QuoteCategory = {
 };
 
 export type QuoteCatalogue = {
-  /** Remains false until the owner approves the entire public numeric catalogue. */
+  /** Enables only per-item prices carrying an explicit approved flag. */
   publishedPrices: boolean;
   categories: QuoteCategory[];
   scope?: ScopeConfig;
@@ -39,16 +39,16 @@ const option = (id: string, he: string, en: string, ar: string, extra: Partial<Q
 
 const primaryWeb = 'primary_web_presence';
 
-// No numeric price is approved. Categories represent work customers can ask
-// about, not commercial commitments. Manual items need individual scoping.
+// The owner approved the website base and five component rates. Other
+// categories remain unpriced until their scope and rates are agreed.
 export const quoteCatalogue: QuoteCatalogue = {
-  publishedPrices: false,
+  publishedPrices: true,
   scope: draftScopeConfig,
   categories: [
     {
       id: 'websites', label: label('אתרים ודפי נחיתה', 'Websites & landing pages', 'مواقع وصفحات هبوط'), options: [
-        option('landing', 'דף נחיתה', 'Landing page', 'صفحة هبوط', { exclusiveGroup: primaryWeb }),
-        option('business_site', 'אתר עסקי', 'Business website', 'موقع أعمال', { exclusiveGroup: primaryWeb }),
+        option('landing', 'דף נחיתה', 'Landing page', 'صفحة هبوط', { exclusiveGroup: primaryWeb, price: { mode: 'fixed_package', amountIls: 990, approved: true } }),
+        option('business_site', 'אתר עסקי', 'Business website', 'موقع أعمال', { exclusiveGroup: primaryWeb, price: { mode: 'fixed_package', amountIls: 990, approved: true } }),
         option('custom_site', 'אתר בהתאמה אישית', 'Custom website', 'موقع مخصص', { exclusiveGroup: primaryWeb, price: manual() }),
       ],
     },

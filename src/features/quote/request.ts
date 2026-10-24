@@ -26,7 +26,7 @@ const lines = {
     itemQuote: 'לפי הצעת מחיר',
     total: 'סה״כ משוער',
     partial: 'סכום ביניים לפריטים מתומחרים בלבד (לא מחיר הפרויקט)',
-    finish: 'אשמח להצעה לפי היקף העבודה. טרם נקבע מחיר.',
+    finish: 'אשמח לאישור ההיקף והמחיר הסופי לפני תחילת העבודה.',
   },
   en: {
     intro: 'Hi vasia, I would like a project quote.',
@@ -39,7 +39,7 @@ const lines = {
     itemQuote: 'Request a quote',
     total: 'Estimated total',
     partial: 'Priced items subtotal only (not the project price)',
-    finish: 'Please quote based on the project scope. No price has been agreed.',
+    finish: 'Please confirm the scope and final price before work begins.',
   },
   ar: {
     intro: 'مرحباً vasia، أود طلب عرض سعر لمشروع.',
@@ -52,9 +52,15 @@ const lines = {
     itemQuote: 'بحاجة إلى عرض سعر',
     total: 'الإجمالي التقديري',
     partial: 'مجموع العناصر المسعّرة فقط (ليس سعر المشروع)',
-    finish: 'أرجو تقديم عرض حسب نطاق العمل. لم يتم الاتفاق على سعر بعد.',
+    finish: 'يرجى تأكيد نطاق العمل والسعر النهائي قبل البدء.',
   },
 } as const;
+
+const websiteTerms: Record<Language, string> = {
+  he: 'מחיר אתר כולל עמוד אחד, שפה אחת, תוכן שמספק הלקוח ושני סבבי תיקונים. אחסון, דומיין ורישיונות בתשלום אינם כלולים.',
+  en: 'Website pricing includes one page, one language, client-supplied content and two revision rounds. Hosting, domain and paid licenses are excluded.',
+  ar: 'يشمل سعر الموقع صفحة واحدة ولغة واحدة ومحتوى يقدمه العميل وجولتين من التعديلات. الاستضافة والنطاق والتراخيص المدفوعة غير مشمولة.',
+};
 
 export function buildRequestMessage(catalogue: QuoteCatalogue, details: RequestDetails): string {
   const t = lines[details.language];
@@ -100,6 +106,7 @@ export function buildRequestMessage(catalogue: QuoteCatalogue, details: RequestD
         ? t.total : t.partial) + ': ' + formatQuoteAmount(details.language, breakdown.knownSubtotal.minIls, breakdown.knownSubtotal.maxIls),
     ] : []),
     '',
+    ...(allowedIds.some((id) => id === 'landing' || id === 'business_site') ? [websiteTerms[details.language]] : []),
     t.stage + ': ' + t.stages[details.projectStage],
     ...(business ? [t.business + ': ' + business] : []),
     ...(notes ? [t.notes + ': ' + notes] : []),

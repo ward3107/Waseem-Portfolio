@@ -5,9 +5,9 @@ export type LocalizedScopeText = Record<Language, string>;
 export type ScopeQuantity = 'pages' | 'languages' | 'products' | 'reels';
 export type ScopeFeature = 'blog_cms' | 'booking' | 'custom_form' | 'motion_hero' |
   'member_login' | 'custom_payment' | 'captions' | 'motion_titles';
-export type ScopePriceKey = 'extra_page' | 'extra_language' | 'product_batch' | 'extra_reel' |
+export type ScopePriceKey = 'extra_page' | 'website_extra_language' | 'extra_language' | 'product_batch' | 'extra_reel' |
   'enhanced_design' | 'custom_design' | ScopeFeature;
-type QuantityPriceKey = 'extra_page' | 'extra_language' | 'product_batch' | 'extra_reel';
+type QuantityPriceKey = 'extra_page' | 'website_extra_language' | 'extra_language' | 'product_batch' | 'extra_reel';
 
 export type ScopeValues = {
   quantities?: Partial<Record<ScopeQuantity, number>>;
@@ -49,6 +49,7 @@ export const scopeCopy = {
   extras: {
     extra_page: text('עמודים נוספים', 'Additional pages', 'صفحات إضافية'),
     extra_language: text('שפות נוספות', 'Additional languages', 'لغات إضافية'),
+    website_extra_language: text('שפות נוספות', 'Additional languages', 'لغات إضافية'),
     product_batch: text('קבוצות של עד 10 מוצרים נוספים', 'Additional batches of up to 10 products', 'دفعات إضافية حتى 10 منتجات'),
     extra_reel: text('סרטונים נוספים', 'Additional videos', 'فيديوهات إضافية'),
   },
@@ -72,13 +73,12 @@ export const scopeCopy = {
   included: text('כלול בבחירה', 'Included in selection', 'مشمول في الاختيار'),
 } as const;
 
-// These are draft scope allowances, not approved commercial terms. No public
-// amount is configured. The owner must approve allowances and each price rule
-// before scope pricing can be published.
+// Website scope and the five fixed website rates below are owner-approved.
+// All other components retain pending or manual rules until scoped and approved.
 export const draftScopeConfig: ScopeConfig = {
   profiles: {
-    landing: { quantities: { pages: { included: 1, max: 12, perCharge: 1, priceKey: 'extra_page' }, languages: { included: 1, max: 3, perCharge: 1, priceKey: 'extra_language' } }, design: true, features: ['booking', 'custom_form', 'motion_hero'] },
-    business_site: { quantities: { pages: { included: 4, max: 30, perCharge: 1, priceKey: 'extra_page' }, languages: { included: 1, max: 3, perCharge: 1, priceKey: 'extra_language' } }, design: true, features: ['blog_cms', 'booking', 'custom_form', 'motion_hero', 'member_login'] },
+    landing: { quantities: { pages: { included: 1, max: 12, perCharge: 1, priceKey: 'extra_page' }, languages: { included: 1, max: 3, perCharge: 1, priceKey: 'website_extra_language' } }, design: true, features: ['booking', 'custom_form', 'motion_hero'] },
+    business_site: { quantities: { pages: { included: 1, max: 30, perCharge: 1, priceKey: 'extra_page' }, languages: { included: 1, max: 3, perCharge: 1, priceKey: 'website_extra_language' } }, design: true, features: ['blog_cms', 'booking', 'custom_form', 'motion_hero', 'member_login'] },
     starter_store: { quantities: { products: { included: 10, max: 100, perCharge: 10, priceKey: 'product_batch' }, languages: { included: 1, max: 3, perCharge: 1, priceKey: 'extra_language' } }, design: true, features: ['member_login', 'custom_payment'] },
     card_classic: { quantities: { languages: { included: 1, max: 3, perCharge: 1, priceKey: 'extra_language' } } },
     card_motion: { quantities: { languages: { included: 1, max: 3, perCharge: 1, priceKey: 'extra_language' } } },
@@ -86,9 +86,15 @@ export const draftScopeConfig: ScopeConfig = {
     reel_edit: { quantities: { reels: { included: 1, max: 10, perCharge: 1, priceKey: 'extra_reel' } }, features: ['captions', 'motion_titles'] },
   },
   prices: {
-    extra_page: pending(), extra_language: pending(), product_batch: pending(), extra_reel: pending(),
-    enhanced_design: pending(), custom_design: manual(), blog_cms: pending(), booking: manual(),
-    custom_form: manual(), motion_hero: pending(), member_login: manual(), custom_payment: manual(),
+    extra_page: { mode: 'fixed_package', amountIls: 190, approved: true },
+    website_extra_language: { mode: 'fixed_package', amountIls: 350, approved: true },
+    extra_language: pending(),
+    product_batch: pending(), extra_reel: pending(),
+    enhanced_design: pending(), custom_design: manual(),
+    blog_cms: { mode: 'fixed_package', amountIls: 390, approved: true },
+    booking: manual(), custom_form: manual(),
+    motion_hero: { mode: 'fixed_package', amountIls: 290, approved: true },
+    member_login: manual(), custom_payment: manual(),
     captions: pending(), motion_titles: pending(),
   },
 };

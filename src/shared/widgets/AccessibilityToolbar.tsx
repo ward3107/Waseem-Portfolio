@@ -213,11 +213,11 @@ const AccessibilityToolbar: React.FC = () => {
   return (
     <div className="fixed inset-0 z-[70] flex items-end justify-end pointer-events-none sm:items-center sm:pe-6 sm:pb-6">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-auto" onClick={closePanel}></div>
+      <div className="absolute inset-0 z-0 bg-black/45 pointer-events-auto" onClick={closePanel} aria-hidden="true"></div>
 
       <div
         ref={panelRef}
-        className="w-full sm:w-[400px] bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom))] sm:max-h-[90dvh] pointer-events-auto overflow-hidden"
+        className="relative z-10 w-full sm:w-[400px] bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom))] sm:max-h-[90dvh] pointer-events-auto overflow-hidden"
         role="dialog"
         aria-modal="true"
         aria-label={t('a11y_title')}
