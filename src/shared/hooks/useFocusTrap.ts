@@ -8,7 +8,7 @@ import { useEffect, RefObject } from 'react';
  * @param isOpen - Whether the modal is open
  */
 export const useFocusTrap = (
-  modalRef: RefObject<HTMLElement>,
+  modalRef: RefObject<HTMLElement | null>,
   isOpen: boolean
 ): void => {
   useEffect(() => {
