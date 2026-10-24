@@ -26,6 +26,7 @@ const lines = {
     itemQuote: 'לפי הצעת מחיר',
     total: 'סה״כ משוער',
     partial: 'סכום ביניים לפריטים מתומחרים בלבד (לא מחיר הפרויקט)',
+    costs: 'טווחי המחיר הם הערכה לפי היקף העבודה. דומיין, אחסון, רישיונות, מנויים, תקציבי פרסום ושימוש בשירותי AI אינם כלולים. תחזוקה היא לחודש אחד ללא חידוש אוטומטי.',
     finish: 'אשמח לאישור ההיקף והמחיר הסופי לפני תחילת העבודה.',
   },
   en: {
@@ -39,6 +40,7 @@ const lines = {
     itemQuote: 'Request a quote',
     total: 'Estimated total',
     partial: 'Priced items subtotal only (not the project price)',
+    costs: 'Price ranges are scope-based estimates. Domain, hosting, licenses, subscriptions, ad spend and AI usage are excluded. Maintenance covers one month without automatic renewal.',
     finish: 'Please confirm the scope and final price before work begins.',
   },
   ar: {
@@ -52,6 +54,7 @@ const lines = {
     itemQuote: 'بحاجة إلى عرض سعر',
     total: 'الإجمالي التقديري',
     partial: 'مجموع العناصر المسعّرة فقط (ليس سعر المشروع)',
+    costs: 'النطاقات السعرية تقديرية حسب نطاق العمل. النطاق والاستضافة والتراخيص والاشتراكات وميزانيات الإعلان واستخدام AI غير مشمولة. الصيانة لشهر واحد دون تجديد تلقائي.',
     finish: 'يرجى تأكيد نطاق العمل والسعر النهائي قبل البدء.',
   },
 } as const;
@@ -111,6 +114,7 @@ export function buildRequestMessage(catalogue: QuoteCatalogue, details: RequestD
     ...(business ? [t.business + ': ' + business] : []),
     ...(notes ? [t.notes + ': ' + notes] : []),
     '',
+    t.costs,
     t.finish,
   ].join('\n');
 }

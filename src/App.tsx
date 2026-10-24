@@ -1,3 +1,4 @@
+import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion';
 import React, { lazy, Suspense } from 'react';
 import { MotionConfig } from 'framer-motion';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -166,6 +167,11 @@ const AppContent: React.FC = () => {
   );
 };
 
+const AccessibleMotion: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const reduced = usePrefersReducedMotion();
+  return <MotionConfig reducedMotion={reduced ? 'always' : 'user'}>{children}</MotionConfig>;
+};
+
 const App: React.FC = () => {
   return (
     <ErrorBoundary>
@@ -176,9 +182,9 @@ const App: React.FC = () => {
               {/* reducedMotion="user" makes every framer-motion animation on
                     the site honor the OS prefers-reduced-motion setting,
                     including components that don't check it manually. */}
-              <MotionConfig reducedMotion="user">
+              <AccessibleMotion>
                 <AppContent />
-              </MotionConfig>
+              </AccessibleMotion>
             </BrowserRouter>
           </WidgetProvider>
         </ThemeProvider>

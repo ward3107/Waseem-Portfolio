@@ -31,31 +31,154 @@ export type QuoteCatalogue = {
 };
 
 const label = (he: string, en: string, ar: string): Localized => ({ he, en, ar });
-const pending = (): PriceRule => ({ mode: 'pending' });
-const manual = (): PriceRule => ({ mode: 'manual_quote' });
+const publicRates: Record<string, number[]> = {
+  "landing": [
+    1150
+  ],
+  "business_site": [
+    1150
+  ],
+  "custom_site": [
+    4600,
+    9200
+  ],
+  "starter_store": [
+    4000
+  ],
+  "custom_store": [
+    6900,
+    13800
+  ],
+  "card_classic": [
+    350
+  ],
+  "card_motion": [
+    550
+  ],
+  "card_signature": [
+    900
+  ],
+  "pwa": [
+    4600,
+    9200
+  ],
+  "mobile_app": [
+    9200,
+    18400
+  ],
+  "store_launch": [
+    2300,
+    4600
+  ],
+  "website_chatbot": [
+    1750,
+    2900
+  ],
+  "business_agent": [
+    3500,
+    7000
+  ],
+  "knowledge_assistant": [
+    2900,
+    5800
+  ],
+  "workflow": [
+    650,
+    1150
+  ],
+  "crm": [
+    900,
+    1750
+  ],
+  "api": [
+    650,
+    1500
+  ],
+  "reel_edit": [
+    350
+  ],
+  "ad_edit": [
+    650,
+    1150
+  ],
+  "ai_video": [
+    900,
+    1750
+  ],
+  "motion_graphics": [
+    650,
+    1500
+  ],
+  "web_3d": [
+    1750,
+    4600
+  ],
+  "speed_audit": [
+    350
+  ],
+  "speed_fix": [
+    650,
+    1500
+  ],
+  "seo_audit": [
+    450
+  ],
+  "seo_implementation": [
+    900,
+    2300
+  ],
+  "local_seo": [
+    650,
+    1500
+  ],
+  "maintenance": [
+    290
+  ],
+  "migration": [
+    650,
+    1750
+  ],
+  "repair": [
+    350,
+    900
+  ],
+  "accessibility_audit": [
+    650
+  ],
+  "accessibility_fix": [
+    1150,
+    2900
+  ]
+};
+const publicPrice = (id: string): PriceRule => {
+  const rate = publicRates[id];
+  if (!rate) return { mode: 'manual_quote' };
+  return rate.length === 1
+    ? { mode: 'fixed_package', amountIls: rate[0], approved: true }
+    : { mode: 'estimate_range', minIls: rate[0], maxIls: rate[1], approved: true };
+};
 const option = (id: string, he: string, en: string, ar: string, extra: Partial<QuoteOption> = {}): QuoteOption => ({
-  id, label: label(he, en, ar), price: pending(), ...extra,
+  id, label: label(he, en, ar), ...extra, price: publicPrice(id),
 });
 
 const primaryWeb = 'primary_web_presence';
 
-// The owner approved the website base and five component rates. Other
-// categories remain unpriced until their scope and rates are agreed.
+// Public price list updated 2026-10-24: higher base rates and priced variable scope.
 export const quoteCatalogue: QuoteCatalogue = {
   publishedPrices: true,
   scope: draftScopeConfig,
   categories: [
     {
       id: 'websites', label: label('אתרים ודפי נחיתה', 'Websites & landing pages', 'مواقع وصفحات هبوط'), options: [
-        option('landing', 'דף נחיתה', 'Landing page', 'صفحة هبوط', { exclusiveGroup: primaryWeb, price: { mode: 'fixed_package', amountIls: 990, approved: true } }),
-        option('business_site', 'אתר עסקי', 'Business website', 'موقع أعمال', { exclusiveGroup: primaryWeb, price: { mode: 'fixed_package', amountIls: 990, approved: true } }),
-        option('custom_site', 'אתר בהתאמה אישית', 'Custom website', 'موقع مخصص', { exclusiveGroup: primaryWeb, price: manual() }),
+        option('landing', 'דף נחיתה', 'Landing page', 'صفحة هبوط', { exclusiveGroup: primaryWeb }),
+        option('business_site', 'אתר עסקי', 'Business website', 'موقع أعمال', { exclusiveGroup: primaryWeb }),
+        option('custom_site', 'אתר בהתאמה אישית', 'Custom website', 'موقع مخصص', { exclusiveGroup: primaryWeb }),
       ],
     },
     {
       id: 'commerce', label: label('חנויות ומסחר', 'Online stores', 'متاجر إلكترونية'), options: [
         option('starter_store', 'חנות למוצרים פשוטים', 'Store for standard products', 'متجر لمنتجات عادية', { exclusiveGroup: primaryWeb }),
-        option('custom_store', 'חנות עם תהליכים מיוחדים', 'Custom commerce flow', 'متجر بمسارات مخصصة', { exclusiveGroup: primaryWeb, price: manual() }),
+        option('custom_store', 'חנות עם תהליכים מיוחדים', 'Custom commerce flow', 'متجر بمسارات مخصصة', { exclusiveGroup: primaryWeb }),
       ],
     },
     {
@@ -67,62 +190,62 @@ export const quoteCatalogue: QuoteCatalogue = {
     },
     {
       id: 'apps', label: label('אפליקציות ו־PWA', 'Apps & PWA', 'تطبيقات وPWA'), options: [
-        option('pwa', 'אפליקציית ווב / PWA', 'Web app / PWA', 'تطبيق ويب / PWA', { exclusiveGroup: 'application_build', price: manual() }),
-        option('mobile_app', 'אפליקציית מובייל', 'Mobile app', 'تطبيق هاتف', { exclusiveGroup: 'application_build', price: manual() }),
-        option('store_launch', 'הכנה ופרסום בחנויות אפליקציות', 'App store launch support', 'تجهيز ونشر في متاجر التطبيقات', { price: manual() }),
+        option('pwa', 'אפליקציית ווב / PWA', 'Web app / PWA', 'تطبيق ويب / PWA', { exclusiveGroup: 'application_build' }),
+        option('mobile_app', 'אפליקציית מובייל', 'Mobile app', 'تطبيق هاتف', { exclusiveGroup: 'application_build' }),
+        option('store_launch', 'הכנה ופרסום בחנויות אפליקציות', 'App store launch support', 'تجهيز ونشر في متاجر التطبيقات', {}),
       ],
     },
     {
       id: 'agents', label: label('סוכני AI וצ׳אטבוטים', 'AI agents & chatbots', 'وكلاء AI وروبوتات محادثة'), options: [
-        option('website_chatbot', 'צ׳אטבוט לאתר', 'Website chatbot', 'روبوت محادثة للموقع', { price: manual() }),
-        option('business_agent', 'סוכן AI לתהליך עסקי', 'AI agent for a business process', 'وكيل AI لعملية عمل', { price: manual() }),
-        option('knowledge_assistant', 'עוזר מבוסס מאגר ידע', 'Knowledge-base assistant', 'مساعد يعتمد على قاعدة معرفة', { price: manual() }),
+        option('website_chatbot', 'צ׳אטבוט לאתר', 'Website chatbot', 'روبوت محادثة للموقع', {}),
+        option('business_agent', 'סוכן AI לתהליך עסקי', 'AI agent for a business process', 'وكيل AI لعملية عمل', {}),
+        option('knowledge_assistant', 'עוזר מבוסס מאגר ידע', 'Knowledge-base assistant', 'مساعد يعتمد على قاعدة معرفة', {}),
       ],
     },
     {
       id: 'automation', label: label('אוטומציה, API ו־CRM', 'Automation, APIs & CRM', 'أتمتة وAPI وCRM'), options: [
-        option('workflow', 'אוטומציה לתהליך חוזר', 'Recurring workflow automation', 'أتمتة عملية متكررة', { price: manual() }),
-        option('crm', 'חיבור למערכת CRM', 'CRM integration', 'ربط بنظام CRM', { price: manual() }),
-        option('api', 'חיבור בין מערכות באמצעות API', 'API system integration', 'ربط الأنظمة عبر API', { price: manual() }),
+        option('workflow', 'אוטומציה לתהליך חוזר', 'Recurring workflow automation', 'أتمتة عملية متكررة', {}),
+        option('crm', 'חיבור למערכת CRM', 'CRM integration', 'ربط بنظام CRM', {}),
+        option('api', 'חיבור בין מערכות באמצעות API', 'API system integration', 'ربط الأنظمة عبر API', {}),
       ],
     },
     {
       id: 'video', label: label('עריכת וידאו ווידאו AI', 'Video editing & AI video', 'مونتاج فيديو وفيديو AI'), options: [
         option('reel_edit', 'עריכת רילס מחומרים מוכנים', 'Reel editing from supplied footage', 'مونتاج ريلز من مواد جاهزة'),
-        option('ad_edit', 'עריכת סרטון פרסומי', 'Promotional video editing', 'مونتاج فيديو إعلاني', { price: manual() }),
-        option('ai_video', 'הפקת וידאו בעזרת AI', 'AI video production', 'إنتاج فيديو بمساعدة AI', { price: manual() }),
+        option('ad_edit', 'עריכת סרטון פרסומי', 'Promotional video editing', 'مونتاج فيديو إعلاني', {}),
+        option('ai_video', 'הפקת וידאו בעזרת AI', 'AI video production', 'إنتاج فيديو بمساعدة AI', {}),
       ],
     },
     {
       id: 'motion', label: label('מושן ותלת־ממד', 'Motion & 3D', 'موشن وثلاثي الأبعاد'), options: [
-        option('motion_graphics', 'גרפיקת מושן', 'Motion graphics', 'رسوم متحركة', { price: manual() }),
-        option('web_3d', 'חוויה תלת־ממדית לאתר', 'Interactive 3D for a website', 'تجربة تفاعلية ثلاثية الأبعاد للموقع', { price: manual() }),
+        option('motion_graphics', 'גרפיקת מושן', 'Motion graphics', 'رسوم متحركة', {}),
+        option('web_3d', 'חוויה תלת־ממדית לאתר', 'Interactive 3D for a website', 'تجربة تفاعلية ثلاثية الأبعاد للموقع', {}),
       ],
     },
     {
       id: 'performance', label: label('מהירות וביצועים', 'Speed & performance', 'السرعة والأداء'), options: [
         option('speed_audit', 'בדיקת ביצועים לאתר קיים', 'Existing-site performance audit', 'فحص أداء موقع قائم'),
-        option('speed_fix', 'שיפור מהירות לאתר קיים', 'Existing-site speed improvements', 'تحسين سرعة موقع قائم', { price: manual() }),
+        option('speed_fix', 'שיפור מהירות לאתר קיים', 'Existing-site speed improvements', 'تحسين سرعة موقع قائم', {}),
       ],
     },
     {
       id: 'seo', label: label('SEO טכני', 'Technical SEO', 'SEO تقني'), options: [
         option('seo_audit', 'בדיקת SEO טכני לאתר קיים', 'Existing-site technical SEO audit', 'فحص SEO تقني لموقع قائم'),
-        option('seo_implementation', 'יישום תיקוני SEO טכניים', 'Technical SEO implementation', 'تنفيذ تحسينات SEO التقنية', { price: manual() }),
-        option('local_seo', 'תשתית SEO מקומי', 'Local SEO setup', 'تهيئة SEO محلي', { price: manual() }),
+        option('seo_implementation', 'יישום תיקוני SEO טכניים', 'Technical SEO implementation', 'تنفيذ تحسينات SEO التقنية', {}),
+        option('local_seo', 'תשתית SEO מקומי', 'Local SEO setup', 'تهيئة SEO محلي', {}),
       ],
     },
     {
       id: 'support', label: label('תחזוקה ומעבר אתר', 'Maintenance & migration', 'صيانة ونقل المواقع'), options: [
-        option('maintenance', 'תחזוקה שוטפת', 'Ongoing maintenance', 'صيانة مستمرة', { price: manual() }),
-        option('migration', 'מעבר אתר או פלטפורמה', 'Site or platform migration', 'نقل موقع أو منصة', { price: manual() }),
-        option('repair', 'תיקון תקלה באתר קיים', 'Repair an existing site', 'إصلاح مشكلة بموقع قائم', { price: manual() }),
+        option('maintenance', 'חבילת תחזוקה לחודש אחד', 'One-month maintenance package', 'حزمة صيانة لشهر واحد', {}),
+        option('migration', 'מעבר אתר או פלטפורמה', 'Site or platform migration', 'نقل موقع أو منصة', {}),
+        option('repair', 'תיקון תקלה באתר קיים', 'Repair an existing site', 'إصلاح مشكلة بموقع قائم', {}),
       ],
     },
     {
       id: 'accessibility', label: label('יישום נגישות', 'Accessibility implementation', 'تنفيذ تحسينات الوصول'), options: [
         option('accessibility_audit', 'בדיקת שימוש ונגישות', 'Usability and accessibility audit', 'فحص الاستخدام وإمكانية الوصول'),
-        option('accessibility_fix', 'תיקוני נגישות בממשק', 'Interface accessibility fixes', 'إصلاحات الوصول في الواجهة', { price: manual() }),
+        option('accessibility_fix', 'תיקוני נגישות בממשק', 'Interface accessibility fixes', 'إصلاحات الوصول في الواجهة', {}),
       ],
     },
   ],
@@ -228,4 +351,10 @@ export function formatQuoteAmount(language: Language, minIls: number, maxIls: nu
   const locale = language === 'he' ? 'he-IL' : language === 'ar' ? 'ar-IL' : 'en-IL';
   const formatter = new Intl.NumberFormat(locale, { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 });
   return minIls === maxIls ? formatter.format(minIls) : formatter.format(minIls) + '–' + formatter.format(maxIls);
+}
+
+export function formatPriceRule(language: Language, price: PriceRule): string {
+  if (price.mode === 'fixed_package') return formatQuoteAmount(language, price.amountIls, price.amountIls);
+  if (price.mode === 'estimate_range') return formatQuoteAmount(language, price.minIls, price.maxIls);
+  return language === 'he' ? 'לפי היקף מיוחד' : language === 'ar' ? 'حسب نطاق خاص' : 'Custom scope';
 }

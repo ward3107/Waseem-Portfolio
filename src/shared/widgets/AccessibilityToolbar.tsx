@@ -1,358 +1,227 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
-  Accessibility, X, RotateCcw, Sun, Type,
-  MousePointer, Image as ImageIcon, Zap, Link as LinkIcon,
-  AlignLeft, Check, EyeOff
+  Accessibility, X, RotateCcw, Type, MousePointer, Image as ImageIcon,
+  Zap, Link as LinkIcon, AlignLeft, EyeOff, Heading, Focus, Palette, MoveHorizontal, Minus,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { safeGetItem, safeSetItem } from '@/lib/safeStorage';
-import { useFocusTrap, useEscapeKey } from '@/shared/hooks/useFocusTrap';
+import { useFocusTrap } from '@/shared/hooks/useFocusTrap';
+import { safeSetItem } from '@/lib/safeStorage';
+import {
+  A11Y_CHANGE_EVENT, A11Y_DIALOG_EVENT, A11Y_OPEN_EVENT, DEFAULT_A11Y_SETTINGS,
+  readA11ySettings, type A11ySettings, type A11yToggle,
+} from './accessibilitySettings';
+import './AccessibilityToolbar.css';
 
-type ContrastMode = 'normal' | 'high' | 'inverted';
+const copy = {
+  he: {
+    title: 'התאמות נגישות', description: 'התאימו את התצוגה לנוחותכם. אפשר לגלול בתוך החלון ולהשתמש במקלדת.',
+    size: 'גודל טקסט', increase: 'הגדלת טקסט', decrease: 'הקטנת טקסט',
+    contrast: 'ניגודיות', normal: 'רגילה', high: 'בהירה', inverted: 'כהה',
+    highlightLinks: 'הדגשת קישורים', readableFont: 'גופן קריא', textSpacing: 'ריווח טקסט',
+    largeCursor: 'סמן עכבר גדול', hideImages: 'הסתרת מדיה דקורטיבית', disableAnimations: 'הפחתת תנועה והנפשות',
+    highlightHeadings: 'הדגשת כותרות', focusHighlight: 'מיקוד מקלדת מודגש', grayscale: 'מדיה בגווני אפור',
+    alignText: 'יישור טקסט לתחילת השורה', readingGuide: 'קו עזר לקריאה',
+    reset: 'איפוס התאמות', hide: 'הסתרה לביקור הנוכחי', close: 'סגירת נגישות',
+    statement: 'הצהרת נגישות ויצירת קשר', saved: 'ההתאמות נשמרות במכשיר זה. Escape סוגר את החלון.',
+    restore: 'אפשר לפתוח שוב דרך עמוד הצהרת הנגישות.',
+  },
+  en: {
+    title: 'Accessibility settings', description: 'Adjust the display for your comfort. Scroll inside this panel or use the keyboard.',
+    size: 'Text size', increase: 'Increase text size', decrease: 'Decrease text size',
+    contrast: 'Contrast', normal: 'Default', high: 'Light', inverted: 'Dark',
+    highlightLinks: 'Highlight links', readableFont: 'Readable font', textSpacing: 'Text spacing',
+    largeCursor: 'Large cursor', hideImages: 'Hide decorative media', disableAnimations: 'Reduce motion and animations',
+    highlightHeadings: 'Highlight headings', focusHighlight: 'Stronger keyboard focus', grayscale: 'Grayscale media',
+    alignText: 'Align text to reading direction', readingGuide: 'Reading guide',
+    reset: 'Reset settings', hide: 'Hide for this visit', close: 'Close accessibility settings',
+    statement: 'Accessibility statement and contact', saved: 'Settings are saved on this device. Escape closes this panel.',
+    restore: 'Reopen from the accessibility statement page.',
+  },
+  ar: {
+    title: 'إعدادات إمكانية الوصول', description: 'اضبط العرض لراحتك. يمكنك التمرير داخل النافذة أو استخدام لوحة المفاتيح.',
+    size: 'حجم النص', increase: 'تكبير النص', decrease: 'تصغير النص',
+    contrast: 'التباين', normal: 'عادي', high: 'فاتح', inverted: 'داكن',
+    highlightLinks: 'إبراز الروابط', readableFont: 'خط واضح', textSpacing: 'تباعد النص',
+    largeCursor: 'مؤشر كبير', hideImages: 'إخفاء الوسائط الزخرفية', disableAnimations: 'تقليل الحركة والمؤثرات',
+    highlightHeadings: 'إبراز العناوين', focusHighlight: 'إبراز تركيز لوحة المفاتيح', grayscale: 'وسائط بتدرج رمادي',
+    alignText: 'محاذاة النص مع اتجاه القراءة', readingGuide: 'خط مساعد للقراءة',
+    reset: 'إعادة ضبط الإعدادات', hide: 'إخفاء لهذه الزيارة', close: 'إغلاق إعدادات الوصول',
+    statement: 'بيان الوصول والتواصل', saved: 'تُحفظ الإعدادات على هذا الجهاز. Escape يغلق النافذة.',
+    restore: 'يمكن فتحها من صفحة بيان إمكانية الوصول.',
+  },
+} as const;
 
-interface A11yState {
-  fontSize: number;
-  contrastMode: ContrastMode;
-  highlightLinks: boolean;
-  readableFont: boolean;
-  textSpacing: boolean;
-  largeCursor: boolean;
-  hideImages: boolean;
-  disableAnimations: boolean;
+const toggles: Array<{ key: A11yToggle; icon: typeof Type }> = [
+  { key: 'highlightLinks', icon: LinkIcon }, { key: 'readableFont', icon: Type },
+  { key: 'textSpacing', icon: AlignLeft }, { key: 'highlightHeadings', icon: Heading },
+  { key: 'focusHighlight', icon: Focus }, { key: 'disableAnimations', icon: Zap },
+  { key: 'largeCursor', icon: MousePointer }, { key: 'hideImages', icon: ImageIcon },
+  { key: 'grayscale', icon: Palette }, { key: 'alignText', icon: MoveHorizontal },
+  { key: 'readingGuide', icon: Minus },
+];
+
+function sessionHidden() {
+  try { return sessionStorage.getItem('a11y-widget-hidden') === '1'; }
+  catch { return false; }
 }
 
-const DEFAULT_STATE: A11yState = {
-  fontSize: 100,
-  contrastMode: 'normal',
-  highlightLinks: false,
-  readableFont: false,
-  textSpacing: false,
-  largeCursor: false,
-  hideImages: false,
-  disableAnimations: false,
-};
-
-// Light/dark theme is owned solely by ThemeContext (it toggles the `dark` class
-// on <html>). This toolbar must NOT touch that class, or the two systems fight
-// and changing any a11y setting silently flips the site's theme.
-
-const AccessibilityToolbar: React.FC = () => {
-  const { t } = useLanguage();
+export default function AccessibilityToolbar() {
+  const { language, dir } = useLanguage();
+  const text = copy[language];
+  const [state, setState] = useState(readA11ySettings);
   const [isOpen, setIsOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(() => {
-    try { return sessionStorage.getItem('a11y-widget-hidden') !== '1'; }
-    catch { return true; }
-  });
-
-  // No self-opening intro card. The narrow side tab avoids the contact controls
-  // at the bottom of short mobile viewports.
-  // Lazy initializer reads saved settings synchronously on first render, so
-  // the persist effect below never sees DEFAULT_STATE overwriting real data,
-  // and there's no visible flash of non-accessible styles on route changes.
-  const [state, setState] = useState<A11yState>(() => {
-    const saved = safeGetItem('a11y-settings');
-    if (!saved) return DEFAULT_STATE;
-    try {
-      // Merge over defaults so older/partial saved payloads (e.g. from before
-      // a field existed, or the removed `isDark` field) can't break state.
-      return { ...DEFAULT_STATE, ...JSON.parse(saved) };
-    } catch {
-      return DEFAULT_STATE;
-    }
-  });
-  const panelRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(() => !sessionHidden());
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const restoreFocus = useRef(false);
+  const guideRef = useRef<HTMLDivElement>(null);
+  // Keep Tab inside the modal even when the browser would focus its own chrome.
+  useFocusTrap(dialogRef, isOpen);
 
-  const closePanel = () => {
-    restoreFocus.current = true;
+  const closePanel = useCallback(() => {
+    dialogRef.current?.close();
     setIsOpen(false);
-  };
-
-  const hideForSession = () => {
-    try { sessionStorage.setItem('a11y-widget-hidden', '1'); }
-    catch { /* Session storage may be unavailable; hiding still works for this mount. */ }
-    setIsOpen(false);
-    setIsVisible(false);
-  };
-
-  // The accessibility panel is a dialog — it must trap focus and close on
-  // Escape like every other modal in the app (ironic to omit on this widget).
-  useFocusTrap(panelRef, isOpen);
-  useEscapeKey(isOpen, closePanel);
+    triggerRef.current?.focus({ preventScroll: true });
+  }, []);
 
   useEffect(() => {
-    if (!isOpen && restoreFocus.current) {
-      restoreFocus.current = false;
-      triggerRef.current?.focus();
-    }
-  }, [isOpen]);
+    const open = () => {
+      try { sessionStorage.removeItem('a11y-widget-hidden'); } catch { /* Optional storage. */ }
+      setVisible(true);
+      setIsOpen(true);
+    };
+    window.addEventListener(A11Y_OPEN_EVENT, open);
+    return () => window.removeEventListener(A11Y_OPEN_EVENT, open);
+  }, []);
 
-  const getAccessibilityLabel = () => t('a11y_title');
-
-  // Persist and apply styles whenever state changes.
   useEffect(() => {
+    const root = document.documentElement;
+    const attrs: Record<A11yToggle, string> = {
+      highlightLinks: 'data-a11y-highlight-links', readableFont: 'data-a11y-readable-font',
+      textSpacing: 'data-a11y-text-spacing', largeCursor: 'data-a11y-large-cursor',
+      hideImages: 'data-a11y-hide-images', disableAnimations: 'data-a11y-reduced-motion',
+      highlightHeadings: 'data-a11y-highlight-headings', focusHighlight: 'data-a11y-focus-highlight',
+      grayscale: 'data-a11y-grayscale', alignText: 'data-a11y-align-text', readingGuide: 'data-a11y-reading-guide',
+    };
+    for (const feature of toggles) root.toggleAttribute(attrs[feature.key], state[feature.key]);
+    root.dataset.a11yContrast = state.contrastMode;
+    root.style.setProperty('--a11y-scale', String(state.fontSize / 100));
+    // No filter/transform on html: the launcher must stay attached to the viewport.
+    root.style.fontSize = state.fontSize === 100 ? '' : state.fontSize + '%';
+    document.getElementById('a11y-styles')?.remove();
     safeSetItem('a11y-settings', JSON.stringify(state));
-    applyStyles(state);
+    window.dispatchEvent(new Event(A11Y_CHANGE_EVENT));
   }, [state]);
 
-  // Handle click outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
-        closePanel();
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
+    const dialog = dialogRef.current;
+    if (!isOpen || !dialog) return;
+    // Native modal semantics make the background inert and trap focus.
+    dialog.showModal();
+    document.documentElement.setAttribute('data-a11y-dialog-open', '');
+    window.dispatchEvent(new CustomEvent(A11Y_DIALOG_EVENT, { detail: true }));
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      if (dialog.open) dialog.close();
+      document.documentElement.removeAttribute('data-a11y-dialog-open');
+      window.dispatchEvent(new CustomEvent(A11Y_DIALOG_EVENT, { detail: false }));
     };
   }, [isOpen]);
 
-  const applyStyles = (s: A11yState) => {
-    // Note: theme (dark/light) is intentionally NOT handled here — ThemeContext
-    // owns the `dark` class on <html>. Generate dynamic CSS only.
-    let css = '';
+  useEffect(() => {
+    if (!state.readingGuide || isOpen) return;
+    const move = (y: number) => {
+      if (guideRef.current) guideRef.current.style.top = Math.max(0, Math.min(window.innerHeight - 4, y)) + 'px';
+    };
+    const pointer = (event: PointerEvent) => move(event.clientY + 12);
+    const focus = (event: FocusEvent) => {
+      if (event.target instanceof HTMLElement) move(event.target.getBoundingClientRect().bottom + 4);
+    };
+    move(window.innerHeight / 2);
+    window.addEventListener('pointermove', pointer, { passive: true });
+    document.addEventListener('focusin', focus);
+    return () => {
+      window.removeEventListener('pointermove', pointer);
+      document.removeEventListener('focusin', focus);
+    };
+  }, [state.readingGuide, isOpen]);
 
-    // Font Size
-    if (s.fontSize !== 100) {
-      css += `html { font-size: ${s.fontSize}% !important; }`;
-    }
+  useEffect(() => {
+    if (!state.disableAnimations) return;
+    // Also stop HTML media and Web Animations; CSS alone does not stop them.
+    const stopMedia = (event?: Event) => {
+      if (event?.target instanceof HTMLMediaElement && event.target.autoplay) event.target.pause();
+      document.querySelectorAll<HTMLMediaElement>('video[autoplay],audio[autoplay]').forEach((media) => media.pause());
+      document.getAnimations?.().forEach((animation) => animation.pause());
+    };
+    stopMedia();
+    document.addEventListener('play', stopMedia, true);
+    const observer = new MutationObserver(() => stopMedia());
+    observer.observe(document.getElementById('root') || document.body, { childList: true, subtree: true });
+    return () => {
+      document.removeEventListener('play', stopMedia, true);
+      observer.disconnect();
+    };
+  }, [state.disableAnimations]);
 
-    // Highlight Links
-    if (s.highlightLinks) {
-      css += `a { text-decoration: underline !important; font-weight: bold !important; color: #d4af37 !important; background-color: rgba(0,0,0,0.8) !important; padding: 0 4px !important; }`;
-    }
-
-    // Readable Font
-    if (s.readableFont) {
-      css += `* { font-family: Arial, Helvetica, sans-serif !important; }`;
-    }
-
-    // Text Spacing
-    if (s.textSpacing) {
-      css += `* { line-height: 1.8 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } p { margin-bottom: 1.5em !important; }`;
-    }
-
-    // Hide Images
-    if (s.hideImages) {
-      css += `img, video, [role="img"] { opacity: 0 !important; pointer-events: none !important; }`;
-    }
-
-    // Disable Animations
-    if (s.disableAnimations) {
-      css += `*, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }`;
-    }
-
-    // Large Cursor
-    if (s.largeCursor) {
-      // Using a data URI for a larger cursor SVG
-      const cursorSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="black" stroke="white" stroke-width="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>`;
-      const cursorUrl = `data:image/svg+xml;utf8,${encodeURIComponent(cursorSvg)}`;
-      css += `* { cursor: url('${cursorUrl}') 0 0, auto !important; }`;
-    }
-
-    // Contrast Modes
-    if (s.contrastMode === 'high') {
-      css += `
-        body, main, section, header, footer, div { background-color: #ffffff !important; background-image: none !important; color: #000000 !important; border-color: #000000 !important; }
-        h1, h2, h3, h4, h5, h6, p, span, li { color: #000000 !important; }
-        a { color: #0000EE !important; text-decoration: underline !important; }
-        button { background-color: #eeeeee !important; color: #000000 !important; border: 2px solid #000000 !important; }
-        .bg-brand-purple, .bg-slate-900 { background-color: #000000 !important; color: #ffffff !important; }
-      `;
-    } else if (s.contrastMode === 'inverted') {
-      css += `html { filter: invert(1) hue-rotate(180deg); } img, video, picture { filter: invert(1) hue-rotate(180deg); }`;
-    }
-
-    // Inject CSS
-    let styleTag = document.getElementById('a11y-styles');
-    if (!styleTag) {
-      styleTag = document.createElement('style');
-      styleTag.id = 'a11y-styles';
-      document.head.appendChild(styleTag);
-    }
-    styleTag.innerHTML = css;
+  const update = <K extends keyof A11ySettings>(key: K, value: A11ySettings[K]) =>
+    setState((previous) => ({ ...previous, [key]: value }));
+  const hide = () => {
+    closePanel();
+    try { sessionStorage.setItem('a11y-widget-hidden', '1'); } catch { /* Optional storage. */ }
+    setVisible(false);
+    document.querySelector<HTMLElement>('main')?.focus({ preventScroll: true });
   };
 
-  const updateState = <K extends keyof A11yState>(key: K, value: A11yState[K]) => {
-    setState(prev => ({ ...prev, [key]: value }));
-  };
-
-  const resetSettings = () => {
-    setState(DEFAULT_STATE);
-  };
-
-  if (!isVisible) return null;
-  // Session-dismissed users get nothing until the next browser session.
-
-  if (!isOpen) {
-    return (
-      <div
-        className="fixed right-0 top-1/2 z-50 -translate-y-1/2"
-      >
-        <motion.button
-          ref={triggerRef}
-          initial={{ x: 12, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          onClick={() => setIsOpen(true)}
-          className="grid h-12 w-11 place-items-center rounded-l-xl border border-r-0 border-white/30 bg-brand-purple/90 text-white shadow-lg transition-colors hover:bg-brand-purple focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-cyan group"
-          aria-label={getAccessibilityLabel()}
-          aria-haspopup="dialog"
-        >
-          <Accessibility className="h-6 w-6" aria-hidden="true" />
-        </motion.button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="fixed inset-0 z-[70] flex items-end justify-end pointer-events-none sm:items-center sm:pe-6 sm:pb-6">
-      {/* Backdrop */}
-      <div className="absolute inset-0 z-0 bg-black/45 pointer-events-auto" onClick={closePanel} aria-hidden="true"></div>
-
-      <div
-        ref={panelRef}
-        className="relative z-10 w-full sm:w-[400px] bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom))] sm:max-h-[90dvh] pointer-events-auto overflow-hidden"
-        role="dialog"
-        aria-modal="true"
-        aria-label={t('a11y_title')}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-brand-purple/10 to-brand-cyan/10">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2 drop-shadow-sm">
-            <Accessibility className="text-brand-purple drop-shadow-md" size={24} />
-            <span className="bg-gradient-to-r from-brand-purple to-brand-cyan bg-clip-text text-transparent font-extrabold">
-              {getAccessibilityLabel()}
-            </span>
-          </h2>
-          <button
-            onClick={closePanel}
-            aria-label={t('aria_close')}
-            className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500 dark:text-slate-400 hover:text-red-500"
-          >
-            <X size={20} aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="min-h-0 overflow-y-auto p-6 space-y-8">
-
-          {/* 1. Font Size */}
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                <Type size={18} aria-hidden="true" /> {t('a11y_font_size')}
-              </label>
-              <span className="text-sm font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-slate-600 dark:text-slate-400">{state.fontSize}%</span>
+  return createPortal(
+    <>
+      {visible && <button ref={triggerRef} type="button" className="a11y-launcher" onClick={() => setIsOpen(true)}
+        aria-label={text.title} aria-haspopup="dialog" aria-controls="accessibility-dialog" aria-expanded={isOpen}>
+        <Accessibility size={26} aria-hidden="true" />
+      </button>}
+      <dialog ref={dialogRef} id="accessibility-dialog" className="a11y-dialog" dir={dir}
+        aria-labelledby="a11y-title" aria-describedby="a11y-description" data-lenis-prevent="" data-native-scroll=""
+        onCancel={(event) => { event.preventDefault(); closePanel(); }}
+        onClose={() => { setIsOpen(false); }}
+        onClick={(event) => {
+          if (event.target !== event.currentTarget) return;
+          const box = event.currentTarget.getBoundingClientRect();
+          if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) closePanel();
+        }}>
+        <header className="a11y-header">
+          <h2 id="a11y-title">{text.title}</h2>
+          <button type="button" className="a11y-close" onClick={closePanel} aria-label={text.close} autoFocus><X size={22} aria-hidden="true" /></button>
+        </header>
+        <div className="a11y-scroll" data-lenis-prevent="" data-native-scroll="" tabIndex={0} aria-label={text.title}>
+          <p id="a11y-description" className="a11y-description">{text.description}</p>
+          <fieldset className="a11y-fieldset">
+            <legend>{text.size}</legend>
+            <div className="a11y-size">
+              <button type="button" aria-label={text.decrease} disabled={state.fontSize === 100} onClick={() => update('fontSize', Math.max(100, state.fontSize - 25))}>A−</button>
+              <output aria-live="polite">{state.fontSize}%</output>
+              <button type="button" aria-label={text.increase} disabled={state.fontSize === 200} onClick={() => update('fontSize', Math.min(200, state.fontSize + 25))}>A+</button>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="text-xs">A</span>
-              <input
-                type="range"
-                aria-label={t('a11y_font_size')}
-                min="100"
-                max="200"
-                step="25"
-                value={state.fontSize}
-                onChange={(e) => updateState('fontSize', parseInt(e.target.value))}
-                className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-brand-purple"
-              />
-              <span className="text-lg font-bold">A</span>
-            </div>
-            <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
-              <span>100%</span>
-              <span>125%</span>
-              <span>150%</span>
-              <span>175%</span>
-              <span>200%</span>
-            </div>
-          </div>
-
-          <hr className="border-slate-100 dark:border-slate-800" />
-
-          {/* 2. Contrast Mode */}
-          <div className="space-y-3">
-            <label className="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-              <Sun size={18} aria-hidden="true" /> {t('a11y_contrast')}
+          </fieldset>
+          <fieldset className="a11y-fieldset">
+            <legend>{text.contrast}</legend>
+            <div className="a11y-contrast">{(['normal', 'high', 'inverted'] as const).map((mode) =>
+              <label key={mode}><input type="radio" name="a11y-contrast" value={mode} checked={state.contrastMode === mode} onChange={() => update('contrastMode', mode)} />{text[mode]}</label>
+            )}</div>
+          </fieldset>
+          <div>{toggles.map(({ key, icon: Icon }) =>
+            <label key={key} className="a11y-toggle">
+              <span><Icon size={20} aria-hidden="true" />{text[key]}</span>
+              <input type="checkbox" checked={state[key]} onChange={(event) => update(key, event.target.checked)} />
             </label>
-            <div className="grid grid-cols-3 gap-2">
-              {([
-                { id: 'normal', label: t('a11y_contrast_normal'), bg: 'bg-slate-100 dark:bg-slate-800', text: 'text-slate-900 dark:text-slate-300' },
-                { id: 'high', label: t('a11y_contrast_high'), bg: 'bg-white border-2 border-black', text: 'text-black' },
-                { id: 'inverted', label: t('a11y_contrast_inverted'), bg: 'bg-black', text: 'text-white' }
-              ] as const).map((mode) => (
-                <button
-                  key={mode.id}
-                  onClick={() => updateState('contrastMode', mode.id)}
-                  className={`py-2 px-1 rounded-lg text-xs font-bold transition-all flex flex-col items-center gap-1 ${state.contrastMode === mode.id ? 'ring-2 ring-brand-purple ring-offset-1' : ''} ${mode.bg} ${mode.text}`}
-                >
-                  {state.contrastMode === mode.id && <Check size={12} />}
-                  {mode.label}
-                </button>
-              ))}
-            </div>
+          )}</div>
+          <div className="a11y-actions">
+            <button type="button" className="a11y-action" onClick={() => setState({ ...DEFAULT_A11Y_SETTINGS })}><RotateCcw size={16} aria-hidden="true" style={{ display: 'inline', marginInlineEnd: 6 }} />{text.reset}</button>
+            <button type="button" className="a11y-action" onClick={hide}><EyeOff size={16} aria-hidden="true" style={{ display: 'inline', marginInlineEnd: 6 }} />{text.hide}</button>
           </div>
-
-          <hr className="border-slate-100 dark:border-slate-800" />
-
-          {/* Grid Features */}
-          <div className="grid grid-cols-1 gap-4">
-            {[
-              { key: 'highlightLinks', label: t('a11y_highlight_links'), icon: LinkIcon },
-              { key: 'readableFont', label: t('a11y_readable_font'), icon: Type },
-              { key: 'textSpacing', label: t('a11y_text_spacing'), icon: AlignLeft },
-              { key: 'largeCursor', label: t('a11y_large_cursor'), icon: MousePointer },
-              { key: 'hideImages', label: t('a11y_hide_images'), icon: ImageIcon },
-              { key: 'disableAnimations', label: t('a11y_disable_animations'), icon: Zap },
-            ].map((feature) => (
-              <label key={feature.key} className="flex items-center justify-between cursor-pointer group p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg">
-                <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
-                  <feature.icon size={18} className="text-slate-500 dark:text-slate-400 group-hover:text-brand-purple transition-colors" />
-                  <span className="font-medium text-sm">{feature.label}</span>
-                </div>
-                {/* sr-only (not `hidden`) keeps the checkbox in the tab order and
-                    operable via Space; the visual box mirrors its checked/focus
-                    state via Tailwind `peer-*` utilities. */}
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={state[feature.key as keyof A11yState] as boolean}
-                  onChange={(e) => updateState(feature.key as keyof A11yState, e.target.checked)}
-                />
-                <div className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-brand-purple peer-focus-visible:ring-offset-2 ${state[feature.key as keyof A11yState] ? 'bg-brand-purple border-brand-purple' : 'border-slate-300'}`}>
-                  {state[feature.key as keyof A11yState] && <Check size={14} className="text-white" />}
-                </div>
-              </label>
-            ))}
-          </div>
-
-          <div className="flex gap-3 pt-2">
-            <button
-              onClick={resetSettings}
-              className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-purple dark:hover:text-brand-purple transition-colors flex items-center justify-center gap-2"
-            >
-              <RotateCcw size={16} aria-hidden="true" /> {t('a11y_reset')}
-            </button>
-            <button
-              onClick={hideForSession}
-              className="flex-1 py-3 rounded-xl border border-red-100 dark:border-red-900/30 text-red-500 font-bold text-sm hover:bg-red-50 dark:hover:bg-red-900/10 hover:border-red-200 dark:hover:border-red-800 transition-colors flex items-center justify-center gap-2"
-            >
-              <EyeOff size={16} aria-hidden="true" /> {t('a11y_hide')}
-            </button>
-          </div>
+          <a className="a11y-statement" href="/accessibility" onClick={closePanel}>{text.statement}</a>
+          <p className="a11y-note">{text.saved}<br />{text.restore}</p>
         </div>
-
-        {/* Footer */}
-        <div className="p-3 bg-slate-100 dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 text-center">
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">{t('a11y_persist')}</p>
-        </div>
-      </div>
-    </div>
+      </dialog>
+      {state.readingGuide && !isOpen && <div ref={guideRef} className="a11y-guide" aria-hidden="true" />}
+    </>, document.body
   );
-};
-
-export default AccessibilityToolbar;
+}
