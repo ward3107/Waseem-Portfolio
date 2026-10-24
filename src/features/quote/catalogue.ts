@@ -153,27 +153,67 @@ export type QuoteEstimate =
   | { mode: 'fixed_package'; amountIls: number }
   | { mode: 'estimate_range'; minIls: number; maxIls: number };
 
-export function quoteEstimate(catalogue: QuoteCatalogue, selectedIds: string[]): QuoteEstimate {
-  if (!catalogue.publishedPrices || !selectedIds.length) return { mode: 'manual_quote' };
+export type QuoteBreakdown = {
+  /** Amounts are null while the public price catalogue is unpublished. */
+  pricedItems: Array<{ id: string; minIls: number; maxIls: number }>;
+  unpricedIds: string[];
+  knownSubtotal: { minIls: number; maxIls: number } | null;
+  /** A whole-project number is available only when every selected item is priced. */
+  total: QuoteEstimate;
+};
+
+export function quoteBreakdown(catalogue: QuoteCatalogue, selectedIds: string[]): QuoteBreakdown {
+  const uniqueIds = [...new Set(selectedIds)];
   const options = allOptions(catalogue);
-  const selected = selectedIds.map((id) => options.find((item) => item.id === id));
-  if (selected.some((item) => !item || !canSelectOption(catalogue, selectedIds, item.id) || item.price.mode === 'pending' || item.price.mode === 'manual_quote')) {
-    return { mode: 'manual_quote' };
+  const selected = uniqueIds.map((id) => options.find((item) => item.id === id));
+  const groups = selected.map((item) => item?.exclusiveGroup).filter((group): group is string => !!group);
+  const validSelection = uniqueIds.length > 0 && selected.every((item) =>
+    !!item && canSelectOption(catalogue, uniqueIds, item.id)) && new Set(groups).size === groups.length;
+  if (!validSelection || !catalogue.publishedPrices) {
+    return { pricedItems: [], unpricedIds: uniqueIds, knownSubtotal: null, total: { mode: 'manual_quote' } };
   }
+
+  const pricedItems: QuoteBreakdown['pricedItems'] = [];
+  const unpricedIds: string[] = [];
   let minIls = 0;
   let maxIls = 0;
-  let hasRange = false;
   for (const item of selected) {
-    if (!item) return { mode: 'manual_quote' };
+    if (!item) continue;
     if (item.price.mode === 'fixed_package') {
+      if (!Number.isFinite(item.price.amountIls) || item.price.amountIls <= 0) {
+        unpricedIds.push(item.id);
+        continue;
+      }
+      pricedItems.push({ id: item.id, minIls: item.price.amountIls, maxIls: item.price.amountIls });
       minIls += item.price.amountIls;
       maxIls += item.price.amountIls;
     } else if (item.price.mode === 'estimate_range') {
+      if (!Number.isFinite(item.price.minIls) || !Number.isFinite(item.price.maxIls) || item.price.minIls <= 0 || item.price.maxIls < item.price.minIls) {
+        unpricedIds.push(item.id);
+        continue;
+      }
+      pricedItems.push({ id: item.id, minIls: item.price.minIls, maxIls: item.price.maxIls });
       minIls += item.price.minIls;
       maxIls += item.price.maxIls;
-      hasRange = true;
+    } else {
+      unpricedIds.push(item.id);
     }
   }
-  if (!Number.isFinite(minIls) || !Number.isFinite(maxIls) || minIls <= 0 || maxIls < minIls) return { mode: 'manual_quote' };
-  return hasRange ? { mode: 'estimate_range', minIls, maxIls } : { mode: 'fixed_package', amountIls: minIls };
+  const knownSubtotal = pricedItems.length && Number.isFinite(minIls) && Number.isFinite(maxIls)
+    ? { minIls, maxIls } : null;
+  const total: QuoteEstimate = !knownSubtotal || unpricedIds.length
+    ? { mode: 'manual_quote' }
+    : minIls === maxIls ? { mode: 'fixed_package', amountIls: minIls }
+      : { mode: 'estimate_range', minIls, maxIls };
+  return { pricedItems, unpricedIds, knownSubtotal, total };
+}
+
+export function quoteEstimate(catalogue: QuoteCatalogue, selectedIds: string[]): QuoteEstimate {
+  return quoteBreakdown(catalogue, selectedIds).total;
+}
+
+export function formatQuoteAmount(language: Language, minIls: number, maxIls: number): string {
+  const locale = language === 'he' ? 'he-IL' : language === 'ar' ? 'ar-IL' : 'en-IL';
+  const formatter = new Intl.NumberFormat(locale, { style: 'currency', currency: 'ILS', maximumFractionDigits: 0 });
+  return minIls === maxIls ? formatter.format(minIls) : formatter.format(minIls) + '–' + formatter.format(maxIls);
 }
