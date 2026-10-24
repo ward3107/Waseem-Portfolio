@@ -56,6 +56,14 @@ export function useLenisScroll(enabled: boolean): void {
       scrollStore.set({ progress, journey, chapter, chapterProgress });
     };
     window.addEventListener('resize', measure);
+    // The below-fold quote builder expands when its lazy form becomes visible.
+    // Recalculate chapter positions as its height changes, so the final
+    // contact scene still follows the actual DOM scroll positions.
+    const quoteSection = document.getElementById('quote-builder');
+    const quoteResize = typeof ResizeObserver !== 'undefined' && quoteSection
+      ? new ResizeObserver(measure)
+      : null;
+    if (quoteSection) quoteResize?.observe(quoteSection);
 
     // Drive Lenis from a single rAF loop and publish progress each tick.
     let frame = 0;
@@ -78,6 +86,7 @@ export function useLenisScroll(enabled: boolean): void {
 
     return () => {
       window.removeEventListener('resize', measure);
+      quoteResize?.disconnect();
       document.removeEventListener('visibilitychange', visibilityChanged);
       cancelAnimationFrame(frame);
       lenis.destroy();

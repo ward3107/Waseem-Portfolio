@@ -15,6 +15,7 @@ import VideosOverlay from './chapters/VideosOverlay';
 import ContactOverlay from './chapters/ContactOverlay';
 import SocialMediaSection from '@/features/social-media/SocialMediaSection';
 import { scrollStore } from './scrollStore';
+import InlineQuoteSection from '@/features/quote/InlineQuoteSection';
 
 // Maps a storyboard chapter id to its DOM overlay. Handled separately: chapter
 // 1 (hero) owns the page's single <h1>; projects takes the quality tier (it
@@ -143,8 +144,9 @@ const Experience: React.FC = () => {
           // chapter in the experience too.
           const sectionId = chapter.anchor ? chapter.anchor.replace(/^#/, '') : chapter.id;
           return (
+            <React.Fragment key={chapter.id}>
+            {chapter.id === 'contact' && <InlineQuoteSection />}
             <section
-              key={chapter.id}
               id={sectionId}
               aria-label={chapter.label}
               className="flex min-h-[100svh] flex-col items-center justify-center px-5 py-24 text-center sm:px-6"
@@ -164,6 +166,7 @@ const Experience: React.FC = () => {
                 <Overlay index={i} total={CHAPTERS.length} />
               ) : null}
             </section>
+            </React.Fragment>
           );
         })}
       </div>

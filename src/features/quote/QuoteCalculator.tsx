@@ -119,7 +119,25 @@ const copy = {
 
 type Stage = 'categories' | 'options' | 'review';
 
-export default function QuoteCalculator({ catalogue = quoteCatalogue }: { catalogue?: QuoteCatalogue }) {
+const inlineCopy = {
+  he: {
+    heading: 'הרכיבו את הפרויקט שלכם',
+    intro: 'בחרו שירותים והתאימו את היקף העבודה. הבחירות מתעדכנות כאן בזמן אמת; מחיר ייקבע אחרי בדיקת הפרטים.',
+    empty: 'בחרו שירות כדי להתחיל להרכיב את הבקשה.',
+  },
+  en: {
+    heading: 'Build your project',
+    intro: 'Choose services and adjust the scope. Your selections update live; we will confirm a price after reviewing the details.',
+    empty: 'Choose a service area to start building your request.',
+  },
+  ar: {
+    heading: 'كوّن مشروعك',
+    intro: 'اختر الخدمات وحدد نطاق العمل. تتحدث اختياراتك مباشرة، ونؤكد السعر بعد مراجعة التفاصيل.',
+    empty: 'اختر مجال خدمة للبدء في إعداد طلبك.',
+  },
+} as const;
+
+export default function QuoteCalculator({ catalogue = quoteCatalogue, inline = false }: { catalogue?: QuoteCatalogue; inline?: boolean }) {
   const { language, dir } = useLanguage();
   const contact = useContact();
   const t = copy[language];
@@ -225,6 +243,106 @@ export default function QuoteCalculator({ catalogue = quoteCatalogue }: { catalo
 
   const currentComplete = currentCategory &&
     (currentCategory.options.some((item) => optionIds.includes(item.id)) || unsureCategoryIds.includes(currentCategory.id));
+
+  if (inline) {
+    const text = inlineCopy[language];
+    return (
+      <section dir={dir} aria-labelledby="inline-quote-heading" className="rounded-[2rem] border border-[#dce3f1] bg-[#f8f9fd] p-5 text-[#18203a] shadow-[0_32px_80px_-40px_rgba(20,28,77,.45)] sm:p-8 lg:p-10">
+        <header className="max-w-3xl">
+          <p className="text-sm font-bold uppercase tracking-widest text-[#6257ae]">{t.heading}</p>
+          <h2 id="inline-quote-heading" className="mt-2 text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">{text.heading}</h2>
+          <p className="mt-4 text-base leading-7 text-[#4f5870]">{text.intro}</p>
+        </header>
+        <div className="sticky top-16 z-20 mt-5 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-[#dce3f1] bg-white/95 px-4 py-3 text-sm shadow-sm backdrop-blur lg:hidden" aria-live="polite">
+          <span>{t.selected}: {optionIds.length}</span>
+          <strong className="text-[#342880]">{estimateLabel}</strong>
+        </div>
+        <div className="mt-9 grid items-start gap-7 lg:grid-cols-[minmax(0,1.5fr)_minmax(300px,1fr)]">
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-xl font-bold">{t.categoryTitle}</h3>
+              <p className="mt-1 text-sm text-[#59647c]">{t.categoryHint}</p>
+              <div role="group" aria-label={t.categoryTitle} className="mt-5 grid gap-2 sm:grid-cols-2">
+                {catalogue.categories.map((category) => {
+                  const selected = categoryIds.includes(category.id);
+                  return <button key={category.id} type="button" aria-pressed={selected} onClick={() => toggleCategory(category.id)}
+                    className={'flex min-h-14 items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-start font-semibold transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5448a9] ' + (selected ? 'border-[#675abb] bg-[#eeecfb] text-[#342880]' : 'border-[#dfe4ef] bg-white text-[#26304a] hover:border-[#978bcc]')}>
+                    <span>{category.label[language]}</span><span aria-hidden="true">{selected ? '✓' : '+'}</span>
+                  </button>;
+                })}
+              </div>
+              <label className="mt-4 flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border border-[#dfe4ef] bg-white px-4 py-3 text-sm font-medium">
+                <input type="checkbox" checked={unsureOverall} onChange={(event) => setUnsureOverall(event.target.checked)} className="h-5 w-5 accent-[#5448a9]" />
+                {t.unsureOverall}
+              </label>
+            </div>
+            {selectedCategories.map((category) => (
+              <fieldset key={category.id} className="rounded-3xl border border-[#dfe4ef] bg-white p-4 sm:p-6">
+                <legend className="px-2 text-lg font-bold text-[#342880]">{category.label[language]}</legend>
+                <div className="space-y-4">
+                  {category.options.map((item) => {
+                    const checked = optionIds.includes(item.id);
+                    const available = checked || canSelectOption(catalogue, optionIds, item.id);
+                    return <div key={item.id}>
+                      <label className={'flex min-h-14 items-center gap-3 rounded-2xl border px-4 py-3 ' + (available ? 'cursor-pointer' : 'cursor-not-allowed bg-[#f0f2f7] text-[#667088]') + (checked ? ' border-[#675abb] bg-[#f6f4ff]' : ' border-[#dfe4ef]')}>
+                        <input type="checkbox" checked={checked} disabled={!available} onChange={() => chooseOption(item.id, category)} className="h-5 w-5 shrink-0 accent-[#5448a9]" />
+                        <span className="font-medium">{item.label[language]}{!available && <span className="mt-1 block text-xs font-normal">{t.prerequisite}</span>}</span>
+                      </label>
+                      {checked && catalogue.scope?.profiles[item.id] && <div className="mt-3">
+                        <ScopeEditor language={language} profile={catalogue.scope.profiles[item.id]} value={scope[item.id] ?? {}} onChange={(value) => updateScope(item.id, value)} />
+                      </div>}
+                    </div>;
+                  })}
+                  <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border border-[#dfe4ef] px-4 py-3 text-sm font-medium">
+                    <input type="checkbox" checked={unsureCategoryIds.includes(category.id)} onChange={() => toggleUnsureCategory(category)} className="h-5 w-5 accent-[#5448a9]" />
+                    {t.unsureCategory}
+                  </label>
+                </div>
+              </fieldset>
+            ))}
+          </div>
+          <aside aria-label={t.reviewTitle} className="rounded-3xl border border-[#dfe4ef] bg-white p-5 shadow-sm lg:sticky lg:top-24 sm:p-6">
+            <h3 className="text-xl font-bold">{t.reviewTitle}</h3>
+            <p className="mt-2 rounded-xl bg-[#eeecfb] p-3 font-bold text-[#342880]" aria-live="polite">{estimateLabel}</p>
+            {!optionIds.length && !unsureOverall && <p className="mt-4 text-sm text-[#59647c]">{text.empty}</p>}
+            <ul className="mt-5 space-y-4" aria-live="polite">
+              {selectedCategories.map((category) => (
+                <li key={category.id} className="border-b border-[#edf0f6] pb-4 last:border-0">
+                  <strong className="block">{category.label[language]}</strong>
+                  {category.options.filter((item) => optionIds.includes(item.id)).map((item) => (
+                    <div key={item.id} className="mt-2 text-sm">
+                      <div className="flex justify-between gap-2"><span>{item.label[language]}</span><span className="shrink-0 font-semibold">{optionAmount(item.id)}</span></div>
+                      {detailRows.filter((row) => row.optionId === item.id).map((row) => (
+                        <div key={row.id} className="mt-1 flex justify-between gap-2 ps-3 text-xs text-[#59647c]">
+                          <span>{row.label[language]}{row.quantity > 1 ? ` × ${row.quantity}` : ''}</span>
+                          {row.price && <span>{optionAmount(row.id)}</span>}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                  {unsureCategoryIds.includes(category.id) && <p className="mt-2 text-sm">{t.unsureCategory}</p>}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-5 text-xs leading-5 text-[#59647c]">{t.quoteNote}</p>
+            <label className="mt-5 block text-sm font-semibold">{t.business}
+              <input value={businessName} maxLength={120} onChange={(event) => setBusinessName(event.target.value)} placeholder={t.businessPlaceholder} className="mt-2 min-h-12 w-full rounded-xl border border-[#cfd6e5] px-4 text-base font-normal" />
+            </label>
+            <label className="mt-4 block text-sm font-semibold">{t.stage}
+              <select value={projectStage} onChange={(event) => setProjectStage(event.target.value as 'new' | 'existing' | 'unsure')} className="mt-2 min-h-12 w-full rounded-xl border border-[#cfd6e5] px-4 text-base font-normal">
+                <option value="unsure">{t.stageUnsure}</option><option value="new">{t.new}</option><option value="existing">{t.existing}</option>
+              </select>
+            </label>
+            <label className="mt-4 block text-sm font-semibold">{t.notes}
+              <textarea value={notes} maxLength={700} rows={3} onChange={(event) => setNotes(event.target.value)} placeholder={t.notesPlaceholder} className="mt-2 w-full rounded-xl border border-[#cfd6e5] px-4 py-3 text-base font-normal" />
+            </label>
+            {message && <a href={'https://wa.me/' + contact.whatsappNumber + '?text=' + encodeURIComponent(message)} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-[#176d49] px-5 text-center font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#176d49]">{t.whatsapp}</a>}
+            <p className="mt-2 text-xs text-[#59647c]">{t.handoff}</p>
+          </aside>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section dir={dir} aria-labelledby="quote-heading" className="overflow-hidden rounded-[28px] border border-[#dde2f0] bg-[#f8f9fd] text-[#18203a] shadow-[0_24px_70px_-32px_rgba(20,28,77,.35)]">

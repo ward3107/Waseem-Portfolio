@@ -129,7 +129,7 @@ const Contact: React.FC = () => {
 
         </div>
         <div className="mx-auto mt-12 max-w-4xl text-center">
-          <a href="/plan" className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand-purple px-7 font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-purple">
+          <a href="/#quote-builder" className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand-purple px-7 font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-purple">
             {{ he: 'תכננו פרויקט ובקשו הצעת מחיר', en: 'Plan a project and request a quote', ar: 'خطّط لمشروعك واطلب عرض سعر' }[language]}
           </a>
         </div>
