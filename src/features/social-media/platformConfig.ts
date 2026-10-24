@@ -18,7 +18,7 @@ export const BRAND_PLATFORMS: readonly BrandPlatform[] = [
     border: 'border-fuchsia-400/25',
     enabled: false,
     href: CONTACT.instagram,
-    ariaLabel: 'Vasia Instagram page',
+    ariaLabel: 'vasia Instagram page',
   },
   {
     name: 'Facebook',
@@ -26,20 +26,20 @@ export const BRAND_PLATFORMS: readonly BrandPlatform[] = [
     border: 'border-blue-400/25',
     enabled: true,
     href: CONTACT.facebook,
-    ariaLabel: 'Vasia Facebook page',
+    ariaLabel: 'vasia Facebook page',
   },
   {
     name: 'TikTok',
     glow: 'bg-cyan-400/10',
     border: 'border-cyan-400/25',
     enabled: false,
-    ariaLabel: 'Vasia TikTok page',
+    ariaLabel: 'vasia TikTok page',
   },
   {
     name: 'Google Ads',
     glow: 'bg-amber-400/10',
     border: 'border-amber-400/25',
     enabled: false,
-    ariaLabel: 'Vasia Google Ads page',
+    ariaLabel: 'vasia Google Ads page',
   },
 ];

@@ -27,7 +27,7 @@ const reveal = {
 const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
   const { t, language } = useLanguage();
   const draftLabel = language === 'he' ? 'פרטים · הדמו טרם פורסם' : language === 'ar' ? 'التفاصيل · العرض لم يُنشر بعد' : 'Details · demo not published';
-  const { projects } = useProjects();
+  const { projects } = useProjects('projects');
   const leading = useHeadingLeading();
 
   return (

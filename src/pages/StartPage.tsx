@@ -5,17 +5,17 @@ type StartLanguage = 'en' | 'he' | 'ar';
 
 const COPY: Record<StartLanguage, { message: string; loading: string; button: string }> = {
   en: {
-    message: 'Hi Waseem, I found Vasia through your content and would like to discuss a project.',
+    message: 'Hi vasia, I found vasia through your content and would like to discuss a project.',
     loading: 'Opening WhatsApp…',
     button: 'Continue to WhatsApp',
   },
   he: {
-    message: 'היי וסימ, הגעתי ל־Vasia דרך התוכן שלך ואני רוצה לדבר על פרויקט.',
+    message: 'היי ואסיה, הגעתי ל־vasia דרך התוכן שלך ואני רוצה לדבר על פרויקט.',
     loading: 'פותחים את WhatsApp…',
     button: 'המשך ל־WhatsApp',
   },
   ar: {
-    message: 'مرحباً وسيم، وصلت إلى Vasia من خلال المحتوى وأرغب في مناقشة مشروع.',
+    message: 'مرحباً وسيم، وصلت إلى vasia من خلال المحتوى وأرغب في مناقشة مشروع.',
     loading: 'جارٍ فتح واتساب…',
     button: 'المتابعة إلى واتساب',
   },

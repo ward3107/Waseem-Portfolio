@@ -31,7 +31,7 @@ const formatDate = (iso: string | null | undefined, locale: string): string => {
 const CertCarousel: React.FC = () => {
   const { t, language } = useLanguage();
   const locale = language === 'he' ? 'he-IL' : language === 'ar' ? 'ar' : 'en-US';
-  const { certifications } = useCertifications();
+  const { certifications } = useCertifications('reviews');
 
   if (!certifications.length) return null;
 
@@ -44,7 +44,7 @@ const CertCarousel: React.FC = () => {
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-white/10 bg-white/5">
               {cert.image ? (
                 <img
-                  src={cert.image}
+                  src={cert.image.replace(/\.png$/, '-thumb.webp')}
                   alt={`${cert.title} certificate`}
                   loading="lazy"
                   className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"

@@ -69,7 +69,7 @@ const WhatsAppFloat: React.FC = () => {
           rel="noopener noreferrer"
           aria-label={t('wa_float_aria')}
           onClick={() => trackEvent('generate_lead', { source: 'whatsapp_dock', language })}
-          className="pointer-events-auto flex flex-1 items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-6 py-3.5 text-base font-bold text-white shadow-2xl shadow-green-900/40 ring-1 ring-white/20 transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-4 focus-visible:ring-green-300"
+          className="pointer-events-auto flex flex-1 items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-6 py-3.5 text-base font-bold text-[#082B1B] shadow-2xl shadow-green-900/40 ring-1 ring-white/20 transition-transform hover:scale-[1.02] focus:outline-none focus-visible:ring-4 focus-visible:ring-green-300"
         >
           <MessageCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
           {t('hero_cta_whatsapp')}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" role="img" aria-labelledby="title">
+  <title id="title">MOVA interactive storefront concept</title>
+  <defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#21201e"/><stop offset="1" stop-color="#493a30"/></linearGradient></defs>
+  <rect width="600" height="400" fill="url(#bg)"/>
+  <circle cx="435" cy="162" r="130" fill="#e9854e" opacity=".22"/>
+  <path d="M339 226c25-15 51-38 85-43 35-5 56 17 96 27l23 30-16 24H348l-26-17z" fill="#eea169"/>
+  <path d="M341 226c30 10 56 17 89 15 34-2 73-13 113-1" fill="none" stroke="#f8dec0" stroke-width="12"/>
+  <text x="48" y="188" fill="#fcf0e4" font-family="Arial,sans-serif" font-size="83" font-weight="800" letter-spacing="3">MOVA</text>
+  <text x="52" y="224" fill="#eaa577" font-family="Arial,sans-serif" font-size="18" letter-spacing="3">OBJECTS IN MOTION</text>
+  <path d="M48 328h504" stroke="#eaa577" opacity=".7"/>
+  <text x="50" y="359" fill="#fcf0e4" font-family="Arial,sans-serif" font-size="15" letter-spacing="3">INTERACTIVE STOREFRONT DEMO</text>
+</svg>

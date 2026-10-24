@@ -26,10 +26,10 @@ const HeroOverlay: React.FC = () => {
   return (
     <div className="pointer-events-none relative flex flex-col items-center text-center">
       <img
-        src="/assets/waseem-mobile-avatar.webp"
+        src="/assets/waseem-mobile-avatar-256.webp"
         alt={t('hero_profile_alt')}
-        width="512"
-        height="512"
+        width="256"
+        height="256"
         loading="eager"
         decoding="async"
         className="mb-4 h-20 w-20 self-end rounded-full border-2 border-white/80 object-cover shadow-lg ring-1 ring-cyan-300/40 sm:hidden"
@@ -53,26 +53,20 @@ const HeroOverlay: React.FC = () => {
         {t('hero_badge')}
       </motion.div>
 
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
+      <h1
         className={`max-w-4xl font-heading text-4xl font-black tracking-tight sm:text-6xl md:text-7xl ${leading}`}
       >
         <span className="text-white">{t('hero_title_1')}</span>
         <HeadingAccent tone="purple">{t('hero_title_2')}</HeadingAccent>{' '}
         <span className="text-white">{t('hero_title_3')}</span>
         <HeadingAccent tone="gold" fancy>{t('hero_title_4')}</HeadingAccent>
-      </motion.h1>
+      </h1>
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35, duration: 0.6 }}
+      <p
         className="mt-6 max-w-xl text-base font-medium leading-relaxed text-slate-300 sm:text-lg"
       >
         {t('hero_subtitle')}
-      </motion.p>
+      </p>
 
       <motion.p
         initial={{ opacity: 0, y: 16 }}
@@ -109,6 +103,10 @@ const HeroOverlay: React.FC = () => {
           {t('hero_cta_view')}
         </a>
       </motion.div>
+
+      <a href="/plan" className="pointer-events-auto mt-4 rounded px-2 py-1 text-sm font-semibold text-brand-cyan underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-cyan">
+        {{ he: 'בחרו שירותים ובקשו הצעה', en: 'Choose services and request a quote', ar: 'اختر الخدمات واطلب عرض سعر' }[language]}
+      </a>
 
       <motion.div
         initial={{ opacity: 0, y: 12 }}

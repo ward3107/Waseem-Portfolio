@@ -60,7 +60,7 @@ const CertificationCard: React.FC<CertificationCardProps> = ({
       {cert.image ? (
         <div className="relative aspect-[4/3] bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 overflow-hidden">
           <img
-            src={cert.image}
+            src={cert.image.replace(/\.png$/, '-thumb.webp')}
             alt={`${cert.title} certificate`}
             className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
             loading="lazy"

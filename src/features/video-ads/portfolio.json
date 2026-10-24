@@ -1,0 +1,392 @@
+[
+  {
+    "id": "english-4-all",
+    "category": "education",
+    "language": "ar",
+    "title": {
+      "en": "English 4 All · Learning in motion",
+      "he": "English 4 All · לומדים בתנועה",
+      "ar": "English 4 All · التعلّم بالحركة"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/english-4-all.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/english-4-all.webp",
+    "duration": 36.0,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "culinary-experience",
+    "category": "food",
+    "language": "he",
+    "title": {
+      "en": "Culinary experience",
+      "he": "חוויה קולינרית",
+      "ar": "تجربة طعام سينمائية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/culinary-experience.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/culinary-experience.webp",
+    "duration": 30.0,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "fashion-store",
+    "category": "fashion",
+    "language": "he",
+    "title": {
+      "en": "Fashion · The store in motion",
+      "he": "אופנה · החנות בתנועה",
+      "ar": "أزياء · المتجر بالحركة"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/fashion-store.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/fashion-store.webp",
+    "duration": 30.005,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "chrome-flame",
+    "category": "automotive",
+    "language": "en",
+    "title": {
+      "en": "Chrome & Flame · Full-wheel edit",
+      "he": "Chrome & Flame · תנועה וקצב",
+      "ar": "Chrome & Flame · حركة وإيقاع"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/chrome-flame.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/chrome-flame.webp",
+    "duration": 30.0,
+    "width": 720,
+    "height": 1280
+  },
+  {
+    "id": "car-speed-sound",
+    "category": "automotive",
+    "language": null,
+    "title": {
+      "en": "Fast / Slow · Automotive sound design",
+      "he": "Fast / Slow · עיצוב סאונד לרכב",
+      "ar": "Fast / Slow · تصميم صوت للسيارات"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/car-speed-sound.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/car-speed-sound.webp",
+    "duration": 23.6,
+    "width": 864,
+    "height": 1536
+  },
+  {
+    "id": "night-drive",
+    "category": "automotive",
+    "language": null,
+    "title": {
+      "en": "Night Drive · Cinematic reflections",
+      "he": "Night Drive · השתקפויות קולנועיות",
+      "ar": "Night Drive · انعكاسات سينمائية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/night-drive.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/night-drive.webp",
+    "duration": 20.0,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "chrome-drift",
+    "category": "automotive",
+    "language": "en",
+    "title": {
+      "en": "Chrome & Flame · Drift cut",
+      "he": "Chrome & Flame · גרסת Drift",
+      "ar": "Chrome & Flame · نسخة Drift"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/chrome-drift.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/chrome-drift.webp",
+    "duration": 12.0,
+    "width": 720,
+    "height": 1280
+  },
+  {
+    "id": "vasia-motion-2026",
+    "category": "motion",
+    "language": "he",
+    "title": {
+      "en": "VASIA · Dynamic motion",
+      "he": "VASIA · מושן דינמי",
+      "ar": "VASIA · موشن ديناميكي"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/vasia-motion-2026.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/vasia-motion-2026.webp",
+    "duration": 20.01,
+    "width": 1080,
+    "height": 1350
+  },
+  {
+    "id": "vasia-presenter-en",
+    "category": "presenter",
+    "language": "en",
+    "title": {
+      "en": "VASIA · AI presenter / English",
+      "he": "VASIA · פרזנטורית AI באנגלית",
+      "ar": "VASIA · مقدّمة افتراضية بالإنجليزية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/vasia-presenter-en.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/vasia-presenter-en.webp",
+    "duration": 30.0,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "vasia-cinematic-he",
+    "category": "presenter",
+    "language": "he",
+    "title": {
+      "en": "VASIA · Cinematic brand film / Hebrew",
+      "he": "VASIA · סרט תדמית בעברית",
+      "ar": "VASIA · فيلم تعريفي بالعبرية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/vasia-cinematic-he.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/vasia-cinematic-he.webp",
+    "duration": 30.0,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "vasia-synced-icons",
+    "category": "presenter",
+    "language": "en",
+    "title": {
+      "en": "VASIA · Presenter & animated icons",
+      "he": "VASIA · פרזנטורית ואייקונים בתנועה",
+      "ar": "VASIA · مقدّمة وأيقونات متحركة"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/vasia-synced-icons.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/vasia-synced-icons.webp",
+    "duration": 20.2,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "kama-nishar-li",
+    "category": "motion",
+    "language": "he",
+    "title": {
+      "en": "Kama Nishar Li · App reel",
+      "he": "כמה נשאר לי · ריל לאפליקציה",
+      "ar": "כמה נשאר לי · ريل للتطبيق"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/kama-nishar-li.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/kama-nishar-li.webp",
+    "duration": 19.0,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "onetap-motion-he",
+    "category": "motion",
+    "language": "he",
+    "title": {
+      "en": "OneTap Motion · Hebrew",
+      "he": "OneTap מושן · עברית",
+      "ar": "OneTap موشن · العبرية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/onetap-motion-he.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/onetap-motion-he.webp",
+    "duration": 18.0,
+    "width": 1080,
+    "height": 1350
+  },
+  {
+    "id": "onetap-motion-ar",
+    "category": "motion",
+    "language": "ar",
+    "title": {
+      "en": "OneTap Motion · Arabic",
+      "he": "OneTap מושן · ערבית",
+      "ar": "OneTap موشن · العربية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/onetap-motion-ar.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/onetap-motion-ar.webp",
+    "duration": 18.0,
+    "width": 1080,
+    "height": 1350
+  },
+  {
+    "id": "onetap-motion-en",
+    "category": "motion",
+    "language": "en",
+    "title": {
+      "en": "OneTap Motion · English",
+      "he": "OneTap מושן · אנגלית",
+      "ar": "OneTap موشن · الإنجليزية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/onetap-motion-en.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/onetap-motion-en.webp",
+    "duration": 18.0,
+    "width": 1080,
+    "height": 1350
+  },
+  {
+    "id": "onetap-classic-he",
+    "category": "motion",
+    "language": "he",
+    "title": {
+      "en": "OneTap Classic · Hebrew",
+      "he": "OneTap קלאסי · עברית",
+      "ar": "OneTap كلاسيكي · العبرية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/onetap-classic-he.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/onetap-classic-he.webp",
+    "duration": 18.0,
+    "width": 1080,
+    "height": 1350
+  },
+  {
+    "id": "onetap-classic-ar",
+    "category": "motion",
+    "language": "ar",
+    "title": {
+      "en": "OneTap Classic · Arabic",
+      "he": "OneTap קלאסי · ערבית",
+      "ar": "OneTap كلاسيكي · العربية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/onetap-classic-ar.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/onetap-classic-ar.webp",
+    "duration": 18.0,
+    "width": 1080,
+    "height": 1350
+  },
+  {
+    "id": "onetap-classic-en",
+    "category": "motion",
+    "language": "en",
+    "title": {
+      "en": "OneTap Classic · English",
+      "he": "OneTap קלאסי · אנגלית",
+      "ar": "OneTap كلاسيكي · الإنجليزية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/onetap-classic-en.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/onetap-classic-en.webp",
+    "duration": 18.0,
+    "width": 1080,
+    "height": 1350
+  },
+  {
+    "id": "onetap-custom-he",
+    "category": "motion",
+    "language": "he",
+    "title": {
+      "en": "OneTap Custom · Hebrew",
+      "he": "OneTap עיצוב אישי · עברית",
+      "ar": "OneTap تصميم خاص · العبرية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/onetap-custom-he.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/onetap-custom-he.webp",
+    "duration": 18.0,
+    "width": 1080,
+    "height": 1350
+  },
+  {
+    "id": "onetap-custom-ar",
+    "category": "motion",
+    "language": "ar",
+    "title": {
+      "en": "OneTap Custom · Arabic",
+      "he": "OneTap עיצוב אישי · ערבית",
+      "ar": "OneTap تصميم خاص · العربية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/onetap-custom-ar.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/onetap-custom-ar.webp",
+    "duration": 18.0,
+    "width": 1080,
+    "height": 1350
+  },
+  {
+    "id": "onetap-custom-en",
+    "category": "motion",
+    "language": "en",
+    "title": {
+      "en": "OneTap Custom · English",
+      "he": "OneTap עיצוב אישי · אנגלית",
+      "ar": "OneTap تصميم خاص · الإنجليزية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/onetap-custom-en.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/onetap-custom-en.webp",
+    "duration": 18.0,
+    "width": 1080,
+    "height": 1350
+  },
+  {
+    "id": "onetap-three-styles",
+    "category": "motion",
+    "language": "he",
+    "title": {
+      "en": "OneTap · Three design styles",
+      "he": "OneTap · שלושה סגנונות עיצוב",
+      "ar": "OneTap · ثلاثة أنماط تصميم"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/onetap-three-styles.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/onetap-three-styles.webp",
+    "duration": 18.0,
+    "width": 1920,
+    "height": 800
+  },
+  {
+    "id": "vasia-website-he",
+    "category": "motion",
+    "language": "he",
+    "title": {
+      "en": "VASIA · Website reel / Hebrew",
+      "he": "VASIA · ריל האתר / עברית",
+      "ar": "VASIA · ريل الموقع / العبرية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/vasia-website-he.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/vasia-website-he.webp",
+    "duration": 24.0,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "vasia-website-ar",
+    "category": "motion",
+    "language": "ar",
+    "title": {
+      "en": "VASIA · Website reel / Arabic",
+      "he": "VASIA · ריל האתר / ערבית",
+      "ar": "VASIA · ريل الموقع / العربية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/vasia-website-ar.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/vasia-website-ar.webp",
+    "duration": 24.0,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "vasia-website-en",
+    "category": "motion",
+    "language": "en",
+    "title": {
+      "en": "VASIA · Website reel / English",
+      "he": "VASIA · ריל האתר / אנגלית",
+      "ar": "VASIA · ريل الموقع / الإنجليزية"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/vasia-website-en.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/vasia-website-en.webp",
+    "duration": 24.0,
+    "width": 1080,
+    "height": 1920
+  },
+  {
+    "id": "ninnyo-flowers-offer",
+    "category": "social",
+    "language": "he",
+    "title": {
+      "en": "NINNYO FLOWERS · Bouquet spotlight",
+      "he": "NINNYO FLOWERS · הזר במרכז",
+      "ar": "NINNYO FLOWERS · الباقة في الواجهة"
+    },
+    "src": "/assets/video-ads/portfolio-20261019/ninnyo-flowers-offer.mp4",
+    "poster": "/assets/video-ads/portfolio-20261019/ninnyo-flowers-offer.webp",
+    "duration": 12.0,
+    "width": 720,
+    "height": 1280
+  }
+]

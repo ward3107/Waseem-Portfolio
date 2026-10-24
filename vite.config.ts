@@ -23,11 +23,9 @@ export default defineConfig({
           // in by the 3D logo scene (src/shared/three/*) — no reason for it
           // to bloat the main bundle.
           'vendor-three': ['three'],
-          // React Three Fiber + drei power the immersive scroll experience
-          // (src/experience/*). Only its lazy chunk imports them, so this
-          // named chunk stays a cacheable async sibling and never lands in the
-          // entry bundle the classic site ships.
-          'vendor-r3f': ['@react-three/fiber', '@react-three/drei'],
+          // Let Rollup place React Three Fiber and drei with the lazy canvas.
+          // Forcing them into a manual chunk made the entry import that chunk
+          // (and Three.js) even before visitors entered the scroll experience.
           // supabase-js (GoTrue + Realtime + PostgREST) is imported only from
           // lazy chunks: the /admin tree and /share-testimonial. Because two
           // separate async chunks share it, Rollup would otherwise hoist it

@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider, useLanguage } from '@/contexts/LanguageContext';
 import { useProjects } from '@/features/projects/useProjects';
 import { translations } from '@/translations';
@@ -20,6 +20,11 @@ function usePortfolio() {
 }
 
 describe('portfolio content loading', () => {
+  afterEach(() => {
+    document.getElementById('projects')?.remove();
+    vi.unstubAllGlobals();
+  });
+
   beforeEach(() => {
     mocks.configured = false;
     mocks.listProjectRows.mockReset();
@@ -29,13 +34,18 @@ describe('portfolio content loading', () => {
 
   it('translates the fallback immediately when a visitor switches language', () => {
     const { result } = renderHook(usePortfolio, { wrapper });
-    expect(result.current.projects[1].description).toBe(translations.en.project_softec_desc);
+    expect(result.current.projects.find((project) => project.id === 'softec-vision')?.description).toBe(translations.en.project_softec_desc);
     act(() => result.current.setLanguage('he'));
-    expect(result.current.projects[1].description).toBe(translations.he.project_softec_desc);
+    expect(result.current.projects.find((project) => project.id === 'softec-vision')?.description).toBe(translations.he.project_softec_desc);
     act(() => result.current.setLanguage('ar'));
-    expect(result.current.projects[1].description).toBe(translations.ar.project_softec_desc);
+    expect(result.current.projects.find((project) => project.id === 'softec-vision')?.description).toBe(translations.ar.project_softec_desc);
     expect(result.current.projects.map((project) => project.id)).toEqual([
-      'mova-motion-store', 'softec-vision', 'biznix', 'kiwi',
+      'mova-motion-store', 'nacre-ocean-atelier', 'frame-video-learning',
+      'luma-video-library', 'mova-storefront-concept', 'flora-botanical-journey',
+      'liman-hadha', 'land-of-jesus', 'classflow-studio', 'jalal-opticare',
+      'bathline', 'ragad-kindergarten', 'cybersecurity-course', 'careerconnect',
+      'habeeb-farah', 'adan-center',
+      'softec-vision', 'biznix', 'kiwi',
       'shayish-kfar-yassif', 'ninnyo-flowers', 'vocabagrut',
       'souvlaki', 'seatai', 'law-office', 'shokha', 'vocaband',
     ]);
@@ -59,5 +69,28 @@ describe('portfolio content loading', () => {
     act(() => result.current.setLanguage('ar'));
     expect(result.current.projects.find((project) => project.id === 'cms-only')?.description).toBe('وصف بالعربية');
     expect(mocks.listProjectRows).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows curated work before requesting below-the-fold CMS projects', async () => {
+    mocks.configured = true;
+    mocks.listProjectRows.mockResolvedValue([]);
+    const section = document.createElement('section');
+    section.id = 'projects';
+    document.body.append(section);
+    let reveal: (() => void) | undefined;
+    vi.stubGlobal('IntersectionObserver', class {
+      constructor(callback: IntersectionObserverCallback) {
+        reveal = () => callback([{ isIntersecting: true } as IntersectionObserverEntry], this as unknown as IntersectionObserver);
+      }
+      observe() { /* observed until the section enters the viewport */ }
+      disconnect() { /* the query only needs one trigger */ }
+    });
+
+    const { result } = renderHook(() => useProjects('projects'), { wrapper });
+    expect(result.current.projects.find((project) => project.id === 'law-office')?.link)
+      .toBe('https://officelaw.vercel.app/');
+    expect(mocks.listProjectRows).not.toHaveBeenCalled();
+    act(() => reveal?.());
+    await waitFor(() => expect(mocks.listProjectRows).toHaveBeenCalledTimes(1));
   });
 });

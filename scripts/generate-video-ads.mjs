@@ -5,26 +5,42 @@ import { fileURLToPath } from 'node:url';
 const output = new URL('../dist/video-ads/', import.meta.url);
 const site = 'https://www.vasia.dev';
 const url = `${site}/video-ads`;
-const title = 'Social Video Portfolio | Waseem';
-const description = 'Watch vertical social-video work for GreenTouch, NINNYO FLOWERS and Souvlaki restaurant.';
+const title = 'Video Editing & Motion Portfolio | VASIA';
+const selectedCount = JSON.parse(
+  readFileSync(new URL('../src/features/video-ads/curation.json', import.meta.url), 'utf8')
+).length;
+const description = `Watch ${selectedCount} selected video works for brands, food, fashion and education. One chosen version of each project.`;
 let html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
 html = html.replace(/<title>[\s\S]*?<\/title>/, `<title>${title}</title>`);
 const values = {
-  title, description,
-  'og:title': title, 'twitter:title': title,
-  'og:description': description, 'twitter:description': description,
-  'og:url': url, 'twitter:url': url,
+  title,
+  description,
+  'og:title': title,
+  'twitter:title': title,
+  'og:description': description,
+  'twitter:description': description,
+  'og:url': url,
+  'twitter:url': url,
   'og:image': `${site}/assets/video-ads/video-work-share.jpg`,
   'twitter:image': `${site}/assets/video-ads/video-work-share.jpg`,
-  'og:image:width': '1080', 'og:image:height': '1080',
-  'og:image:alt': 'GreenTouch and NINNYO FLOWERS social video portfolio',
-  'twitter:image:alt': 'GreenTouch and NINNYO FLOWERS social video portfolio',
+  'og:image:width': '1080',
+  'og:image:height': '1080',
+  'og:image:alt': 'VASIA video editing and motion portfolio',
+  'twitter:image:alt': 'VASIA video editing and motion portfolio',
 };
-html = html.replace(/<meta\s+(?:name|property)="([^"]+)"\s+content="[^"]*"\s*\/?\s*>/g,
-  (tag, key) => key in values ? tag.replace(/content="[^"]*"/, `content="${values[key]}"`) : tag);
-html = html.replace(/<link rel="canonical" href="[^"]*"\s*\/>/, `<link rel="canonical" href="${url}" />`);
-html = html.replace(/(<link rel="alternate" hreflang="([^"]+)" href=")[^"]*("\s*\/>)/g,
-  (_, start, lang, end) => `${start}${url}${lang === 'he' || lang === 'ar' ? `?lang=${lang}` : ''}${end}`);
+html = html.replace(
+  /<meta\s+(?:name|property)="([^"]+)"\s+content="[^"]*"\s*\/?\s*>/g,
+  (tag, key) => (key in values ? tag.replace(/content="[^"]*"/, `content="${values[key]}"`) : tag)
+);
+html = html.replace(
+  /<link rel="canonical" href="[^"]*"\s*\/>/,
+  `<link rel="canonical" href="${url}" />`
+);
+html = html.replace(
+  /(<link rel="alternate" hreflang="([^"]+)" href=")[^"]*("\s*\/>)/g,
+  (_, start, lang, end) =>
+    `${start}${url}${lang === 'he' || lang === 'ar' ? `?lang=${lang}` : ''}${end}`
+);
 // Homepage service/FAQ schema does not describe this dedicated showcase.
 html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '');
 mkdirSync(output, { recursive: true });
