@@ -40,13 +40,13 @@ const DEFAULT_STATE: A11yState = {
 const AccessibilityToolbar: React.FC = () => {
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(() => {
+    try { return sessionStorage.getItem('a11y-widget-hidden') !== '1'; }
+    catch { return true; }
+  });
 
-  // No self-opening intro card. It used to appear on its own and sit over the
-  // page's own buttons, and an accessibility affordance that has to be
-  // dismissed works against the thing it is there for. The button simply
-  // stays in the corner at full opacity, which is also more discoverable than
-  // the 35%-opacity state the old card faded it to.
+  // No self-opening intro card. The narrow side tab avoids the contact controls
+  // at the bottom of short mobile viewports.
   // Lazy initializer reads saved settings synchronously on first render, so
   // the persist effect below never sees DEFAULT_STATE overwriting real data,
   // and there's no visible flash of non-accessible styles on route changes.
@@ -62,11 +62,32 @@ const AccessibilityToolbar: React.FC = () => {
     }
   });
   const panelRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const restoreFocus = useRef(false);
+
+  const closePanel = () => {
+    restoreFocus.current = true;
+    setIsOpen(false);
+  };
+
+  const hideForSession = () => {
+    try { sessionStorage.setItem('a11y-widget-hidden', '1'); }
+    catch { /* Session storage may be unavailable; hiding still works for this mount. */ }
+    setIsOpen(false);
+    setIsVisible(false);
+  };
 
   // The accessibility panel is a dialog — it must trap focus and close on
   // Escape like every other modal in the app (ironic to omit on this widget).
   useFocusTrap(panelRef, isOpen);
-  useEscapeKey(isOpen, () => setIsOpen(false));
+  useEscapeKey(isOpen, closePanel);
+
+  useEffect(() => {
+    if (!isOpen && restoreFocus.current) {
+      restoreFocus.current = false;
+      triggerRef.current?.focus();
+    }
+  }, [isOpen]);
 
   const getAccessibilityLabel = () => t('a11y_title');
 
@@ -80,7 +101,7 @@ const AccessibilityToolbar: React.FC = () => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        closePanel();
       }
     };
 
@@ -167,43 +188,38 @@ const AccessibilityToolbar: React.FC = () => {
   };
 
   if (!isVisible) return null;
-  // Session-dismissed users get nothing at all.
+  // Session-dismissed users get nothing until the next browser session.
 
   if (!isOpen) {
     return (
       <div
-        className="fixed right-4 md:right-6 z-50 flex items-end gap-3"
-        style={{ bottom: 'calc(var(--wa-dock-h, 0.75rem) + 0.75rem)' }}
+        className="fixed right-0 top-1/2 z-50 -translate-y-1/2"
       >
-        {/* First-visit tooltip. Sits to the LEFT of the button so it
-            doesn't push it off-screen on narrow mobiles. Dismissible with
-            the X or "Continue"; either choice persists for the session. */}
-                <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          whileHover={{ scale: 1.1, opacity: 1 }}
-          whileFocus={{ opacity: 1 }}
-          whileTap={{ scale: 0.95, opacity: 1 }}
+        <motion.button
+          ref={triggerRef}
+          initial={{ x: 12, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
           onClick={() => setIsOpen(true)}
-          className="bg-gradient-to-br from-brand-purple to-brand-purpleLight text-white p-2.5 md:p-3.5 rounded-full shadow-xl hover:shadow-brand-purple/50 transition-shadow focus:outline-none focus:ring-4 focus:ring-brand-purple/50 group border-2 border-white/20"
-          aria-label={getAccessibilityLabel() + ' Options'}
-          style={{ transition: 'opacity 200ms ease' }}
+          className="grid h-12 w-11 place-items-center rounded-l-xl border border-r-0 border-white/30 bg-brand-purple/90 text-white shadow-lg transition-colors hover:bg-brand-purple focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-cyan group"
+          aria-label={getAccessibilityLabel()}
+          aria-haspopup="dialog"
         >
-          <Accessibility className="w-6 h-6 md:w-7 md:h-7 group-hover:rotate-12 transition-transform duration-500 drop-shadow-lg" />
+          <Accessibility className="h-6 w-6" aria-hidden="true" />
         </motion.button>
       </div>
     );
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-end sm:pe-6 sm:pb-6 pointer-events-none">
+    <div className="fixed inset-0 z-[70] flex items-end justify-end pointer-events-none sm:items-center sm:pe-6 sm:pb-6">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-auto" onClick={() => setIsOpen(false)}></div>
+      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm pointer-events-auto" onClick={closePanel}></div>
 
       <div
         ref={panelRef}
-        className="w-full sm:w-[400px] bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[90vh] pointer-events-auto overflow-hidden animate-float"
+        className="w-full sm:w-[400px] bg-white dark:bg-slate-900 rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom))] sm:max-h-[90dvh] pointer-events-auto overflow-hidden"
         role="dialog"
+        aria-modal="true"
         aria-label={t('a11y_title')}
       >
         {/* Header */}
@@ -215,7 +231,7 @@ const AccessibilityToolbar: React.FC = () => {
             </span>
           </h2>
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={closePanel}
             aria-label={t('aria_close')}
             className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500 dark:text-slate-400 hover:text-red-500"
           >
@@ -223,7 +239,7 @@ const AccessibilityToolbar: React.FC = () => {
           </button>
         </div>
 
-        <div className="overflow-y-auto p-6 space-y-8">
+        <div className="min-h-0 overflow-y-auto p-6 space-y-8">
 
           {/* 1. Font Size */}
           <div className="space-y-3">
@@ -237,6 +253,7 @@ const AccessibilityToolbar: React.FC = () => {
               <span className="text-xs">A</span>
               <input
                 type="range"
+                aria-label={t('a11y_font_size')}
                 min="100"
                 max="200"
                 step="25"
@@ -321,7 +338,7 @@ const AccessibilityToolbar: React.FC = () => {
               <RotateCcw size={16} aria-hidden="true" /> {t('a11y_reset')}
             </button>
             <button
-              onClick={() => setIsVisible(false)}
+              onClick={hideForSession}
               className="flex-1 py-3 rounded-xl border border-red-100 dark:border-red-900/30 text-red-500 font-bold text-sm hover:bg-red-50 dark:hover:bg-red-900/10 hover:border-red-200 dark:hover:border-red-800 transition-colors flex items-center justify-center gap-2"
             >
               <EyeOff size={16} aria-hidden="true" /> {t('a11y_hide')}

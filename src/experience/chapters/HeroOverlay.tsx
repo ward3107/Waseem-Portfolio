@@ -104,8 +104,8 @@ const HeroOverlay: React.FC = () => {
         </a>
       </motion.div>
 
-      <a href="/plan" className="pointer-events-auto mt-4 rounded px-2 py-1 text-sm font-semibold text-brand-cyan underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-cyan">
-        {{ he: 'בחרו שירותים ובקשו הצעה', en: 'Choose services and request a quote', ar: 'اختر الخدمات واطلب عرض سعر' }[language]}
+      <a href="/plan" className="pointer-events-auto mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-brand-cyan/70 bg-slate-950/70 px-6 py-2.5 text-sm font-bold text-white shadow-lg transition-colors hover:bg-brand-cyan/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cyan">
+        {{ he: 'הרכיבו פרויקט לבקשת הצעת מחיר', en: 'Build your project quote request', ar: 'جهّز طلب عرض سعر لمشروعك' }[language]}
       </a>
 
       <motion.div
