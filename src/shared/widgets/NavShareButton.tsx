@@ -24,7 +24,7 @@ const NavShareButton: React.FC<NavShareButtonProps> = ({ className = '' }) => {
   const { t, dir } = useLanguage();
   useLocation(); // recompute URL on client-side nav
   const url = typeof window !== 'undefined' ? window.location.href : '';
-  const text = t('share_page_intent') || "Check out Waseem's Portfolio";
+  const text = t('share_page_intent') || "Check out vasia's Portfolio";
 
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
