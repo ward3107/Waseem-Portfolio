@@ -1,10 +1,12 @@
 import type { Language } from '@/types';
 import { allOptions, formatQuoteAmount, quoteBreakdown, type QuoteCatalogue } from './catalogue';
+import { scopeRows, type QuoteScope } from './scope';
 
 export type RequestDetails = {
   language: Language;
   categoryIds: string[];
   optionIds: string[];
+  scope?: QuoteScope;
   unsureCategoryIds: string[];
   unsureOverall: boolean;
   projectStage: 'new' | 'existing' | 'unsure';
@@ -62,7 +64,8 @@ export function buildRequestMessage(catalogue: QuoteCatalogue, details: RequestD
   const allowedIds = catalogue.categories
     .filter((category) => details.categoryIds.includes(category.id))
     .flatMap((category) => category.options.filter((item) => selected.has(item.id)).map((item) => item.id));
-  const breakdown = quoteBreakdown(catalogue, allowedIds);
+  const breakdown = quoteBreakdown(catalogue, allowedIds, details.scope);
+  const detailsRows = scopeRows(catalogue, allowedIds, details.scope);
   const amountFor = (id: string) => {
     const item = breakdown.pricedItems.find((priced) => priced.id === id);
     return item ? formatQuoteAmount(details.language, item.minIls, item.maxIls) : t.itemQuote;
@@ -72,7 +75,12 @@ export function buildRequestMessage(catalogue: QuoteCatalogue, details: RequestD
     .flatMap((category) => {
       const picked = category.options.filter((item) => selected.has(item.id));
       return [
-        ...picked.map((item) => '- ' + category.label[details.language] + ': ' + item.label[details.language] + ' — ' + amountFor(item.id)),
+        ...picked.flatMap((item) => [
+          '- ' + category.label[details.language] + ': ' + item.label[details.language] + ' — ' + amountFor(item.id),
+          ...detailsRows.filter((row) => row.optionId === item.id).map((row) =>
+            '  · ' + row.label[details.language] + (row.quantity > 1 ? ' ×' + row.quantity : '') +
+            (row.price ? ' — ' + amountFor(row.id) : '')),
+        ]),
         ...(uncertain.has(category.id) ? ['- ' + category.label[details.language] + ': ' + t.unsure] : []),
       ];
     });
