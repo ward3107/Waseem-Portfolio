@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Mail, MessageSquare } from 'lucide-react';
 import ProjectWizard from '@/features/projects/ProjectWizard';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -8,9 +8,6 @@ import { useContact } from '@/features/contact/useContact';
 import Dimensional3DWord, { fontForLanguage } from '@/shared/three/Dimensional3DWord';
 import TrustBadges from '@/shared/ui/TrustBadges';
 import CalendarEmbed from '@/features/contact/CalendarEmbed';
-import { canPublishQuote, quoteCatalogue } from '@/features/quote/catalogue';
-
-const QuoteCalculator = lazy(() => import('@/features/quote/QuoteCalculator'));
 
 const Contact: React.FC = () => {
   const { t, language } = useLanguage();
@@ -131,11 +128,11 @@ const Contact: React.FC = () => {
           </motion.div>
 
         </div>
-        {canPublishQuote(quoteCatalogue) && (
-          <div className="mx-auto mt-12 max-w-4xl">
-            <Suspense fallback={null}><QuoteCalculator /></Suspense>
-          </div>
-        )}
+        <div className="mx-auto mt-12 max-w-4xl text-center">
+          <a href="/plan" className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand-purple px-7 font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-purple">
+            {{ he: 'תכננו פרויקט ובקשו הצעת מחיר', en: 'Plan a project and request a quote', ar: 'خطّط لمشروعك واطلب عرض سعر' }[language]}
+          </a>
+        </div>
       </div>
     </section>
   );

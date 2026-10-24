@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import FooterConstellation from '@/shared/ui/FooterConstellation';
 import { Link } from 'react-router-dom';
 import { ArrowRight, X, Lock } from 'lucide-react';
-import { NAV_LINKS, SERVICE_AREAS } from '@/constants';
+import { NAV_LINKS } from '@/constants';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap, useEscapeKey } from '@/shared/hooks/useFocusTrap';
@@ -90,18 +90,6 @@ const Footer: React.FC = () => {
                 </li>
               ))}
               <li>
-                <a
-                  href={language === 'he' ? '/blog/' : `/${language}/blog/`}
-                  className="hover:text-brand-purple transition-colors flex items-center gap-2 group py-1.5"
-                >
-                  <ArrowRight
-                    size={14}
-                    className="opacity-0 -ms-4 rtl:rotate-180 group-hover:opacity-100 group-hover:ms-0 transition-all duration-300 text-brand-purple"
-                  />
-                  {{ ar: 'مدونة', en: 'Blog', he: 'בלוג' }[language]}
-                </a>
-              </li>
-              <li>
                 <Link
                   to="/brand"
                   className="hover:text-brand-purple transition-colors flex items-center gap-2 group py-1.5"
@@ -115,32 +103,22 @@ const Footer: React.FC = () => {
               </li>
             </ul>
 
-            {/* Service Areas — internal links to local SEO landing pages */}
+            {/* A compact nationwide summary links to the regional hub, which
+                keeps every existing city page discoverable without a long
+                list of city names in every footer. */}
             <h3 className="text-sm font-bold mt-8 mb-4 text-slate-900 dark:text-white">
-              {{ ar: 'مناطق الخدمة', en: 'Service Areas', he: 'אזורי שירות' }[language]}
+              {{ ar: 'خدمة في جميع أنحاء البلاد', en: 'Serving all of Israel', he: 'שירות בכל הארץ' }[language]}
             </h3>
-            <ul className="space-y-0.5 text-sm text-slate-600 dark:text-slate-400">
-              {SERVICE_AREAS.map((area) => (
-                <li key={area.slug}>
-                  <a
-                    href={language === 'ar' ? `/ar/${area.slug}/` : `/${area.slug}/`}
-                    className="hover:text-brand-cyan transition-colors flex items-center gap-2 group py-1.5"
-                  >
-                    <ArrowRight
-                      size={14}
-                      className="opacity-0 -ms-4 rtl:rotate-180 group-hover:opacity-100 group-hover:ms-0 transition-all duration-300 text-brand-cyan"
-                    />
-                    {
-                      {
-                        ar: area.ar,
-                        en: `Web Design ${area.en}`,
-                        he: `בניית אתרים ${area.he}`,
-                      }[language]
-                    }
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <p className="max-w-xs text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+              {{ ar: 'نعمل مع شركات من مختلف مناطق إسرائيل، ويمكن تنسيق المشروع والاجتماعات عن بُعد.', en: 'I work with businesses across Israel. Projects and meetings can be coordinated remotely.', he: 'אני עובד עם עסקים מכל הארץ. אפשר לתאם את הפרויקט והפגישות מרחוק.' }[language]}
+            </p>
+            <a
+              href={language === 'he' ? '/service-areas/' : `/${language}/service-areas/`}
+              className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-brand-purple hover:underline focus-visible:rounded focus-visible:outline-2 focus-visible:outline-brand-purple dark:text-brand-purpleLighter"
+            >
+              {{ ar: 'اطّلع على مناطق الخدمة', en: 'Explore service areas', he: 'לכל אזורי השירות' }[language]}
+              <ArrowRight size={15} className="rtl:rotate-180" aria-hidden="true" />
+            </a>
           </div>
 
           {/* Services */}
@@ -169,7 +147,7 @@ const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         {/* The journey's epilogue: its particles settle here and rebuild the
-            W. Sweep a cursor through them and they scatter, then drift back. */}
+            V. Sweep a cursor through them and they scatter, then drift back. */}
         <FooterConstellation />
 
         <div className="pt-8 border-t border-slate-200 dark:border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-600 dark:text-slate-500">

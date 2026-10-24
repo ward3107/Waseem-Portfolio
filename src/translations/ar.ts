@@ -130,7 +130,7 @@ export const ar: Record<string, string> = {
     projects_filter_wordpress: "WordPress",
     projects_hint: "انقر للقلب",
     projects_details: "تفاصيل",
-    projects_demo: "عرض حي",
+    projects_demo: "زيارة الموقع",
     projects_code: "كود",
     project_1_desc: "موقع لمطعم يوناني أصيل يضم القائمة، معرض الصور، والطلب عبر الإنترنت — مبني بـ Next.js.",
     project_2_desc: "نظام مدعوم بالذكاء الاصطناعي لتحسين ترتيب جلوس الطلاب في الفصول، يوازن بين المستوى الأكاديمي والسلوك واحتياجات إمكانية الوصول.",
@@ -152,6 +152,17 @@ export const ar: Record<string, string> = {
     project_luma_desc: "عرض تجريبي لتصميم منصة أفلام قصيرة، مع تصفح مصنف ومقاطع معاينة وقائمة مشاهدة شخصية. دون شراء أو اشتراك.",
     project_mova_storefront_desc: "عرض تجريبي لمتجر تفاعلي مع مشاهدة المنتجات بزاوية 360 درجة وتخصيص هوية العلامة. الطلبات للتجربة فقط.",
     project_flora_desc: "رحلة تمرير تفاعلية لعلامة عطور تصورية، من الزهرة والخلاصة إلى نفحات العطر.",
+
+    project_liman_desc: "موقع تفاعلي لتعلّم العربية يجمع تركيب الكلمات والتدريب الموجّه والألعاب.",
+    project_land_of_jesus_desc: "موقع تراثي متعدد اللغات يضم رحلة مصوّرة وأماكن للاستكشاف وقصصًا.",
+    project_classflow_desc: "لوحة رقمية للورش تضم مؤقتات وأنشطة جماعية وواجهة بعدة لغات.",
+    project_opti_desc: "موقع للبصريات يعرض الخدمات والإطارات والمعرض ووسائل التواصل.",
+    project_bathline_desc: "موقع متعدد اللغات لتجديد الحمّامات مع حاسبة تقدير ومسار للتواصل.",
+    project_ragad_desc: "موقع متعدد اللغات لحضانة الأطفال يشرح اليوم المعتاد والبرامج والفريق ووسائل التواصل.",
+    project_cyber_course_desc: "موقع عربي لتعلّم الأمن السيبراني مع خريطة للدورة ودروس تفاعلية. بعض الوحدات قيد البناء.",
+    project_careerconnect_desc: "تجربة لاستكشاف المسارات المهنية مع إرشاد ومحتوى بعدة لغات.",
+    project_habeeb_farah_desc: "موقع متعدد اللغات يعرض البرامج التعليمية ومعلومات المؤسسة ووسائل التواصل.",
+    project_adan_desc: "موقع لمركز نمو الطفل يعرض الخدمات ونهج العمل والفريق والأسئلة الشائعة.",
 
     // Process
     process_step_1_title: "🧭 الاكتشاف والاستراتيجية",
@@ -507,15 +518,15 @@ export const ar: Record<string, string> = {
     a11y_persist: "الإعدادات محفوظة عبر الجلسات",
 
     // Per-page document titles
-    page_title_home: "وسيم — مطور Wix وWordPress وحلول ويب مخصصة",
-    page_title_about: "معلومات وعملية العمل — وسيم",
-    page_title_projects: "المشاريع والمهارات — وسيم",
-    page_title_contact: "تواصل معي — وسيم",
-    page_title_services: "خدمات — وسيم",
-    page_title_privacy: "سياسة الخصوصية — وسيم",
-    page_title_accessibility: "بيان إمكانية الوصول — وسيم",
+    page_title_home: "vasia — مطور Wix وWordPress وحلول ويب مخصصة",
+    page_title_about: "معلومات وعملية العمل — vasia",
+    page_title_projects: "المشاريع والمهارات — vasia",
+    page_title_contact: "تواصل معي — vasia",
+    page_title_services: "خدمات — vasia",
+    page_title_privacy: "سياسة الخصوصية — vasia",
+    page_title_accessibility: "بيان إمكانية الوصول — vasia",
     footer_accessibility: "إمكانية الوصول",
-    page_title_404: "الصفحة غير موجودة — وسيم",
+    page_title_404: "الصفحة غير موجودة — vasia",
 
     // Share widget toasts
     share_copy_failed: "تعذّر نسخ الرابط. يرجى نسخه من شريط العنوان.",

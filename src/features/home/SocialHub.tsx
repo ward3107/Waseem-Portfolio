@@ -41,13 +41,13 @@ const SocialHub: React.FC = () => {
                             >
                                 <div className="h-20 sm:h-24 bg-[#1877F2] relative">
                                     <div className={`absolute bottom-[-20px] sm:bottom-[-24px] ${isRTL ? 'right-4 sm:right-6' : 'left-4 sm:left-6'} w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-full p-1 flex items-center justify-center`}>
-                                        <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm sm:text-base">W</div>
+                                        <div className="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm sm:text-base">V</div>
                                     </div>
                                 </div>
                                 <div className="pt-6 sm:pt-8 px-4 sm:px-6 pb-4 sm:pb-6">
                                     <div className="flex justify-between items-start mb-3 sm:mb-4 gap-2">
                                         <div className={isRTL ? 'text-right' : 'text-left'}>
-                                            <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">Waseem Dev</h3>
+                                            <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white">vasia</h3>
                                             <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Full Stack & AI</p>
                                         </div>
                                         <button className="flex items-center gap-1.5 sm:gap-2 bg-[#1877F2] text-white px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-md text-[11px] sm:text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
