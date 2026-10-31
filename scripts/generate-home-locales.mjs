@@ -7,17 +7,17 @@ const site = 'https://www.vasia.dev';
 
 const locales = {
   en: {
-    title: 'vasia — Wix, WordPress & Custom Web Developer',
-    description: 'vasia builds Wix and WordPress sites, online stores and custom web apps for businesses. AI automation and support in English, Hebrew and Arabic.',
-    socialTitle: 'vasia — Websites and digital solutions',
-    socialDescription: 'Wix and WordPress sites, custom development and AI automation for businesses. Work in English, Hebrew and Arabic.',
+    title: "Vasia — Websites, Apps & AI Automation",
+    description: "Vasia builds Wix and WordPress websites, online stores and custom apps for businesses, with AI tools and automation. Service in English, Hebrew and Arabic.",
+    socialTitle: "Vasia — Websites, Apps & AI Automation",
+    socialDescription: "Vasia builds Wix and WordPress websites, online stores and custom apps for businesses, with AI tools and automation. Service in English, Hebrew and Arabic.",
     ogLocale: 'en_US',
   },
   ar: {
-    title: 'vasia — مواقع Wix وWordPress وحلول ويب مخصصة',
-    description: 'يبني وسيم مواقع Wix وWordPress ومتاجر وتطبيقات ويب مخصصة للأعمال، مع حلول الذكاء الاصطناعي والأتمتة وخدمة بالعربية والعبرية والإنجليزية.',
-    socialTitle: 'vasia — تطوير مواقع وحلول رقمية',
-    socialDescription: 'مواقع Wix وWordPress وتطوير مخصص وأتمتة للأعمال بالعربية والعبرية والإنجليزية.',
+    title: "Vasia — تطوير مواقع وتطبيقات وأتمتة بالذكاء الاصطناعي",
+    description: "Vasia تطوّر مواقع Wix وWordPress ومتاجر وتطبيقات مخصصة للأعمال، مع حلول الذكاء الاصطناعي والأتمتة. خدمة بالعربية والعبرية والإنجليزية.",
+    socialTitle: "Vasia — تطوير مواقع وتطبيقات وأتمتة بالذكاء الاصطناعي",
+    socialDescription: "Vasia تطوّر مواقع Wix وWordPress ومتاجر وتطبيقات مخصصة للأعمال، مع حلول الذكاء الاصطناعي والأتمتة. خدمة بالعربية والعبرية والإنجليزية.",
     ogLocale: 'ar_AR',
   },
 };
@@ -45,6 +45,11 @@ for (const [lang, copy] of Object.entries(locales)) {
     ['name', 'twitter:description', copy.socialDescription],
     ['name', 'twitter:url', url],
   ]) html = setMeta(html, kind, key, value);
+  // Each locale lists the other locales, without repeating itself.
+  html = html.replace(/\s*<meta property="og:locale:alternate" content="[^"]*"\s*\/>/g, '');
+  html = html.replace('</head>', Object.values({ he: 'he_IL', en: 'en_US', ar: 'ar_AR' })
+    .filter(value => value !== copy.ogLocale)
+    .map(value => `    <meta property="og:locale:alternate" content="${value}" />`).join('\n') + '\n  </head>');
   mkdirSync(resolve(dist, lang), { recursive: true });
   writeFileSync(resolve(dist, lang, 'index.html'), html, 'utf8');
 }
