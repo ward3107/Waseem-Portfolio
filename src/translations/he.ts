@@ -518,7 +518,7 @@ export const he: Record<string, string> = {
     a11y_persist: "ההגדרות נשמרות בין ביקורים",
 
     // Per-page document titles
-    page_title_home: "ואסיה — פיתוח אתרי Wix, WordPress ופתרונות מותאמים",
+    page_title_home: "Vasia — בניית אתרים, אפליקציות ואוטומציות AI",
     page_title_about: "אודות ותהליך — ואסיה",
     page_title_projects: "פרויקטים וכישורים — ואסיה",
     page_title_contact: "צור קשר — ואסיה",
