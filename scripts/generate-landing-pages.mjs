@@ -21,7 +21,7 @@ const publicDir = resolve(__dirname, '..', 'public');
 
 const SITE = 'https://www.vasia.dev';
 const WHATSAPP = '972544513141';
-const LASTMOD = '2026-07-07';
+const LASTMOD = '2026-10-31';
 const LANGS = ['he', 'ar'];
 
 const esc = (s) =>
@@ -79,11 +79,11 @@ const T = {
     viewWork: 'شاهدوا أعمالي',
     areasLabel: 'خدمة أيضًا في المناطق التالية:',
     sibling: (c) => `بناء مواقع في ${c}`,
-    credit: '© 2026 وسيم — بناء مواقع في الشمال.',
+    credit: '© 2026 واسيا — بناء مواقع في الشمال.',
     toMain: 'إلى الموقع الرئيسي',
     whatsapp: 'واتساب',
     contact: 'تواصل',
-    waText: (c) => `مرحبا وسيم، أنا مهتم بموقع لنشاطي التجاري في ${c} 🙂`,
+    waText: (c) => `مرحبا واسيا، أنا مهتم بموقع لنشاطي التجاري في ${c} 🙂`,
     otherLang: 'עברית',
   },
 };
@@ -111,7 +111,7 @@ const cities = [
       ],
     },
     ar: {
-      lead: 'أنا وسيم — مطوّر ومصمّم مواقع من كفر ياسيف. أعيش وأعمل هنا، أعرف الأنشطة التجارية المحلية عن قرب وما ينجح فعليًا. أبني مواقع سريعة وواضحة وفعّالة — بالعربية والعبرية والإنجليزية — تجلب عملاء حقيقيين لا مجرد زيارات.',
+      lead: 'أنا واسيا — مطوّر ومصمّم مواقع من كفر ياسيف. أعيش وأعمل هنا، أعرف الأنشطة التجارية المحلية عن قرب وما ينجح فعليًا. أبني مواقع سريعة وواضحة وفعّالة — بالعربية والعبرية والإنجليزية — تجلب عملاء حقيقيين لا مجرد زيارات.',
       angle: [
         'ابن البلد — لقاءات وجهًا لوجه، بدون وسطاء وبدون مسافات.',
         'موقع ثنائي اللغة (عربي + عبري) يخاطب كل الجمهور في البلدة والمحيط.',
@@ -271,7 +271,7 @@ const cities = [
       ],
     },
     ar: {
-      lead: 'جديدة المكر بلدة كبيرة في الجليل الغربي — فيها أنشطة عائلية، صالات أفراح، أصحاب مهن ومطاعم تخدم السكان وكل المنطقة. أنا وسيم من كفر ياسيف المجاورة، أعرف الديناميكية المحلية عن قرب وما ينجح فعليًا للأنشطة على الأرض. أبني مواقع ثنائية اللغة (عربية + عبرية) مريحة للتصفح من الجوال — لأن هذا كيف يبحث معظم عملائكم.',
+      lead: 'جديدة المكر بلدة كبيرة في الجليل الغربي — فيها أنشطة عائلية، صالات أفراح، أصحاب مهن ومطاعم تخدم السكان وكل المنطقة. أنا واسيا من كفر ياسيف المجاورة، أعرف الديناميكية المحلية عن قرب وما ينجح فعليًا للأنشطة على الأرض. أبني مواقع ثنائية اللغة (عربية + عبرية) مريحة للتصفح من الجوال — لأن هذا كيف يبحث معظم عملائكم.',
       angle: [
         'جار من كفر ياسيف — لقاءات وجهًا لوجه، بدون سفر إلى تل أبيب.',
         'موقع بالعربية والعبرية من اليوم الأول — ليس ترجمة ارتجالية، بل مبني من الأساس للاتجاهين.',
@@ -303,7 +303,7 @@ const cities = [
       ],
     },
     ar: {
-      lead: 'أبو سنان قرية درزية-مسيحية-مسلمة مختلطة، بجانب كفر ياسيف — فيها شبكة غنية من الأنشطة العائلية والمشاغل الصغيرة والمطاعم وأصحاب المهن الذين يخدمون كل الشمال. أنا وسيم، من المنطقة، أبني مواقع موثوقة وسريعة تمثّل تراث نشاطكم كما يجب — وتظهر في جوجل في اللحظة التي يبحث فيها العميل بالضبط.',
+      lead: 'أبو سنان قرية درزية-مسيحية-مسلمة مختلطة، بجانب كفر ياسيف — فيها شبكة غنية من الأنشطة العائلية والمشاغل الصغيرة والمطاعم وأصحاب المهن الذين يخدمون كل الشمال. أنا واسيا، من المنطقة، أبني مواقع موثوقة وسريعة تمثّل تراث نشاطكم كما يجب — وتظهر في جوجل في اللحظة التي يبحث فيها العميل بالضبط.',
       angle: [
         'من المنطقة، لا من لندن — لقاءات وجهًا لوجه في القرية أو ضمن ربع ساعة سفر.',
         'تصميم محترم يناسب النشاط العائلي مع تاريخ — ليس بأسلوب ستارت-أب مبالغ فيه.',
@@ -335,7 +335,7 @@ const cities = [
       ],
     },
     ar: {
-      lead: 'يانوح - جث مجلس درزي في الجليل الأعلى، فيه أنشطة زراعية وأصحاب مهن وضيافة ريفية ومطاعم بدأت تجذب السياح من كل الشمال. النشاط في يانوح - جث يحتاج موقعًا يظهر في جوجل عندما يبحث شخص عن «ضيافة ريفية في الشمال» أو «مطعم قروي في الجليل». أنا وسيم — أبني مواقع متخصّصة في السياحة تجلب حجوزات حقيقية.',
+      lead: 'يانوح - جث مجلس درزي في الجليل الأعلى، فيه أنشطة زراعية وأصحاب مهن وضيافة ريفية ومطاعم بدأت تجذب السياح من كل الشمال. النشاط في يانوح - جث يحتاج موقعًا يظهر في جوجل عندما يبحث شخص عن «ضيافة ريفية في الشمال» أو «مطعم قروي في الجليل». أنا واسيا — أبني مواقع متخصّصة في السياحة تجلب حجوزات حقيقية.',
       angle: [
         'مناسب للسياحة الريفية — معارض صور، خرائط، توفّر وحجز ببضع نقرات.',
         'SEO لـ«الشمال»، «الجليل الأعلى» و«درزي أصيل» — ليس فقط لاسم القرية.',
@@ -387,7 +387,7 @@ const AREA_COPY = {
   },
   ar: {
     title: 'خدمات رقمية للشركات في أنحاء إسرائيل | vasia.dev',
-    description: 'مواقع ومتاجر إلكترونية وتطبيقات وأتمتة للشركات في أنحاء إسرائيل. تعاون عن بُعد مع وسيم وتصفّح الصفحات الإقليمية الحالية.',
+    description: 'مواقع ومتاجر إلكترونية وتطبيقات وأتمتة للشركات في أنحاء إسرائيل. تعاون عن بُعد مع واسيا وتصفّح الصفحات الإقليمية الحالية.',
     eyebrow: 'خدمة في جميع أنحاء البلاد',
     heading: 'نبني معًا، أينما كنت في البلاد.',
     lead: 'أعمل مع شركات في أنحاء إسرائيل على المواقع والمتاجر الإلكترونية وتطبيقات الويب وحلول الأتمتة. يمكننا التعارف وتحديد نطاق المشروع وتنسيق العمل عن بُعد.',
@@ -417,23 +417,24 @@ const faqJsonLd = (city, lang) => ({
 const businessJsonLd = (city, lang) => ({
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
-  '@id': `${cityUrl(city, lang)}#localbusiness`,
-  name: `${lang === 'ar' ? 'وسيم — بناء مواقع في' : 'ואסיה — בניית אתרים ב'}${city.name[lang]}`,
-  image: `${SITE}/og-image.png`,
-  url: cityUrl(city, lang),
+  '@id': `${SITE}/#localbusiness`,
+  name: 'Vasia',
+  alternateName: ['vasia.dev', 'ואסיה', 'واسيا'],
+  image: `${SITE}/brand/vasia-share.png`,
+  url: `${SITE}/`,
   telephone: `+${WHATSAPP}`,
   priceRange: '$$',
   description: city[lang].lead,
   areaServed: { '@type': 'City', name: city.en },
   address: {
     '@type': 'PostalAddress',
-    addressLocality: city.en,
+    addressLocality: 'Kfar Yasif',
     addressRegion: 'Northern District',
     addressCountry: 'IL',
   },
-  geo: { '@type': 'GeoCoordinates', latitude: city.geo.lat, longitude: city.geo.lng },
+  geo: { '@type': 'GeoCoordinates', latitude: 32.9556, longitude: 35.1706 },
   knowsLanguage: ['he', 'ar', 'en'],
-  sameAs: ['https://github.com/ward3107', 'https://www.linkedin.com/in/waseem-abu-akel-334486374/'],
+  sameAs: ["https://www.instagram.com/vasia.dev/","https://www.facebook.com/profile.php?id=61594997720112","https://www.linkedin.com/in/waseem-abu-akel-334486374/","https://github.com/ward3107","https://www.google.com/maps?cid=4818309089833202551"],
 });
 
 const breadcrumbJsonLd = (city, lang) => ({
@@ -512,7 +513,7 @@ const page = (city, lang) => {
   const heroPrefix = lang === 'ar' ? 'بناء مواقع في ' : 'בניית אתרים ב';
   const title =
     lang === 'ar'
-      ? `بناء مواقع في ${cityName} | وسيم — مطوّر ومصمّم مواقع في الشمال`
+      ? `بناء مواقع في ${cityName} | واسيا — مطوّر ومصمّم مواقع في الشمال`
       : `בניית אתרים ב${cityName} | ואסיה — מפתח ובונה אתרים בצפון`;
   const desc = c.lead.slice(0, 155);
   const keywords =
@@ -529,7 +530,7 @@ const page = (city, lang) => {
   <meta name="title" content="${esc(title)}" />
   <meta name="description" content="${esc(desc)}" />
   <meta name="keywords" content="${esc(keywords)}" />
-  <meta name="author" content="Waseem" />
+  <meta name="author" content="Vasia" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#483AA0" />
   <link rel="canonical" href="${url}" />
@@ -542,13 +543,13 @@ const page = (city, lang) => {
   <meta property="og:url" content="${url}" />
   <meta property="og:title" content="${esc(title)}" />
   <meta property="og:description" content="${esc(desc)}" />
-  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image" content="${SITE}/brand/vasia-share.png" />
   <meta property="og:locale" content="${lang === 'ar' ? 'ar_AR' : 'he_IL'}" />
-  <meta property="og:site_name" content="vasia" />
+  <meta property="og:site_name" content="Vasia" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${esc(title)}" />
   <meta name="twitter:description" content="${esc(desc)}" />
-  <meta name="twitter:image" content="${SITE}/og-image.png" />
+  <meta name="twitter:image" content="${SITE}/brand/vasia-share.png" />
 
   <script type="application/ld+json">
 ${JSON.stringify(businessJsonLd(city, lang), null, 2)}
@@ -672,7 +673,7 @@ const areaHubPage = (lang) => {
   <meta property="og:url" content="${url}" />
   <meta property="og:title" content="${esc(copy.title)}" />
   <meta property="og:description" content="${esc(copy.description)}" />
-  <meta property="og:image" content="${SITE}/og-image.png" />
+  <meta property="og:image" content="${SITE}/brand/vasia-share.png" />
   <script type="application/ld+json">${JSON.stringify(breadcrumb).replace(/</g, '\\u003c')}</script>
   <style>${CSS}
     .skip { position: absolute; transform: translateY(-200%); padding: 8px 12px; background: var(--card); z-index: 10; }
@@ -797,7 +798,7 @@ const homeEntry = (lang) => {
   const home = (locale) => `${SITE}${locale === 'he' ? '/' : `/${locale}/`}`;
   return `  <url>
     <loc>${home(lang)}</loc>
-    <lastmod>2026-10-23</lastmod>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="he" href="${home('he')}" />

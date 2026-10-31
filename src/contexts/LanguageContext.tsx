@@ -49,15 +49,47 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     document.documentElement.dir = dir;
     if (/^\/(?:en\/|ar\/)?$/.test(window.location.pathname)) {
       const url = `https://www.vasia.dev${language === 'he' ? '/' : `/${language}/`}`;
-      const description = {
-        he: 'ואסיה בונה אתרי Wix ו-WordPress, חנויות ואפליקציות מותאמות לעסקים. פתרונות AI ואוטומציה, עם תמיכה בעברית, בערבית ובאנגלית.',
-        en: 'vasia builds Wix and WordPress sites, online stores and custom web apps for businesses. AI automation and support in English, Hebrew and Arabic.',
-        ar: 'يبني وسيم مواقع Wix وWordPress ومتاجر وتطبيقات ويب مخصصة للأعمال، مع حلول الذكاء الاصطناعي والأتمتة وخدمة بالعربية والعبرية والإنجليزية.',
+      const metadata = {
+        "he": {
+          "title": "Vasia — בניית אתרים, אפליקציות ואוטומציות AI",
+          "description": "Vasia בונה אתרי Wix ו-WordPress, חנויות ואפליקציות מותאמות לעסקים, עם פתרונות AI ואוטומציה. שירות בעברית, בערבית ובאנגלית.",
+          "locale": "he_IL"
+        },
+        "en": {
+          "title": "Vasia — Websites, Apps & AI Automation",
+          "description": "Vasia builds Wix and WordPress websites, online stores and custom apps for businesses, with AI tools and automation. Service in English, Hebrew and Arabic.",
+          "locale": "en_US"
+        },
+        "ar": {
+          "title": "Vasia — تطوير مواقع وتطبيقات وأتمتة بالذكاء الاصطناعي",
+          "description": "Vasia تطوّر مواقع Wix وWordPress ومتاجر وتطبيقات مخصصة للأعمال، مع حلول الذكاء الاصطناعي والأتمتة. خدمة بالعربية والعبرية والإنجليزية.",
+          "locale": "ar_AR"
+        }
       }[language];
       document.querySelector('link[rel="canonical"]')?.setAttribute('href', url);
-      document.querySelector('meta[name="description"]')?.setAttribute('content', description);
-      document.querySelector('meta[property="og:url"]')?.setAttribute('content', url);
-      document.querySelector('meta[name="twitter:url"]')?.setAttribute('content', url);
+      const values: Record<string, string> = {
+        title: metadata.title,
+        description: metadata.description,
+        'og:title': metadata.title,
+        'og:description': metadata.description,
+        'og:url': url,
+        'og:locale': metadata.locale,
+        'og:site_name': 'Vasia',
+        'twitter:title': metadata.title,
+        'twitter:description': metadata.description,
+        'twitter:url': url,
+      };
+      Object.entries(values).forEach(([key, value]) => {
+        const attribute = key.startsWith('og:') ? 'property' : 'name';
+        document.querySelector(`meta[${attribute}="${key}"]`)?.setAttribute('content', value);
+      });
+      document.querySelectorAll('meta[property="og:locale:alternate"]').forEach(node => node.remove());
+      ['he_IL', 'en_US', 'ar_AR'].filter(locale => locale !== metadata.locale).forEach(locale => {
+        const meta = document.createElement('meta');
+        meta.setAttribute('property', 'og:locale:alternate');
+        meta.content = locale;
+        document.head.appendChild(meta);
+      });
     }
   }, [language, dir]);
 
