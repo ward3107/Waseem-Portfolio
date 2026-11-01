@@ -16,7 +16,7 @@ export type RequestDetails = {
 
 const lines = {
   he: {
-    intro: 'היי ואסיה, אני מבקש/ת הצעת מחיר לפרויקט.',
+    intro: 'היי וסיה, אני מבקש/ת הצעת מחיר לפרויקט.',
     services: 'שירותים שבחרתי:',
     unsure: 'אשמח לעזרה בבחירת השירות המתאים',
     stage: 'מצב הפרויקט',
@@ -30,7 +30,7 @@ const lines = {
     finish: 'אשמח לאישור ההיקף והמחיר הסופי לפני תחילת העבודה.',
   },
   en: {
-    intro: 'Hi vasia, I would like a project quote.',
+    intro: 'Hi Vasia, I would like a project quote.',
     services: 'Services selected:',
     unsure: 'I would like help choosing the right service',
     stage: 'Project stage',
@@ -44,7 +44,7 @@ const lines = {
     finish: 'Please confirm the scope and final price before work begins.',
   },
   ar: {
-    intro: 'مرحباً vasia، أود طلب عرض سعر لمشروع.',
+    intro: 'مرحباً واسيا، أود طلب عرض سعر لمشروع.',
     services: 'الخدمات المختارة:',
     unsure: 'أحتاج مساعدة في اختيار الخدمة المناسبة',
     stage: 'حالة المشروع',

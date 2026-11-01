@@ -10,12 +10,12 @@ const COPY: Record<StartLanguage, { message: string; loading: string; button: st
     button: 'Continue to WhatsApp',
   },
   he: {
-    message: 'היי ואסיה, הגעתי ל־vasia דרך התוכן שלך ואני רוצה לדבר על פרויקט.',
+    message: 'היי וסיה, הגעתי ל־vasia דרך התוכן שלך ואני רוצה לדבר על פרויקט.',
     loading: 'פותחים את WhatsApp…',
     button: 'המשך ל־WhatsApp',
   },
   ar: {
-    message: 'مرحباً وسيم، وصلت إلى vasia من خلال المحتوى وأرغب في مناقشة مشروع.',
+    message: 'مرحباً واسيا، وصلت إلى vasia من خلال المحتوى وأرغب في مناقشة مشروع.',
     loading: 'جارٍ فتح واتساب…',
     button: 'المتابعة إلى واتساب',
   },

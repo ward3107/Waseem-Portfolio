@@ -128,7 +128,7 @@ const Settings: React.FC = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `waseem-portfolio-export-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `vasia-portfolio-export-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
       toastSaved('Export ready');

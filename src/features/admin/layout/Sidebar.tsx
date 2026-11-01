@@ -13,7 +13,7 @@ const Sidebar: React.FC<{ onSignOut: () => void; email?: string | null }> = ({
       <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-brand-purple via-brand-cyan to-brand-gold" />
       <p className="font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
         <span className="inline-block w-6 h-6 rounded-md bg-gradient-to-br from-brand-purple to-brand-cyan shadow-sm flex items-center justify-center text-white text-[10px] font-bold">W</span>
-        Waseem Admin
+        Vasia Admin
       </p>
       {email && (
         <p className="text-xs text-zinc-500 dark:text-zinc-500 truncate mt-1 pl-8">{email}</p>

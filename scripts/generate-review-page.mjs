@@ -22,14 +22,14 @@ const SITE = 'https://www.vasia.dev';
 //    https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID
 //    or your short g.page/r/... link.
 const REVIEW_URL =
-  'https://www.google.com/maps/search/?api=1&query=Waseem%20web%20developer%20Kfar%20Yasif';
+  'https://www.google.com/maps/search/?api=1&query=Vasia%20web%20developer%20Kfar%20Yasif';
 
 const html = `<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>השאירו ביקורת · וסים — בניית אתרים</title>
+  <title>השאירו ביקורת · וסיה — בניית אתרים</title>
   <meta name="description" content="תודה שבחרתם בי! ביקורת קצרה בגוגל עוזרת מאוד לעסק קטן." />
   <meta name="robots" content="noindex, follow" />
   <meta name="theme-color" content="#483AA0" />

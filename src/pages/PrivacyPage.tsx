@@ -18,7 +18,7 @@ import { useContact } from '@/features/contact/useContact';
 // benefits from being reviewable in-full context, and the copy rarely churns.
 // Effective date: bump `LAST_UPDATED` when the policy substantively changes.
 
-const LAST_UPDATED = '2026-10-10';
+const LAST_UPDATED = '2026-11-01';
 
 const PrivacyPage: React.FC = () => {
   const { language, t } = useLanguage();
@@ -33,7 +33,7 @@ const PrivacyPage: React.FC = () => {
       </p>
 
       <p>
-        אני, וסים אבו עקל (להלן: <b>"האתר"</b>, <b>"אני"</b> או <b>"בעל האתר"</b>),
+        אני, וסיה (Vasia) (להלן: <b>"האתר"</b>, <b>"אני"</b> או <b>"בעל האתר"</b>),
         מכפר יאסיף, ישראל, מפעיל את האתר הזה ואוסף מידע מסוים מהמבקרים. מסמך זה
         מסביר בשקיפות איזה מידע נאסף, למה, כמה זמן הוא נשמר, מי חשוף אליו ואיך
         אתם יכולים לממש את הזכויות שלכם.
@@ -41,7 +41,7 @@ const PrivacyPage: React.FC = () => {
 
       <h2>1. מי אחראי לעיבוד המידע</h2>
       <p>
-        בעל האתר ובעל המאגר: <b>וסים אבו עקל</b>, כפר יאסיף, ישראל.
+        בעל האתר ובעל המאגר: <b>וסיה (Vasia)</b>, כפר יאסיף, ישראל.
         <br />
         לפניות בנושא פרטיות:{' '}
         <a href={`mailto:${contact.email}`}>{contact.email}</a>.
@@ -185,7 +185,7 @@ const PrivacyPage: React.FC = () => {
       </p>
 
       <p>
-        أنا، وسيم أبو عقل (فيما يلي <b>"الموقع"</b>، <b>"أنا"</b> أو <b>"صاحب الموقع"</b>)،
+        أنا، واسيا (فيما يلي <b>"الموقع"</b>، <b>"أنا"</b> أو <b>"صاحب الموقع"</b>)،
         من كفر ياسيف، إسرائيل، أشغّل هذا الموقع وأجمع بعض المعلومات من الزوّار. توضّح هذه
         الوثيقة بشفافية ما الذي يُجمع، ولماذا، وكم يُحفظ، ومن يطّلع عليه، وكيف يمكنكم
         ممارسة حقوقكم.
@@ -193,7 +193,7 @@ const PrivacyPage: React.FC = () => {
 
       <h2>1. المسؤول عن معالجة البيانات</h2>
       <p>
-        صاحب الموقع ومسجّل قاعدة البيانات: <b>وسيم أبو عقل</b>، كفر ياسيف، إسرائيل.
+        صاحب الموقع ومسجّل قاعدة البيانات: <b>واسيا</b>، كفر ياسيف، إسرائيل.
         <br />
         للاستفسارات المتعلقة بالخصوصية:{' '}
         <a href={`mailto:${contact.email}`}>{contact.email}</a>.
@@ -337,7 +337,7 @@ const PrivacyPage: React.FC = () => {
       </p>
 
       <p>
-        I, Waseem Abu Aql (the <b>"Site"</b>, <b>"I"</b>, or the <b>"Site Owner"</b>),
+        I, Vasia (the <b>"Site"</b>, <b>"I"</b>, or the <b>"Site Owner"</b>),
         based in Kfar Yasif, Israel, operate this website and collect certain
         information from visitors. This document transparently explains what is
         collected, why, for how long, who sees it, and how you can exercise your
@@ -346,7 +346,7 @@ const PrivacyPage: React.FC = () => {
 
       <h2>1. Data Controller</h2>
       <p>
-        The site owner and database controller is <b>Waseem Abu Aql</b>, Kfar
+        The site owner and database controller is <b>Vasia</b>, Kfar
         Yasif, Israel.
         <br />
         Privacy inquiries: <a href={`mailto:${contact.email}`}>{contact.email}</a>.

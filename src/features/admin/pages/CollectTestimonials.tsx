@@ -78,7 +78,7 @@ const NativeShareButton: React.FC<{ url: string; text?: string; label?: string }
   if (!supported) return null;
   const onClick = async () => {
     try {
-      await navigator.share({ url, text, title: 'Share your experience with Waseem' });
+      await navigator.share({ url, text, title: 'Share your experience with Vasia' });
     } catch {
       // User dismissed the share sheet — nothing to do.
     }

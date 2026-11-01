@@ -12,7 +12,7 @@ const OneTapQrPage: React.FC = () => {
   const c = ONETAP_COPY[language];
   const [feedback, setFeedback] = useState<'idle' | 'copied' | 'manual'>('idle');
   const Back = dir === 'rtl' ? ArrowRight : ArrowLeft;
-  useDocumentTitle('VASIA OneTap QR | Waseem Abu Akel');
+  useDocumentTitle('VASIA OneTap QR | Vasia');
   useOneTapManifest('/onetap-qr.webmanifest');
   const [installHelp, setInstallHelp] = useState(false);
   const [deferredInstall, setDeferredInstall] = useState<Event | null>(null);
