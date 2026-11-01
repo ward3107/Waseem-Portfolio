@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title description">
-  <title id="title">Waseem Shop WordPress store preview</title>
+  <title id="title">Vasia Shop WordPress store preview</title>
   <desc id="description">Editorial digital-product storefront in green, cream, and charcoal.</desc>
   <defs>
     <linearGradient id="shopBg" x1="0" y1="0" x2="1" y2="1">
@@ -17,7 +17,7 @@
   </defs>
   <rect width="1200" height="800" rx="36" fill="url(#shopBg)"/>
   <rect x="44" y="36" width="1112" height="728" rx="28" fill="#fffef8" stroke="#d1fae5" stroke-width="2"/>
-  <text x="82" y="90" fill="#052e26" font-family="Arial, sans-serif" font-size="30" font-weight="800">WASEEM SHOP</text>
+  <text x="82" y="90" fill="#052e26" font-family="Arial, sans-serif" font-size="30" font-weight="800">VASIA SHOP</text>
   <text x="1110" y="86" text-anchor="end" fill="#3f6212" font-family="Arial, sans-serif" font-size="17" font-weight="700">PRODUCTS  ·  ABOUT  ·  CART (0)</text>
   <line x1="82" y1="116" x2="1110" y2="116" stroke="#d1d5db"/>
   <text x="82" y="205" fill="#052e26" font-family="Arial, sans-serif" font-size="66" font-weight="800">DIGITAL TOOLS.</text>

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title description">
-  <title id="title">Waseem Studio WordPress portfolio preview</title>
+  <title id="title">Vasia Studio WordPress portfolio preview</title>
   <desc id="description">Dark modern portfolio interface with blue and violet accents.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
@@ -19,7 +19,7 @@
   <circle cx="160" cy="720" r="170" fill="#06b6d4" opacity=".15" filter="url(#glow)"/>
   <rect x="44" y="36" width="1112" height="728" rx="28" fill="#0f172a" stroke="#334155" stroke-width="2"/>
   <circle cx="78" cy="72" r="7" fill="#fb7185"/><circle cx="102" cy="72" r="7" fill="#fbbf24"/><circle cx="126" cy="72" r="7" fill="#34d399"/>
-  <text x="170" y="80" fill="#f8fafc" font-family="Arial, sans-serif" font-size="22" font-weight="700">WASEEM STUDIO</text>
+  <text x="170" y="80" fill="#f8fafc" font-family="Arial, sans-serif" font-size="22" font-weight="700">VASIA STUDIO</text>
   <text x="1075" y="80" text-anchor="end" fill="#94a3b8" font-family="Arial, sans-serif" font-size="16">WORK  ·  SERVICES  ·  CONTACT</text>
   <rect x="88" y="144" width="500" height="10" rx="5" fill="url(#accent)"/>
   <text x="88" y="235" fill="#f8fafc" font-family="Arial, sans-serif" font-size="55" font-weight="800">DIGITAL WORK</text>

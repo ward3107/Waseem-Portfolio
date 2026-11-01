@@ -87,7 +87,7 @@ describe('Hebrew audio tour and mobile activation', () => {
       vi.runOnlyPendingTimers();
     });
     expect(audioTourStore.get().present).toBe(true);
-    expect(current.src).toBe('/audio/he/hero.mp3');
+    expect(current.src).toBe('/audio/he/hero.mp3?v=vasia-20261101');
     expect(current.playbackRate).toBe(1);
   });
   it('recovers a blocked scroll attempt on touch release', async () => {
