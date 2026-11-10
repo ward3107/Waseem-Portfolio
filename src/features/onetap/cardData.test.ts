@@ -22,7 +22,7 @@ describe('VASIA OneTap contact card', () => {
   it('generates a vCard 3.0 with CRLF and actionable contact fields', () => {
     const file = buildVCard(contact);
     expect(file.startsWith('BEGIN:VCARD\r\nVERSION:3.0\r\n')).toBe(true);
-    expect(file).toContain('FN:Waseem Abu Akel\r\n');
+    expect(file).toContain('FN:Vasia\r\n');
     expect(file).toContain('TEL;TYPE=CELL:+972544513141\r\n');
     expect(file).toContain('EMAIL;TYPE=INTERNET:hello@vasia.dev\r\n');
     expect(file).toContain('URL:https://www.vasia.dev/card\r\n');

@@ -15,7 +15,9 @@ import { audioTourStore } from '../audioTourStore';
  * per-visit cost or latency and the page stays fast.
  *
  * Scope: the narration is recorded per language — English, Hebrew, and Arabic
- * each have their own clip folder (public/audio/<lang>/), with the same young narrator approved in preview across all languages. A visitor hears their own language; any
+ * each have their own clip folder (public/audio/<lang>/). The branded intros
+ * use native-language voices; the remaining chapter recordings are retained.
+ * A visitor hears their own language; any
  * language without a folder falls back to English. Adding one is a folder of
  * clips plus an entry in CLIPS_BY_LANG.
  *
@@ -36,7 +38,7 @@ type Clip = { id: string; src: string };
 // DOM section ids (from the storyboard anchors) → their narration file.
 const CLIPS_BY_LANG: Record<string, Clip[]> = {
   en: [
-    { id: 'hero', src: '/audio/en/hero.mp3' },
+    { id: 'hero', src: '/audio/en/hero.mp3?v=vasia-20261101' },
     { id: 'what-i-do', src: '/audio/en/services.mp3' },
     { id: 'ai-automation', src: '/audio/en/ai.mp3' },
     { id: 'projects', src: '/audio/en/projects.mp3' },
@@ -46,7 +48,7 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
     { id: 'contact', src: '/audio/en/contact.mp3' },
   ],
   he: [
-    { id: 'hero', src: '/audio/he/hero.mp3' },
+    { id: 'hero', src: '/audio/he/hero.mp3?v=vasia-20261101' },
     { id: 'what-i-do', src: '/audio/he/services.mp3' },
     { id: 'ai-automation', src: '/audio/he/ai.mp3' },
     { id: 'projects', src: '/audio/he/projects.mp3' },
@@ -56,7 +58,7 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
     { id: 'contact', src: '/audio/he/contact.mp3' },
   ],
   ar: [
-    { id: 'hero', src: '/audio/ar/hero.mp3' },
+    { id: 'hero', src: '/audio/ar/hero.mp3?v=vasia-20261101' },
     { id: 'what-i-do', src: '/audio/ar/services.mp3' },
     { id: 'ai-automation', src: '/audio/ar/ai.mp3' },
     { id: 'projects', src: '/audio/ar/projects.mp3' },
@@ -67,7 +69,7 @@ const CLIPS_BY_LANG: Record<string, Clip[]> = {
   ],
 };
 
-// All clips use the approved narrator and natural preview speed.
+// Keep the natural recorded pace for every chapter.
 const PLAYBACK_RATE = 1;
 const NARRATION_DISABLED_LANGS: string[] = [];
 

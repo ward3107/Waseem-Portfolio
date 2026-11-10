@@ -80,7 +80,7 @@ const SocialHub: React.FC = () => {
                                                 <div className="w-full h-full rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center text-white font-bold text-sm sm:text-base">W</div>
                                             </div>
                                             <div className={isRTL ? 'text-right' : 'text-left'}>
-                                                <p className="font-bold text-xs sm:text-sm">waseem.code</p>
+                                                <p className="font-bold text-xs sm:text-sm">Vasia</p>
                                                 <p className="text-[11px] sm:text-xs opacity-90">Developer Life</p>
                                             </div>
                                         </div>
@@ -125,7 +125,7 @@ const SocialHub: React.FC = () => {
                                                 <div className="w-full h-full bg-gradient-to-br from-[#FE2C55] to-[#25F4EE] flex items-center justify-center text-white font-bold text-sm sm:text-base">@</div>
                                             </div>
                                             <div className={isRTL ? 'text-right' : 'text-left'}>
-                                                <p className="font-bold text-xs sm:text-sm">@waseem_ai</p>
+                                                <p className="font-bold text-xs sm:text-sm">Vasia</p>
                                                 <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400">Tech & Automation</p>
                                             </div>
                                         </div>
