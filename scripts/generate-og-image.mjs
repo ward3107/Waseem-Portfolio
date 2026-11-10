@@ -55,7 +55,7 @@ const textSvg = Buffer.from(`
     .url    { font: 500 26px 'Inter','Segoe UI',sans-serif; fill: #ffffff; opacity: 0.75; }
     .pill   { font: 600 22px 'Inter','Segoe UI',sans-serif; fill: #ffffff; }
   </style>
-  <text x="620" y="240" class="name">Waseem</text>
+  <text x="620" y="240" class="name">Vasia</text>
   <text x="620" y="305" class="role">Full Stack Developer</text>
   <text x="620" y="355" class="accent">&amp; AI Specialist</text>
   <rect x="620" y="395" width="256" height="44" rx="22" fill="#ffffff" fill-opacity="0.10" stroke="#ffffff" stroke-opacity="0.25"/>

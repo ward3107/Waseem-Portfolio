@@ -15,15 +15,15 @@ const works=[
  ['nacre-ocean-atelier','NACRE — Ocean Atelier','web','/assets/projects/nacre/cover.webp',null,'https://nacre-ocean-atelier.vasele66.chatgpt.site/'],
  ['ninnyo-friday','NINNYO FLOWERS','video','/assets/video-ads/ninnyo-friday-thumbnail.webp','ninnyo-friday'],
  ['greentouch','GreenTouch','video','/assets/video-ads/greentouch-thumbnail.webp','greentouch'],
- ['wordpress-studio','Waseem Studio','web','/assets/wordpress-portfolio.svg','wordpress-studio'],
+ ['wordpress-studio','Vasia Studio','web','/assets/wordpress-portfolio.svg','wordpress-studio'],
  ['souvlaki','Souvlaki','web','/assets/souvlaki.webp',null],
  ['vocaband','Vocaband','web','/assets/vocaband.webp',null],
  ['vasia','Vasia','brand','/brand/vasia-share.png',null],
- ['wordpress-shop','Waseem Shop','web','/assets/wordpress-shop.svg','wordpress-studio'],
+ ['wordpress-shop','Vasia Shop','web','/assets/wordpress-shop.svg','wordpress-studio'],
 ];
 const storyIds=['ninnyo-friday','greentouch','wordpress-studio'];
 const dest=(l,id)=>`${prefix(l)}/stories/${id}/`;
-function data(l,id){const t=copy[l];if(id==='wordpress-studio')return{title:'Waseem Studio',image:'/assets/wordpress-portfolio.svg',disclosure:t.demo,goal:t.studioGoal,process:t.studioProcess,delivery:t.studioDelivery,source:'WordPress · Gutenberg',link:'https://waseemstudiodemo.wordpress.com/'};const p=videoAdsCopy[l].projects[id];return{title:p.project,image:works.find(w=>w[0]===id)[3],disclosure:p.disclosure,goal:p.purpose,process:p.edit,delivery:p.format,source:p.source,link:`/video-ads?lang=${l}#${id}`};}
+function data(l,id){const t=copy[l];if(id==='wordpress-studio')return{title:'Vasia Studio',image:'/assets/wordpress-portfolio.svg',disclosure:t.demo,goal:t.studioGoal,process:t.studioProcess,delivery:t.studioDelivery,source:'WordPress · Gutenberg',link:'https://waseemstudiodemo.wordpress.com/'};const p=videoAdsCopy[l].projects[id];return{title:p.project,image:works.find(w=>w[0]===id)[3],disclosure:p.disclosure,goal:p.purpose,process:p.edit,delivery:p.format,source:p.source,link:`/video-ads?lang=${l}#${id}`};}
 function storyCard(l,id){const d=data(l,id),t=copy[l];return `<a class="post-card" href="${dest(l,id)}"><div class="art-image"><img src="${d.image}" alt="${esc(d.title)}" width="640" height="480" loading="lazy"></div><div class="card-body"><p class="eyebrow">${t.story}</p><h2>${esc(d.title)}</h2><p>${esc(d.goal)}</p><span class="read">${t.story} ↗</span></div></a>`;}
 function write(l,path,title,description,body){const dir=resolve('public',prefix(l).slice(1),path);mkdirSync(dir,{recursive:true});writeFileSync(resolve(dir,'index.html'),shell(l,{title,description,path:`${prefix(l)}/${path}/`,body}));}
 for(const l of ['he','en','ar']){const t=copy[l],u=UI[l];

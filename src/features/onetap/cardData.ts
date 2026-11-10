@@ -28,8 +28,8 @@ export function buildVCard(info: ContactInfo): string {
   const lines = [
     'BEGIN:VCARD',
     'VERSION:3.0',
-    'N:Abu Akel;Waseem;;;',
-    'FN:Waseem Abu Akel',
+    'N:;Vasia;;;',
+    'FN:Vasia',
     'ORG:VASIA',
     'TITLE:Web Development and AI Solutions',
     ...(phone ? ['TEL;TYPE=CELL:+' + phone] : []),
