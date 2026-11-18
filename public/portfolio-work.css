@@ -1,0 +1,304 @@
+.work-shelf,
+.work-page,
+.work-manager {
+  box-sizing: border-box;
+  inline-size: 100%;
+  text-align: start;
+}
+.work-shelf {
+  max-inline-size: 72rem;
+  margin-inline: auto;
+  pointer-events: auto;
+}
+.work-shelf section {
+  padding: 1.3rem clamp(0.8rem, 3vw, 2rem);
+}
+.work-shelf h2,
+.work-manager h2 {
+  font-size: clamp(1.25rem, 3vw, 1.8rem);
+  font-weight: 750;
+  margin-block: 0 1rem;
+}
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(12rem, 100%), 1fr));
+  gap: 0.75rem;
+}
+.work-card {
+  display: block;
+  overflow: hidden;
+  background: #171827;
+  border: 1px solid #414054;
+  border-radius: 1rem;
+  color: #fff;
+  text-decoration: none;
+}
+.work-card > img,
+.work-placeholder {
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  aspect-ratio: 3/2;
+  object-fit: cover;
+  background: #332b50;
+}
+.work-card > span:last-child {
+  display: grid;
+  padding: 0.7rem 1rem;
+  gap: 0.2rem;
+}
+.work-card small,
+.work-manager small {
+  color: #c6bddf;
+}
+.work-card strong {
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+.work-page {
+  max-inline-size: 64rem;
+  padding: 7rem clamp(1rem, 4vw, 3rem) 4rem;
+  margin: auto;
+  color: #f4f2ff;
+}
+.work-page h1,
+.work-manager h1 {
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 750;
+  line-height: 1.18;
+  margin: 0.75rem 0 1rem;
+}
+.work-page p {
+  margin: 0.8rem 0;
+}
+.work-page a:not(.work-card) {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.work-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  gap: 0.8rem;
+  margin-block: 1rem;
+}
+.work-photos img {
+  width: 100%;
+  max-height: 76vh;
+  object-fit: contain;
+  border-radius: 0.8rem;
+  background: #181823;
+}
+.work-film {
+  max-width: 46rem;
+  margin: 1rem auto;
+  background: #12131b;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.work-film video,
+.work-film > button {
+  display: block;
+  width: 100%;
+  max-height: 74vh;
+  min-height: 8rem;
+  object-fit: contain;
+}
+.work-film > button {
+  position: relative;
+  aspect-ratio: 16/9;
+  background: #262139;
+  color: white;
+}
+.work-film > button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.work-film > button strong {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #252038ee;
+  padding: 0.7rem 1rem;
+  border-radius: 1rem;
+  white-space: nowrap;
+}
+.work-manager {
+  max-width: 52rem;
+  padding: 1.25rem clamp(0.85rem, 4vw, 2.5rem) 6rem;
+  margin: auto;
+  color: #f6f4ff;
+}
+.work-manager form,
+.work-panel {
+  border: 1px solid #39374b;
+  background: #181822;
+  border-radius: 1.1rem;
+  padding: clamp(0.9rem, 3vw, 1.4rem);
+  margin-block: 1rem;
+}
+.work-manager label,
+.work-manager fieldset {
+  display: grid;
+  gap: 0.35rem;
+  margin-block: 0.85rem;
+  font-weight: 600;
+}
+.work-manager input:not([type='checkbox']),
+.work-manager select,
+.work-manager textarea {
+  background: #242432;
+  color: #fbfaff;
+  border: 1px solid #605b75;
+  border-radius: 0.55rem;
+  min-height: 2.7rem;
+  padding: 0.45rem 0.7rem;
+  width: 100%;
+  font: inherit;
+}
+.work-manager input[type='file'] {
+  white-space: normal;
+  font-size: 0.9rem;
+}
+.work-manager label.work-check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.3rem;
+}
+.work-check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: #a48aff;
+}
+.work-actions,
+.work-tabs,
+.work-list-item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.work-action,
+.work-tabs button,
+.work-manager button {
+  cursor: pointer;
+  color: #f5f2ff;
+  border: 1px solid #655d76;
+  border-radius: 0.7rem;
+  min-height: 2.65rem;
+  padding: 0.45rem 0.85rem;
+  background: #272334;
+  font: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.work-tabs button[aria-pressed='true'],
+.work-action.primary,
+.work-manager button.primary {
+  background: #6045b1;
+  border-color: #ae95ff;
+  color: white;
+  font-weight: 700;
+}
+.work-manager button:disabled,
+.work-action:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.work-manager :focus-visible,
+.work-page :focus-visible,
+.work-shelf :focus-visible {
+  outline: 3px solid #aa98ff;
+  outline-offset: 3px;
+}
+.work-preview {
+  background: #232432;
+  border-inline-start: 0.22rem solid #ae96ff;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-block: 1rem;
+}
+.work-preview p,
+.work-list-item p {
+  margin: 0;
+}
+.work-list-item {
+  justify-content: space-between;
+  border-bottom: 1px solid #39374b;
+  padding: 0.55rem 0;
+}
+.work-summary {
+  padding: 0.5rem 0;
+  overflow-wrap: anywhere;
+}
+.work-manager [role='alert'] {
+  color: #ffb5b4;
+}
+.work-manager [role='status'] {
+  color: #d2c3ff;
+}
+.work-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+.work-thumbs figure {
+  max-width: 7.5rem;
+  margin: 0;
+}
+.work-thumbs img {
+  width: 7.5rem;
+  height: 5rem;
+  object-fit: cover;
+  border-radius: 0.4rem;
+}
+.work-thumbs button {
+  font-size: 0.78rem;
+  min-height: 2rem;
+  padding: 0.25rem 0.4rem;
+}
+@media (max-width: 600px) {
+  .work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .work-card > span:last-child {
+    padding: 0.5rem;
+  }
+  .work-card strong {
+    font-size: 0.92rem;
+  }
+  .work-action,
+  .work-manager button {
+    min-height: 2.75rem;
+  }
+}
+.work-preview-video {
+  width: min(100%, 30rem);
+  max-height: 55vh;
+  margin-top: 0.75rem;
+}
+.work-shelf-featured .work-grid {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  max-width: 100%;
+  padding-bottom: 0.25rem;
+}
+.work-shelf-featured .work-card {
+  min-width: 7rem;
+  max-width: 10rem;
+  flex: 0 0 26%;
+  scroll-snap-align: start;
+}
+.work-stream {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 0;
+  display: block;
+  max-height: 75vh;
+}

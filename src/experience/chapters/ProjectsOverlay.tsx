@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
+import WorkShelf from '@/features/work/WorkShelf';
 import HeadingAccent from '../components/HeadingAccent';
 import { useHeadingLeading } from './ChapterOverlay';
 import { GhostNavButton } from './actions';
@@ -19,7 +20,7 @@ const reveal = {
 } as const;
 
 const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const leading = useHeadingLeading();
 
   return (
@@ -51,6 +52,7 @@ const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, to
         transition={{ duration: 0.6, delay: 0.1 }}
         className="flex flex-col items-center"
       >
+        <WorkShelf scope="featured" language={language} defer />
         <GhostNavButton href="/projects">{t('home_projects_cta')}</GhostNavButton>
       </motion.div>
     </div>

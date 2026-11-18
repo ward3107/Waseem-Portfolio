@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Copy, Trash2, Upload, Loader2, Check } from 'lucide-react';
 import Topbar from '@/features/admin/layout/Topbar';
@@ -130,6 +131,9 @@ const Media: React.FC = () => {
           if (!uploading) handleFiles(e.dataTransfer.files);
         }}
       >
+        <Link to="/admin/work" dir="rtl" className="mb-4 inline-block font-semibold text-brand-purple underline">
+          הוספת עבודה לתיק העבודות
+        </Link>
         <label
           htmlFor="media-upload"
           className="mb-4 flex items-center justify-center gap-2 py-6 rounded-md border-2 border-dashed border-zinc-300 dark:border-zinc-700 hover:border-brand-purple cursor-pointer transition-colors"

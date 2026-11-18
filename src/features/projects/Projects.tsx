@@ -6,6 +6,7 @@ import { usePrefersReducedMotion } from '@/shared/hooks/usePrefersReducedMotion'
 import Dimensional3DWord, { fontForLanguage } from '@/shared/three/Dimensional3DWord';
 import { useProjects } from '@/features/projects/useProjects';
 import { safeHref } from '@/lib/safe';
+import { labels as workLabels, projectUrl } from '@/features/work/model';
 import type { Project } from '@/types';
 
 // 'All' plus whatever categories the projects data actually uses. Deriving the
@@ -29,6 +30,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   prefersReducedMotion,
   t,
 }) => {
+  const { language } = useLanguage();
   return (
     <motion.div
       initial={prefersReducedMotion ? false : { opacity: 0.72, y: 16 }}
@@ -111,7 +113,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
           </div>
 
-          <div className="flex gap-4 mt-6">
+          <div className="flex flex-wrap gap-2 mt-4">
+            <a href={projectUrl(project.id, language)} tabIndex={isFlipped ? 0 : -1}
+              onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}
+              className="w-full font-semibold text-brand-cyan underline">{workLabels[language].related}</a>
             {safeHref(project.link) && (
               <a
                 href={safeHref(project.link)}

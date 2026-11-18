@@ -39,7 +39,8 @@
     "react-router-dom": "^7.18.5",
     "remark-gfm": "^4.0.1",
     "sonner": "^2.0.7",
-    "three": "^0.187.0"
+    "three": "^0.187.0",
+    "tus-js-client": "4.3.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
