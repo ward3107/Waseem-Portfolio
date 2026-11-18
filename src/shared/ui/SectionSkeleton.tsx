@@ -1,10 +1,10 @@
 import React from 'react';
 
-const SectionSkeleton: React.FC = () => (
+const SectionSkeleton: React.FC<{ fullPage?: boolean }> = ({ fullPage = false }) => (
   <div
     role="status"
     aria-label="Loading section"
-    className="min-h-[50vh] flex items-center justify-center"
+    className={`${fullPage ? 'min-h-screen' : 'min-h-[50vh]'} flex items-center justify-center`}
   >
     <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 py-16 animate-pulse">
       <div className="h-8 w-40 bg-slate-200 dark:bg-slate-800 rounded-full mb-6" />
