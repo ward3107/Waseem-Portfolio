@@ -27,6 +27,8 @@ const AdminPages = lazy(() =>
  * Mounted as a descendant route at `/admin/*`, so the paths below are relative
  * to `/admin`.
  */
+const WorkManager = lazy(() => import('@/features/work/WorkManager'));
+
 const AdminRoutes: React.FC = () => (
   <AdminAuthProvider>
     <Suspense fallback={<SectionSkeleton />}>
@@ -46,6 +48,7 @@ const AdminRoutes: React.FC = () => (
           }
         >
           <Route index element={<AdminPages page="overview" />} />
+          <Route path="work" element={<WorkManager />} />
           <Route path="projects" element={<AdminPages page="projects-list" />} />
           <Route path="projects/new" element={<AdminPages page="project-editor" />} />
           <Route path="projects/:id" element={<AdminPages page="project-editor" />} />

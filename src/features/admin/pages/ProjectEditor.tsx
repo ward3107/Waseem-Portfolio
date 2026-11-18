@@ -221,6 +221,10 @@ const ProjectEditor: React.FC = () => {
               <Eye size={14} aria-hidden="true" />
               {showPreview ? 'Hide preview' : 'Preview'}
             </button>
+            {!isNew && form.slug && (
+              <a className="inline-flex items-center px-3 py-2 text-sm rounded-md bg-brand-purple text-white"
+                href={'/admin/work?project=' + encodeURIComponent('project/' + form.slug)}>הוספת חומר לפרויקט</a>
+            )}
             {!isNew && (
               <button
                 type="button"

@@ -1,4 +1,5 @@
 import React from 'react';
+import WorkShelf from '@/features/work/WorkShelf';
 import Projects from '@/features/projects/Projects';
 import TechStack from '@/features/tech-stack';
 import Certifications from '@/features/certifications/Certifications';
@@ -12,10 +13,11 @@ import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 // the page under the reader.
 
 const ProjectsPage: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   useDocumentTitle(t('page_title_projects'));
   return (
     <PageShell>
+      <WorkShelf scope="websites" language={language} />
       <Projects />
       <TechStack />
       <Certifications />

@@ -6,6 +6,7 @@ import { useContact } from '@/features/contact/useContact';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { useSectionNavigate } from '@/shared/hooks/useSectionNavigate';
 import { type VideoAd, videoAdsCopy } from '@/features/video-ads/content';
+import WorkShelf from '@/features/work/WorkShelf';
 import VideoPortfolioGallery from '@/features/video-ads/VideoPortfolioGallery';
 import {
   CURATED_CASE_STUDIES as VIDEO_ADS,
@@ -170,6 +171,7 @@ export default function VideoAdsPage() {
           </a>
         </header>
 
+        <WorkShelf scope="videos" language={language} />
         <VideoPortfolioGallery />
 
         <h2 className="va-stories-heading">{videoLibraryCopy[language].stories}</h2>

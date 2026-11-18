@@ -111,10 +111,10 @@ const Overview: React.FC = () => {
         {/* Quick actions — primary is filled gradient; secondaries are per-section tinted */}
         <div className="flex flex-wrap gap-2">
           <Link
-            to="/admin/projects/new"
+            to="/admin/work"
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg text-white bg-gradient-to-r from-brand-purple to-brand-purpleLight hover:shadow-lg hover:shadow-brand-purple/30 transition-shadow"
           >
-            <Plus size={14} aria-hidden="true" /> Add project
+            <Plus size={14} aria-hidden="true" /> הוספת עבודה
           </Link>
           <Link
             to="/admin/certifications/new"

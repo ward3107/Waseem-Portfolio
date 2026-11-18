@@ -43,6 +43,7 @@ const AdminRoutes = lazy(() => import('./pages/admin/AdminRoutes'));
 // reason for keeping public pages eager doesn't apply. It is lazy because it
 // posts to Supabase via '@/lib/content/reviews' — held eagerly, that single
 // import put supabase-js back in the entry chunk for every visitor.
+const WorkPage = lazy(() => import('./features/work/WorkPage'));
 const ShareTestimonialPage = lazy(() => import('./pages/ShareTestimonialPage'));
 // Fully standalone, lazy-loaded OneTap entrypoints.
 const OneTapCardPage = lazy(() => import('./pages/OneTapCardPage'));
@@ -133,6 +134,8 @@ const AppContent: React.FC = () => {
                 <Route path="/ar/" element={<HomePage />} />
                 <Route path="/projects" element={<ProjectsPage />} />
                 <Route path="/video-ads" element={<VideoAdsPage />} />
+                <Route path="/work/project/:slug" element={<WorkPage />} />
+                <Route path="/work/:id" element={<WorkPage />} />
                 <Route path="/brand" element={<BrandAssetsPage />} />
                 {/* The site is one page now — these former routes redirect to
                     their section on the home journey. Kept so bookmarks, deep

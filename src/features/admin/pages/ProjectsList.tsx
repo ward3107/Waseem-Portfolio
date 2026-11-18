@@ -99,11 +99,11 @@ const ProjectsList: React.FC = () => {
         actions={
           <button
             type="button"
-            onClick={() => navigate('/admin/projects/new')}
+            onClick={() => navigate('/admin/work')}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-md bg-brand-purple text-white hover:bg-brand-purpleLight"
           >
             <Plus size={14} aria-hidden="true" />
-            Add project
+            הוספת עבודה
           </button>
         }
       />
@@ -160,11 +160,11 @@ const ProjectsList: React.FC = () => {
           <div className="rounded-lg border border-dashed border-zinc-300 dark:border-zinc-700 p-8 text-center">
             <p className="text-sm text-zinc-500 dark:text-zinc-500 mb-3">No projects yet.</p>
             <Link
-              to="/admin/projects/new"
+              to="/admin/work"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-md bg-brand-purple text-white hover:bg-brand-purpleLight"
             >
               <Plus size={14} aria-hidden="true" />
-              Add your first project
+              הוספת עבודה
             </Link>
           </div>
         )}

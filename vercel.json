@@ -32,6 +32,7 @@
       "source": "/video-ads/",
       "destination": "/video-ads/index.html"
     },
+    { "source": "/work/:path*", "destination": "/index.html" },
     { "source": "/projects", "destination": "/index.html" },
     { "source": "/brand", "destination": "/index.html" },
     { "source": "/privacy", "destination": "/index.html" },
@@ -53,7 +54,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' blob: https://vercel.live https://va.vercel-scripts.com https://tracker.metricool.com; worker-src 'self' blob:; child-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; media-src 'self' blob:; connect-src 'self' https://api.web3forms.com https://formspree.io https://formsubmit.co https://*.supabase.co wss://*.supabase.co https://vercel.live wss://ws-us3.pusher.com https://vitals.vercel-insights.com https://api.elevenlabs.io wss://api.elevenlabs.io https://api.us.elevenlabs.io wss://api.us.elevenlabs.io; frame-src 'self' https://vercel.live; frame-ancestors 'self'; form-action 'self' https://api.web3forms.com https://formspree.io https://formsubmit.co; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' blob: https://vercel.live https://va.vercel-scripts.com https://tracker.metricool.com; worker-src 'self' blob:; child-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' blob: https://*.supabase.co; connect-src 'self' https://api.web3forms.com https://formspree.io https://formsubmit.co https://*.supabase.co wss://*.supabase.co https://*.cloudflarestream.com https://*.videodelivery.net https://vercel.live wss://ws-us3.pusher.com https://vitals.vercel-insights.com https://api.elevenlabs.io wss://api.elevenlabs.io https://api.us.elevenlabs.io wss://api.us.elevenlabs.io; frame-src 'self' https://vercel.live https://*.cloudflarestream.com https://videodelivery.net; frame-ancestors 'self'; form-action 'self' https://api.web3forms.com https://formspree.io https://formsubmit.co; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
         },
         {
           "key": "X-Frame-Options",

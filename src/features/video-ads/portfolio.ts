@@ -27,7 +27,7 @@ export type PortfolioVideo = {
 
 const languages: Language[] = ['en', 'he', 'ar'];
 
-const studioVideos: PortfolioVideo[] = [
+export const STUDIO_VIDEOS: PortfolioVideo[] = [
   ...VIDEO_ADS.map(
     (video): PortfolioVideo => ({
       ...video,
@@ -61,7 +61,7 @@ const studioVideos: PortfolioVideo[] = [
 // Publication is an explicit selection, independent of the retained studio inventory.
 // New files and alternate renders remain unpublished until deliberately selected.
 const selectedIds = new Set(curatedIds);
-export const VIDEO_PORTFOLIO = studioVideos.filter((video) => selectedIds.has(video.id));
+export const VIDEO_PORTFOLIO = STUDIO_VIDEOS.filter((video) => selectedIds.has(video.id));
 export const FEATURED_VIDEOS = VIDEO_PORTFOLIO;
 export const CURATED_CASE_STUDIES = VIDEO_ADS.filter((video) => selectedIds.has(video.id));
 export const CURATED_SOUVLAKI_REELS = SOUVLAKI_REELS.filter((video) =>

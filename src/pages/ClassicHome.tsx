@@ -1,4 +1,6 @@
 import React from 'react';
+import WorkShelf from '@/features/work/WorkShelf';
+import { useLanguage } from '@/contexts/LanguageContext';
 import Hero from '@/features/hero';
 import AboutTimeline from '@/features/about/AboutTimeline';
 import Certifications from '@/features/certifications/Certifications';
@@ -41,7 +43,9 @@ const [ACT_IDENTITY, ACT_SERVICES, ACT_AI, ACT_WORK, ACT_CONTACT] = JOURNEY_ACTS
  *
  *  Each act keeps its sections' own ids (#about, #what-i-do, #ai-automation,
  *  #projects, #contact, …) so the nav and every CTA scroll straight to them. */
-const ClassicHome: React.FC = () => (
+const ClassicHome: React.FC = () => {
+  const { language } = useLanguage();
+  return (
   <ScrollJourney>
     {/* Identity — who Waseem is: the hero, the story/timeline, the credentials. */}
     <Act act={ACT_IDENTITY}>
@@ -61,6 +65,7 @@ const ClassicHome: React.FC = () => (
     </Act>
     {/* Work — the projects gallery and social proof. */}
     <Act act={ACT_WORK}>
+      <WorkShelf scope="featured" language={language} defer />
       <Projects />
       <VideoAdsPreview />
       <SocialMediaSection />
@@ -73,7 +78,8 @@ const ClassicHome: React.FC = () => (
       <Contact />
     </Act>
   </ScrollJourney>
-);
+  );
+};
 
 
 export default ClassicHome;
