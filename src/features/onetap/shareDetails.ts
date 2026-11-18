@@ -5,6 +5,16 @@ import { CARD_URL, digitsOnly } from './cardData';
 export const WEBSITE_URL = 'https://vasia.dev';
 export const QR_PAGE_URL = 'https://www.vasia.dev/qr';
 
+const FACEBOOK_INTRO: Record<Language, string> = {
+  he: 'היי, אני ואסים אבו עקל מ־Vasia 👋 אני בונה אתרים לעסקים. אשמח לשמוע על הפרויקט שלכם כאן בפרטי.\nזה כרטיס הביקור שלי עם פרטי הקשר 👇',
+  ar: 'مرحبًا، أنا وسيم أبو عقل من Vasia 👋 أصمّم مواقع إلكترونية للأعمال. يسعدني أن أسمع عن مشروعكم برسالة خاصة هنا.\nهذه بطاقتي وفيها تفاصيل التواصل معي 👇',
+  en: 'Hi, I’m Waseem Abu Akel from Vasia 👋 I build websites for businesses. Feel free to message me here about your project.\nHere’s my business card with my contact details 👇',
+};
+
+export function buildFacebookMessage(language: Language): string {
+  return FACEBOOK_INTRO[language] + '\n' + CARD_URL;
+}
+
 /**
  * wa.me only accepts an international-format phone number without +, 00,
  * whitespace or punctuation. Site settings may use the local Israeli format.

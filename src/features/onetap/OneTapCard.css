@@ -406,7 +406,7 @@
 .onetap-copy-arrow { width: 18px; height: 18px; margin-inline-start: auto; flex: none; }
 .onetap-tools {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: stretch;
   gap: clamp(6px, 1.8vw, 11px);
   min-width: 0;
@@ -554,8 +554,7 @@
   border: 1px solid #acc4e6;
   border-radius: 12px;
   padding: 11px;
-  direction: ltr;
-  text-align: left;
+  text-align: start;
   color: #19457e;
   background: white;
   font-size: 12px;
