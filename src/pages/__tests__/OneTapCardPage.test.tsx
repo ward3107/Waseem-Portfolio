@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { CARD_URL } from '@/features/onetap/cardData';
@@ -145,7 +145,7 @@ describe('Facebook message on the OneTap card', () => {
     fireEvent.click(button);
     const field = await screen.findByRole('textbox', { name: 'העתק הודעה לפייסבוק' }) as HTMLTextAreaElement;
     expect(field).toHaveValue(writeText.mock.calls[0][0]);
-    expect(field).toHaveFocus();
+    await waitFor(() => expect(field).toHaveFocus());
     expect([field.selectionStart, field.selectionEnd]).toEqual([0, field.value.length]);
     expect(field).toHaveAttribute('dir', 'rtl');
     fireEvent.keyDown(field, { key: 'Escape' });
