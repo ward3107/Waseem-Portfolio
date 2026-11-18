@@ -96,7 +96,7 @@ describe('Image download and secondary card actions', () => {
 
   it('keeps payment and offers inside More and restores focus after either dialog', async () => {
     vi.stubGlobal('fetch', vi.fn().mockImplementation(() =>
-      Promise.resolve(new Response(new Blob(['offer']), { headers: { 'content-type': 'image/jpeg' } }))));
+      Promise.resolve(new Response('offer', { headers: { 'content-type': 'image/jpeg' } }))));
     openCard('he');
     const more = screen.getByRole('button', { name: 'עוד פעולות' });
     expect(screen.queryByRole('button', { name: 'תשלום ב־Bit' })).not.toBeInTheDocument();
