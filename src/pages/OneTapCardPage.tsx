@@ -1,17 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowUpRight, Check, ChevronRight, Copy, Facebook, Github,
-  Globe2, Instagram, Linkedin, MessageCircle, PhoneCall, QrCode,
+  Globe2, Instagram, Linkedin, MessageCircle, Palette, PhoneCall, QrCode,
   Smartphone, Share2, UserPlus, X, type LucideIcon,
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useContact } from '@/features/contact/useContact';
 import { useDocumentTitle } from '@/shared/hooks/useDocumentTitle';
 import { buildVCard, CARD_URL, ONETAP_COPY, safeExternalUrl } from '@/features/onetap/cardData';
-import { buildOneTapSharePayload, getWhatsAppLink, normalizeWhatsAppNumber } from '@/features/onetap/shareDetails';
+import { buildFacebookMessage, buildOneTapSharePayload, getWhatsAppLink, normalizeWhatsAppNumber } from '@/features/onetap/shareDetails';
 import { useOneTapManifest } from '@/features/onetap/useOneTapManifest';
 import { resolveOneTapVariant } from '@/features/onetap/variants';
 import { PromotionShareButtons } from '@/features/onetap/PromotionShareButtons';
+import { CardColorPicker } from '@/features/onetap/CardColorPicker';
+import { COLOR_UI, DEFAULT_CARD_COLOR, cardAccent, readCardColor, saveCardColor, withCardColor } from '@/features/onetap/cardColors';
 import '@/features/onetap/OneTapCard.css';
 
 interface InstallPromptEvent extends Event {
@@ -28,10 +30,27 @@ const PAYMENT_COPY = {
 };
 
 const languages = ['he', 'ar', 'en'] as const;
+type CopyKind = 'facebook' | 'info' | 'card';
+type CopyFeedback =
+  | { status: 'copied'; kind: CopyKind }
+  | { status: 'manual'; kind: CopyKind; text: string };
+
 const UI = {
-  he: { copy: 'העתקת כל הפרטים', copied: 'הפרטים הועתקו', detail: 'טלפון • אתר • QR • כרטיס דיגיטלי', tagline: 'TURNING IDEAS INTO IMPACT', motto: 'CONNECT • COLLABORATE • CREATE • GROW' },
-  ar: { copy: 'نسخ جميع المعلومات', copied: 'تم نسخ المعلومات', detail: 'الهاتف • الموقع • QR • البطاقة الرقمية', tagline: 'TURNING IDEAS INTO IMPACT', motto: 'CONNECT • COLLABORATE • CREATE • GROW' },
-  en: { copy: 'Copy My Info', copied: 'Details copied', detail: 'Phone • Website • QR • Digital Card', tagline: 'TURNING IDEAS INTO IMPACT', motto: 'CONNECT • COLLABORATE • CREATE • GROW' },
+  he: {
+    copy: 'העתקת כל הפרטים', copied: 'הפרטים הועתקו', detail: 'טלפון • אתר • QR • כרטיס דיגיטלי',
+    facebook: 'העתק הודעה לפייסבוק', facebookCopied: 'ההודעה הועתקה', facebookDetail: 'היכרות קצרה וקישור אחד לכרטיס',
+    manualText: 'סמנו את הטקסט והעתיקו אותו.',
+  },
+  ar: {
+    copy: 'نسخ جميع المعلومات', copied: 'تم نسخ المعلومات', detail: 'الهاتف • الموقع • QR • البطاقة الرقمية',
+    facebook: 'نسخ رسالة لفيسبوك', facebookCopied: 'تم نسخ الرسالة', facebookDetail: 'تعريف قصير ورابط واحد للبطاقة',
+    manualText: 'حدّدوا النص وانسخوه.',
+  },
+  en: {
+    copy: 'Copy My Info', copied: 'Details copied', detail: 'Phone • Website • QR • Digital Card',
+    facebook: 'Copy message for Facebook', facebookCopied: 'Message copied', facebookDetail: 'A short introduction and one card link',
+    manualText: 'Select and copy the text.',
+  },
 };
 
 const OneTapCardPage: React.FC = () => {
@@ -43,15 +62,21 @@ const OneTapCardPage: React.FC = () => {
   const [nativePrompt, setNativePrompt] = useState<InstallPromptEvent | null>(null);
   const [installHelp, setInstallHelp] = useState(false);
   const [bitHelp, setBitHelp] = useState(false);
-  const [linkCopied, setLinkCopied] = useState(false);
-  const [manualKind, setManualKind] = useState<'info' | 'card'>('info');
+  const [color, setColor] = useState(readCardColor);
+  const [draftColor, setDraftColor] = useState<string | null>(null);
+  const activeColor = draftColor ?? color;
+  const accentStyle = { '--onetap-accent': cardAccent(activeColor) } as React.CSSProperties;
+  const colorUi = COLOR_UI[language];
+  const [feedback, setFeedback] = useState<CopyFeedback | null>(null);
+  const copied = feedback?.status === 'copied' ? feedback.kind : null;
+  const manual = feedback?.status === 'manual' ? feedback : null;
+  const dialogOpen = installHelp || bitHelp || manual !== null || draftColor !== null;
+  const copyLabels = { facebook: ui.facebook, info: ui.copy, card: c.share };
   const payment = PAYMENT_COPY[language];
   const dialogRef = useRef<HTMLElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
-  const [feedback, setFeedback] = useState<'none' | 'copied' | 'manual'>('none');
-  const [manualText, setManualText] = useState('');
+  const textArea = useRef<HTMLTextAreaElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
-  const copyButton = useRef<HTMLButtonElement>(null);
   useDocumentTitle('VASIA OneTap | Digital Business Card');
   useOneTapManifest('/onetap.webmanifest');
 
@@ -65,17 +90,24 @@ const OneTapCardPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!installHelp && !bitHelp && feedback !== 'manual') return;
-    returnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    closeButton.current?.focus();
+    if (feedback?.status !== 'copied') return;
+    const timer = window.setTimeout(() => setFeedback(null), 2500);
+    return () => window.clearTimeout(timer);
+  }, [feedback]);
+
+  useEffect(() => {
+    if (!dialogOpen) return;
+    const focusTarget = textArea.current ?? closeButton.current;
+    focusTarget?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setInstallHelp(false);
         setBitHelp(false);
-        setFeedback('none');
+        setFeedback(null);
+        setDraftColor(null);
       }
       if (e.key === 'Tab') {
-        const elements = dialogRef.current?.querySelectorAll<HTMLElement>('a[href], button, textarea');
+        const elements = dialogRef.current?.querySelectorAll<HTMLElement>('a[href], button, textarea, input');
         if (!elements?.length) return;
         const first = elements[0], last = elements[elements.length - 1];
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -87,17 +119,34 @@ const OneTapCardPage: React.FC = () => {
       document.removeEventListener('keydown', onKey);
       returnFocus.current?.focus();
     };
-  }, [installHelp, bitHelp, feedback]);
+  }, [dialogOpen]);
 
   const dismiss = () => {
     setInstallHelp(false);
     setBitHelp(false);
-    setFeedback('none');
+    setFeedback(null);
+    setDraftColor(null);
+  };
+
+  const saveSelectedColor = () => {
+    if (draftColor === null) return;
+    saveCardColor(draftColor);
+    setColor(draftColor);
+    setDraftColor(null);
+  };
+
+  const copyPlainText = async (kind: CopyKind, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setFeedback({ status: 'copied', kind });
+    } catch {
+      setFeedback({ status: 'manual', kind, text });
+    }
   };
 
   const shareCard = async () => {
-    setLinkCopied(false);
-    const url = new URL(CARD_URL);
+    setFeedback(null);
+    const url = new URL(withCardColor(CARD_URL, color));
     url.searchParams.set('lang', language);
     if (variant === 'classic') url.searchParams.set('variant', variant);
     if (navigator.share) {
@@ -109,14 +158,7 @@ const OneTapCardPage: React.FC = () => {
         if (error instanceof Error && error.name === 'AbortError') return;
       }
     }
-    try {
-      await navigator.clipboard.writeText(url.href);
-      setLinkCopied(true);
-    } catch {
-      setManualKind('card');
-      setManualText(url.href);
-      setFeedback('manual');
-    }
+    await copyPlainText('card', url.href);
   };
 
   const addHome = async () => {
@@ -146,29 +188,21 @@ const OneTapCardPage: React.FC = () => {
   };
 
   const copyMyInfo = async () => {
-    setFeedback('none');
-    setManualKind('info');
-    const payload = buildOneTapSharePayload(contact, language);
-    setManualText(payload.plainText);
-    try {
-      if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
+    const payload = buildOneTapSharePayload(contact, language, color);
+    if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
+      try {
         const item = new ClipboardItem({
           'text/plain': new Blob([payload.plainText], { type: 'text/plain' }),
           'text/html': new Blob([payload.html], { type: 'text/html' }),
         });
         await navigator.clipboard.write([item]);
-      } else {
-        await navigator.clipboard.writeText(payload.plainText);
-      }
-      setFeedback('copied');
-    } catch {
-      try {
-        await navigator.clipboard.writeText(payload.plainText);
-        setFeedback('copied');
+        setFeedback({ status: 'copied', kind: 'info' });
+        return;
       } catch {
-        setFeedback('manual');
+        // Browsers can support plain text even when rich clipboard writes fail.
       }
     }
+    await copyPlainText('info', payload.plainText);
   };
 
   const social: { name: string; url: string; icon: LucideIcon; slug: string }[] = [
@@ -186,12 +220,14 @@ const OneTapCardPage: React.FC = () => {
     : language === 'ar'
       ? 'تطوير مواقع وتطبيقات • AI • أتمتة'
       : 'Web & App Development • AI Solutions • Automation';
-  const copyDialog = feedback === 'manual';
-  const dialogOpen = installHelp || copyDialog || bitHelp;
 
   return (
     <>
-    <main className={"onetap-screen onetap--" + variant} dir={dir} aria-label="VASIA OneTap Digital Business Card" inert={dialogOpen}>
+    <main className={"onetap-screen onetap--" + variant} dir={dir} aria-label="VASIA OneTap Digital Business Card" inert={dialogOpen}
+      data-card-color={activeColor === DEFAULT_CARD_COLOR ? undefined : activeColor} style={accentStyle}
+      onClickCapture={event => {
+        if (event.target instanceof Element) returnFocus.current = event.target.closest<HTMLElement>('button, a');
+      }}>
       <div className="onetap-shell">
         <article className="onetap-glass">
           <div aria-hidden="true" className="onetap-horizon" />
@@ -205,15 +241,21 @@ const OneTapCardPage: React.FC = () => {
                 <span>One<em>Tap</em></span>
               </span>
             </a>
-            <nav className="onetap-lang" aria-label={c.languageLabel} dir="ltr">
-              {languages.map(code => (
-                <button type="button" key={code} lang={code}
-                  onClick={() => setLanguage(code)} aria-pressed={code === language}
-                  aria-label={code === 'he' ? 'עברית' : code === 'ar' ? 'العربية' : 'English'}>
-                  {code.toUpperCase()}
-                </button>
-              ))}
-            </nav>
+            <div className="onetap-header-controls">
+              <button type="button" className="onetap-color-trigger" aria-haspopup="dialog" aria-label={colorUi.title}
+                onClick={() => setDraftColor(color)}>
+                <Palette aria-hidden="true" size={17} /><span>{colorUi.trigger}</span>
+              </button>
+              <nav className="onetap-lang" aria-label={c.languageLabel} dir="ltr">
+                {languages.map(code => (
+                  <button type="button" key={code} lang={code}
+                    onClick={() => setLanguage(code)} aria-pressed={code === language}
+                    aria-label={code === 'he' ? 'עברית' : code === 'ar' ? 'العربية' : 'English'}>
+                    {code.toUpperCase()}
+                  </button>
+                ))}
+              </nav>
+            </div>
           </header>
 
           <section className="onetap-hero" aria-label="VASIA digital services">
@@ -236,7 +278,7 @@ const OneTapCardPage: React.FC = () => {
             </div>
             <p className="onetap-microline" dir="ltr">WEB <span>•</span> APPS <span>•</span> AI</p>
             <p className="onetap-service">{heroRole}</p>
-            <p className="onetap-slogan" dir="ltr">{ui.tagline}</p>
+            <p className="onetap-slogan" dir="ltr">TURNING IDEAS INTO IMPACT</p>
           </section>
 
           <a className="onetap-action onetap-whatsapp" href={waLink} target="_blank" rel="noopener noreferrer">
@@ -272,12 +314,15 @@ const OneTapCardPage: React.FC = () => {
           </nav>
 
           <div className="onetap-secondary-actions">
-          <button type="button" className="onetap-copy" onClick={copyMyInfo}
-            ref={copyButton} aria-label={ui.copy} aria-live="polite">
-            {feedback === 'copied' ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+          <button type="button" className="onetap-copy"
+            onClick={() => copyPlainText('facebook', buildFacebookMessage(language, color))}
+            aria-labelledby="onetap-facebook-title" aria-describedby="onetap-facebook-detail">
+            {copied === 'facebook' ? <Check aria-hidden="true" /> : <Facebook aria-hidden="true" />}
             <span className="onetap-copy-info">
-              <span className="onetap-copy-title">{feedback === 'copied' ? ui.copied : ui.copy}</span>
-              <span className="onetap-copy-detail">{ui.detail}</span>
+              <span id="onetap-facebook-title" className="onetap-copy-title" aria-live="polite">
+                {copied === 'facebook' ? ui.facebookCopied : ui.facebook}
+              </span>
+              <span id="onetap-facebook-detail" className="onetap-copy-detail">{ui.facebookDetail}</span>
             </span>
             <ChevronRight className="onetap-copy-arrow" aria-hidden="true" />
           </button>
@@ -289,6 +334,10 @@ const OneTapCardPage: React.FC = () => {
           </div>
 
           <div className="onetap-tools" role="group" aria-label={language === 'en' ? 'Card actions' : language === 'he' ? 'פעולות כרטיס' : 'إجراءات البطاقة'}>
+            <button type="button" className="onetap-tool" onClick={copyMyInfo} title={ui.detail} aria-live="polite">
+              {copied === 'info' ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+              <span>{copied === 'info' ? ui.copied : ui.copy}</span>
+            </button>
             <button type="button" className="onetap-tool" onClick={downloadVCard}>
               <UserPlus aria-hidden="true" />
               <span>{c.save}</span>
@@ -298,8 +347,8 @@ const OneTapCardPage: React.FC = () => {
               <span>{c.install}</span>
             </button>
             <button type="button" className="onetap-tool" onClick={shareCard} aria-live="polite">
-              {linkCopied ? <Check aria-hidden="true" /> : <Share2 aria-hidden="true" />}
-              <span>{linkCopied ? c.copied : c.share}</span>
+              {copied === 'card' ? <Check aria-hidden="true" /> : <Share2 aria-hidden="true" />}
+              <span>{copied === 'card' ? c.copied : c.share}</span>
             </button>
             <a className="onetap-tool" href="/qr">
               <QrCode aria-hidden="true" />
@@ -322,23 +371,29 @@ const OneTapCardPage: React.FC = () => {
             aria-labelledby="onetap-dialog-title">
             <button ref={closeButton} type="button" className="onetap-dialog-close"
               onClick={dismiss} aria-label={c.close}><X size={21} aria-hidden="true" /></button>
-            <img src="/onetap/vasia-v.svg" alt="" width="52" height="52" />
-            <h2 id="onetap-dialog-title">{bitHelp ? payment.title : copyDialog ? (manualKind === 'card' ? c.share : ui.copy) : c.installTitle}</h2>
-            {bitHelp ? (
+            {draftColor !== null ? (
+              <div className="onetap-color-preview" data-original={draftColor === DEFAULT_CARD_COLOR} style={accentStyle} aria-hidden="true">
+                <img src="/onetap/vasia-v.svg" alt="" width="48" height="48" />
+              </div>
+            ) : <img src="/onetap/vasia-v.svg" alt="" width="52" height="52" />}
+            <h2 id="onetap-dialog-title">{draftColor !== null ? colorUi.title : bitHelp ? payment.title : manual ? copyLabels[manual.kind] : c.installTitle}</h2>
+            {draftColor !== null ? (
+              <CardColorPicker language={language} value={draftColor} onChange={setDraftColor} />
+            ) : bitHelp ? (
               <>
                 <p>{payment.scan}</p>
                 <img className="onetap-bit-qr" src="/onetap/bit-qr.svg" alt={payment.title + ' QR'} width="280" height="280" />
                 <a className="onetap-bit-open" href={BIT_PAYMENT_URL} target="_blank" rel="noopener noreferrer">{payment.open}</a>
               </>
-            ) : copyDialog ? (
+            ) : manual ? (
               <>
-                <p>{c.manualCopy}</p>
-                <textarea readOnly value={manualText} onFocus={e => e.currentTarget.select()}
-                  aria-label={manualKind === 'card' ? c.share : ui.copy} rows={5} dir="ltr" />
+                <p>{manual.kind === 'card' ? c.manualCopy : ui.manualText}</p>
+                <textarea ref={textArea} readOnly value={manual.text} onFocus={e => e.currentTarget.select()}
+                  aria-label={copyLabels[manual.kind]} rows={5} dir={manual.kind === 'card' ? 'ltr' : dir} />
               </>
             ) : <p>{help}</p>}
-            <button type="button" onClick={dismiss} className="onetap-dialog-confirm">
-              {c.close}
+            <button type="button" onClick={draftColor !== null ? saveSelectedColor : dismiss} className="onetap-dialog-confirm">
+              {draftColor !== null ? colorUi.save : c.close}
             </button>
           </section>
         </div>
