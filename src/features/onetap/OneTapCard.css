@@ -848,3 +848,109 @@
   .onetap-orbit-system { width: 0; height: 0; overflow: hidden; }
   .onetap-tools { height: 46px; }
 }
+
+.onetap-header-controls, .onetap-color-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.onetap-color-trigger {
+  justify-content: center;
+  min-width: 44px;
+  min-height: 36px;
+  padding: 4px 9px;
+  border: 1px solid rgba(222, 242, 255, .7);
+  border-radius: 999px;
+  background: rgba(15, 32, 64, .6);
+  color: white;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.15;
+  cursor: pointer;
+}
+.onetap-color-trigger:hover { background: rgba(15, 32, 64, .8); }
+.onetap-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(46px, 1fr));
+  gap: 6px;
+  margin-block: 14px;
+}
+.onetap-swatches button {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  min-height: 55px;
+  padding: 6px 2px;
+  border: 1px solid #bac8dc;
+  border-radius: 10px;
+  color: #253956;
+  background: white;
+  font-size: 11px;
+  cursor: pointer;
+}
+.onetap-swatches button[aria-pressed="true"] { border-color: #253956; box-shadow: inset 0 0 0 1px #253956; }
+.onetap-color-chip {
+  display: grid;
+  place-items: center;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+}
+.onetap-color-chip svg { color: white; border-radius: 50%; background: #19273e; }
+.onetap-custom-color {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid #bac8dc;
+  border-radius: 10px;
+  background: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+.onetap-custom-color input { width: 48px; height: 36px; border: 0; padding: 2px; background: transparent; cursor: pointer; }
+.onetap-dialog :is(button, input, textarea):focus-visible { outline: 3px solid #315fbd; outline-offset: 2px; }
+
+.onetap-screen[data-card-color], .onetap-color-preview {
+  --card-deep: color-mix(in srgb, var(--onetap-accent) 19%, #11141f);
+  --card-mid: color-mix(in srgb, var(--onetap-accent) 36%, #172030);
+  --card-edge: color-mix(in srgb, var(--onetap-accent) 54%, #f6f7fa);
+}
+.onetap-color-preview {
+  display: grid;
+  place-items: center;
+  height: 72px;
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 30% 0%, var(--onetap-accent), transparent 65%), linear-gradient(125deg, var(--card-mid), var(--card-deep));
+}
+.onetap-color-preview[data-original="true"] { background: linear-gradient(125deg, #438eed, #494cba 68%, #5265c7); }
+.onetap-screen[data-card-color] {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--onetap-accent) 24%, white), var(--card-edge));
+}
+.onetap-screen[data-card-color] .onetap-shell::before { background: var(--card-edge); }
+.onetap-screen[data-card-color] .onetap-glass {
+  background: radial-gradient(ellipse at 30% 10%, var(--card-mid), transparent 68%), linear-gradient(155deg, var(--card-deep), var(--card-mid));
+}
+.onetap-screen[data-card-color] .onetap-horizon {
+  border-color: var(--card-edge);
+  box-shadow: 0 -3px 13px var(--onetap-accent), 0 -9px 29px var(--card-mid);
+  background: linear-gradient(var(--card-mid), transparent 75%);
+}
+.onetap-screen[data-card-color] .onetap-glow { background: radial-gradient(ellipse, var(--card-mid), transparent 72%); }
+.onetap-screen[data-card-color] .onetap-orb {
+  border-color: var(--card-edge);
+  background: radial-gradient(circle at 35% 25%, var(--card-mid), var(--card-deep) 70%);
+  box-shadow: 0 0 4px 3px var(--card-edge), 0 0 22px 6px var(--onetap-accent);
+}
+.onetap-screen[data-card-color] .onetap-orb::before,
+.onetap-screen[data-card-color] .onetap-orbit-ring { border-color: var(--card-edge); }
+.onetap-screen[data-card-color] :is(.onetap-orbit-ring--one, .onetap-orbit-ring--two) { box-shadow: 0 0 10px var(--onetap-accent); }
+.onetap-screen[data-card-color] :is(.onetap-quick, .onetap-copy, .onetap-tools, .onetap-social, .onetap-lang) {
+  border-color: var(--card-edge);
+  background: linear-gradient(120deg, var(--card-mid), var(--card-deep));
+  box-shadow: inset 0 1px 5px rgba(255,255,255,.15), 0 3px 10px rgba(0,0,0,.18);
+}
+.onetap-screen[data-card-color] :is(.onetap-tool, .onetap-promo-button) { background: var(--card-deep); }
+.onetap-screen[data-card-color] .onetap-lang button[aria-pressed="true"] { background: var(--card-edge); color: #11141f; }

@@ -1,6 +1,7 @@
 import type { ContactInfo } from '@/features/contact/useContact';
 import type { Language } from '@/types';
 import { CARD_URL, digitsOnly } from './cardData';
+import { DEFAULT_CARD_COLOR, withCardColor } from './cardColors';
 
 export const WEBSITE_URL = 'https://vasia.dev';
 export const QR_PAGE_URL = 'https://www.vasia.dev/qr';
@@ -11,8 +12,8 @@ const FACEBOOK_INTRO: Record<Language, string> = {
   en: 'Hi, I’m Waseem Abu Akel from Vasia 👋 I build websites for businesses. Feel free to message me here about your project.\nHere’s my business card with my contact details 👇',
 };
 
-export function buildFacebookMessage(language: Language): string {
-  return FACEBOOK_INTRO[language] + '\n' + CARD_URL;
+export function buildFacebookMessage(language: Language, color: string = DEFAULT_CARD_COLOR): string {
+  return FACEBOOK_INTRO[language] + '\n' + withCardColor(CARD_URL, color);
 }
 
 /**
@@ -68,8 +69,9 @@ export interface OneTapSharePayload {
  * Plain-text-only apps receive the explicit wa.me URL, because they cannot
  * retain hyperlinks. The receiving platform decides whether URLs are clickable.
  */
-export function buildOneTapSharePayload(info: ContactInfo, language: Language): OneTapSharePayload {
+export function buildOneTapSharePayload(info: ContactInfo, language: Language, color: string = DEFAULT_CARD_COLOR): OneTapSharePayload {
   const label = LABELS[language];
+  const cardUrl = withCardColor(CARD_URL, color);
   const whatsappLink = getWhatsAppLink(info.whatsappNumber);
   const phone = displayPhone(info.whatsappNumber);
   const whatsappPlain = whatsappLink ? phone + ' — ' + whatsappLink : phone;
@@ -78,7 +80,7 @@ export function buildOneTapSharePayload(info: ContactInfo, language: Language): 
     'VASIA OneTap',
     label.whatsapp + ': ' + whatsappPlain,
     label.site + ': ' + WEBSITE_URL,
-    label.card + ': ' + CARD_URL,
+    label.card + ': ' + cardUrl,
     label.qr + ': ' + QR_PAGE_URL,
   ].join('\n');
 
@@ -93,7 +95,7 @@ export function buildOneTapSharePayload(info: ContactInfo, language: Language): 
     '<p><strong>VASIA OneTap</strong></p>',
     '<p>' + label.whatsapp + ': ' + phoneHtml + '</p>',
     '<p>' + label.site + ': <a href="' + WEBSITE_URL + '">' + WEBSITE_URL + '</a></p>',
-    '<p>' + label.card + ': <a href="' + CARD_URL + '">' + CARD_URL + '</a></p>',
+    '<p>' + label.card + ': <a href="' + cardUrl + '">' + cardUrl + '</a></p>',
     '<p>' + label.qr + ': <a href="' + QR_PAGE_URL + '">' + QR_PAGE_URL + '</a></p>',
     '</div>',
   ].join('');

@@ -10,14 +10,53 @@ vi.mock('@/features/onetap/PromotionShareButtons', () => ({ PromotionShareButton
 const writeText = vi.fn<(text: string) => Promise<void>>();
 const originalClipboard = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
 
-function openCard(lang: string) {
-  window.history.replaceState({}, '', '/card?lang=' + lang);
-  render(<LanguageProvider><OneTapCardPage /></LanguageProvider>);
+function openCard(lang: string, extraQuery = '') {
+  window.history.replaceState({}, '', '/card?lang=' + lang + extraQuery);
+  return render(<LanguageProvider><OneTapCardPage /></LanguageProvider>);
 }
 
 beforeEach(() => {
+  window.localStorage.removeItem('vasia.onetap.color');
   writeText.mockReset().mockResolvedValue(undefined);
   Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
+});
+
+describe('OneTap card colors', () => {
+  it('saves a preset, shares it in the only Facebook link, and restores it on the plain card', async () => {
+    const view = openCard('he');
+    fireEvent.click(screen.getByRole('button', { name: 'צבע הכרטיס' }));
+    fireEvent.click(screen.getByRole('button', { name: 'טורקיז' }));
+    fireEvent.click(screen.getByRole('button', { name: 'שמירת הצבע' }));
+    expect(screen.getByRole('main')).toHaveAttribute('data-card-color', 'teal');
+    fireEvent.click(screen.getByRole('button', { name: 'העתק הודעה לפייסבוק' }));
+    await screen.findByRole('button', { name: 'ההודעה הועתקה' });
+    expect(writeText.mock.calls[0][0].match(/https?:\/\/\S+/g)).toEqual([CARD_URL + '?color=teal']);
+    view.unmount();
+    openCard('he');
+    expect(screen.getByRole('main')).toHaveAttribute('data-card-color', 'teal');
+  });
+
+  it('previews and cancels edits, saves a custom color, and restores the original clean link', async () => {
+    openCard('en', '&variant=classic&color=rose');
+    expect(screen.getByRole('main')).toHaveAttribute('data-card-color', 'rose');
+    fireEvent.click(screen.getByRole('button', { name: 'Card color' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Violet' }));
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.getByRole('main')).toHaveAttribute('data-card-color', 'rose');
+    fireEvent.click(screen.getByRole('button', { name: 'Card color' }));
+    fireEvent.change(screen.getByLabelText('Custom color'), { target: { value: '#beab77' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save color' }));
+    expect(screen.getByRole('main')).toHaveAttribute('data-card-color', 'beab77');
+    expect(new URLSearchParams(window.location.search).get('color')).toBe('beab77');
+    fireEvent.click(screen.getByRole('button', { name: 'Card color' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Original' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Save color' }));
+    expect(screen.getByRole('main')).not.toHaveAttribute('data-card-color');
+    expect(window.location.search).toBe('?lang=en&variant=classic');
+    fireEvent.click(screen.getByRole('button', { name: 'Copy message for Facebook' }));
+    await screen.findByRole('button', { name: 'Message copied' });
+    expect(writeText.mock.calls[0][0].match(/https?:\/\/\S+/g)).toEqual([CARD_URL]);
+  });
 });
 
 afterEach(() => {
