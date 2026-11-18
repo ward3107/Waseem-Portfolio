@@ -40,7 +40,7 @@ export function CardImageDownload({ src, language }: { src: string; language: La
 
   // Prepare the file before the tap so mobile browsers receive a normal download link.
   if (current?.href) return <a className="onetap-copy onetap-image-action" href={current.href}
-    download={`Vasia-Waseem-Abu-Akel-${language}.png`} aria-label={ui.save}>{content}</a>;
+    download={`Vasia-Waseem-${language}.png`} aria-label={ui.save}>{content}</a>;
 
   return <button type="button" className="onetap-copy onetap-image-action"
     aria-label={title} disabled={!current} onClick={() => { setResult(undefined); setAttempt(value => value + 1); }}>

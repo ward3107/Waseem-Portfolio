@@ -78,20 +78,21 @@ describe('Image download and secondary card actions', () => {
     });
     openCard('he');
     const original = await screen.findByRole('link', { name: 'שמירת הכרטיס כתמונה' });
-    expect(original).toHaveAttribute('download', 'Vasia-Waseem-Abu-Akel-he.png');
+    expect(original).toHaveAttribute('download', 'Vasia-Waseem-he.png');
     const firstUrl = original.getAttribute('href');
     fireEvent.click(screen.getByRole('button', { name: 'צבע הכרטיס' }));
     fireEvent.click(screen.getByRole('button', { name: 'טורקיז' }));
-    const preview = screen.getByRole('img', { name: /ואסים אבו עקל.*054-4513141/ });
+    const preview = screen.getByRole('img', { name: /ואסים.*054-4513141/ });
     const previewSrc = preview.getAttribute('src');
     expect(decodeURIComponent(previewSrc!)).toContain('#13a89d');
+    expect(decodeURIComponent(previewSrc!)).not.toMatch(/אבו עקל|أبو عقل|Abu Akel/);
     fireEvent.click(screen.getByRole('button', { name: 'שמירת הצבע' }));
     expect(await screen.findByRole('link', { name: 'שמירת הכרטיס כתמונה' })).not.toHaveAttribute('href', firstUrl);
     expect(png).toHaveBeenLastCalledWith(previewSrc);
     expect(release).toHaveBeenCalledWith(firstUrl);
     fireEvent.click(screen.getByRole('button', { name: 'العربية' }));
-    expect(await screen.findByRole('link', { name: 'حفظ البطاقة كصورة' })).toHaveAttribute('download', 'Vasia-Waseem-Abu-Akel-ar.png');
-    expect(decodeURIComponent(png.mock.calls.at(-1)![0])).toContain('وسيم أبو عقل');
+    expect(await screen.findByRole('link', { name: 'حفظ البطاقة كصورة' })).toHaveAttribute('download', 'Vasia-Waseem-ar.png');
+    expect(decodeURIComponent(png.mock.calls.at(-1)![0])).toContain('وسيم');
   });
 
   it('keeps payment and offers inside More and restores focus after either dialog', async () => {
@@ -122,9 +123,9 @@ describe('Image download and secondary card actions', () => {
 
 describe('Facebook message on the OneTap card', () => {
   it.each([
-    ['he', 'העתק הודעה לפייסבוק', 'ההודעה הועתקה', 'ואסים אבו עקל'],
-    ['ar', 'نسخ رسالة لفيسبوك', 'تم نسخ الرسالة', 'وسيم أبو عقل'],
-    ['en', 'Copy message for Facebook', 'Message copied', 'Waseem Abu Akel'],
+    ['he', 'העתק הודעה לפייסבוק', 'ההודעה הועתקה', 'ואסים'],
+    ['ar', 'نسخ رسالة لفيسبوك', 'تم نسخ الرسالة', 'وسيم'],
+    ['en', 'Copy message for Facebook', 'Message copied', 'Waseem'],
   ])('copies one introduction and the permanent card URL in %s', async (lang, label, copied, name) => {
     openCard(lang);
     fireEvent.click(screen.getByRole('button', { name: label }));
@@ -132,6 +133,7 @@ describe('Facebook message on the OneTap card', () => {
     expect(writeText).toHaveBeenCalledTimes(1);
     const [message] = writeText.mock.calls[0];
     expect(message).toContain(name);
+    expect(message).not.toMatch(/אבו עקל|أبو عقل|Abu Akel/);
     expect(message.match(/https?:\/\/\S+/g)).toEqual([CARD_URL]);
     expect(message.split('\n').pop()).toBe(CARD_URL);
   });
