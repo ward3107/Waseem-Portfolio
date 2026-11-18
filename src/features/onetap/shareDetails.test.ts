@@ -25,6 +25,10 @@ describe('OneTap share details', () => {
 
   it.each(['he', 'ar', 'en'] as const)('copies the phone and an explicit tappable WhatsApp URL in %s', (language) => {
     const result = buildOneTapSharePayload(contact, language);
+    const name = { he: 'ואסים', ar: 'وسيم', en: 'Waseem' }[language];
+    expect(result.plainText.split('\n')[0]).toBe(name + ' | VASIA');
+    expect(result.html).toContain('<strong>' + name + ' | VASIA</strong>');
+    expect(result.plainText + result.html).not.toMatch(/אבו עקל|أبو عقل|Abu Akel/);
     expect(result.plainText).toContain('054-4513141 — https://wa.me/972544513141');
     expect(result.plainText).toContain('https://vasia.dev');
     expect(result.plainText).toContain('https://www.vasia.dev/card');

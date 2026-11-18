@@ -6,6 +6,8 @@ import { DEFAULT_CARD_COLOR, withCardColor } from './cardColors';
 export const WEBSITE_URL = 'https://vasia.dev';
 export const QR_PAGE_URL = 'https://www.vasia.dev/qr';
 
+const SHARE_NAME: Record<Language, string> = { he: 'ואסים', ar: 'وسيم', en: 'Waseem' };
+
 const FACEBOOK_INTRO: Record<Language, string> = {
   he: 'היי, אני ואסים מ־Vasia 👋 אני בונה אתרים לעסקים. אשמח לשמוע על הפרויקט שלכם כאן בפרטי.\nזה כרטיס הביקור שלי עם פרטי הקשר 👇',
   ar: 'مرحبًا، أنا وسيم من Vasia 👋 أصمّم مواقع إلكترونية للأعمال. يسعدني أن أسمع عن مشروعكم برسالة خاصة هنا.\nهذه بطاقتي وفيها تفاصيل التواصل معي 👇',
@@ -77,7 +79,7 @@ export function buildOneTapSharePayload(info: ContactInfo, language: Language, c
   const whatsappPlain = whatsappLink ? phone + ' — ' + whatsappLink : phone;
 
   const plainText = [
-    'VASIA OneTap',
+    SHARE_NAME[language] + ' | VASIA',
     label.whatsapp + ': ' + whatsappPlain,
     label.site + ': ' + WEBSITE_URL,
     label.card + ': ' + cardUrl,
@@ -92,7 +94,7 @@ export function buildOneTapSharePayload(info: ContactInfo, language: Language, c
   const dir = language === 'en' ? 'ltr' : 'rtl';
   const html = [
     '<div dir="' + dir + '">',
-    '<p><strong>VASIA OneTap</strong></p>',
+    '<p><strong>' + SHARE_NAME[language] + ' | VASIA</strong></p>',
     '<p>' + label.whatsapp + ': ' + phoneHtml + '</p>',
     '<p>' + label.site + ': <a href="' + WEBSITE_URL + '">' + WEBSITE_URL + '</a></p>',
     '<p>' + label.card + ': <a href="' + cardUrl + '">' + cardUrl + '</a></p>',
