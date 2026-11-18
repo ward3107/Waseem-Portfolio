@@ -35,13 +35,7 @@ const ContextLossBridge: React.FC<{ onLost: () => void }> = ({ onLost }) => {
   return null;
 };
 
-/** Lets touch drags reach the scene. Without an explicit touch-action the mobile
- *  browser claims every touch on the canvas for its own scroll/zoom gesture
- *  detection and fires pointercancel the moment a finger moves sideways — so the
- *  projects turntable never receives the pointermove stream it needs to spin
- *  (desktop mice are unaffected, which is why it only broke on phones). `pan-y`
- *  keeps vertical panning native — the page still scrolls the scene normally —
- *  while horizontal swipes are handed to our pointer handlers to turn the ring. */
+/** Keep vertical page scrolling available while the hero handles horizontal drags. */
 const TouchActionBridge: React.FC = () => {
   const gl = useThree((s) => s.gl);
   useEffect(() => {
@@ -62,6 +56,26 @@ interface ExperienceCanvasProps {
 
 const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({ onContextLost, tier }) => {
   const [visible, setVisible] = useState(() => document.visibilityState !== 'hidden');
+  const [readingProject, setReadingProject] = useState(false);
+  useEffect(() => {
+    const section = document.getElementById('projects');
+    if (!section || typeof IntersectionObserver === 'undefined') return;
+    let observer: IntersectionObserver;
+    const observe = () => {
+      observer?.disconnect();
+      const inset = Math.floor(window.innerHeight * 0.45);
+      observer = new IntersectionObserver(([entry]) => setReadingProject(entry.isIntersecting), {
+        rootMargin: `-${inset}px 0px -${inset}px 0px`,
+      });
+      observer.observe(section);
+    };
+    observe();
+    window.addEventListener('resize', observe);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', observe);
+    };
+  }, []);
   useEffect(() => {
     const update = () => setVisible(document.visibilityState !== 'hidden');
     document.addEventListener('visibilitychange', update);
@@ -70,9 +84,8 @@ const ExperienceCanvas: React.FC<ExperienceCanvasProps> = ({ onContextLost, tier
 
   return (
     <Canvas
-      // Keep the scene and textures mounted while backgrounded, but stop GPU
-      // work. Resume the same scene when returning from WhatsApp or another tab.
-      frameloop={visible ? 'always' : 'never'}
+      // Keep resources warm while the opaque project chapter covers the canvas.
+      frameloop={visible && !readingProject ? 'always' : 'never'}
       // Cap the pixel ratio harder on the low tier — phones have very high DPRs,
       // and rendering at native resolution is the single biggest mobile cost.
       dpr={tier === 'high' ? [1, 1.5] : [1, 1]}

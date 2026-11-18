@@ -1,11 +1,10 @@
-import React, { Suspense, useMemo, useRef, useSyncExternalStore } from 'react';
+import React, { Suspense, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Sparkles } from '@react-three/drei';
 import { Vector3, MathUtils, type Group } from 'three';
 import { scrollStore } from './scrollStore';
 import { CHAPTERS } from './storyboard';
 import HeroChapter from './chapters/HeroChapter';
-import ProjectsScene from './chapters/ProjectsScene';
 import MorphField from './MorphField';
 import type { QualityTier } from './useQualityTier';
 
@@ -25,14 +24,6 @@ const BRAND_CYAN = '#00E5FF';
  * behind its own <Suspense> so an asset load never blanks the whole canvas.
  */
 const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
-  // Textures for the gallery are large and unnecessary during the hero. Mount
-  // them only as the reader approaches the projects chapter.
-  const chapter = useSyncExternalStore(
-    scrollStore.subscribe,
-    () => scrollStore.get().chapter,
-    () => 0
-  );
-  const projectsChapter = CHAPTERS.findIndex((item) => item.id === 'projects');
   const camera = useThree((s) => s.camera);
   // The morphing field rides the camera's focus point. Left at the world
   // origin it slid out of frame as the per-chapter camera moves panned away,
@@ -94,19 +85,6 @@ const Scene: React.FC<{ tier: QualityTier }> = ({ tier }) => {
       <Suspense fallback={null}>
         <HeroChapter tier={tier} />
       </Suspense>
-
-      {/* Chapter 4 — the projects fly-through gallery: the real screenshots
-          float in a fanned arc the camera sweeps through. Scrolling (or swiping
-          on a phone) brings each screen to the front and enlarges it; hovering
-          lifts it; clicking opens the live site. This is the journey's "wow"
-          beat, so it now runs on every device rather than desktop-only. The
-          gallery fades in only around the projects chapter, so it costs nothing
-          elsewhere; Suspense isolates its texture load. */}
-      {Math.abs(chapter - projectsChapter) <= 1 && (
-        <Suspense fallback={null}>
-          <ProjectsScene />
-        </Suspense>
-      )}
 
       {/* Ambient dust, well behind the morphing field so it reads as depth. */}
       <Sparkles

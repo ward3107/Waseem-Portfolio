@@ -6,9 +6,9 @@ export type QualityTier = 'high' | 'low';
  * Picks a rendering quality tier for the 3D experience.
  *
  *   - 'high' — desktop/laptop (≥1024px): full effects (glass transmission
- *     material, richer environment, higher DPR, the projects fly-through).
+ *     material, richer environment, higher DPR).
  *   - 'low'  — phones/tablets: cheaper materials, capped DPR, fewer particles,
- *     while preserving the live 3D project gallery, morphs and touch interaction.
+ *     while preserving the chapter morphs and hero interaction.
  *     Reduces the cost of the experience on battery-powered GPUs.
  *
  * Reactive, so rotating a tablet or resizing a window re-tiers on the fly.
