@@ -7,9 +7,9 @@ import { displayPhone, WEBSITE_URL } from './shareDetails';
 const WIDTH = 1080;
 const HEIGHT = 810;
 const IDENTITY = {
-  he: { name: 'ואסים אבו עקל', contact: 'טלפון או וואטסאפ' },
-  ar: { name: 'وسيم أبو عقل', contact: 'للاتصال أو عبر واتساب' },
-  en: { name: 'Waseem Abu Akel', contact: 'Call or WhatsApp' },
+  he: { name: 'ואסים', contact: 'טלפון או וואטסאפ' },
+  ar: { name: 'وسيم', contact: 'للاتصال أو عبر واتساب' },
+  en: { name: 'Waseem', contact: 'Call or WhatsApp' },
 };
 
 const xmlText = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
