@@ -1,5 +1,5 @@
 /* VASIA OneTap: opt-in offline cache. Other portfolio routes are network-only. */
-const CACHE = 'vasia-onetap-v7-first-name-sharing';
+const CACHE = 'vasia-onetap-v8-first-name-sharing';
 const PAGES = ['/card', '/qr'];
 const STATIC = ['/favicon.svg', '/brand/vasia-profile.png', '/onetap/vasia-qr.svg', '/onetap/vasia-v.svg', '/onetap/bit-payment.png', '/onetap/bit-qr.svg'];
 
@@ -20,11 +20,15 @@ self.addEventListener('activate', (event) => {
       // Retain the exact URL (language/color); leave all other site windows alone.
       if (oldKeys.length) {
         const windows = await self.clients.matchAll({ type: 'window' });
-        await Promise.all(windows.filter((client) => {
+        windows.filter((client) => {
           const url = new URL(client.url);
           return url.origin === self.location.origin &&
             PAGES.includes(url.pathname.replace(/\/$/, ''));
-        }).map((client) => client.navigate(client.url).catch(() => undefined)));
+        }).forEach((client) => {
+          // Do not await navigation during activation: navigation can itself
+          // wait for activation to finish.
+          void client.navigate(client.url).catch(() => undefined);
+        });
       }
     })()
   );
