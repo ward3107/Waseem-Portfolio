@@ -1,5 +1,5 @@
 /* VASIA OneTap: opt-in offline cache. Other portfolio routes are network-only. */
-const CACHE = 'vasia-onetap-v6-vasia-name';
+const CACHE = 'vasia-onetap-v7-first-name-sharing';
 const PAGES = ['/card', '/qr'];
 const STATIC = ['/favicon.svg', '/brand/vasia-profile.png', '/onetap/vasia-qr.svg', '/onetap/vasia-v.svg', '/onetap/bit-payment.png', '/onetap/bit-qr.svg'];
 
@@ -11,10 +11,22 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(
-      keys.filter((key) => key.startsWith('vasia-onetap-') && key !== CACHE)
-        .map((key) => caches.delete(key))
-    )).then(() => self.clients.claim())
+    (async () => {
+      const keys = await caches.keys();
+      const oldKeys = keys.filter((key) => key.startsWith('vasia-onetap-') && key !== CACHE);
+      await Promise.all(oldKeys.map((key) => caches.delete(key)));
+      await self.clients.claim();
+      // Refresh existing OneTap windows once on upgrade, including installed PWAs.
+      // Retain the exact URL (language/color); leave all other site windows alone.
+      if (oldKeys.length) {
+        const windows = await self.clients.matchAll({ type: 'window' });
+        await Promise.all(windows.filter((client) => {
+          const url = new URL(client.url);
+          return url.origin === self.location.origin &&
+            PAGES.includes(url.pathname.replace(/\/$/, ''));
+        }).map((client) => client.navigate(client.url).catch(() => undefined)));
+      }
+    })()
   );
 });
 
@@ -25,7 +37,7 @@ self.addEventListener('fetch', (event) => {
 
   if (request.mode === 'navigate' && PAGES.includes(url.pathname)) {
     event.respondWith(
-      fetch(request).then((response) => {
+      fetch(request, { cache: 'no-cache' }).then((response) => {
         if (!response.ok) return response;
         const copy = response.clone();
         event.waitUntil(caches.open(CACHE).then((cache) => cache.put(url.pathname, copy)));
