@@ -125,7 +125,7 @@ const AppContent: React.FC = () => {
             pathname === '/onetap';
 
           const routes = (
-            <Suspense fallback={<SectionSkeleton />}>
+            <Suspense fallback={<SectionSkeleton fullPage />}>
               {/* location={display} so the exchange happens under the curtain. */}
               <Routes location={display}>
                 <Route path="/" element={<HomePage />} />

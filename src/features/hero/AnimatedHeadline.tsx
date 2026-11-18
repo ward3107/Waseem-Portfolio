@@ -24,11 +24,23 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
 
   return (
     <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-bold leading-tight mb-4 md:mb-6 lg:mb-8 text-slate-900 dark:text-white tracking-tight break-words hyphens-auto overflow-wrap-anywhere">
-      <motion.span initial={initial} animate={{ opacity: 1, y: 0 }} transition={transition(0.05)} className="block">
+      <motion.span
+        initial={initial}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={transition(0.05)}
+        className="block"
+      >
         {t('hero_title_1')}
       </motion.span>
 
-      <motion.span initial={initial} animate={{ opacity: 1, y: 0 }} transition={transition(0.14)} className="relative z-50 mb-1 inline-block">
+      <motion.span
+        initial={initial}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={transition(0.14)}
+        className="relative z-50 mb-1 inline-block"
+      >
         <span className="relative z-50 text-brand-purple dark:text-brand-purpleLighter drop-shadow-[0_1px_10px_rgba(121,101,193,0.55)]">
           {t('hero_title_2')}
         </span>
@@ -41,7 +53,13 @@ const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
         />
       </motion.span>
 
-      <motion.span initial={initial} animate={{ opacity: 1, y: 0 }} transition={transition(0.23)} className="block">
+      <motion.span
+        initial={initial}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={transition(0.23)}
+        className="block"
+      >
         {t('hero_title_3')}
         <span className="inline-block relative">
           <Dimensional3DWord
