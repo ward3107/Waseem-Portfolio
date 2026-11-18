@@ -18,8 +18,7 @@ import { scrollStore } from './scrollStore';
 import InlineQuoteSection from '@/features/quote/InlineQuoteSection';
 
 // Maps a storyboard chapter id to its DOM overlay. Handled separately: chapter
-// 1 (hero) owns the page's single <h1>; projects takes the quality tier (it
-// swaps the DOM card grid for a lean index when the 3D gallery is present).
+// 1 (hero) owns the page's single <h1>; projects has a dedicated showcase.
 const OVERLAY_BY_ID: Record<string, React.FC<{ index: number; total: number }>> = {
   about: AboutOverlay,
   services: ServicesOverlay,
@@ -149,7 +148,7 @@ const Experience: React.FC = () => {
             <section
               id={sectionId}
               aria-label={chapter.label}
-              className="flex min-h-[100svh] flex-col items-center justify-center px-5 py-24 text-center sm:px-6"
+              className={`flex min-h-[100svh] flex-col items-center justify-center px-5 py-24 text-center sm:px-6 ${chapter.id === 'projects' ? 'bg-slate-950' : ''}`}
             >
               {i === 0 ? (
                 // Chapter 1 — real hero content (its own single <h1>).
@@ -159,9 +158,7 @@ const Experience: React.FC = () => {
                   <SocialMediaSection embedded />
                 </div>
               ) : chapter.id === 'projects' ? (
-                // Projects — 3D fly-through gallery (in the canvas) is the
-                // visual; this overlay is the accessible heading + link index.
-                <ProjectsOverlay index={i} total={CHAPTERS.length} />
+                <ProjectsOverlay />
               ) : Overlay ? (
                 <Overlay index={i} total={CHAPTERS.length} />
               ) : null}
