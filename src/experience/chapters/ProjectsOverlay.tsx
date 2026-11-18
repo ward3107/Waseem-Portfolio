@@ -1,40 +1,31 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
-import WorkShelf from '@/features/work/WorkShelf';
 import HeadingAccent from '../components/HeadingAccent';
 import { useHeadingLeading } from './ChapterOverlay';
 import { GhostNavButton } from './actions';
+import ProjectShowcase from './ProjectShowcase';
+import WorkShelf from '@/features/work/WorkShelf';
 
-/**
- * Chapter 4 — Projects. The visual is the 3D turntable (ProjectsScene, in the
- * canvas): every project's screenshot rides a slowly rotating ring and the one
- * at the front enlarges and opens on click. The heading stays above the visual,
- * and the full projects page is linked below it. Individual project names and
- * links remain available on that page without covering the homepage previews.
- */
 const reveal = {
   initial: { opacity: 0.72, y: 12 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.4 },
 } as const;
 
-const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, total }) => {
+const ProjectsOverlay: React.FC = () => {
   const { t, language } = useLanguage();
   const leading = useHeadingLeading();
 
   return (
-    <div className="pointer-events-none flex min-h-[82vh] w-full max-w-5xl flex-col items-center justify-between">
+    <div className="pointer-events-none mx-auto flex w-full max-w-6xl flex-col items-center gap-5 sm:gap-7">
       <motion.div
         {...reveal}
         transition={{ duration: 0.6 }}
         className="flex flex-col items-center text-center"
       >
-        <p className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-brand-cyan">
-          {String(index + 1).padStart(2, '0')} <span className="text-white/30">/</span>{' '}
-          {String(total).padStart(2, '0')}
-        </p>
         <h2
+          id="projects-heading"
           className={`max-w-3xl font-heading text-4xl font-black tracking-tight sm:text-5xl md:text-6xl ${leading}`}
         >
           <span className="text-white">{t('projects_title_1')} </span>
@@ -42,10 +33,12 @@ const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, to
             {t('projects_title_2')}
           </HeadingAccent>
         </h2>
-        <p className="mt-5 max-w-xl text-base font-medium text-slate-300 sm:text-lg">
+        <p className="mt-2 max-w-xl text-base font-medium text-slate-300 sm:text-lg">
           {t('projects_subtitle')}
         </p>
       </motion.div>
+
+      <ProjectShowcase />
 
       <motion.div
         {...reveal}
