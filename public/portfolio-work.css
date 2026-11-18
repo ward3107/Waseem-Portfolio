@@ -59,7 +59,6 @@
   max-inline-size: 64rem;
   padding: 7rem clamp(1rem, 4vw, 3rem) 4rem;
   margin: auto;
-  color: #f4f2ff;
 }
 .work-page h1,
 .work-manager h1 {
@@ -83,7 +82,8 @@
 }
 .work-photos img {
   width: 100%;
-  max-height: 76vh;
+  /* Reserve the frame before a lazy image arrives, including on a mobile connection. */
+  aspect-ratio: 4 / 3;
   object-fit: contain;
   border-radius: 0.8rem;
   background: #181823;

@@ -50,7 +50,7 @@ const ProjectsOverlay: React.FC<{ index: number; total: number }> = ({ index, to
       <motion.div
         {...reveal}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="flex flex-col items-center"
+        className="flex w-full min-w-0 flex-col items-center"
       >
         <WorkShelf scope="featured" language={language} defer />
         <GhostNavButton href="/projects">{t('home_projects_cta')}</GhostNavButton>
