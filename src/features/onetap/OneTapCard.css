@@ -53,7 +53,7 @@
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) repeat(7, auto);
+  grid-template-rows: auto minmax(0, 1fr) repeat(6, auto);
   gap: var(--onetap-gap);
   width: 100%;
   height: 100%;
@@ -403,7 +403,6 @@
 .onetap-copy-info { display:flex; flex-direction:column; justify-content:center; min-width:0; gap:3px; }
 .onetap-copy-title { font-size: clamp(13px,2.12dvh,19px); font-weight:750; line-height:1.18; }
 .onetap-copy-detail { font-size: clamp(8px,1.31dvh,11px); color: #deebff; opacity: .92; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.onetap-copy-arrow { width: 18px; height: 18px; margin-inline-start: auto; flex: none; }
 .onetap-tools {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -442,21 +441,6 @@
 .onetap-tool svg { flex: none; width: clamp(18px,3.1dvh,27px); height: clamp(18px,3.1dvh,27px); }
 .onetap-tool span { display: block; max-width: 100%; text-wrap: balance; }
 .onetap-tool:hover { background: rgba(220,237,255,.1); }
-.onetap-footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(6px,1.3vw,12px);
-  min-height: 12px;
-  font-size: clamp(7px,1.1dvh,10px);
-  line-height: 1;
-  font-weight: 650;
-  white-space: nowrap;
-  letter-spacing: .12em;
-  text-align: center;
-  color: rgba(224,239,255,.9);
-}
-.onetap-footer > span { color:#ffcb57; }
 .onetap-promotions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -610,7 +594,6 @@
   .onetap-copy { height: 40px; }
   .onetap-copy-detail { display: none; }
   .onetap-tools { height: 55px; }
-  .onetap-footer { display: none; }
 }
 @media (max-height: 445px) {
   .onetap-orb { display: none; }
@@ -773,13 +756,52 @@
   .onetap-spark { animation: none !important; }
 }
 
-/* Share stays visible beside the existing save, install and QR actions. */
 .onetap-secondary-actions {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 72px;
-  gap: clamp(9px, 2.5vw, 14px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(6px, 1.8vw, 11px);
   min-width: 0;
 }
+.onetap-secondary-actions .onetap-copy { gap: 7px; padding-inline: clamp(7px, 2.2vw, 12px); }
+.onetap-secondary-actions .onetap-copy > svg { width: 22px; height: 22px; }
+.onetap-image-action { text-decoration: none; }
+.onetap-image-action:disabled { cursor: wait; }
+.onetap-more { position: relative; min-width: 0; }
+.onetap-more-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  margin-inline: auto;
+  padding: 4px 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: rgba(11, 22, 52, .32);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.onetap-more-trigger svg:first-child { width: 18px; }
+.onetap-more-trigger[aria-expanded="true"] svg:last-child { transform: rotate(180deg); }
+.onetap-more-panel:not([hidden]) {
+  display: grid;
+  position: absolute;
+  z-index: 4;
+  inset-inline: 0;
+  bottom: calc(100% + 7px);
+  max-height: 65dvh;
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid rgba(230, 241, 255, .65);
+  border-radius: 19px;
+  background: var(--card-deep, #192a50);
+  box-shadow: 0 8px 32px rgba(7, 12, 33, .42);
+}
+.onetap-more-panel .onetap-bit, .onetap-more-panel .onetap-promo-button { min-height: 44px; }
+.onetap-more-caption { margin: 12px 0 7px; color: #ebf2ff; font-size: 13px; font-weight: 600; }
 .onetap-bit {
   display: flex;
   align-items: center;
@@ -840,7 +862,6 @@
 @media (max-height: 570px) {
   .onetap-orbit-system { width: 68px; height: 68px; }
   .onetap-orbit-system .onetap-orb { width: 52px; height: 52px; }
-  .onetap-secondary-actions { grid-template-columns: minmax(0,1fr) 66px; }
   .onetap-bit-logo { width: 25px; height: 25px; }
   .onetap-tools { height: 60px; }
 }
@@ -913,19 +934,18 @@
 .onetap-custom-color input { width: 48px; height: 36px; border: 0; padding: 2px; background: transparent; cursor: pointer; }
 .onetap-dialog :is(button, input, textarea):focus-visible { outline: 3px solid #315fbd; outline-offset: 2px; }
 
-.onetap-screen[data-card-color], .onetap-color-preview {
+.onetap-screen[data-card-color] {
   --card-deep: color-mix(in srgb, var(--onetap-accent) 19%, #11141f);
   --card-mid: color-mix(in srgb, var(--onetap-accent) 36%, #172030);
   --card-edge: color-mix(in srgb, var(--onetap-accent) 54%, #f6f7fa);
 }
 .onetap-color-preview {
-  display: grid;
-  place-items: center;
-  height: 72px;
-  border-radius: 16px;
-  background: radial-gradient(ellipse at 30% 0%, var(--onetap-accent), transparent 65%), linear-gradient(125deg, var(--card-mid), var(--card-deep));
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 13px;
 }
-.onetap-color-preview[data-original="true"] { background: linear-gradient(125deg, #438eed, #494cba 68%, #5265c7); }
+.onetap-dialog h2:first-of-type { padding-inline-end: 28px; }
 .onetap-screen[data-card-color] {
   background: linear-gradient(135deg, color-mix(in srgb, var(--onetap-accent) 24%, white), var(--card-edge));
 }

@@ -2,10 +2,10 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { CARD_URL } from '@/features/onetap/cardData';
+import * as images from '@/features/onetap/cardArtwork';
 import OneTapCardPage from '@/pages/OneTapCardPage';
 
 vi.mock('@/shared/hooks/useSiteSettings', () => ({ useSiteSettings: () => ({ settings: null }) }));
-vi.mock('@/features/onetap/PromotionShareButtons', () => ({ PromotionShareButtons: () => null }));
 
 const writeText = vi.fn<(text: string) => Promise<void>>();
 const originalClipboard = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
@@ -61,8 +61,63 @@ describe('OneTap card colors', () => {
 
 afterEach(() => {
   cleanup();
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
   if (originalClipboard) Object.defineProperty(navigator, 'clipboard', originalClipboard);
   else Reflect.deleteProperty(navigator, 'clipboard');
+});
+
+describe('Image download and secondary card actions', () => {
+  it('uses the saved color, current phone and language for the downloadable image', async () => {
+    const png = vi.spyOn(images, 'renderCardPng').mockResolvedValue(new Blob(['png'], { type: 'image/png' }));
+    let sequence = 0;
+    const release = vi.fn();
+    vi.stubGlobal('URL', class extends URL {
+      static createObjectURL = () => 'blob:card-' + ++sequence;
+      static revokeObjectURL = release;
+    });
+    openCard('he');
+    const original = await screen.findByRole('link', { name: 'שמירת הכרטיס כתמונה' });
+    expect(original).toHaveAttribute('download', 'Vasia-Waseem-Abu-Akel-he.png');
+    const firstUrl = original.getAttribute('href');
+    fireEvent.click(screen.getByRole('button', { name: 'צבע הכרטיס' }));
+    fireEvent.click(screen.getByRole('button', { name: 'טורקיז' }));
+    const preview = screen.getByRole('img', { name: /ואסים אבו עקל.*054-4513141/ });
+    const previewSrc = preview.getAttribute('src');
+    expect(decodeURIComponent(previewSrc!)).toContain('#13a89d');
+    fireEvent.click(screen.getByRole('button', { name: 'שמירת הצבע' }));
+    expect(await screen.findByRole('link', { name: 'שמירת הכרטיס כתמונה' })).not.toHaveAttribute('href', firstUrl);
+    expect(png).toHaveBeenLastCalledWith(previewSrc);
+    expect(release).toHaveBeenCalledWith(firstUrl);
+    fireEvent.click(screen.getByRole('button', { name: 'العربية' }));
+    expect(await screen.findByRole('link', { name: 'حفظ البطاقة كصورة' })).toHaveAttribute('download', 'Vasia-Waseem-Abu-Akel-ar.png');
+    expect(decodeURIComponent(png.mock.calls.at(-1)![0])).toContain('وسيم أبو عقل');
+  });
+
+  it('keeps payment and offers inside More and restores focus after either dialog', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockImplementation(() =>
+      Promise.resolve(new Response('offer', { headers: { 'content-type': 'image/jpeg' } }))));
+    openCard('he');
+    const more = screen.getByRole('button', { name: 'עוד פעולות' });
+    expect(screen.queryByRole('button', { name: 'תשלום ב־Bit' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'מבצע בעברית' })).not.toBeInTheDocument();
+    fireEvent.click(more);
+    expect(more).toHaveAttribute('aria-expanded', 'true');
+    const bit = screen.getByRole('button', { name: 'תשלום ב־Bit' });
+    fireEvent.click(bit);
+    const bitDialog = screen.getByRole('dialog', { name: 'תשלום ב־Bit' });
+    fireEvent.keyDown(bitDialog, { key: 'Escape' });
+    expect(bit).toHaveFocus();
+    const offer = screen.getByRole('button', { name: 'מבצע בעברית' });
+    offer.focus();
+    fireEvent.click(offer);
+    const offerDialog = await screen.findByRole('dialog', { name: 'מבצע בעברית' });
+    fireEvent.keyDown(offerDialog, { key: 'Escape' });
+    expect(offer).toHaveFocus();
+    fireEvent.keyDown(offer, { key: 'Escape' });
+    expect(more).toHaveFocus();
+    expect(more).toHaveAttribute('aria-expanded', 'false');
+  });
 });
 
 describe('Facebook message on the OneTap card', () => {
